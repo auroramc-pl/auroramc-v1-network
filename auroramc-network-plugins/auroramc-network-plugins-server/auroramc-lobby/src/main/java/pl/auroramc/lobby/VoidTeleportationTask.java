@@ -21,7 +21,7 @@ class VoidTeleportationTask implements Runnable {
     for (final Player player : getOnlinePlayers()) {
       if (player.getLocation().getY() <= TELEPORT_SINCE_Y) {
         player.teleport(lobbyConfig.spawn);
-        player.sendMessage(messageSource.teleportedFromVoid.into());
+        player.sendMessage(messageSource.teleportedFromVoid.compile());
       }
     }
   }

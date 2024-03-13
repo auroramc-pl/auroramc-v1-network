@@ -2,8 +2,6 @@ package pl.auroramc.dailyrewards.visit;
 
 import static java.time.Instant.now;
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.joining;
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static pl.auroramc.commons.period.PeriodFormatter.getFormattedPeriod;
 import static pl.auroramc.commons.period.PeriodFormatter.getFormattedPeriodShortly;
 import static pl.auroramc.commons.period.PeriodUtils.getMaximumTimeOfDay;
@@ -15,9 +13,9 @@ import dev.rollczi.litecommands.command.route.Route;
 import java.time.Instant;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import pl.auroramc.commons.duration.DurationFormatter;
+import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.dailyrewards.message.MessageSource;
 import pl.auroramc.registry.user.User;
 import pl.auroramc.registry.user.UserFacade;
@@ -25,7 +23,6 @@ import pl.auroramc.registry.user.UserFacade;
 @Route(name = "visit", aliases = {"session", "sessions"})
 public class VisitCommand {
 
-  private static final String LINE_SEPARATOR = "<newline>";
   private final MessageSource messageSource;
   private final UserFacade userFacade;
   private final VisitFacade visitFacade;
@@ -44,9 +41,7 @@ public class VisitCommand {
   }
 
   @Execute
-  public CompletableFuture<Component> getSessionsFromToday(
-      final Player executor
-  ) {
+  public CompletableFuture<MutableMessage> getSessionsFromToday(final Player executor) {
     final Instant now = now();
     return userFacade.getUserByUniqueId(executor.getUniqueId())
         .thenApply(User::getId)
@@ -56,73 +51,55 @@ public class VisitCommand {
                 getMaximumTimeOfDay(now)
             )
         )
-        .thenApply(visits -> getFormattedVisits(now, visits))
-        .thenApply(miniMessage()::deserialize);
+        .thenApply(visits -> getFormattedVisits(now, visits));
   }
 
   @Execute(route = "ranged")
-  public CompletableFuture<Component> getSessions(
+  public CompletableFuture<MutableMessage> getSessions(
       final Player executor, final @Arg Instant from, final @Arg Instant to
   ) {
     return userFacade.getUserByUniqueId(executor.getUniqueId())
         .thenApply(User::getId)
         .thenApply(userId -> visitFacade.getVisitsByUserIdBetween(userId, from, to))
-        .thenApply(visits -> getFormattedVisits(from, to, visits))
-        .thenApply(miniMessage()::deserialize);
+        .thenApply(visits -> getFormattedVisits(from, to, visits));
   }
 
-  private String getFormattedVisitHeader(final Instant period) {
-    return messageSource.visitDailySummary.formatted(
-        getFormattedPeriodShortly(period)
-    );
+  private MutableMessage getFormattedVisitHeader(final Instant period) {
+    return messageSource.visitDailySummary
+        .with("period", getFormattedPeriodShortly(period));
   }
 
-  private String getFormattedVisitHeader(final Instant from, final Instant to) {
+  private MutableMessage getFormattedVisitHeader(final Instant from, final Instant to) {
     return messageSource.visitRangeSummary
-        .formatted(
-            getFormattedPeriodShortly(from),
-            getFormattedPeriodShortly(to)
-        );
+        .with("from", getFormattedPeriodShortly(from))
+        .with("to", getFormattedPeriodShortly(to));
   }
 
-  private String getFormattedVisits(final Instant period, final Set<Visit> visits) {
-    if (visits.isEmpty()) {
-      return messageSource.noVisits;
-    }
-
-    return "%s%s%s"
-        .formatted(
-            getFormattedVisitHeader(period),
-            LINE_SEPARATOR,
-            getFormattedVisits(visits)
-        );
+  private MutableMessage getFormattedVisits(final Instant period, final Set<Visit> visits) {
+    return getFormattedVisits(getFormattedVisitHeader(period), visits);
   }
 
-  private String getFormattedVisits(final Instant from, final Instant to, final Set<Visit> visits) {
-    if (visits.isEmpty()) {
-      return messageSource.noVisits;
-    }
-
-    return "%s<newline>%s"
-        .formatted(
-            getFormattedVisitHeader(from, to),
-            getFormattedVisits(visits)
-        );
+  private MutableMessage getFormattedVisits(final Instant from, final Instant to, final Set<Visit> visits) {
+    return getFormattedVisits(getFormattedVisitHeader(from, to), visits);
   }
 
-  private String getFormattedVisits(final Set<Visit> visits) {
+  private MutableMessage getFormattedVisits(final MutableMessage header, final Set<Visit> visits) {
+    return visits.isEmpty()
+        ? messageSource.noVisits
+        : header.append(getFormattedVisits(visits));
+  }
+
+  private MutableMessage getFormattedVisit(final Visit visit) {
+    return messageSource.visitEntry
+        .with("session_start", getFormattedPeriod(visit.getSessionStartTime()))
+        .with("session_ditch", getFormattedPeriod(visit.getSessionDitchTime()))
+        .with("playtime", durationFormatter.getFormattedDuration(visit.getSessionDuration()));
+  }
+
+  private MutableMessage getFormattedVisits(final Set<Visit> visits) {
     return visits.stream()
         .sorted(comparing(Visit::getSessionStartTime).reversed())
         .map(this::getFormattedVisit)
-        .collect(joining(LINE_SEPARATOR));
-  }
-
-  private String getFormattedVisit(final Visit visit) {
-    return messageSource.visitEntry
-        .formatted(
-            getFormattedPeriod(visit.getSessionStartTime()),
-            getFormattedPeriod(visit.getSessionDitchTime()),
-            durationFormatter.getFormattedDuration(visit.getSessionDuration())
-        );
+        .collect(MutableMessage.collector());
   }
 }

@@ -18,11 +18,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.auroramc.commons.config.ConfigFactory;
 import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
+import pl.auroramc.commons.integration.litecommands.v2.MutableMessageResultHandler;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.hoppers.hopper.HopperCommand;
 import pl.auroramc.hoppers.hopper.HopperInitializeListener;
 import pl.auroramc.hoppers.hopper.HopperTransferListener;
-import pl.auroramc.hoppers.message.MessageResultHandler;
 import pl.auroramc.hoppers.message.MessageSource;
 
 public class HoppersBukkitPlugin extends JavaPlugin {
@@ -68,7 +68,7 @@ public class HoppersBukkitPlugin extends JavaPlugin {
             context -> messageSource.availableSchematicsSuggestion
                 .with("schematics", join(", ", context.getSchematics()))
         )
-        .resultHandler(MutableMessage.class, new MessageResultHandler())
+        .resultHandler(MutableMessage.class, new MutableMessageResultHandler())
         .register();
   }
 

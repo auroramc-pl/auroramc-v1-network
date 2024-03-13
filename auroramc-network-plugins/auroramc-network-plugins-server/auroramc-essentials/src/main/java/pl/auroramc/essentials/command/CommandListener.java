@@ -74,7 +74,7 @@ public class CommandListener implements Listener {
     final String performedCommand = resolveCommand("/%s".formatted(input));
     final String suggestedCommand = getPotentialSuggestionForCommand(event.getSender(), performedCommand);
     if (suggestedCommand == null) {
-      event.message(messageSource.unknownCommand.into());
+      event.message(messageSource.unknownCommand.compile());
       return;
     }
 
@@ -85,9 +85,9 @@ public class CommandListener implements Listener {
 
     event.message(messageSource.unknownCommandWithPotentialSuggestion
         .with("suggestion", text(suggestedCommand)
-            .hoverEvent(messageSource.potentialSuggestionHover.into())
+            .hoverEvent(messageSource.potentialSuggestionHover.compile())
             .clickEvent(suggestCommand("/%s%s".formatted(suggestedCommand, arguments))))
-        .into());
+        .compile());
   }
 
   private boolean whetherInputHasArguments(final String input) {
@@ -154,7 +154,7 @@ public class CommandListener implements Listener {
   private Component getTitleOfPluginSummary(final int percentageOfCustomPlugins) {
     return messageSource.titleOfSummary
         .with("plugins_percentage", percentageOfCustomPlugins)
-        .into();
+        .compile();
   }
 
   private Component getEntriesOfPluginSummary(final List<Plugin> plugins) {
@@ -173,7 +173,7 @@ public class CommandListener implements Listener {
     return messageSource.entryOfSummary
         .with("plugin_name", plugin.getName())
         .with("separator", whetherIsClosingEntry ? PLUGIN_SEPARATOR_CLOSING : PLUGIN_SEPARATOR)
-        .into();
+        .compile();
   }
 
   private boolean whetherIsPluginSummaryRequest(final String query) {

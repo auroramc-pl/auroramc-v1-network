@@ -1,9 +1,9 @@
-package pl.auroramc.scoreboard.message.quest;
+package pl.auroramc.scoreboard.message;
 
 import eu.okaeri.configs.OkaeriConfig;
 import pl.auroramc.commons.message.MutableMessage;
 
-public class QuestMessageSource extends OkaeriConfig {
+public class MessageSourceQuest extends OkaeriConfig {
 
   public MutableMessage observedQuest = MutableMessage.of(
       "<gray>Obserwowane zadanie:"

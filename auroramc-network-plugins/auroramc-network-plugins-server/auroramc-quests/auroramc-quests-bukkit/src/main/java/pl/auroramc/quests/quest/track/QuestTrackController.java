@@ -95,8 +95,10 @@ public class QuestTrackController {
       questObserverFacade.updateQuestObserver(questObserver);
     }
 
-    player.sendMessage(messageSource.questHasBeenCompleted
-        .with("quest", miniMessage().serialize(quest.getIcon().displayName()))
-        .into());
+    player.sendMessage(
+        messageSource.questHasBeenCompleted
+            .with("quest", miniMessage().serialize(quest.getIcon().displayName()))
+            .compile()
+    );
   }
 }

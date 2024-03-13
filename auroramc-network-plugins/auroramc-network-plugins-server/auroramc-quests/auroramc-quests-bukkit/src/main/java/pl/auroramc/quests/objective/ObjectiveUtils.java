@@ -37,9 +37,9 @@ public final class ObjectiveUtils {
   ) {
     final List<Component> aggregator = new ArrayList<>();
 
-    aggregator.add(getQuestObjective0(objective, objectiveProgress).into());
+    aggregator.add(getQuestObjective0(objective, objectiveProgress).compile());
     for (final ObjectiveRequirement requirement : objective.getRequirements()) {
-      aggregator.add(getObjectiveRequirement(requirement).into());
+      aggregator.add(getObjectiveRequirement(requirement).compile());
     }
 
     return aggregator;

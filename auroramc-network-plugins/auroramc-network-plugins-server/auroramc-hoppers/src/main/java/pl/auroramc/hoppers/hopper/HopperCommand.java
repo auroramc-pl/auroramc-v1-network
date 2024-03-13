@@ -37,7 +37,7 @@ public class HopperCommand {
         .displayName(
             messageSource.hopperDisplayName
                 .with("quantity", transferQuantity)
-                .into()
+                .compile()
         )
         .data(transferQuantityKey, INTEGER, transferQuantity)
         .build();

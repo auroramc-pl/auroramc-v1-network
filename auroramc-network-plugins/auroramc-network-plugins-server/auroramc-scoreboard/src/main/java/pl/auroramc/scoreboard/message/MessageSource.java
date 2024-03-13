@@ -4,7 +4,6 @@ import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Exclude;
 import java.util.List;
 import pl.auroramc.commons.message.MutableMessage;
-import pl.auroramc.scoreboard.message.quest.QuestMessageSource;
 
 public class MessageSource extends OkaeriConfig {
 
@@ -26,5 +25,5 @@ public class MessageSource extends OkaeriConfig {
       )
   );
 
-  public QuestMessageSource quest = new QuestMessageSource();
+  public MessageSourceQuest quest = new MessageSourceQuest();
 }

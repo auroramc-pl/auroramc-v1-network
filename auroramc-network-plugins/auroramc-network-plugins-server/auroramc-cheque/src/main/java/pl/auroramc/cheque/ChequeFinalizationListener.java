@@ -48,7 +48,7 @@ class ChequeFinalizationListener implements Listener {
       postToMainThreadAndNextTick(plugin,
           () ->
               chequeFacade.finalizeCheque(retriever.getUniqueId(), heldItemStack)
-                  .thenApply(MutableMessage::into)
+                  .thenApply(MutableMessage::compile)
                   .thenAccept(retriever::sendMessage)
                   .exceptionally(exception -> delegateCaughtException(logger, exception))
       );

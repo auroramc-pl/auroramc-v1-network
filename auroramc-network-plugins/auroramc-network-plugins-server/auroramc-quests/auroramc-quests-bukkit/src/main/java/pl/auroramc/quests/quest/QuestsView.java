@@ -94,7 +94,7 @@ public class QuestsView {
 
   private ChestGui getQuestsGui(final HumanEntity viewer) {
     final ChestGui questsGui = new ChestGui(
-        6, ComponentHolder.of(messageSource.titleOfQuestsView.into()), plugin
+        6, ComponentHolder.of(messageSource.titleOfQuestsView.compile()), plugin
     );
     questsGui.setOnTopClick(this::requestClickCancelling);
     final PaginatedPane questsPane = getQuestsPane(viewer);
@@ -200,9 +200,11 @@ public class QuestsView {
           final Quest observedQuest = questIndex.resolveQuest(questObserver.getQuestId());
           eventPublisher.publish(new QuestObservedEvent(viewer, previousQuest, observedQuest));
 
-          viewer.sendMessage(messageSource.observingQuest
-              .with("quest", miniMessage().serialize(quest.getIcon().displayName()))
-              .into());
+          viewer.sendMessage(
+              messageSource.observingQuest
+                  .with("quest", miniMessage().serialize(quest.getIcon().displayName()))
+                  .compile()
+          );
         })
         .thenAccept(state -> postToMainThread(plugin, () -> render(viewer)))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
@@ -214,20 +216,31 @@ public class QuestsView {
     return questTrack
         .map(track ->
             switch (track.getQuestState()) {
-              case COMPLETED -> List.of(messageSource.questIsCompleted.into());
+              case COMPLETED -> List.of(
+                  messageSource.questIsCompleted.compile()
+              );
               case IN_PROGRESS ->
                   stream(
                       mergeLists(
                           stream(
                               mergeLists(
-                                  List.of(getQuestObjectives(quest, viewerUniqueId)),
-                                  List.of(messageSource.questRequiresCompletionOfAllObjectives.into()),
-                                  Component[]::new)
+                                  List.of(
+                                      getQuestObjectives(quest, viewerUniqueId)
+                                  ),
+                                  List.of(
+                                      messageSource.questRequiresCompletionOfAllObjectives.compile()
+                                  ),
+                                  Component[]::new
+                              )
                           ).toList(),
-                          List.of(empty(), messageSource.questCouldBeTracked.into()), Component[]::new)
+                          List.of(
+                              empty(), messageSource.questCouldBeTracked.compile()
+                          ),
+                          Component[]::new
+                      )
                   ).toList();
             })
-        .orElse(List.of(messageSource.questCouldBeStarted.into()))
+        .orElse(List.of(messageSource.questCouldBeStarted.compile()))
         .stream()
         .map(line -> line.decoration(ITALIC, FALSE))
         .toList();
@@ -249,7 +262,7 @@ public class QuestsView {
             );
 
     return mergeLists(
-        List.of(messageSource.questObjectivesHeader.into()),
+        List.of(messageSource.questObjectivesHeader.compile()),
         quest.getObjectives().stream()
             .map(objective -> getQuestObjective(objective, objectiveToObjectiveProgress.get(objective)))
             .flatMap(List::stream)
@@ -263,10 +276,10 @@ public class QuestsView {
     navigationPane.addItem(
         new GuiItem(
             ItemStackBuilder.newBuilder(PAPER)
-                .displayName(messageSource.nameOfPrevPageNavigationButton.into()
+                .displayName(messageSource.nameOfPrevPageNavigationButton.compile()
                     .decoration(ITALIC, FALSE)
                 )
-                .lore(messageSource.loreOfPrevPageNavigationButton.into()
+                .lore(messageSource.loreOfPrevPageNavigationButton.compile()
                     .decoration(ITALIC, FALSE)
                 )
                 .build(),
@@ -277,10 +290,10 @@ public class QuestsView {
     navigationPane.addItem(
         new GuiItem(
             ItemStackBuilder.newBuilder(PAPER)
-                .displayName(messageSource.nameOfNextPageNavigationButton.into()
+                .displayName(messageSource.nameOfNextPageNavigationButton.compile()
                     .decoration(ITALIC, FALSE)
                 )
-                .lore(messageSource.loreOfNextPageNavigationButton.into()
+                .lore(messageSource.loreOfNextPageNavigationButton.compile()
                     .decoration(ITALIC, FALSE)
                 )
                 .build(),

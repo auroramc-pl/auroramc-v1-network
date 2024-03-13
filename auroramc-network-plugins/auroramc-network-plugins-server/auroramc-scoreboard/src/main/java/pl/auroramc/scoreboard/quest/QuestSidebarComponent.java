@@ -81,13 +81,13 @@ public class QuestSidebarComponent implements SidebarComponentKyori<Quest> {
         messageSource.quest.observedQuest,
         messageSource.quest.observedQuestName.with("quest", quest.getKey().getName())
     )
-        .map(MutableMessage::into)
+        .map(MutableMessage::compile)
         .toList();
   }
 
   private List<Component> renderQuestObjectiveHeader() {
     return List.of(
-        empty(), messageSource.quest.remainingQuestObjectives.into()
+        empty(), messageSource.quest.remainingQuestObjectives.compile()
     );
   }
 

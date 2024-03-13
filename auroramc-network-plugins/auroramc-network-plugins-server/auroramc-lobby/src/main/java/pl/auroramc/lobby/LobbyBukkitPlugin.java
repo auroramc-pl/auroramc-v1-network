@@ -20,8 +20,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.auroramc.commons.config.ConfigFactory;
 import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
+import pl.auroramc.commons.integration.litecommands.v3.MutableMessageResultHandler;
 import pl.auroramc.commons.message.MutableMessage;
-import pl.auroramc.lobby.message.MessageResultHandler;
 import pl.auroramc.lobby.message.MessageSource;
 import pl.auroramc.lobby.spawn.SpawnCommand;
 
@@ -59,7 +59,7 @@ public class LobbyBukkitPlugin extends JavaPlugin {
         .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
         .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
         .commands(LiteCommandsAnnotations.of(new SpawnCommand(lobbyConfig, messageSource)))
-        .result(MutableMessage.class, new MessageResultHandler<>())
+        .result(MutableMessage.class, new MutableMessageResultHandler<>())
         .build();
   }
 

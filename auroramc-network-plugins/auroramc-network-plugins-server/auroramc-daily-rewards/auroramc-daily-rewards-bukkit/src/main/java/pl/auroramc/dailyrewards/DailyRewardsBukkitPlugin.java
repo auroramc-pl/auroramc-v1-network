@@ -3,8 +3,6 @@ package pl.auroramc.dailyrewards;
 import static java.lang.String.join;
 import static java.time.Duration.ofSeconds;
 import static moe.rafal.juliet.datasource.HikariPooledDataSourceFactory.produceHikariDataSource;
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
-import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.parsed;
 import static pl.auroramc.commons.BukkitUtils.getTicksOf;
 import static pl.auroramc.commons.BukkitUtils.registerListeners;
 import static pl.auroramc.commons.BukkitUtils.resolveService;
@@ -29,7 +27,6 @@ import java.util.Locale;
 import java.util.logging.Logger;
 import moe.rafal.juliet.Juliet;
 import moe.rafal.juliet.JulietBuilder;
-import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -39,6 +36,8 @@ import pl.auroramc.commons.config.serdes.juliet.JulietConfig;
 import pl.auroramc.commons.config.serdes.juliet.SerdesJuliet;
 import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
 import pl.auroramc.commons.duration.DurationFormatter;
+import pl.auroramc.commons.integration.litecommands.v2.MutableMessageResultHandler;
+import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.dailyrewards.message.MessageSource;
 import pl.auroramc.dailyrewards.visit.VisitCommand;
 import pl.auroramc.dailyrewards.visit.VisitController;
@@ -87,6 +86,7 @@ public class DailyRewardsBukkitPlugin extends JavaPlugin {
     final UserFacade userFacade = resolveService(getServer(), UserFacade.class);
     final VisitFacade visitFacade = getVisitFacade(logger, juliet);
     final VisitController visitController = new VisitController();
+
     registerListeners(this,
         new VisitListener(logger, userFacade, visitFacade, visitController, dailyRewardsConfig),
         new NametagListener(nametagFacade)
@@ -105,17 +105,27 @@ public class DailyRewardsBukkitPlugin extends JavaPlugin {
     );
 
     commands = LitePaperAdventureFactory.builder(getServer(), getName())
-        .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(
-            miniMessage().deserialize("<red>Nie możesz użyć tej komendy z poziomu konsoli!")))
-        .commandInstance(new VisitCommand(messageSource, userFacade, visitFacade, durationFormatter))
-        .argument(Player.class, new BukkitPlayerArgument<>(getServer(),
-            miniMessage().deserialize("<red>Gracz o wskazanej przez ciebie nazwie jest Offline.")))
-        .redirectResult(RequiredPermissions.class, Component.class, permissions ->
-            miniMessage().deserialize(
-                "<red>Nie posiadasz wystarczających uprawnień aby użyć tej komendy."))
-        .redirectResult(Schematic.class, Component.class, schematic ->
-            miniMessage().deserialize("<red>Poprawne użycie: <yellow><newline><schematics>",
-                parsed("schematics", join("<newline>", schematic.getSchematics()))))
+        .contextualBind(Player.class,
+            new BukkitOnlyPlayerContextual<>(
+                messageSource.executionFromConsoleIsUnsupported
+            )
+        )
+        .commandInstance(
+            new VisitCommand(messageSource, userFacade, visitFacade, durationFormatter)
+        )
+        .argument(Player.class,
+            new BukkitPlayerArgument<>(
+                getServer(), messageSource.specifiedPlayerIsUnknown
+            )
+        )
+        .redirectResult(RequiredPermissions.class, MutableMessage.class,
+            context -> messageSource.executionOfCommandIsNotPermitted
+        )
+        .redirectResult(Schematic.class, MutableMessage.class,
+            context -> messageSource.availableSchematicsSuggestion
+                .with("schematics", join("<newline>", context.getSchematics()))
+        )
+        .resultHandler(MutableMessage.class, new MutableMessageResultHandler())
         .register();
   }
 

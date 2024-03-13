@@ -23,13 +23,13 @@ import moe.rafal.juliet.JulietBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.auroramc.cheque.message.MessageResultHandler;
 import pl.auroramc.cheque.message.MessageSource;
 import pl.auroramc.cheque.payment.PaymentFacade;
 import pl.auroramc.commons.config.ConfigFactory;
 import pl.auroramc.commons.config.serdes.juliet.JulietConfig;
 import pl.auroramc.commons.config.serdes.juliet.SerdesJuliet;
 import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
+import pl.auroramc.commons.integration.litecommands.v2.MutableMessageResultHandler;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
@@ -100,7 +100,7 @@ public class ChequeBukkitPlugin extends JavaPlugin {
             context -> messageSource.availableSchematicsSuggestion
                 .with("schematics", join("<newline>", context.getSchematics()))
         )
-        .resultHandler(MutableMessage.class, new MessageResultHandler())
+        .resultHandler(MutableMessage.class, new MutableMessageResultHandler())
         .register();
   }
 

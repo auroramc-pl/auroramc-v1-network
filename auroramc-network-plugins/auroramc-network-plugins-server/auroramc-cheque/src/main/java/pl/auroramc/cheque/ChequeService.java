@@ -85,13 +85,13 @@ class ChequeService implements ChequeFacade {
             messageSource.titleOfCheque
                 .with("symbol", fundsCurrency.getSymbol())
                 .with("amount", getFormattedDecimal(chequeContext.amount()))
-                .into()
+                .compile()
                 .decoration(ITALIC, FALSE)
         )
         .lore(
             messageSource.linesOfCheque
                 .with("issuer", chequeContext.issuer().username())
-                .into()
+                .compile()
                 .decoration(ITALIC, FALSE)
         )
         .build();

@@ -1,7 +1,5 @@
 package pl.auroramc.dailyrewards.nametag;
 
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
-import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.unparsed;
 import static org.bukkit.Bukkit.getOnlinePlayers;
 
 import java.time.Duration;
@@ -41,10 +39,9 @@ public class NametagUpdateScheduler implements Runnable {
   private void updateNameTag(final Player player) {
     final Duration visitPeriod = visitController.getVisitPeriod(player.getUniqueId());
     nametagFacade.belowName(player,
-        miniMessage().deserialize(
-            messageSource.belowName,
-            unparsed("visit_period", durationFormatter.getFormattedDuration(visitPeriod))
-        )
+        messageSource.belowName
+            .with("visit_period", durationFormatter.getFormattedDuration(visitPeriod))
+            .compile()
     );
   }
 }

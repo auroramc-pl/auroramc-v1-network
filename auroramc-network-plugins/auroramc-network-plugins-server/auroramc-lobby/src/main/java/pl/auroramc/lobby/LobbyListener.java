@@ -21,6 +21,6 @@ class LobbyListener implements Listener {
     final Player player = event.getPlayer();
     player
         .teleportAsync(lobbyConfig.spawn)
-        .thenAccept(state -> player.sendMessage(messageSource.lobbyClarification.into()));
+        .thenAccept(state -> player.sendMessage(messageSource.lobbyClarification.compile()));
   }
 }

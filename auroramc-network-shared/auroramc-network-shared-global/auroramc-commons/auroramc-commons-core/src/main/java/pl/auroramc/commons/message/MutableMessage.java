@@ -8,14 +8,16 @@ import pl.auroramc.commons.lazy.Lazy;
 
 public class MutableMessage {
 
-  public static final MutableMessage EMPTY_TRANSLATION_TEMPLATE = of("");
+  private static final MutableMessage EMPTY_TRANSLATION_TEMPLATE = of("");
   private static final char PLACEHOLDER_KEY_INITIATOR = '{';
   private static final char PLACEHOLDER_KEY_TERMINATOR = '}';
+  private static final String LINE_SEPARATOR = "<newline>";
   private final String template;
-  private final Lazy<Component> compiledTemplate = lazy(this::compile);
+  private final Lazy<Component> templateCompiled;
 
   private MutableMessage(final String template) {
     this.template = template;
+    this.templateCompiled = lazy(() -> miniMessage().deserialize(template));
   }
 
   public static MutableMessage of(final String template) {
@@ -26,27 +28,37 @@ public class MutableMessage {
     return EMPTY_TRANSLATION_TEMPLATE;
   }
 
-  public MutableMessage with(final String rawKey, final Object value) {
-    return new MutableMessage(template.replace(getKeyWithMarkers(rawKey), String.valueOf(value)));
+  public static MutableMessageCollector collector() {
+    return new MutableMessageCollector();
   }
 
-  public MutableMessage with(final String rawKey, final Component value) {
-    return with(rawKey, miniMessage().serialize(value));
+  public MutableMessage with(final String key, final Object value) {
+    return new MutableMessage(template.replace(getKeyWithMarkers(key), String.valueOf(value)));
   }
 
-  public Component into() {
-    return compiledTemplate.get();
+  public MutableMessage with(final String key, final Component value) {
+    return with(key, miniMessage().serialize(value));
   }
 
-  private Component compile() {
-    return miniMessage().deserialize(template);
+  public MutableMessage append(final MutableMessage message) {
+    return of(template + message.getTemplate());
   }
 
-  private String getKeyWithMarkers(final String rawKey) {
-    return PLACEHOLDER_KEY_INITIATOR + rawKey + PLACEHOLDER_KEY_TERMINATOR;
+  public MutableMessage appendSeparated(final MutableMessage message) {
+    return of(
+        template + LINE_SEPARATOR + message.getTemplate()
+    );
+  }
+
+  public Component compile() {
+    return templateCompiled.get();
   }
 
   public String getTemplate() {
     return template;
+  }
+
+  private String getKeyWithMarkers(final String rawKey) {
+    return PLACEHOLDER_KEY_INITIATOR + rawKey + PLACEHOLDER_KEY_TERMINATOR;
   }
 }
