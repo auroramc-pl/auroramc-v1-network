@@ -39,7 +39,7 @@ public class MutableMessageCollector implements
     return messages -> messages.stream()
         .reduce(
             MutableMessage.empty(),
-            MutableMessage::appendSeparated
+            MutableMessage::append
         );
   }
 

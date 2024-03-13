@@ -32,6 +32,10 @@ public class MutableMessage {
     return new MutableMessageCollector();
   }
 
+  public boolean isEmpty() {
+    return template.isEmpty();
+  }
+
   public MutableMessage with(final String key, final Object value) {
     return new MutableMessage(template.replace(getKeyWithMarkers(key), String.valueOf(value)));
   }
@@ -40,14 +44,16 @@ public class MutableMessage {
     return with(key, miniMessage().serialize(value));
   }
 
-  public MutableMessage append(final MutableMessage message) {
-    return of(template + message.getTemplate());
+  public MutableMessage append(final MutableMessage message, final String delimiter) {
+    if (isEmpty()) {
+      return message;
+    }
+
+    return of(template + delimiter + message.getTemplate());
   }
 
-  public MutableMessage appendSeparated(final MutableMessage message) {
-    return of(
-        template + LINE_SEPARATOR + message.getTemplate()
-    );
+  public MutableMessage append(final MutableMessage message) {
+    return append(message, LINE_SEPARATOR);
   }
 
   public Component compile() {
