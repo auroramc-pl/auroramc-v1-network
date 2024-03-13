@@ -1,0 +1,9 @@
+main: pl.auroramc.dailyrewards.DailyRewardsBukkitPlugin
+name: auroramc-daily-rewards
+version: ${project.version}
+authors: [ shitzuu <hello@rafal.moe> ]
+api-version: "1.20"
+depend:
+  - auroramc-registry
+libraries:
+  - com.github.ben-manes.caffeine:caffeine:3.1.8

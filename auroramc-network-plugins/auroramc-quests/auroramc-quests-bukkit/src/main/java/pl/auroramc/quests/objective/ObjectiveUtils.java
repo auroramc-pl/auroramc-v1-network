@@ -1,0 +1,74 @@
+package pl.auroramc.quests.objective;
+
+import static java.util.Arrays.stream;
+import static java.util.Locale.ROOT;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toMap;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import net.kyori.adventure.text.Component;
+import org.apache.commons.lang3.StringUtils;
+import pl.auroramc.commons.message.MutableMessage;
+import pl.auroramc.quests.objective.progress.ObjectiveProgress;
+import pl.auroramc.quests.objective.requirement.HeldItemRequirement;
+import pl.auroramc.quests.objective.requirement.ObjectiveRequirement;
+import pl.auroramc.quests.quest.Quest;
+
+public final class ObjectiveUtils {
+
+  private static final String EMPTY_ARGUMENT = "";
+
+  private ObjectiveUtils() {
+
+  }
+
+  static <T extends Objective<?>> Map<Quest, List<T>> aggregateObjectives(
+      final List<Quest> bunchOfQuests, final Class<T> objectiveType
+  ) {
+    return bunchOfQuests.stream()
+        .collect(toMap(quest -> quest, quest -> quest.getObjectives(objectiveType)));
+  }
+
+  public static List<Component> getQuestObjective(
+      final Objective<?> objective,
+      final ObjectiveProgress objectiveProgress
+  ) {
+    final List<Component> aggregator = new ArrayList<>();
+
+    aggregator.add(getQuestObjective0(objective, objectiveProgress).into());
+    for (final ObjectiveRequirement requirement : objective.getRequirements()) {
+      aggregator.add(getObjectiveRequirement(requirement).into());
+    }
+
+    return aggregator;
+  }
+
+  private static MutableMessage getQuestObjective0(
+      final Objective<?> objective,
+      final ObjectiveProgress objectiveProgress
+  ) {
+    return objective.getMessage()
+        .with("type", getFormattedNameOfMaterial(objective.getType()))
+        .with("data", objectiveProgress.getData())
+        .with("goal", objectiveProgress.getGoal());
+  }
+
+  private static MutableMessage getObjectiveRequirement(
+      final ObjectiveRequirement requirement
+  ) {
+    return requirement.getMessage()
+        .with("item",
+            requirement instanceof HeldItemRequirement heldItemRequirement
+                ? getFormattedNameOfMaterial(heldItemRequirement.getRequiredMaterial())
+                : EMPTY_ARGUMENT
+        );
+  }
+
+  private static String getFormattedNameOfMaterial(final Object material) {
+    return stream(material.toString().toLowerCase(ROOT).split("_"))
+        .map(StringUtils::capitalize)
+        .collect(joining(" "));
+  }
+}

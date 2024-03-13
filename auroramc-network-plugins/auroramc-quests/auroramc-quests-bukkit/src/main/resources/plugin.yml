@@ -1,0 +1,14 @@
+main: pl.auroramc.quests.QuestsBukkitPlugin
+name: auroramc-quests
+version: ${project.parent.version}
+authors: [ shitzuu <hello@rafal.moe> ]
+api-version: 1.20
+softdepend:
+  - auroramc-registry
+depend:
+  - PlaceholderAPI
+libraries:
+  - org.apache.groovy:groovy-jsr223:5.0.0-alpha-2
+  - io.github.classgraph:classgraph:4.8.163
+  - com.github.stefvanschie.inventoryframework:IF:0.10.13
+  - com.github.ben-manes.caffeine:caffeine:3.1.8
