@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>pl.auroramc</groupId>
+    <artifactId>auroramc-network-plugins</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>auroramc-network-plugins-server</artifactId>
+  <packaging>pom</packaging>
+  <modules>
+    <module>auroramc-bazaars</module>
+    <module>auroramc-cheque</module>
+    <module>auroramc-daily-rewards</module>
+    <module>auroramc-economy</module>
+    <module>auroramc-essentials</module>
+    <module>auroramc-hoppers</module>
+    <module>auroramc-lobby</module>
+    <module>auroramc-quests</module>
+    <module>auroramc-registry</module>
+    <module>auroramc-scoreboard</module>
+  </modules>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <repositories>
+    <repository>
+      <id>jeff-media-repo</id>
+      <url>https://hub.jeff-media.com/nexus/repository/jeff-media-public/</url>
+    </repository>
+    <repository>
+      <id>placeholderapi-repo</id>
+      <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+    </repository>
+  </repositories>
+
+</project>

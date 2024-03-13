@@ -5,15 +5,15 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>pl.auroramc</groupId>
-    <artifactId>auroramc-network</artifactId>
+    <artifactId>auroramc-network-plugins-server</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>auroramc-network-shared</artifactId>
+  <artifactId>auroramc-daily-rewards</artifactId>
   <packaging>pom</packaging>
   <modules>
-    <module>auroramc-network-shared-global</module>
-    <module>auroramc-network-shared-server</module>
+    <module>auroramc-daily-rewards-shared</module>
+    <module>auroramc-daily-rewards-bukkit</module>
   </modules>
 
   <properties>

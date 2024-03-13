@@ -21,10 +21,58 @@
     <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-economy/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-essentials/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-essentials/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-hoppers/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-hoppers/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-lobby/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-lobby/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-gamble/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-gamble/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-punishments/auroramc-punishments-shared/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-punishments/auroramc-punishments-shared/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-punishments/auroramc-punishments-velocity/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-punishments/auroramc-punishments-velocity/src/main/java-templates" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-punishments/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-punishments/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-bazaars/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-bazaars/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-cheque/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-cheque/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-daily-rewards/auroramc-daily-rewards-bukkit/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-daily-rewards/auroramc-daily-rewards-bukkit/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-daily-rewards/auroramc-daily-rewards-shared/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-daily-rewards/auroramc-daily-rewards-shared/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-daily-rewards/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-daily-rewards/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-economy/auroramc-economy-bukkit/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-economy/auroramc-economy-bukkit/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-economy/auroramc-economy-shared/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-economy/auroramc-economy-shared/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-economy/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-economy/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-essentials/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-essentials/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-hoppers/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-hoppers/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-lobby/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-lobby/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-quests/auroramc-quests-bukkit/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-quests/auroramc-quests-bukkit/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-quests/auroramc-quests-shared/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-quests/auroramc-quests-shared/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-quests/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-quests/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-registry/auroramc-registry-bukkit/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-registry/auroramc-registry-bukkit/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-registry/auroramc-registry-shared/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-registry/auroramc-registry-shared/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-registry/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-registry/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-scoreboard/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-scoreboard/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-platform-bukkit/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-platform-bukkit/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-platform-velocity/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-platform-velocity/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-punishments/auroramc-punishments-shared/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-punishments/auroramc-punishments-shared/src/main/java-templates" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-punishments/auroramc-punishments-shared/src/main/resources" charset="UTF-8" />
@@ -61,6 +109,22 @@
     <file url="file://$PROJECT_DIR$/auroramc-network-shared/auroramc-commons/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/auroramc-network-shared/auroramc-nametag/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/auroramc-network-shared/auroramc-nametag/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-shared/auroramc-network-shared-global/auroramc-commons/auroramc-commons-bukkit/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-shared/auroramc-network-shared-global/auroramc-commons/auroramc-commons-bukkit/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-shared/auroramc-network-shared-global/auroramc-commons/auroramc-commons-config/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-shared/auroramc-network-shared-global/auroramc-commons/auroramc-commons-config/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-shared/auroramc-network-shared-global/auroramc-commons/auroramc-commons-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-shared/auroramc-network-shared-global/auroramc-commons/auroramc-commons-core/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-shared/auroramc-network-shared-global/auroramc-commons/auroramc-commons-velocity/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-shared/auroramc-network-shared-global/auroramc-commons/auroramc-commons-velocity/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-shared/auroramc-network-shared-global/auroramc-commons/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-shared/auroramc-network-shared-global/auroramc-commons/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-shared/auroramc-network-shared-global/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-shared/auroramc-network-shared-global/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-shared/auroramc-network-shared-server/auroramc-nametags/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-shared/auroramc-network-shared-server/auroramc-nametags/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-shared/auroramc-network-shared-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-shared/auroramc-network-shared-server/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/auroramc-network-shared/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/auroramc-network-shared/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />

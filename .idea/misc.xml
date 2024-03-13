@@ -8,6 +8,24 @@
         <option value="$PROJECT_DIR$/auroramc-network-shared/auroramc-nametags/pom.xml" />
       </list>
     </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-bazaars/pom.xml" />
+        <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-cheque/pom.xml" />
+        <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-daily-rewards/pom.xml" />
+        <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-economy/pom.xml" />
+        <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-essentials/pom.xml" />
+        <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-gamble/pom.xml" />
+        <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-hoppers/pom.xml" />
+        <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-lobby/pom.xml" />
+        <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-punishments/pom.xml" />
+        <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-quests/pom.xml" />
+        <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-registry/pom.xml" />
+        <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-scoreboard/pom.xml" />
+        <option value="$PROJECT_DIR$/auroramc-network-shared/auroramc-commons/pom.xml" />
+        <option value="$PROJECT_DIR$/auroramc-network-shared/auroramc-nametag/pom.xml" />
+      </set>
+    </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="liberica-17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
