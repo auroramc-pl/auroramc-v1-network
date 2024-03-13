@@ -2,7 +2,7 @@ main: pl.auroramc.dailyrewards.DailyRewardsBukkitPlugin
 name: auroramc-daily-rewards
 version: ${project.version}
 authors: [ shitzuu <hello@rafal.moe> ]
-api-version: "1.20"
+api-version: 1.20
 depend:
   - auroramc-registry
 libraries:

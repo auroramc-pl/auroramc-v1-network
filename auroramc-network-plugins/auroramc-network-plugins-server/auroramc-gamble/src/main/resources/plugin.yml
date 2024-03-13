@@ -1,0 +1,7 @@
+main: pl.auroramc.gamble.GambleBukkitPlugin
+name: auroramc-gamble
+version: ${project.version}
+authors: [ shitzuu <hello@rafal.moe> ]
+api-version: 1.20
+depend:
+  - auroramc-economy
