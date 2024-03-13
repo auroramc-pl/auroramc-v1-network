@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<xs:schema
+  targetNamespace="https://gist.githubusercontent.com/rchomczyk/31fff815e757f9dff61bb9f2c99d38aa/raw/bc23d70320361356a2b93a5f1691d58cc7d7f9ee/if.xsd"
+  elementFormDefault="qualified"
+  xmlns="https://gist.githubusercontent.com/rchomczyk/31fff815e757f9dff61bb9f2c99d38aa/raw/bc23d70320361356a2b93a5f1691d58cc7d7f9ee/if.xsd"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="slot">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="53"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="rows">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="6"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="range">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="1"/>
+      <xs:maxInclusive value="9"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="propertyType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="byte"/>
+      <xs:enumeration value="short"/>
+      <xs:enumeration value="integer"/>
+      <xs:enumeration value="long"/>
+      <xs:enumeration value="float"/>
+      <xs:enumeration value="double"/>
+      <xs:enumeration value="character"/>
+      <xs:enumeration value="boolean"/>
+      <xs:enumeration value="string"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="property">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="type" type="propertyType" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="properties">
+    <xs:sequence>
+      <xs:element name="property" type="property" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="lore">
+    <xs:sequence>
+      <xs:element name="line" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="enchantments">
+    <xs:sequence>
+      <xs:element name="enchantment" type="enchantment" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="enchantment">
+    <xs:attribute name="id" type="xs:string" use="required"/>
+    <xs:attribute name="level" type="xs:integer" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="item">
+    <xs:sequence>
+      <xs:element name="displayname" type="xs:string" minOccurs="0"/>
+      <xs:element name="lore" type="lore" minOccurs="0"/>
+      <xs:element name="enchantments" type="enchantments" minOccurs="0"/>
+      <xs:element name="modeldata" type="xs:integer" minOccurs="0"/>
+      <xs:element name="properties" type="properties" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string" use="required"/>
+    <xs:attribute name="amount" type="xs:integer"/>
+    <xs:attribute name="damage" type="xs:integer"/>
+    <xs:attribute name="field" type="xs:string"/>
+    <xs:attribute name="populate" type="xs:string"/>
+    <xs:attribute name="onClick" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="binding">
+    <xs:sequence>
+      <xs:element name="item" type="item"/>
+    </xs:sequence>
+    <xs:attribute name="char" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="pattern">
+    <xs:sequence>
+      <xs:element name="row" type="xs:string" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="pane">
+    <xs:attribute name="x" type="slot" use="required"/>
+    <xs:attribute name="y" type="slot" use="required"/>
+    <xs:attribute name="height" type="range" use="required"/>
+    <xs:attribute name="length" type="range" use="required"/>
+    <xs:attribute name="priority" type="xs:string" default="NORMAL"/>
+    <xs:attribute name="visible" type="xs:boolean" default="true"/>
+    <xs:attribute name="field" type="xs:string"/>
+    <xs:attribute name="populate" type="xs:string"/>
+    <xs:attribute name="onClick" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="page">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="staticpane" type="staticpane"/>
+        <xs:element name="patternpane" type="patternpane"/>
+        <xs:element name="outlinepane" type="outlinepane"/>
+        <xs:element name="paginatedpane" type="paginatedpane"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="staticitem">
+    <xs:complexContent>
+      <xs:extension base="item">
+        <xs:attribute name="x" type="slot" use="required"/>
+        <xs:attribute name="y" type="slot" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="staticpane">
+    <xs:complexContent>
+      <xs:extension base="pane">
+        <xs:sequence>
+          <xs:element name="item" type="staticitem" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="rotation" type="xs:integer"/>
+        <xs:attribute name="flipHorizontally" type="xs:boolean"/>
+        <xs:attribute name="flipVertically" type="xs:boolean"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="patternpane">
+    <xs:complexContent>
+      <xs:extension base="pane">
+        <xs:sequence>
+          <xs:element name="pattern" type="pattern"/>
+          <xs:element name="binding" type="binding" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="outlinepane">
+    <xs:complexContent>
+      <xs:extension base="pane">
+        <xs:sequence>
+          <xs:element name="item" type="item" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="repeat" type="xs:boolean" default="false"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="paginatedpane">
+    <xs:complexContent>
+      <xs:extension base="pane">
+        <xs:sequence>
+          <xs:element name="page" type="page" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="chestgui">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="staticpane" type="staticpane"/>
+        <xs:element name="patternpane" type="patternpane"/>
+        <xs:element name="outlinepane" type="outlinepane"/>
+        <xs:element name="paginatedpane" type="paginatedpane"/>
+      </xs:choice>
+      <xs:attribute name="title" type="xs:string" use="required"/>
+      <xs:attribute name="rows" type="rows" use="required"/>
+      <xs:attribute name="field" type="xs:string"/>
+      <xs:attribute name="onGlobalClick" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>
