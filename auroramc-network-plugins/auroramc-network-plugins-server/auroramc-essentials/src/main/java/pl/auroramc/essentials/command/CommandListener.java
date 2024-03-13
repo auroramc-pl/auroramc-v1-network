@@ -68,7 +68,7 @@ public class CommandListener implements Listener {
   }
 
   @EventHandler(priority = HIGHEST, ignoreCancelled = true)
-  void onUnknownCommandUse(final UnknownCommandEvent event) {
+  public void onUnknownCommandUse(final UnknownCommandEvent event) {
     final String input = event.getCommandLine();
 
     final String performedCommand = resolveCommand("/%s".formatted(input));
@@ -131,7 +131,7 @@ public class CommandListener implements Listener {
   }
 
   @EventHandler(priority = HIGHEST, ignoreCancelled = true)
-  void onPluginSummaryRequest(final PlayerCommandPreprocessEvent event) {
+  public void onPluginSummaryRequest(final PlayerCommandPreprocessEvent event) {
     if (whetherIsPluginSummaryRequest(event.getMessage())) {
       event.setCancelled(true);
       event.getPlayer().sendMessage(overviewOfPluginSummaries.get());

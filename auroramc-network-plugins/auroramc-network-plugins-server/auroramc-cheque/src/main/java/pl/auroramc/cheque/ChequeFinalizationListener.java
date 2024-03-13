@@ -28,7 +28,7 @@ class ChequeFinalizationListener implements Listener {
   }
 
   @EventHandler
-  public void onChequeFinalize(final PlayerInteractEvent event) {
+  public void onChequeFinalization(final PlayerInteractEvent event) {
     if (event.getHand() == OFF_HAND) {
       return;
     }
