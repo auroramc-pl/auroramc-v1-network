@@ -9,6 +9,7 @@ import static java.nio.file.Files.exists;
 import static java.util.Locale.ROOT;
 import static moe.rafal.juliet.datasource.HikariPooledDataSourceFactory.produceHikariDataSource;
 import static pl.auroramc.commons.BukkitUtils.registerListeners;
+import static pl.auroramc.commons.BukkitUtils.registerServices;
 import static pl.auroramc.commons.BukkitUtils.resolveService;
 import static pl.auroramc.commons.config.serdes.juliet.JulietConfig.JULIET_CONFIG_FILE_NAME;
 import static pl.auroramc.quests.integration.placeholderapi.PlaceholderApiIntegrationFactory.producePlaceholderApiIntegration;
@@ -34,8 +35,6 @@ import java.util.logging.Logger;
 import moe.rafal.juliet.Juliet;
 import moe.rafal.juliet.JulietBuilder;
 import org.bukkit.command.CommandSender;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.auroramc.commons.config.serdes.juliet.JulietConfig;
 import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
@@ -124,8 +123,11 @@ public class QuestsBukkitPlugin extends JavaPlugin {
 
     if (questIndex.resolveQuests().stream()
         .anyMatch(quest -> quest.getObjectives().stream()
-        .anyMatch(DistanceObjective.class::isInstance))) {
-      registerEvents(new DistanceObjectiveHandler(questController, objectiveProgressController));
+        .anyMatch(DistanceObjective.class::isInstance))
+    ) {
+      registerListeners(
+          this, new DistanceObjectiveHandler(questController, objectiveProgressController)
+      );
     }
 
     final ExternalIntegration placeholderApiIntegration = producePlaceholderApiIntegration(
@@ -139,8 +141,18 @@ public class QuestsBukkitPlugin extends JavaPlugin {
     );
     externalIntegrator.configure(getServer());
 
-
-    registerServicesOf(Set.of(userFacade, questIndex, questFacade, questObserverFacade, questTrackFacade, objectiveProgressFacade, objectiveProgressController));
+    registerServices(
+        this,
+        Set.of(
+            userFacade,
+            questIndex,
+            questFacade,
+            questObserverFacade,
+            questTrackFacade,
+            objectiveProgressFacade,
+            objectiveProgressController
+        )
+    );
 
     commands = LiteBukkitFactory.builder(getName(), this)
         .extension(new LiteAdventureExtension<>(),
@@ -180,28 +192,6 @@ public class QuestsBukkitPlugin extends JavaPlugin {
           exception
       );
     }
-  }
-
-  private void registerEvents(final Listener... listeners) {
-    for (final Listener listener : listeners) {
-      getServer().getPluginManager().registerEvents(listener, this);
-    }
-  }
-
-
-  private void registerServicesOf(final Set<?> services) {
-    services.forEach(this::registerService);
-  }
-
-  private <T> void registerService(final T service) {
-    getServer().getServicesManager().register(getFacadeType(service), service, this, ServicePriority.Normal);
-  }
-
-  @SuppressWarnings("unchecked")
-  private <T> Class<T> getFacadeType(final T service) {
-    return service.getClass().getInterfaces().length == 0
-        ? (Class<T>) service.getClass()
-        : (Class<T>) service.getClass().getInterfaces()[0];
   }
 
   private void initTranslationForObjectivesFromQuests(

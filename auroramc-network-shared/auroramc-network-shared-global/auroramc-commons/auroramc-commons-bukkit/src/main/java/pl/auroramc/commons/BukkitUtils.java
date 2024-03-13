@@ -63,6 +63,8 @@ public final class BukkitUtils {
 
   @SuppressWarnings("unchecked")
   private static <T> Class<T> getFacadeType(final T service) {
-    return (Class<T>) service.getClass().getInterfaces()[0];
+    return service.getClass().getInterfaces().length == 0
+        ? (Class<T>) service.getClass()
+        : (Class<T>) service.getClass().getInterfaces()[0];
   }
 }

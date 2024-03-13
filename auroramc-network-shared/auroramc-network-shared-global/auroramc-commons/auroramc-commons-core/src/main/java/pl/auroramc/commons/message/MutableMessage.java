@@ -2,6 +2,7 @@ package pl.auroramc.commons.message;
 
 import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static pl.auroramc.commons.lazy.Lazy.lazy;
+import static pl.auroramc.commons.message.MutableMessageVariableResolver.getResolvedMessageVariable;
 
 import net.kyori.adventure.text.Component;
 import pl.auroramc.commons.lazy.Lazy;
@@ -37,7 +38,12 @@ public class MutableMessage {
   }
 
   public MutableMessage with(final String key, final Object value) {
-    return new MutableMessage(template.replace(getKeyWithMarkers(key), String.valueOf(value)));
+    return new MutableMessage(
+        template.replace(
+            getKeyWithMarkers(key),
+            getResolvedMessageVariable(value)
+        )
+    );
   }
 
   public MutableMessage with(final String key, final Component value) {
