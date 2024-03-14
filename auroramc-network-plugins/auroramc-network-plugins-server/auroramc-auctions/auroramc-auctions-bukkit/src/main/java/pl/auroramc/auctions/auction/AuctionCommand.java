@@ -3,10 +3,9 @@ package pl.auroramc.auctions.auction;
 import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_DOWN;
 import static java.util.concurrent.CompletableFuture.completedFuture;
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
-import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.unparsed;
-import static pl.auroramc.auctions.auction.AuctionUtils.getAuctionSummaryResolvers;
+import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
+import static pl.auroramc.commons.item.ItemStackFormatter.getFormattedItemStack;
 
 import dev.rollczi.litecommands.argument.Arg;
 import dev.rollczi.litecommands.argument.option.Opt;
@@ -14,16 +13,22 @@ import dev.rollczi.litecommands.command.execute.Execute;
 import dev.rollczi.litecommands.command.permission.Permission;
 import dev.rollczi.litecommands.command.route.Route;
 import java.math.BigDecimal;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Logger;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import panda.std.Option;
 import pl.auroramc.auctions.auction.event.AuctionBidEvent;
+import pl.auroramc.auctions.message.MessageSource;
 import pl.auroramc.auctions.message.viewer.MessageViewer;
 import pl.auroramc.auctions.message.viewer.MessageViewerFacade;
 import pl.auroramc.commons.event.publisher.BukkitEventPublisher;
+import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
 
@@ -31,20 +36,26 @@ import pl.auroramc.economy.currency.Currency;
 @Route(name = "auction")
 public class AuctionCommand {
 
+  private final Logger logger;
   private final MessageViewerFacade messageViewerFacade;
+  private final MessageSource messageSource;
   private final EconomyFacade economyFacade;
   private final Currency fundsCurrency;
   private final AuctionController auctionController;
   private final BukkitEventPublisher eventPublisher;
 
   public AuctionCommand(
+      final Logger logger,
       final MessageViewerFacade messageViewerFacade,
+      final MessageSource messageSource,
       final EconomyFacade economyFacade,
       final Currency fundsCurrency,
       final AuctionController auctionController,
       final BukkitEventPublisher eventPublisher
   ) {
+    this.logger = logger;
     this.messageViewerFacade = messageViewerFacade;
+    this.messageSource = messageSource;
     this.economyFacade = economyFacade;
     this.fundsCurrency = fundsCurrency;
     this.auctionController = auctionController;
@@ -53,54 +64,42 @@ public class AuctionCommand {
 
   @Permission("auroramc.auctions.auction.schedule")
   @Execute(route = "schedule", aliases = "sell")
-  public Component scheduleAuction(
+  public MutableMessage scheduleAuction(
       final Player player,
       final @Arg BigDecimal minimalPrice,
       final @Arg BigDecimal minimalPricePuncture,
       final @Opt Option<Integer> stock
   ) {
     if (!auctionController.whetherAuctionCouldBeScheduled()) {
-      return miniMessage().deserialize(
-          "<red>Musisz spróbować wystawić przedmiot później, gdyż aktualnie osiągnięty został limit oczekujących aukcji."
-      );
+      return messageSource.auctionQueueIsFull;
     }
 
     if (!whetherHeldItemIsSupported(player)) {
-      return miniMessage().deserialize(
-          "<red>Musisz trzymać w łapce przedmiot, który chcesz wystawić na aukcję."
-      );
+      return messageSource.requiresHoldingItem;
     }
 
     final int stockOrHeldAmount = stock.orElseGet(
         player.getInventory().getItemInMainHand().getAmount()
     );
     if (stockOrHeldAmount <= 0) {
-      return miniMessage().deserialize(
-          "<red>Wprowadzony przez ciebie nakład jest nieprawidłowy."
-      );
+      return messageSource.invalidStock;
     }
 
     if (!whetherPlayerContainsStock(
         player,
         player.getInventory().getItemInMainHand(), stockOrHeldAmount)
     ) {
-      return miniMessage().deserialize(
-          "<red>Wprowadzony przez ciebie nakład przewyższa posiadane przez ciebie przedmioty."
-      );
+      return messageSource.invalidStockBecauseOfMissingItems;
     }
 
     final BigDecimal fixedMinimalPrice = minimalPrice.setScale(2, HALF_DOWN);
     if (fixedMinimalPrice.compareTo(ZERO) < 0) {
-      return miniMessage().deserialize(
-          "<red>Wprowadzona przez ciebie kwota startowa jest nieprawidłowa."
-      );
+      return messageSource.invalidMinimalPrice;
     }
 
     final BigDecimal fixedMinimalPricePuncture = minimalPricePuncture.setScale(2, HALF_DOWN);
     if (fixedMinimalPricePuncture.compareTo(ZERO) <= 0) {
-      return miniMessage().deserialize(
-          "<red>Wprowadzona przez ciebie kwota przebicia jest nieprawidłowa."
-      );
+      return messageSource.invalidMinimalPricePuncture;
     }
 
     final ItemStack itemStack = player.getInventory().getItemInMainHand().clone();
@@ -116,9 +115,7 @@ public class AuctionCommand {
             minimalPricePuncture
         )
     );
-    return miniMessage().deserialize(
-        "<gray>Trzymany przez ciebie przedmiot został wystawiony. Aukcja rozpocznie się, gdy nadejdzie jej kolej."
-    );
+    return messageSource.auctionSchedule;
   }
 
   private boolean whetherHeldItemIsSupported(final Player player) {
@@ -133,74 +130,48 @@ public class AuctionCommand {
 
   @Permission("auroramc.auctions.auction.bid")
   @Execute(route = "bid", aliases = {"buy", "offer"})
-  public CompletableFuture<Component> bidAuction(
+  public CompletableFuture<MutableMessage> bidAuction(
       final Player player, final @Opt Option<BigDecimal> offer
   ) {
     final Auction auction = auctionController.getOngoingAuction();
     if (auction == null) {
-      return completedFuture(
-          miniMessage().deserialize(
-              "<red>Nie możesz złożyć oferty, gdyż w tej chwili nie trwa żadna aukcja."
-          )
-      );
+      return completedFuture(messageSource.offerMissingAuction);
     }
 
     if (auction.getVendorUniqueId().equals(player.getUniqueId())) {
-      return completedFuture(
-          miniMessage().deserialize(
-              "<red>Nie możesz złożyć oferty, gdyż jest to twoja aukcja."
-          )
-      );
+      return completedFuture(messageSource.offerSelfAuction);
     }
 
     if (auction.getTraderUniqueId() != null &&
         auction.getTraderUniqueId().equals(player.getUniqueId())
     ) {
-      return completedFuture(
-          miniMessage().deserialize(
-              "<red>Nie możesz złożyć następnej oferty, gdyż twoja oferta jest w tej chwili największa."
-          )
-      );
+      return completedFuture(messageSource.offerIsAlreadyHighest);
     }
 
     final BigDecimal resolvedOffer = resolveAuctionOffer(auction, offer);
     if (resolvedOffer.compareTo(auction.getMinimalPrice()) < 0) {
-      return completedFuture(
-          miniMessage()
-              .deserialize(
-                  "<red>Nie możesz złożyć oferty, gdyż jest ona mniejsza od kwoty startowej."
-              )
-      );
+      return completedFuture(messageSource.offerIsAlreadyHighest);
     }
 
     if (auction.getCurrentOffer() != null && resolvedOffer.compareTo(auction.getCurrentOffer()) <= 0) {
-      return completedFuture(
-          miniMessage().deserialize(
-              "<red>Nie możesz złożyć oferty, gdyż jest ona mniejsza od aktualnej oferty."
-          )
-      );
+      return completedFuture(messageSource.offerIsSmallerThanHighestOffer);
     }
 
     return economyFacade.has(player.getUniqueId(), fundsCurrency, resolvedOffer)
         .thenCompose(whetherTraderHasEnoughMoney ->
             completeBidOfAuction(player, resolvedOffer, whetherTraderHasEnoughMoney)
         )
-        .exceptionally(exception ->
-            miniMessage().deserialize(
-                "<red>Wystąpił błąd podczas składania oferty, spróbuj ponownie."
-            )
-        );
+        .exceptionally(exception -> {
+          delegateCaughtException(logger, exception);
+          return messageSource.offeringFailure;
+        });
   }
 
-  private CompletableFuture<Component> completeBidOfAuction(
+  private CompletableFuture<MutableMessage> completeBidOfAuction(
       final Player trader, final BigDecimal offer, final boolean whetherTraderHasEnoughMoney
   ) {
     if (!whetherTraderHasEnoughMoney) {
-      return completedFuture(
-          miniMessage().deserialize(
-              "<red>Nie posiadasz wystarczająco pieniędzy, aby złożyć tą ofertę."
-          )
-      );
+      return completedFuture(messageSource.offerNotEnoughBalance);
     }
 
     final Auction auction = auctionController.getOngoingAuction();
@@ -217,10 +188,9 @@ public class AuctionCommand {
             eventPublisher.publish(new AuctionBidEvent(auction))
         )
         .thenApply(state ->
-            miniMessage().deserialize(
-                "<gray>Złożyłeś ofertę w wysokości <white><funds_currency><offer><gray>.",
-                unparsed("funds_currency", fundsCurrency.getSymbol()),
-                unparsed("offer", getFormattedDecimal(offer)))
+            messageSource.offered
+                .with("symbol", fundsCurrency.getSymbol())
+                .with("offer", getFormattedDecimal(offer))
         );
   }
 
@@ -238,42 +208,53 @@ public class AuctionCommand {
 
   @Permission("auroramc.auctions.auction.info")
   @Execute(route = "info", aliases = "view")
-  public Component getAuction() {
+  public MutableMessage getAuction() {
     final Auction ongoingAuction = auctionController.getOngoingAuction();
     final boolean whetherAuctionIsMissing = ongoingAuction == null;
     if (whetherAuctionIsMissing) {
-      return miniMessage().deserialize(
-          "<red>W tej chwili nie trwa żadna aukcja."
-      );
+      return messageSource.auctionIsMissing;
     }
 
-    return miniMessage().deserialize(
-        """
-        <gray>Informacje na temat bieżącej <auction_uuid><dark_gray>:
-        <dark_gray>► <gray>Przedmiot: <white><subject>
-        <dark_gray>► <gray>Osoba wystawiająca: <white><vendor>
-        <dark_gray>► <gray>Największa oferta: <highest_bid>
-        <dark_gray>► <gray>Minimalna kwota startowa: <white><funds_currency><minimal_price>
-        <dark_gray>► <gray>Minimalna kwota przebicia: <white><funds_currency><minimal_price_puncture>
-        """.trim(),
-        getAuctionSummaryResolvers(ongoingAuction, fundsCurrency)
-    );
+    return messageSource.auctionSummary
+        .with("unique_id", ongoingAuction.getAuctionUniqueId())
+        .with("subject", getFormattedItemStack(ItemStack.deserializeBytes(ongoingAuction.getSubject())))
+        .with("vendor", getDisplayNameByUniqueId(ongoingAuction.getVendorUniqueId()))
+        .with("highest_bid", getHighestBid(ongoingAuction, fundsCurrency))
+        .with("symbol", fundsCurrency.getSymbol())
+        .with("minimal_price", getFormattedDecimal(ongoingAuction.getMinimalPrice()))
+        .with("minimal_price_puncture", getFormattedDecimal(ongoingAuction.getMinimalPricePuncture()));
   }
 
   @Permission("auroramc.auctions.auction.notifications")
   @Execute(route = "notifications", aliases = {"notification", "notify"})
-  public CompletableFuture<Component> toggleNotifications(final Player player) {
+  public CompletableFuture<MutableMessage> toggleNotifications(final Player player) {
     return messageViewerFacade.getMessageViewerByUserUniqueId(player.getUniqueId())
         .thenApply(this::toggleNotifications);
   }
 
-  private Component toggleNotifications(final MessageViewer messageViewer) {
+  private MutableMessage toggleNotifications(final MessageViewer messageViewer) {
     messageViewer.setWhetherReceiveMessages(!messageViewer.isWhetherReceiveMessages());
     messageViewerFacade.updateMessageViewer(messageViewer);
-    return miniMessage().deserialize(
-        messageViewer.isWhetherReceiveMessages()
-            ? "<gray>Włączyłeś wyświetlanie powiadomień dotyczących aukcji."
-            : "<gray>Wyłączyłeś wyświetlanie powiadomień dotyczących aukcji."
-    );
+    return messageViewer.isWhetherReceiveMessages()
+        ? messageSource.notificationsEnabled
+        : messageSource.notificationsDisabled;
+  }
+
+  private MutableMessage getHighestBid(final Auction auction, final Currency fundsCurrency) {
+    if (auction.getTraderUniqueId() == null) {
+      return messageSource.unknownOffer;
+    }
+
+    return messageSource.auctionWinningBid
+        .with("symbol", fundsCurrency.getSymbol())
+        .with("offer", getFormattedDecimal(auction.getCurrentOffer()))
+        .with("trader", getDisplayNameByUniqueId(auction.getTraderUniqueId()));
+  }
+
+  private Component getDisplayNameByUniqueId(final UUID playerUniqueId) {
+    return Optional.ofNullable(playerUniqueId)
+        .map(Bukkit::getPlayer)
+        .map(Player::name)
+        .orElse(messageSource.unknownPlayer.compile());
   }
 }

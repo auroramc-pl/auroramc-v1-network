@@ -8,6 +8,7 @@ import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.pars
 import static pl.auroramc.auctions.AuctionsConfig.PLUGIN_CONFIG_FILE_NAME;
 import static pl.auroramc.auctions.auction.AuctionFacadeFactory.getAuctionFacade;
 import static pl.auroramc.auctions.message.MessageFacade.getMessageFacade;
+import static pl.auroramc.auctions.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
 import static pl.auroramc.auctions.message.viewer.MessageViewerFacadeFactory.getMessageViewerFacade;
 import static pl.auroramc.auctions.vault.VaultFacadeFactory.getVaultFacade;
 import static pl.auroramc.auctions.vault.item.VaultItemFacadeFactory.getVaultItemFacade;
@@ -34,8 +35,9 @@ import pl.auroramc.auctions.auction.AuctionCommand;
 import pl.auroramc.auctions.auction.AuctionCompletionScheduler;
 import pl.auroramc.auctions.auction.AuctionController;
 import pl.auroramc.auctions.auction.AuctionFacade;
-import pl.auroramc.auctions.auction.AuctionListeners;
+import pl.auroramc.auctions.auction.AuctionListener;
 import pl.auroramc.auctions.message.MessageFacade;
+import pl.auroramc.auctions.message.MessageSource;
 import pl.auroramc.auctions.message.viewer.MessageViewerFacade;
 import pl.auroramc.auctions.vault.VaultCommand;
 import pl.auroramc.auctions.vault.VaultController;
@@ -45,6 +47,7 @@ import pl.auroramc.commons.config.ConfigFactory;
 import pl.auroramc.commons.config.serdes.SerdesCommons;
 import pl.auroramc.commons.config.serdes.juliet.JulietConfig;
 import pl.auroramc.commons.config.serdes.juliet.SerdesJuliet;
+import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
 import pl.auroramc.commons.event.publisher.BukkitEventPublisher;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
@@ -64,12 +67,8 @@ public class AuctionsBukkitPlugin extends JavaPlugin {
         YamlBukkitConfigurer::new
     );
 
-    final AuctionsConfig auctionsConfig = configFactory.produceConfig(
-        AuctionsConfig.class, PLUGIN_CONFIG_FILE_NAME, new SerdesCommons()
-    );
-    final AuctionFacade auctionFacade = getAuctionFacade();
-    final AuctionController auctionController = new AuctionController(
-        auctionsConfig, auctionFacade, eventPublisher
+    final MessageSource messageSource = configFactory.produceConfig(
+        MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
     );
 
     final JulietConfig julietConfig = configFactory.produceConfig(
@@ -78,6 +77,14 @@ public class AuctionsBukkitPlugin extends JavaPlugin {
     final Juliet juliet = JulietBuilder.newBuilder()
         .withDataSource(produceHikariDataSource(julietConfig.hikari))
         .build();
+
+    final AuctionsConfig auctionsConfig = configFactory.produceConfig(
+        AuctionsConfig.class, PLUGIN_CONFIG_FILE_NAME, new SerdesCommons()
+    );
+    final AuctionFacade auctionFacade = getAuctionFacade();
+    final AuctionController auctionController = new AuctionController(
+        auctionsConfig, auctionFacade, eventPublisher
+    );
 
     final Logger logger = getLogger();
 
@@ -111,9 +118,10 @@ public class AuctionsBukkitPlugin extends JavaPlugin {
             vaultFacade,
             messageViewerFacade
         ),
-        new AuctionListeners(
+        new AuctionListener(
             logger,
             userFacade,
+            messageSource,
             messageFacade,
             economyFacade,
             fundsCurrency,
@@ -124,7 +132,7 @@ public class AuctionsBukkitPlugin extends JavaPlugin {
 
     getServer().getScheduler().runTaskTimer(this,
         new AuctionCompletionScheduler(
-            messageFacade, auctionController
+            messageSource, messageFacade, auctionController
         ),
         getTicksOf(ofSeconds(1)),
         getTicksOf(ofSeconds(1))
@@ -138,7 +146,15 @@ public class AuctionsBukkitPlugin extends JavaPlugin {
         )
         .commandInstance(new VaultCommand(this, vaultController))
         .commandInstance(
-            new AuctionCommand(messageViewerFacade, economyFacade, fundsCurrency, auctionController, eventPublisher)
+            new AuctionCommand(
+                logger,
+                messageViewerFacade,
+                messageSource,
+                economyFacade,
+                fundsCurrency,
+                auctionController,
+                eventPublisher
+            )
         )
         .redirectResult(RequiredPermissions.class, Component.class,
             context -> miniMessage().deserialize(
