@@ -25,7 +25,7 @@ public class StakeCommand {
   }
 
   @Execute
-  public Component displayStake(final Player executor, final @Opt Option<Integer> page) {
+  public Component displayStake(final Player player, final @Opt Option<Integer> page) {
     if (stakeViewFacade.getPageCount() == 0) {
       return miniMessage().deserialize(
           "<red>W tym momencie nie ma dostępnych zakładów, spróbuj ponownie później."
@@ -41,7 +41,7 @@ public class StakeCommand {
       );
     }
 
-    executor.openInventory(destinedPage.get());
+    player.openInventory(destinedPage.get());
     return miniMessage().deserialize(
         "<gray>Otworzyłeś podgląd dostępnych zakładów, aby dołączyć do jednego z nich naciśnij na wybrany przez ciebie zakład lewym przyciskiem myszy <dark_gray>(<white>LPM<dark_gray>)<gray>."
     );

@@ -43,8 +43,8 @@ public class BalanceCommand {
   }
 
   @Execute(required = 0)
-  public CompletableFuture<Component> getBalance(final Player executor) {
-    return retrieveBalanceSummaries(executor.getUniqueId())
+  public CompletableFuture<Component> getBalance(final Player player) {
+    return retrieveBalanceSummaries(player.getUniqueId())
         .thenApply(balanceSummaries -> miniMessage().deserialize(
             "<gray>Podsumowanie kont: <newline><white><summaries>",
                 component("summaries", balanceSummaries)))
@@ -53,7 +53,7 @@ public class BalanceCommand {
 
   @Permission("auroramc.economy.balance.other")
   @Execute
-  public CompletableFuture<Component> getBalance(final Player executor, final @Arg Player target) {
+  public CompletableFuture<Component> getBalance(final Player player, final @Arg Player target) {
     return retrieveBalanceSummaries(target.getUniqueId())
         .thenApply(balanceSummaries -> miniMessage().deserialize(
             "<gray>Podsumowanie kont gracza <white><target><gray>: <newline><white><summaries>",

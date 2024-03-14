@@ -34,6 +34,18 @@
       <version>5.0.1</version>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>dev.rollczi.litecommands</groupId>
+      <artifactId>core</artifactId>
+      <version>2.9.0-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.velocitypowered</groupId>
+      <artifactId>velocity-api</artifactId>
+      <version>3.2.0-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
 </project>

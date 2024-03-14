@@ -54,7 +54,7 @@ public class AuctionCommand {
   @Permission("auroramc.auctions.auction.schedule")
   @Execute(route = "schedule", aliases = "sell")
   public Component scheduleAuction(
-      final Player executor,
+      final Player player,
       final @Arg BigDecimal minimalPrice,
       final @Arg BigDecimal minimalPricePuncture,
       final @Opt Option<Integer> stock
@@ -65,14 +65,14 @@ public class AuctionCommand {
       );
     }
 
-    if (!whetherHeldItemIsSupported(executor)) {
+    if (!whetherHeldItemIsSupported(player)) {
       return miniMessage().deserialize(
           "<red>Musisz trzymać w łapce przedmiot, który chcesz wystawić na aukcję."
       );
     }
 
     final int stockOrHeldAmount = stock.orElseGet(
-        executor.getInventory().getItemInMainHand().getAmount()
+        player.getInventory().getItemInMainHand().getAmount()
     );
     if (stockOrHeldAmount <= 0) {
       return miniMessage().deserialize(
@@ -81,8 +81,8 @@ public class AuctionCommand {
     }
 
     if (!whetherPlayerContainsStock(
-        executor,
-        executor.getInventory().getItemInMainHand(), stockOrHeldAmount)
+        player,
+        player.getInventory().getItemInMainHand(), stockOrHeldAmount)
     ) {
       return miniMessage().deserialize(
           "<red>Wprowadzony przez ciebie nakład przewyższa posiadane przez ciebie przedmioty."
@@ -103,14 +103,14 @@ public class AuctionCommand {
       );
     }
 
-    final ItemStack itemStack = executor.getInventory().getItemInMainHand().clone();
+    final ItemStack itemStack = player.getInventory().getItemInMainHand().clone();
     itemStack.setAmount(stockOrHeldAmount);
 
-    executor.getInventory().removeItemAnySlot(itemStack);
+    player.getInventory().removeItemAnySlot(itemStack);
 
     auctionController.scheduleAuction(
         new Auction(
-            executor.getUniqueId(),
+            player.getUniqueId(),
             itemStack.serializeAsBytes(),
             minimalPrice,
             minimalPricePuncture
@@ -121,20 +121,20 @@ public class AuctionCommand {
     );
   }
 
-  private boolean whetherHeldItemIsSupported(final Player executor) {
-    return executor.getInventory().getItemInMainHand().getType() != Material.AIR;
+  private boolean whetherHeldItemIsSupported(final Player player) {
+    return player.getInventory().getItemInMainHand().getType() != Material.AIR;
   }
 
   private boolean whetherPlayerContainsStock(
-      final Player executor, final ItemStack subject, final int stock
+      final Player player, final ItemStack subject, final int stock
   ) {
-    return executor.getInventory().containsAtLeast(subject, stock);
+    return player.getInventory().containsAtLeast(subject, stock);
   }
 
   @Permission("auroramc.auctions.auction.bid")
   @Execute(route = "bid", aliases = {"buy", "offer"})
   public CompletableFuture<Component> bidAuction(
-      final Player executor, final @Opt Option<BigDecimal> offer
+      final Player player, final @Opt Option<BigDecimal> offer
   ) {
     final Auction auction = auctionController.getOngoingAuction();
     if (auction == null) {
@@ -145,7 +145,7 @@ public class AuctionCommand {
       );
     }
 
-    if (auction.getVendorUniqueId().equals(executor.getUniqueId())) {
+    if (auction.getVendorUniqueId().equals(player.getUniqueId())) {
       return completedFuture(
           miniMessage().deserialize(
               "<red>Nie możesz złożyć oferty, gdyż jest to twoja aukcja."
@@ -154,7 +154,7 @@ public class AuctionCommand {
     }
 
     if (auction.getTraderUniqueId() != null &&
-        auction.getTraderUniqueId().equals(executor.getUniqueId())
+        auction.getTraderUniqueId().equals(player.getUniqueId())
     ) {
       return completedFuture(
           miniMessage().deserialize(
@@ -181,9 +181,9 @@ public class AuctionCommand {
       );
     }
 
-    return economyFacade.has(executor.getUniqueId(), fundsCurrency, resolvedOffer)
+    return economyFacade.has(player.getUniqueId(), fundsCurrency, resolvedOffer)
         .thenCompose(whetherTraderHasEnoughMoney ->
-            completeBidOfAuction(executor, resolvedOffer, whetherTraderHasEnoughMoney)
+            completeBidOfAuction(player, resolvedOffer, whetherTraderHasEnoughMoney)
         )
         .exceptionally(exception ->
             miniMessage().deserialize(
@@ -262,8 +262,8 @@ public class AuctionCommand {
 
   @Permission("auroramc.auctions.auction.notifications")
   @Execute(route = "notifications", aliases = {"notification", "notify"})
-  public CompletableFuture<Component> toggleNotifications(final Player executor) {
-    return messageViewerFacade.getMessageViewerByUserUniqueId(executor.getUniqueId())
+  public CompletableFuture<Component> toggleNotifications(final Player player) {
+    return messageViewerFacade.getMessageViewerByUserUniqueId(player.getUniqueId())
         .thenApply(this::toggleNotifications);
   }
 

@@ -54,17 +54,17 @@ public class CoinflipCommand {
 
   @Execute
   public CompletableFuture<Component> createCoinflipGamble(
-      final Player executor, final @Arg CoinSide prediction, final @Arg BigDecimal stake
+      final Player player, final @Arg CoinSide prediction, final @Arg BigDecimal stake
   ) {
     final BigDecimal fixedStake = stake.setScale(2, HALF_DOWN);
     if (fixedStake.compareTo(ZERO) <= 0) {
       return completedFuture(miniMessage().deserialize("<red>Stawka musi być większa od zera."));
     }
 
-    return economyFacade.has(executor.getUniqueId(), fundsCurrency, fixedStake)
+    return economyFacade.has(player.getUniqueId(), fundsCurrency, fixedStake)
         .thenCompose(whetherPlayerHasEnoughFunds ->
             completeCoinflipGambleCreation(
-                executor, prediction, fixedStake, whetherPlayerHasEnoughFunds
+                player, prediction, fixedStake, whetherPlayerHasEnoughFunds
             )
         )
         .exceptionally(exception -> delegateCaughtException(logger, exception));

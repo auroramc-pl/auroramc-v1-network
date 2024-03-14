@@ -27,8 +27,8 @@ public class HopperCommand {
   }
 
   @Execute
-  MutableMessage createHopper(final Player executor, final @Arg Integer transferQuantity) {
-    executor.getInventory().addItem(getHopperItem(transferQuantity));
+  MutableMessage createHopper(final Player player, final @Arg Integer transferQuantity) {
+    player.getInventory().addItem(getHopperItem(transferQuantity));
     return messageSource.hopperHasBeenGiven.with("quantity", transferQuantity);
   }
 

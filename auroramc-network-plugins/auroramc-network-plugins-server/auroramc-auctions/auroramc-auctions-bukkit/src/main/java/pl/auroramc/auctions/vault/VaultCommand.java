@@ -21,8 +21,8 @@ public class VaultCommand {
   }
 
   @Execute
-  public void displayVault(final Player executor) {
-    produceVaultView(plugin, vaultController, executor.getUniqueId())
-        .show(executor);
+  public void displayVault(final Player player) {
+    produceVaultView(plugin, vaultController, player.getUniqueId())
+        .show(player);
   }
 }

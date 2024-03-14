@@ -50,8 +50,8 @@ public class QuestsCommand {
   }
 
   @Execute
-  public void displayQuests(final @Context Player executor) {
-    questsView.render(executor);
+  public void displayQuests(final @Context Player player) {
+    questsView.render(player);
   }
 
   @Execute(name = "assign")

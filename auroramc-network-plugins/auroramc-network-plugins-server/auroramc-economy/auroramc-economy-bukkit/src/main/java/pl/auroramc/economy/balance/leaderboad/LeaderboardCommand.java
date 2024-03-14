@@ -35,7 +35,7 @@ public class LeaderboardCommand {
   }
 
   @Execute
-  public Component getLeaderboard(final Player executor, final @Opt Option<Long> currencyId) {
+  public Component getLeaderboard(final Player player, final @Opt Option<Long> currencyId) {
     final Long currencyIdOrDefault = currencyId.orElseGet(leaderboardConfig.defaultCurrencyId);
 
     final Currency currency = currencyFacade.getCurrencyById(currencyIdOrDefault);
@@ -46,14 +46,14 @@ public class LeaderboardCommand {
       );
     }
 
-    return getLeaderboardView(executor, currency.getId());
+    return getLeaderboardView(player, currency.getId());
   }
 
-  private Component getLeaderboardView(final Player executor, final Long currencyId) {
+  private Component getLeaderboardView(final Player player, final Long currencyId) {
     return empty()
         .append(getLeaderboardHeader())
         .append(getLeaderboardLines(leaderboardFacade.getLeaderboardEntriesByCurrencyId(currencyId)))
-        .append(getLeaderboardFooter(executor, currencyId));
+        .append(getLeaderboardFooter(player, currencyId));
   }
 
   private Component getLeaderboardHeader() {

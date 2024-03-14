@@ -41,9 +41,9 @@ public class VisitCommand {
   }
 
   @Execute
-  public CompletableFuture<MutableMessage> getSessionsFromToday(final Player executor) {
+  public CompletableFuture<MutableMessage> getSessionsFromToday(final Player player) {
     final Instant now = now();
-    return userFacade.getUserByUniqueId(executor.getUniqueId())
+    return userFacade.getUserByUniqueId(player.getUniqueId())
         .thenApply(User::getId)
         .thenApply(userId ->
             visitFacade.getVisitsByUserIdBetween(userId,
@@ -56,9 +56,9 @@ public class VisitCommand {
 
   @Execute(route = "ranged")
   public CompletableFuture<MutableMessage> getSessions(
-      final Player executor, final @Arg Instant from, final @Arg Instant to
+      final Player player, final @Arg Instant from, final @Arg Instant to
   ) {
-    return userFacade.getUserByUniqueId(executor.getUniqueId())
+    return userFacade.getUserByUniqueId(player.getUniqueId())
         .thenApply(User::getId)
         .thenApply(userId -> visitFacade.getVisitsByUserIdBetween(userId, from, to))
         .thenApply(visits -> getFormattedVisits(from, to, visits));

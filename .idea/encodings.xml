@@ -23,13 +23,26 @@
     <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-essentials/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-gamble/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-gamble/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-auth/auroramc-auth-shared/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-auth/auroramc-auth-shared/src/main/java-templates" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-auth/auroramc-auth-shared/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-auth/auroramc-auth-velocity/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-auth/auroramc-auth-velocity/src/main/java-templates" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-auth/auroramc-auth-velocity/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-auth/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-auth/src/main/java-templates" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-auth/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-punishments/auroramc-punishments-shared/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-punishments/auroramc-punishments-shared/src/main/java-templates" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-punishments/auroramc-punishments-shared/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-punishments/auroramc-punishments-velocity/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-punishments/auroramc-punishments-velocity/src/main/java-templates" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-punishments/auroramc-punishments-velocity/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-punishments/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-punishments/src/main/java-templates" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/auroramc-punishments/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/src/main/java-templates" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-proxy/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-auctions/auroramc-auctions-bukkit/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-auctions/auroramc-auctions-bukkit/src/main/resources" charset="UTF-8" />

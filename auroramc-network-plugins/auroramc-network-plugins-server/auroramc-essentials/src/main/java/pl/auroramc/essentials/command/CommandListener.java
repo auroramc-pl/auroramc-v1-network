@@ -95,21 +95,21 @@ public class CommandListener implements Listener {
   }
 
   private String getPotentialSuggestionForCommand(
-      final CommandSender executor, final String usedCommand
+      final CommandSender player, final String usedCommand
   ) {
-    if (executor instanceof ConsoleCommandSender) {
+    if (player instanceof ConsoleCommandSender) {
       return null;
     }
 
-    final Set<String> availableCommands = getAvailableCommandsWithCaching((Player) executor);
+    final Set<String> availableCommands = getAvailableCommandsWithCaching((Player) player);
     return fuzzySearch.getMostSimilar(usedCommand, availableCommands, essentialsConfig.minimalScoreForCommandSuggestion);
   }
 
-  private Set<String> getAvailableCommandsWithCaching(final Player executor) {
-    return availableCommandsByName.get(executor.getUniqueId(), key -> getAvailableCommands(executor));
+  private Set<String> getAvailableCommandsWithCaching(final Player player) {
+    return availableCommandsByName.get(player.getUniqueId(), key -> getAvailableCommands(player));
   }
 
-  private Set<String> getAvailableCommands(final CommandSender executor) {
+  private Set<String> getAvailableCommands(final CommandSender player) {
     final Set<String> availableCommands = new HashSet<>();
     for (final Entry<String, Command> commandByCommandName : server.getCommandMap()
         .getKnownCommands()
@@ -119,7 +119,7 @@ public class CommandListener implements Listener {
       }
 
       final Command command = commandByCommandName.getValue();
-      if (command.testPermissionSilent(executor)) {
+      if (command.testPermissionSilent(player)) {
         availableCommands.add(commandByCommandName.getKey().toLowerCase());
       }
     }
