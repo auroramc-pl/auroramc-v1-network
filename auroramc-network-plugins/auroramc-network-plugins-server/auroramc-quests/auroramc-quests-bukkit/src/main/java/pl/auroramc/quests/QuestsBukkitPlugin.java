@@ -43,7 +43,7 @@ import pl.auroramc.commons.integration.ExternalIntegrator;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.commons.config.ConfigFactory;
 import pl.auroramc.commons.config.serdes.juliet.SerdesJuliet;
-import pl.auroramc.commons.event.publisher.BukkitEventPublisher;
+import pl.auroramc.commons.event.publisher.EventPublisher;
 import pl.auroramc.quests.message.MessageSource;
 import pl.auroramc.commons.integration.litecommands.v3.MutableMessageResultHandler;
 import pl.auroramc.quests.objective.Objective;
@@ -99,7 +99,7 @@ public class QuestsBukkitPlugin extends JavaPlugin {
 
     questIndex.indexQuests(quests);
 
-    final BukkitEventPublisher eventPublisher = new BukkitEventPublisher(this);
+    final EventPublisher eventPublisher = new EventPublisher(this);
 
     final UserFacade userFacade = resolveService(getServer(), UserFacade.class);
     final ObjectiveProgressFacade objectiveProgressFacade = getObjectiveProgressFacade(logger, juliet);

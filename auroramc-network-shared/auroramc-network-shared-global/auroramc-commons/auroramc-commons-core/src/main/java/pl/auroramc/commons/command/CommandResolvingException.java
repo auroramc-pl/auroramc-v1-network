@@ -1,4 +1,4 @@
-package pl.auroramc.essentials.command;
+package pl.auroramc.commons.command;
 
 
 class CommandResolvingException extends IllegalArgumentException {

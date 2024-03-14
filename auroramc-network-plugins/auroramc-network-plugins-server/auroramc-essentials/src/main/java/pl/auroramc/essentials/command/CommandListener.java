@@ -7,7 +7,7 @@ import static java.util.function.Predicate.not;
 import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.event.ClickEvent.suggestCommand;
 import static org.bukkit.event.EventPriority.HIGHEST;
-import static pl.auroramc.essentials.command.CommandUtils.resolveCommand;
+import static pl.auroramc.commons.command.CommandUtils.resolveCommand;
 import static pl.auroramc.commons.lazy.Lazy.lazy;
 
 import com.github.benmanes.caffeine.cache.Cache;

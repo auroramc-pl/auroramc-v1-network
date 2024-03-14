@@ -3,8 +3,8 @@ package pl.auroramc.auth.authorization;
 import static com.velocitypowered.api.event.EventTask.resumeWhenComplete;
 import static com.velocitypowered.api.event.command.CommandExecuteEvent.CommandResult.allowed;
 import static com.velocitypowered.api.event.command.CommandExecuteEvent.CommandResult.denied;
-import static pl.auroramc.auth.authorization.AuthorizationUtils.resolveCommand;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
+import static pl.auroramc.commons.command.CommandUtils.resolveCommand;
 
 import com.velocitypowered.api.event.Continuation;
 import com.velocitypowered.api.event.Subscribe;

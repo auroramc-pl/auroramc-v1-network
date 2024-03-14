@@ -4,19 +4,19 @@ import java.time.Instant;
 import pl.auroramc.auctions.AuctionsConfig;
 import pl.auroramc.auctions.auction.event.AuctionCompleteEvent;
 import pl.auroramc.auctions.auction.event.AuctionScheduleEvent;
-import pl.auroramc.commons.event.publisher.BukkitEventPublisher;
+import pl.auroramc.commons.event.publisher.EventPublisher;
 
 public class AuctionController {
 
   private final AuctionsConfig auctionsConfig;
   private final AuctionFacade auctionFacade;
-  private final BukkitEventPublisher eventPublisher;
+  private final EventPublisher eventPublisher;
   private Auction ongoingAuction;
 
   public AuctionController(
       final AuctionsConfig auctionsConfig,
       final AuctionFacade auctionFacade,
-      final BukkitEventPublisher eventPublisher
+      final EventPublisher eventPublisher
   ) {
     this.auctionsConfig = auctionsConfig;
     this.auctionFacade = auctionFacade;

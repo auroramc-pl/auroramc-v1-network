@@ -27,7 +27,7 @@ import pl.auroramc.auctions.auction.event.AuctionBidEvent;
 import pl.auroramc.auctions.message.MessageSource;
 import pl.auroramc.auctions.message.viewer.MessageViewer;
 import pl.auroramc.auctions.message.viewer.MessageViewerFacade;
-import pl.auroramc.commons.event.publisher.BukkitEventPublisher;
+import pl.auroramc.commons.event.publisher.EventPublisher;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
@@ -42,7 +42,7 @@ public class AuctionCommand {
   private final EconomyFacade economyFacade;
   private final Currency fundsCurrency;
   private final AuctionController auctionController;
-  private final BukkitEventPublisher eventPublisher;
+  private final EventPublisher eventPublisher;
 
   public AuctionCommand(
       final Logger logger,
@@ -51,7 +51,7 @@ public class AuctionCommand {
       final EconomyFacade economyFacade,
       final Currency fundsCurrency,
       final AuctionController auctionController,
-      final BukkitEventPublisher eventPublisher
+      final EventPublisher eventPublisher
   ) {
     this.logger = logger;
     this.messageViewerFacade = messageViewerFacade;

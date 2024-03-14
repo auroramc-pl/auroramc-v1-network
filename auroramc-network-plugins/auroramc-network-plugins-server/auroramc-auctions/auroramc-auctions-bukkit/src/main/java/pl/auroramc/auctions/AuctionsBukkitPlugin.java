@@ -48,7 +48,7 @@ import pl.auroramc.commons.config.serdes.SerdesCommons;
 import pl.auroramc.commons.config.serdes.juliet.JulietConfig;
 import pl.auroramc.commons.config.serdes.juliet.SerdesJuliet;
 import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
-import pl.auroramc.commons.event.publisher.BukkitEventPublisher;
+import pl.auroramc.commons.event.publisher.EventPublisher;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
@@ -60,7 +60,7 @@ public class AuctionsBukkitPlugin extends JavaPlugin {
 
   @Override
   public void onEnable() {
-    final BukkitEventPublisher eventPublisher = new BukkitEventPublisher(this);
+    final EventPublisher eventPublisher = new EventPublisher(this);
 
     final ConfigFactory configFactory = new ConfigFactory(
         getDataFolder().toPath(),

@@ -1,8 +1,8 @@
-package pl.auroramc.essentials.command;
+package pl.auroramc.commons.command;
 
 import static java.util.Locale.ROOT;
 
-final class CommandUtils {
+public final class CommandUtils {
 
   private static final String ARGUMENT_SEPARATOR = " ";
   private static final String COMMAND_PREFIX = "/";
@@ -12,7 +12,7 @@ final class CommandUtils {
 
   }
 
-  static String resolveCommand(final String query) {
+  public static String resolveCommand(final String query) {
     final String[] parts = query.split(ARGUMENT_SEPARATOR);
     if (parts.length == 0) {
       throw new CommandResolvingException("Could not resolve command, because the query is empty.");
