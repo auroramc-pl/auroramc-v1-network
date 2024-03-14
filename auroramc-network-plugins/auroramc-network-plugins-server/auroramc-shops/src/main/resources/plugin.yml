@@ -6,5 +6,5 @@ api-version: 1.20
 depend:
   - auroramc-economy
 libraries:
-  - org.apache.groovy:groovy-jsr223:5.0.0-alpha-2
+  - org.apache.groovy:groovy-jsr223:5.0.0-alpha-7
   - com.github.stefvanschie.inventoryframework:IF:0.10.13
