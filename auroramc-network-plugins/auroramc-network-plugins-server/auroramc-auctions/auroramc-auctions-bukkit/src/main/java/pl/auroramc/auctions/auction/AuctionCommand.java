@@ -63,8 +63,8 @@ public class AuctionCommand {
   }
 
   @Permission("auroramc.auctions.auction.schedule")
-  @Execute(route = "schedule", aliases = "sell")
-  public MutableMessage scheduleAuction(
+  @Execute(route = "schedule")
+  public MutableMessage schedule(
       final Player player,
       final @Arg BigDecimal minimalPrice,
       final @Arg BigDecimal minimalPricePuncture,
@@ -129,8 +129,8 @@ public class AuctionCommand {
   }
 
   @Permission("auroramc.auctions.auction.bid")
-  @Execute(route = "bid", aliases = {"buy", "offer"})
-  public CompletableFuture<MutableMessage> bidAuction(
+  @Execute(route = "bid")
+  public CompletableFuture<MutableMessage> bid(
       final Player player, final @Opt Option<BigDecimal> offer
   ) {
     final Auction auction = auctionController.getOngoingAuction();
@@ -206,28 +206,27 @@ public class AuctionCommand {
         .get();
   }
 
-  @Permission("auroramc.auctions.auction.info")
-  @Execute(route = "info", aliases = "view")
-  public MutableMessage getAuction() {
-    final Auction ongoingAuction = auctionController.getOngoingAuction();
-    final boolean whetherAuctionIsMissing = ongoingAuction == null;
-    if (whetherAuctionIsMissing) {
+  @Permission("auroramc.auctions.auction.summary")
+  @Execute(route = "summary")
+  public MutableMessage summary() {
+    final Auction auction = auctionController.getOngoingAuction();
+    if (auction == null) {
       return messageSource.auctionIsMissing;
     }
 
     return messageSource.auctionSummary
-        .with("unique_id", ongoingAuction.getAuctionUniqueId())
-        .with("subject", getFormattedItemStack(ItemStack.deserializeBytes(ongoingAuction.getSubject())))
-        .with("vendor", getDisplayNameByUniqueId(ongoingAuction.getVendorUniqueId()))
-        .with("highest_bid", getHighestBid(ongoingAuction, fundsCurrency))
+        .with("unique_id", auction.getAuctionUniqueId())
+        .with("subject", getFormattedItemStack(ItemStack.deserializeBytes(auction.getSubject())))
+        .with("vendor", getDisplayNameByUniqueId(auction.getVendorUniqueId()))
+        .with("highest_bid", getHighestBid(auction, fundsCurrency))
         .with("symbol", fundsCurrency.getSymbol())
-        .with("minimal_price", getFormattedDecimal(ongoingAuction.getMinimalPrice()))
-        .with("minimal_price_puncture", getFormattedDecimal(ongoingAuction.getMinimalPricePuncture()));
+        .with("minimal_price", getFormattedDecimal(auction.getMinimalPrice()))
+        .with("minimal_price_puncture", getFormattedDecimal(auction.getMinimalPricePuncture()));
   }
 
   @Permission("auroramc.auctions.auction.notifications")
   @Execute(route = "notifications", aliases = {"notification", "notify"})
-  public CompletableFuture<MutableMessage> toggleNotifications(final Player player) {
+  public CompletableFuture<MutableMessage> notifications(final Player player) {
     return messageViewerFacade.getMessageViewerByUserUniqueId(player.getUniqueId())
         .thenApply(this::toggleNotifications);
   }
