@@ -1,7 +1,9 @@
-<chestgui xmlns="https://gist.githubusercontent.com/rchomczyk/31fff815e757f9dff61bb9f2c99d38aa/raw/bc23d70320361356a2b93a5f1691d58cc7d7f9ee/if.xsd"
+<chestgui
+  xmlns="https://gist.githubusercontent.com/rchomczyk/31fff815e757f9dff61bb9f2c99d38aa/raw/bc23d70320361356a2b93a5f1691d58cc7d7f9ee/if.xsd"
   title="Dostępne produkty" rows="4" field="productGui"
   onGlobalClick="requestClickCancelling">
-  <paginatedpane x="0" y="0" length="9" height="2" field="productItemsPane" populate="populateProductItems"/>
+  <paginatedpane x="0" y="0" length="9" height="2" field="productItemsPane"
+    populate="populateProductItems"/>
 
   <outlinepane x="0" y="3" length="9" height="1" priority="lowest" repeat="true">
     <item id="black_stained_glass_pane">

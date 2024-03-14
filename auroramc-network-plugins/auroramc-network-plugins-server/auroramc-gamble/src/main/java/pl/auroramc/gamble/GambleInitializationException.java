@@ -1,8 +1,8 @@
 package pl.auroramc.gamble;
 
-class GambleInitializationException extends IllegalArgumentException {
+class GambleInstantiationException extends IllegalArgumentException {
 
-  GambleInitializationException(final String message) {
+  GambleInstantiationException(final String message) {
     super(message);
   }
 }

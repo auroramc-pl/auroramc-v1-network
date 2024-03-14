@@ -24,6 +24,7 @@
     <module>auroramc-registry</module>
     <module>auroramc-scoreboard</module>
     <module>auroramc-shops</module>
+    <module>auroramc-auctions</module>
   </modules>
 
   <properties>
@@ -40,5 +41,14 @@
       <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
     </repository>
   </repositories>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.papermc.paper</groupId>
+      <artifactId>paper-api</artifactId>
+      <version>1.20.4-R0.1-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
 
 </project>

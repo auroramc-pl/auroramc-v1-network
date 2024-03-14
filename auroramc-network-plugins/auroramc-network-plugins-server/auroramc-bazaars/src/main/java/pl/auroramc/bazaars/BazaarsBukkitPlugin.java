@@ -34,7 +34,7 @@ public class BazaarsBukkitPlugin extends JavaPlugin {
     final CurrencyFacade currencyFacade = resolveService(getServer(), CurrencyFacade.class);
     final Currency fundsCurrency = Optional.ofNullable(currencyFacade.getCurrencyById(bazaarsConfig.fundsCurrencyId))
         .orElseThrow(() ->
-            new BazaarsInitializationException(
+            new BazaarsInstantiationException(
                 "Could not resolve funds currency, make sure that the currency's id is valid."
             )
         );

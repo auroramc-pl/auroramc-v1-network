@@ -1,8 +1,8 @@
 package pl.auroramc.bazaars;
 
-class BazaarsInitializationException extends IllegalStateException {
+class BazaarsInstantiationException extends IllegalStateException {
 
-  BazaarsInitializationException(final String message) {
+  BazaarsInstantiationException(final String message) {
     super(message);
   }
 }

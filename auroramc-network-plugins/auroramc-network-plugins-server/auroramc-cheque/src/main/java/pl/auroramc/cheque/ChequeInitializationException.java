@@ -1,8 +1,8 @@
 package pl.auroramc.cheque;
 
-class ChequeInitializationException extends IllegalStateException {
+class ChequeInstantiationException extends IllegalStateException {
 
-  ChequeInitializationException(final String message) {
+  ChequeInstantiationException(final String message) {
     super(message);
   }
 }

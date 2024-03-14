@@ -64,7 +64,7 @@ public class ChequeBukkitPlugin extends JavaPlugin {
     final CurrencyFacade currencyFacade = resolveService(getServer(), CurrencyFacade.class);
     final Currency fundsCurrency = Optional.ofNullable(currencyFacade.getCurrencyById(chequeConfig.fundsCurrencyId))
         .orElseThrow(() ->
-            new ChequeInitializationException(
+            new ChequeInstantiationException(
                 "Could not find currency with id %d, make sure that the id specified in configuration is proper."
                     .formatted(
                         chequeConfig.fundsCurrencyId

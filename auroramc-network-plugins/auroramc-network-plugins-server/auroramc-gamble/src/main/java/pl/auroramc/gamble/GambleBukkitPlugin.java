@@ -54,7 +54,7 @@ public class GambleBukkitPlugin extends JavaPlugin {
     final Currency fundsCurrency =
         Optional.ofNullable(currencyFacade.getCurrencyById(gambleConfig.fundsCurrencyId))
             .orElseThrow(() ->
-                new GambleInitializationException(
+                new GambleInstantiationException(
                     "Could not resolve funds currency, make sure that the currency's id is valid."
                 )
             );
