@@ -42,7 +42,7 @@ public class EconomyCommand {
   }
 
   @Execute(route = "set")
-  public CompletableFuture<Component> balance(
+  public CompletableFuture<Component> set(
       final @Arg Player target, final @Arg Long currencyId, final @Arg BigDecimal amount
   ) {
     return processIncomingModification(currencyId, amount,
@@ -51,8 +51,8 @@ public class EconomyCommand {
     ).exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
-  @Execute(route = "deposit", aliases = {"give", "add"})
-  public CompletableFuture<Component> deposit(
+  @Execute(route = "add")
+  public CompletableFuture<Component> add(
       final @Arg Player target, final @Arg Long currencyId, final @Arg BigDecimal amount
   ) {
     return processIncomingModification(currencyId, amount,
@@ -61,8 +61,8 @@ public class EconomyCommand {
     ).exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
-  @Execute(route = "withdraw", aliases = {"take", "remove"})
-  public CompletableFuture<Component> withdraw(
+  @Execute(route = "take")
+  public CompletableFuture<Component> take(
       final @Arg Player target, final @Arg Long currencyId, final @Arg BigDecimal amount
   ) {
     return processIncomingModification(currencyId, amount,

@@ -53,7 +53,7 @@ public class CoinflipCommand {
   }
 
   @Execute
-  public CompletableFuture<Component> createCoinflipGamble(
+  public CompletableFuture<Component> coinflip(
       final Player player, final @Arg CoinSide prediction, final @Arg BigDecimal stake
   ) {
     final BigDecimal fixedStake = stake.setScale(2, HALF_DOWN);

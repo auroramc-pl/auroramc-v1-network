@@ -28,14 +28,15 @@ public class LeaderboardCommand {
   public LeaderboardCommand(
       final CurrencyFacade currencyFacade,
       final LeaderboardFacade leaderboardFacade,
-      final LeaderboardConfig leaderboardConfig) {
+      final LeaderboardConfig leaderboardConfig
+  ) {
     this.currencyFacade = currencyFacade;
     this.leaderboardFacade = leaderboardFacade;
     this.leaderboardConfig = leaderboardConfig;
   }
 
   @Execute
-  public Component getLeaderboard(final Player player, final @Opt Option<Long> currencyId) {
+  public Component leaderboard(final Player player, final @Opt Option<Long> currencyId) {
     final Long currencyIdOrDefault = currencyId.orElseGet(leaderboardConfig.defaultCurrencyId);
 
     final Currency currency = currencyFacade.getCurrencyById(currencyIdOrDefault);

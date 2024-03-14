@@ -50,12 +50,12 @@ public class QuestsCommand {
   }
 
   @Execute
-  public void displayQuests(final @Context Player player) {
+  public void quests(final @Context Player player) {
     questsView.render(player);
   }
 
   @Execute(name = "assign")
-  public CompletableFuture<MutableMessage> assignQuest(
+  public CompletableFuture<MutableMessage> assign(
       final @Arg Player target, final @Arg Quest quest, final @Arg Option<QuestState> state
   ) {
     return userFacade.getUserByUniqueId(target.getUniqueId())
@@ -70,11 +70,11 @@ public class QuestsCommand {
         questTrackFacade.getQuestTrackByUserUniqueIdAndQuestId(user.getUniqueId(), quest.getKey().getId())
             .map(QuestTrack::getQuestState);
     if (currentState.isPresent()) {
-      return
-          (currentState.get() == COMPLETED
+      return (
+          currentState.get() == COMPLETED
               ? messageSource.questIsAlreadyCompleted
               : messageSource.questIsAlreadyAssigned
-          )
+      )
           .with("player", user.getUsername())
           .with("quest", quest.getKey().getName());
     }

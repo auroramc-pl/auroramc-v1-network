@@ -14,7 +14,7 @@ import panda.std.Option;
 import pl.auroramc.gamble.stake.view.StakeViewFacade;
 
 @Permission("auroramc.gamble.stake")
-@Route(name = "stake", aliases = {"zaklad", "zaklady"})
+@Route(name = "stake")
 public class StakeCommand {
 
   private static final int INITIAL_STAKE_PAGE_INDEX = 0;
@@ -25,7 +25,7 @@ public class StakeCommand {
   }
 
   @Execute
-  public Component displayStake(final Player player, final @Opt Option<Integer> page) {
+  public Component stake(final Player player, final @Opt Option<Integer> page) {
     if (stakeViewFacade.getPageCount() == 0) {
       return miniMessage().deserialize(
           "<red>W tym momencie nie ma dostępnych zakładów, spróbuj ponownie później."

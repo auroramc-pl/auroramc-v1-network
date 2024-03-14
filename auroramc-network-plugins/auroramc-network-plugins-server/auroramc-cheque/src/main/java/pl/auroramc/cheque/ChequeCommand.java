@@ -49,7 +49,7 @@ class ChequeCommand {
   }
 
   @Execute
-  public CompletableFuture<MutableMessage> createCheque(
+  public CompletableFuture<MutableMessage> cheque(
       final Player invoker, final @Arg BigDecimal amount
   ) {
     if (getLengthOfIntegralPart(amount) > 9 || getLengthOfFractionalPart(amount) > 2) {
@@ -91,6 +91,7 @@ class ChequeCommand {
     target.getInventory()
         .addItem(itemStack)
         .forEach((index, remainingItem) ->
-            target.getWorld().dropItemNaturally(target.getLocation(), remainingItem));
+            target.getWorld().dropItemNaturally(target.getLocation(), remainingItem)
+        );
   }
 }
