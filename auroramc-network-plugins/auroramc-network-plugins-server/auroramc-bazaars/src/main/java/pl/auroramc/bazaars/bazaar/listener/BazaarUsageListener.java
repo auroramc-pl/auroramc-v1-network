@@ -1,7 +1,6 @@
 package pl.auroramc.bazaars.bazaar.listener;
 
 import static com.destroystokyo.paper.MaterialTags.SIGNS;
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static org.bukkit.event.EventPriority.HIGHEST;
 import static org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK;
 import static pl.auroramc.bazaars.bazaar.BazaarType.BUY;
@@ -22,20 +21,25 @@ import pl.auroramc.bazaars.bazaar.BazaarFacade;
 import pl.auroramc.bazaars.bazaar.parser.BazaarParser;
 import pl.auroramc.bazaars.bazaar.parser.BazaarParsingContext;
 import pl.auroramc.bazaars.bazaar.transaction.context.BazaarTransactionContext;
+import pl.auroramc.bazaars.message.MessageSource;
+import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.registry.user.User;
 import pl.auroramc.registry.user.UserFacade;
 
 public class BazaarUsageListener implements Listener {
 
+  private final MessageSource messageSource;
   private final BazaarParser bazaarParser;
   private final BazaarFacade bazaarFacade;
   private final UserFacade userFacade;
 
   public BazaarUsageListener(
+      final MessageSource messageSource,
       final BazaarParser bazaarParser,
       final BazaarFacade bazaarFacade,
       final UserFacade userFacade
   ) {
+    this.messageSource = messageSource;
     this.bazaarParser = bazaarParser;
     this.bazaarFacade = bazaarFacade;
     this.userFacade = userFacade;
@@ -77,11 +81,7 @@ public class BazaarUsageListener implements Listener {
       // the main thread, since otherwise the chest's inventory won't be
       // loaded yet and the check will always return false if not warmed up.
       if (parsingContext.type() == BUY && whetherMagazineIsOutOfStock(magazine, parsingContext)) {
-        customer.sendMessage(
-            miniMessage().deserialize(
-                "<red>Bazar, z którego próbujesz zakupić przedmioty nie posiada ich wystarczająco na stanie."
-            )
-        );
+        customer.sendMessage(messageSource.bazaarOutOfStock.compile());
         return;
       }
 
@@ -97,6 +97,7 @@ public class BazaarUsageListener implements Listener {
               )
           )
           .thenCompose(bazaarFacade::handleItemTransaction)
+          .thenApply(MutableMessage::compile)
           .thenAccept(customer::sendMessage);
     }
   }

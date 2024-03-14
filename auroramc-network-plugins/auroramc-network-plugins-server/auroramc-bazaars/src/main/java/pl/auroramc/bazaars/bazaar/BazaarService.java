@@ -1,8 +1,6 @@
 package pl.auroramc.bazaars.bazaar;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
-import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.unparsed;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 import static pl.auroramc.bazaars.bazaar.BazaarUtils.getEmptySlotsCount;
 import static pl.auroramc.bazaars.bazaar.BazaarUtils.getQuantityInSlots;
@@ -10,14 +8,13 @@ import static pl.auroramc.commons.BukkitUtils.postToMainThread;
 
 import java.text.DecimalFormat;
 import java.util.Locale;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import pl.auroramc.bazaars.bazaar.parser.BazaarParsingContext;
 import pl.auroramc.bazaars.bazaar.transaction.context.BazaarTransactionContext;
+import pl.auroramc.bazaars.message.MessageSource;
+import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
 
@@ -25,23 +22,26 @@ class BazaarService implements BazaarFacade {
 
   private final Plugin plugin;
   private final DecimalFormat priceFormat;
+  private final MessageSource messageSource;
   private final Currency fundsCurrency;
   private final EconomyFacade economyFacade;
 
   BazaarService(
       final Plugin plugin,
       final DecimalFormat priceFormat,
+      final MessageSource messageSource,
       final Currency fundsCurrency,
       final EconomyFacade economyFacade
   ) {
     this.plugin = plugin;
     this.priceFormat = priceFormat;
+    this.messageSource = messageSource;
     this.fundsCurrency = fundsCurrency;
     this.economyFacade = economyFacade;
   }
 
   @Override
-  public CompletableFuture<Component> handleItemTransaction(
+  public CompletableFuture<MutableMessage> handleItemTransaction(
       final BazaarTransactionContext transactionContext
   ) {
     switch (transactionContext.parsingContext().type()) {
@@ -73,13 +73,12 @@ class BazaarService implements BazaarFacade {
   }
 
   @Override
-  public CompletableFuture<Component> handleItemPurchase(
+  public CompletableFuture<MutableMessage> handleItemPurchase(
       final BazaarTransactionContext transactionContext,
       final boolean whetherCustomerHasEnoughFunds
   ) {
     if (!whetherCustomerHasEnoughFunds) {
-      return completedFuture(miniMessage().deserialize(
-          "<red>Nie posiadasz wystarczająco gotówki, aby to zakupić."));
+      return completedFuture(messageSource.customerOutOfBalance);
     }
 
     final BazaarParsingContext parsingContext = transactionContext.parsingContext();
@@ -92,11 +91,7 @@ class BazaarService implements BazaarFacade {
         transactionContext.customer().getInventory(), parsingContext.material()
     );
     if (requiredSlots > obtainedSlots) {
-      return completedFuture(
-          miniMessage().deserialize(
-              "<red>Nie posiadasz wystarczająco miejsca w ekwipunku, aby to zakupić."
-          )
-      );
+      return completedFuture(messageSource.customerOutOfSpace);
     }
 
     return economyFacade
@@ -112,15 +107,17 @@ class BazaarService implements BazaarFacade {
             )
         )
         .thenApply(state ->
-            miniMessage().deserialize(
-                "<gray>Zakupiłeś <white>x<quantity> <material></white> od <white><merchant></white> za <white><price></white>.",
-                getPlaceholdersOfParsingContext(parsingContext)
-            )
+            messageSource.productBought
+                .with("quantity", parsingContext.quantity())
+                .with("material", capitalize(parsingContext.material().name().toLowerCase(Locale.ROOT)))
+                .with("merchant", parsingContext.merchant())
+                .with("symbol", fundsCurrency.getSymbol())
+                .with("price", priceFormat.format(parsingContext.price()))
         );
   }
 
   @Override
-  public CompletableFuture<Component> handleItemSale(
+  public CompletableFuture<MutableMessage> handleItemSale(
       final BazaarTransactionContext transactionContext,
       final boolean whetherMerchantHasEnoughFunds
   ) {
@@ -130,13 +127,11 @@ class BazaarService implements BazaarFacade {
         .getInventory()
         .containsAtLeast(new ItemStack(parsingContext.material()), parsingContext.quantity());
     if (!whetherCustomerHasEnoughStock) {
-      return completedFuture(miniMessage().deserialize(
-          "<red>Nie posiadasz wystarczająco przedmiotów, aby to sprzedać."));
+      return completedFuture(messageSource.customerOutOfProduct);
     }
 
     if (!whetherMerchantHasEnoughFunds) {
-      return completedFuture(miniMessage().deserialize(
-          "<red>Właściciel bazaru, do którego próbujesz sprzedać przedmioty nie posiada wystarczająco gotówki."));
+      return completedFuture(messageSource.merchantOutOfBalance);
     }
 
     final int requiredSlots = getQuantityInSlots(
@@ -147,8 +142,7 @@ class BazaarService implements BazaarFacade {
         transactionContext.magazine().getInventory(), parsingContext.material()
     );
     if (requiredSlots > obtainedSlots) {
-      return completedFuture(miniMessage().deserialize(
-          "<red>Bazar, do którego próbujesz sprzedać przedmioty nie posiada wystarczająco miejsca."));
+      return completedFuture(messageSource.bazaarOutOfSpace);
     }
 
     return economyFacade
@@ -164,10 +158,12 @@ class BazaarService implements BazaarFacade {
             )
         )
         .thenApply(state ->
-            miniMessage().deserialize(
-                "<gray>Sprzedałeś <white>x<quantity> <material></white> dla <white><merchant></white> za <white><price></white>.",
-                getPlaceholdersOfParsingContext(parsingContext)
-            )
+            messageSource.productSold
+                .with("quantity", parsingContext.quantity())
+                .with("material", capitalize(parsingContext.material().name().toLowerCase(Locale.ROOT)))
+                .with("merchant", parsingContext.merchant())
+                .with("symbol", fundsCurrency.getSymbol())
+                .with("price", priceFormat.format(parsingContext.price()))
         );
   }
 
@@ -188,20 +184,5 @@ class BazaarService implements BazaarFacade {
     final ItemStack productItemStack = new ItemStack(parsingContext.material(), parsingContext.quantity());
     transactionContext.customer().getInventory().removeItemAnySlot(productItemStack);
     transactionContext.magazine().getInventory().addItem(productItemStack);
-  }
-
-  private TagResolver[] getPlaceholdersOfParsingContext(final BazaarParsingContext parsingContext) {
-    return Set.of(
-        unparsed("price", "%s%s"
-            .formatted(
-                fundsCurrency.getSymbol(),
-                priceFormat.format(parsingContext.price())
-            )
-        ),
-        unparsed("currency", fundsCurrency.getSymbol()),
-        unparsed("merchant", parsingContext.merchant()),
-        unparsed("material", capitalize(parsingContext.material().name().toLowerCase(Locale.ROOT))),
-        unparsed("quantity", String.valueOf(parsingContext.quantity()))
-    ).toArray(TagResolver[]::new);
   }
 }

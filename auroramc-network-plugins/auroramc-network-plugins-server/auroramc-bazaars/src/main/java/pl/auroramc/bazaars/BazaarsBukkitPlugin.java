@@ -12,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.auroramc.bazaars.bazaar.BazaarFacade;
 import pl.auroramc.bazaars.bazaar.listener.BazaarCreateListener;
 import pl.auroramc.bazaars.bazaar.listener.BazaarUsageListener;
+import pl.auroramc.bazaars.message.MessageSource;
 import pl.auroramc.commons.config.ConfigFactory;
 import pl.auroramc.commons.config.serdes.SerdesCommons;
 import pl.auroramc.economy.EconomyFacade;
@@ -25,6 +26,9 @@ public class BazaarsBukkitPlugin extends JavaPlugin {
   public void onEnable() {
     final ConfigFactory configFactory = new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
 
+    final MessageSource messageSource = configFactory.produceConfig(
+        MessageSource.class, MessageSource.MESSAGE_SOURCE_FILE_NAME, new SerdesCommons()
+    );
     final BazaarsConfig bazaarsConfig = configFactory.produceConfig(
         BazaarsConfig.class, BAZAARS_CONFIG_FILE_NAME, new SerdesCommons()
     );
@@ -41,12 +45,12 @@ public class BazaarsBukkitPlugin extends JavaPlugin {
     final EconomyFacade economyFacade = resolveService(getServer(), EconomyFacade.class);
 
     final BazaarFacade bazaarFacade = getBazaarFacade(
-        this, bazaarsConfig.priceFormat, fundsCurrency, economyFacade
+        this, bazaarsConfig.priceFormat, messageSource, fundsCurrency, economyFacade
     );
 
     registerListeners(this,
-        new BazaarCreateListener(bazaarsConfig.priceFormat, getBazaarParser()),
-        new BazaarUsageListener(getBazaarParser(), bazaarFacade, userFacade)
+        new BazaarCreateListener(messageSource, bazaarsConfig.priceFormat, getBazaarParser()),
+        new BazaarUsageListener(messageSource, getBazaarParser(), bazaarFacade, userFacade)
     );
   }
 }

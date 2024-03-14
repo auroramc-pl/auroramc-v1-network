@@ -4,7 +4,6 @@ import static java.math.BigDecimal.ZERO;
 import static net.kyori.adventure.text.Component.empty;
 import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.format.TextDecoration.BOLD;
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static org.bukkit.block.sign.Side.BACK;
 import static org.bukkit.event.EventPriority.HIGHEST;
 import static pl.auroramc.bazaars.bazaar.BazaarUtils.resolveSignProp;
@@ -23,14 +22,22 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import pl.auroramc.bazaars.bazaar.parser.BazaarParser;
 import pl.auroramc.bazaars.bazaar.parser.BazaarParsingContext;
+import pl.auroramc.bazaars.message.MessageSource;
+import pl.auroramc.commons.message.MutableMessage;
 
 public class BazaarCreateListener implements Listener {
 
   private static final int PLAYER_INVENTORY_CAPACITY = 2304;
+  private final MessageSource messageSource;
   private final DecimalFormat priceFormat;
   private final BazaarParser bazaarParser;
 
-  public BazaarCreateListener(final DecimalFormat priceFormat, final BazaarParser bazaarParser) {
+  public BazaarCreateListener(
+      final MessageSource messageSource,
+      final DecimalFormat priceFormat,
+      final BazaarParser bazaarParser
+  ) {
+    this.messageSource = messageSource;
     this.priceFormat = priceFormat;
     this.bazaarParser = bazaarParser;
   }
@@ -57,7 +64,7 @@ public class BazaarCreateListener implements Listener {
         destroySign(
             event.getPlayer(),
             event.getBlock(),
-            "<red>Nie możesz stworzyć tabliczki dla innego gracza, upewnij się, czy wpisałeś swoją nazwę poprawnie."
+            messageSource.invalidMerchant
         );
         return;
       }
@@ -66,7 +73,7 @@ public class BazaarCreateListener implements Listener {
         destroySign(
             event.getPlayer(),
             event.getBlock(),
-            "<red>Wskazana przez ciebie ilość jest nieprawidłowa."
+            messageSource.invalidQuantity
         );
         return;
       }
@@ -75,7 +82,7 @@ public class BazaarCreateListener implements Listener {
         destroySign(
             event.getPlayer(),
             event.getBlock(),
-            "<red>Wskazana przez ciebie cena jest nieprawidłowa."
+            messageSource.invalidPrice
         );
         return;
       }
@@ -95,8 +102,8 @@ public class BazaarCreateListener implements Listener {
     }
   }
 
-  private void destroySign(final Player player, final Block block, final String rawCause) {
+  private void destroySign(final Player player, final Block block, final MutableMessage cause) {
     block.breakNaturally();
-    player.sendMessage(miniMessage().deserialize(rawCause));
+    player.sendMessage(cause.compile());
   }
 }
