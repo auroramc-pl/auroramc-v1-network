@@ -1,6 +1,5 @@
 package pl.auroramc.shops.product;
 
-import static java.util.concurrent.CompletableFuture.completedFuture;
 import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static pl.auroramc.commons.BukkitUtils.postToMainThread;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
@@ -96,7 +95,8 @@ class ProductService implements ProductFacade {
       final HumanEntity entity, final Product product, final boolean whetherEntityHasEnoughFunds
   ) {
     if (!whetherEntityHasEnoughFunds) {
-      return completedFuture(messageSource.productCouldNotBeBoughtBecauseOfMissingMoney);
+      return messageSource.productCouldNotBeBoughtBecauseOfMissingMoney
+          .asCompletedFuture();
     }
 
     final int requiredSlots = getQuantityInSlots(
@@ -107,7 +107,8 @@ class ProductService implements ProductFacade {
         entity.getInventory(), product.subject()
     );
     if (requiredSlots > obtainedSlots) {
-      return completedFuture(messageSource.productCouldNotBeBoughtBecauseOfMissingSpace);
+      return messageSource.productCouldNotBeBoughtBecauseOfMissingSpace
+          .asCompletedFuture();
     }
 
     return economyFacade.withdraw(entity.getUniqueId(), fundsCurrency, product.priceForPurchase())

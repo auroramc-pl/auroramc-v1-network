@@ -1,6 +1,5 @@
 package pl.auroramc.cheque;
 
-import static java.util.concurrent.CompletableFuture.completedFuture;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.decimal.DecimalUtils.getLengthOfFractionalPart;
@@ -53,16 +52,18 @@ class ChequeCommand {
       final Player invoker, final @Arg BigDecimal amount
   ) {
     if (getLengthOfIntegralPart(amount) > 9 || getLengthOfFractionalPart(amount) > 2) {
-      return completedFuture(messageSource.chequeCouldNotBeCreatedBecauseOfDigits
+      return messageSource.chequeCouldNotBeCreatedBecauseOfDigits
           .with("maximum-integral-length", MAXIMUM_INTEGRAL_LENGTH)
-          .with("maximum-fraction-length", MAXIMUM_FRACTION_LENGTH));
+          .with("maximum-fraction-length", MAXIMUM_FRACTION_LENGTH)
+          .asCompletedFuture();
     }
 
     if (amount.compareTo(MINIMUM_CHEQUE_WORTH) < 0 || amount.compareTo(MAXIMUM_CHEQUE_WORTH) > 0) {
-      return completedFuture(messageSource.chequeCouldNotBeCreatedBecauseOfAmount
+      return messageSource.chequeCouldNotBeCreatedBecauseOfAmount
           .with("symbol", fundsCurrency.getSymbol())
           .with("minimum-cheque-worth", getFormattedDecimal(MINIMUM_CHEQUE_WORTH))
-          .with("maximum-cheque-worth", getFormattedDecimal(MAXIMUM_CHEQUE_WORTH)));
+          .with("maximum-cheque-worth", getFormattedDecimal(MAXIMUM_CHEQUE_WORTH))
+          .asCompletedFuture();
     }
 
     return economyFacade.has(invoker.getUniqueId(), fundsCurrency, amount)
@@ -74,7 +75,8 @@ class ChequeCommand {
   private CompletableFuture<MutableMessage> completeChequeCreation(
       final Player player, final BigDecimal amount, final boolean whetherPlayerHasEnoughFunds) {
     if (!whetherPlayerHasEnoughFunds) {
-      return completedFuture(messageSource.chequeCouldNotBeCreatedBecauseOfMoney);
+      return messageSource.chequeCouldNotBeCreatedBecauseOfMoney
+          .asCompletedFuture();
     }
 
     return economyFacade.withdraw(player.getUniqueId(), fundsCurrency, amount)

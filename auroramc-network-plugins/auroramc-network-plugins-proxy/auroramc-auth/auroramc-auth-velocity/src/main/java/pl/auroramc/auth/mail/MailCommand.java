@@ -1,6 +1,5 @@
 package pl.auroramc.auth.mail;
 
-import static java.util.concurrent.CompletableFuture.completedFuture;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 
 import com.velocitypowered.api.proxy.Player;
@@ -43,7 +42,8 @@ public class MailCommand {
       final Player player, final @Arg String email
   ) {
     if (!emailPattern.matcher(email).matches()) {
-      return completedFuture(messageSource.specifiedEmailIsInvalid);
+      return messageSource.specifiedEmailIsInvalid
+          .asCompletedFuture();
     }
 
     return userFacade.getUserByUniqueId(player.getUniqueId())
@@ -55,15 +55,18 @@ public class MailCommand {
       final User user, final String email
   ) {
     if (user.isPremium()) {
-      return completedFuture(messageSource.notAllowedBecauseOfPremiumAccount);
+      return messageSource.notAllowedBecauseOfPremiumAccount
+          .asCompletedFuture();
     }
 
     if (!user.isRegistered()) {
-      return completedFuture(messageSource.notAllowedBecauseOfNonRegisteredAccount);
+      return messageSource.notAllowedBecauseOfNonRegisteredAccount
+          .asCompletedFuture();
     }
 
     if (!user.isAuthenticated()) {
-      return completedFuture(messageSource.notAllowedBecauseOfMissingAuthorization);
+      return messageSource.notAllowedBecauseOfMissingAuthorization
+          .asCompletedFuture();
     }
 
     if (
@@ -71,7 +74,8 @@ public class MailCommand {
             .filter(email::equalsIgnoreCase)
             .isPresent()
     ) {
-      return completedFuture(messageSource.specifiedEmailIsTheSame);
+      return messageSource.specifiedEmailIsTheSame
+          .asCompletedFuture();
     }
 
     return userFacade.getUserByEmail(email)
@@ -82,7 +86,8 @@ public class MailCommand {
       final User user, final User persistedUser, final String email
   ) {
     if (persistedUser != null) {
-      return completedFuture(messageSource.specifiedEmailIsClaimed);
+      return messageSource.specifiedEmailIsClaimed
+          .asCompletedFuture();
     }
 
     user.setEmail(email);

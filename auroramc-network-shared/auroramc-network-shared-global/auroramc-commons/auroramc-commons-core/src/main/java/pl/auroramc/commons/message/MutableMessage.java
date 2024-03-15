@@ -1,9 +1,11 @@
 package pl.auroramc.commons.message;
 
+import static java.util.concurrent.CompletableFuture.completedFuture;
 import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static pl.auroramc.commons.lazy.Lazy.lazy;
 import static pl.auroramc.commons.message.MutableMessageVariableResolver.getResolvedMessageVariable;
 
+import java.util.concurrent.CompletableFuture;
 import net.kyori.adventure.text.Component;
 import pl.auroramc.commons.lazy.Lazy;
 
@@ -72,5 +74,9 @@ public class MutableMessage {
 
   private String getKeyWithMarkers(final String rawKey) {
     return PLACEHOLDER_KEY_INITIATOR + rawKey + PLACEHOLDER_KEY_TERMINATOR;
+  }
+
+  public CompletableFuture<MutableMessage> asCompletedFuture() {
+    return completedFuture(this);
   }
 }

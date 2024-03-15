@@ -1,6 +1,5 @@
 package pl.auroramc.bazaars.bazaar;
 
-import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 import static pl.auroramc.bazaars.bazaar.BazaarUtils.getEmptySlotsCount;
 import static pl.auroramc.bazaars.bazaar.BazaarUtils.getQuantityInSlots;
@@ -78,7 +77,8 @@ class BazaarService implements BazaarFacade {
       final boolean whetherCustomerHasEnoughFunds
   ) {
     if (!whetherCustomerHasEnoughFunds) {
-      return completedFuture(messageSource.customerOutOfBalance);
+      return messageSource.customerOutOfBalance
+          .asCompletedFuture();
     }
 
     final BazaarParsingContext parsingContext = transactionContext.parsingContext();
@@ -91,7 +91,8 @@ class BazaarService implements BazaarFacade {
         transactionContext.customer().getInventory(), parsingContext.material()
     );
     if (requiredSlots > obtainedSlots) {
-      return completedFuture(messageSource.customerOutOfSpace);
+      return messageSource.customerOutOfSpace
+          .asCompletedFuture();
     }
 
     return economyFacade
@@ -127,11 +128,13 @@ class BazaarService implements BazaarFacade {
         .getInventory()
         .containsAtLeast(new ItemStack(parsingContext.material()), parsingContext.quantity());
     if (!whetherCustomerHasEnoughStock) {
-      return completedFuture(messageSource.customerOutOfProduct);
+      return messageSource.customerOutOfProduct
+          .asCompletedFuture();
     }
 
     if (!whetherMerchantHasEnoughFunds) {
-      return completedFuture(messageSource.merchantOutOfBalance);
+      return messageSource.merchantOutOfBalance
+          .asCompletedFuture();
     }
 
     final int requiredSlots = getQuantityInSlots(
@@ -142,7 +145,8 @@ class BazaarService implements BazaarFacade {
         transactionContext.magazine().getInventory(), parsingContext.material()
     );
     if (requiredSlots > obtainedSlots) {
-      return completedFuture(messageSource.bazaarOutOfSpace);
+      return messageSource.bazaarOutOfSpace
+          .asCompletedFuture();
     }
 
     return economyFacade

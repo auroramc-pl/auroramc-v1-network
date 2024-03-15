@@ -2,7 +2,6 @@ package pl.auroramc.auctions.auction;
 
 import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_DOWN;
-import static java.util.concurrent.CompletableFuture.completedFuture;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.item.ItemStackFormatter.getFormattedItemStack;
@@ -135,26 +134,35 @@ public class AuctionCommand {
   ) {
     final Auction auction = auctionController.getOngoingAuction();
     if (auction == null) {
-      return completedFuture(messageSource.offerMissingAuction);
+      return messageSource.offerMissingAuction
+          .asCompletedFuture();
     }
 
     if (auction.getVendorUniqueId().equals(player.getUniqueId())) {
-      return completedFuture(messageSource.offerSelfAuction);
+      return messageSource.offerSelfAuction
+          .asCompletedFuture();
     }
 
-    if (auction.getTraderUniqueId() != null &&
+    if (
+        auction.getTraderUniqueId() != null &&
         auction.getTraderUniqueId().equals(player.getUniqueId())
     ) {
-      return completedFuture(messageSource.offerIsAlreadyHighest);
+      return messageSource.offerIsAlreadyHighest
+          .asCompletedFuture();
     }
 
     final BigDecimal resolvedOffer = resolveAuctionOffer(auction, offer);
     if (resolvedOffer.compareTo(auction.getMinimalPrice()) < 0) {
-      return completedFuture(messageSource.offerIsAlreadyHighest);
+      return messageSource.offerIsAlreadyHighest
+          .asCompletedFuture();
     }
 
-    if (auction.getCurrentOffer() != null && resolvedOffer.compareTo(auction.getCurrentOffer()) <= 0) {
-      return completedFuture(messageSource.offerIsSmallerThanHighestOffer);
+    if (
+        auction.getCurrentOffer() != null &&
+        resolvedOffer.compareTo(auction.getCurrentOffer()) <= 0
+    ) {
+      return messageSource.offerIsSmallerThanHighestOffer
+          .asCompletedFuture();
     }
 
     return economyFacade.has(player.getUniqueId(), fundsCurrency, resolvedOffer)
@@ -171,7 +179,8 @@ public class AuctionCommand {
       final Player trader, final BigDecimal offer, final boolean whetherTraderHasEnoughMoney
   ) {
     if (!whetherTraderHasEnoughMoney) {
-      return completedFuture(messageSource.offerNotEnoughBalance);
+      return messageSource.offerNotEnoughBalance
+          .asCompletedFuture();
     }
 
     final Auction auction = auctionController.getOngoingAuction();

@@ -1,6 +1,5 @@
 package pl.auroramc.auth.command;
 
-import static java.util.concurrent.CompletableFuture.completedFuture;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 
 import com.velocitypowered.api.proxy.Player;
@@ -46,7 +45,8 @@ public class PasswordController {
       final TriFunction<Player, User, String, CompletableFuture<MutableMessage>> processor
   ) {
     if (!passwordValidator.validatePassword(password)) {
-      return completedFuture(messageSource.specifiedPasswordIsUnsafe);
+      return messageSource.specifiedPasswordIsUnsafe
+          .asCompletedFuture();
     }
 
     return userFacade.getUserByUniqueId(player.getUniqueId())

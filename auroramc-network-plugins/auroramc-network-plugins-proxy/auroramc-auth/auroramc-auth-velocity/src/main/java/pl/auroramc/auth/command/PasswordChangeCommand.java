@@ -1,6 +1,5 @@
 package pl.auroramc.auth.command;
 
-import static java.util.concurrent.CompletableFuture.completedFuture;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 
 import com.velocitypowered.api.proxy.Player;
@@ -51,23 +50,28 @@ public class PasswordChangeCommand {
   private CompletableFuture<MutableMessage> handlePasswordChange(
       final Player player, final User user, final String oldPassword, final String newPassword) {
     if (user.isPremium()) {
-      return completedFuture(messageSource.notAllowedBecauseOfPremiumAccount);
+      return messageSource.notAllowedBecauseOfPremiumAccount
+          .asCompletedFuture();
     }
 
     if (!user.isRegistered()) {
-      return completedFuture(messageSource.notAllowedBecauseOfNonRegisteredAccount);
+      return messageSource.notAllowedBecauseOfNonRegisteredAccount
+          .asCompletedFuture();
     }
 
     if (!user.isAuthenticated()) {
-      return completedFuture(messageSource.notAllowedBecauseOfMissingAuthorization);
+      return messageSource.notAllowedBecauseOfMissingAuthorization
+          .asCompletedFuture();
     }
 
     if (!hashingStrategy.verifyPassword(oldPassword, user.getPassword())) {
-      return completedFuture(messageSource.specifiedPasswordIsInvalid);
+      return messageSource.specifiedPasswordIsInvalid
+          .asCompletedFuture();
     }
 
     if (hashingStrategy.verifyPassword(newPassword, user.getPassword())) {
-      return completedFuture(messageSource.specifiedPasswordIsSame);
+      return messageSource.specifiedPasswordIsSame
+          .asCompletedFuture();
     }
 
     return passwordController.submitChangeOfPassword(player, user, newPassword)

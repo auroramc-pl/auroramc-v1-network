@@ -1,6 +1,5 @@
 package pl.auroramc.auth.command;
 
-import static java.util.concurrent.CompletableFuture.completedFuture;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 
 import com.velocitypowered.api.proxy.Player;
@@ -41,7 +40,8 @@ public class RegisterCommand {
       final Player player, final @Arg String password, final @Arg String repeatedPassword
   ) {
     if (!password.equals(repeatedPassword)) {
-      return completedFuture(messageSource.specifiedPasswordsDiffers);
+      return messageSource.specifiedPasswordsDiffers
+          .asCompletedFuture();
     }
 
     return passwordController.validateChangeOfPassword(player, password, this::handleUserRegistration)
@@ -52,11 +52,13 @@ public class RegisterCommand {
       final Player player, final User user, final String newPassword
   ) {
     if (user.isPremium()) {
-      return completedFuture(messageSource.notAllowedBecauseOfPremiumAccount);
+      return messageSource.notAllowedBecauseOfPremiumAccount
+          .asCompletedFuture();
     }
 
     if (user.isRegistered()) {
-      return completedFuture(messageSource.notAllowedBecauseOfRegisteredAccount);
+      return messageSource.notAllowedBecauseOfRegisteredAccount
+          .asCompletedFuture();
     }
 
     timeoutFacade.ditchCountdown(player.getUniqueId());

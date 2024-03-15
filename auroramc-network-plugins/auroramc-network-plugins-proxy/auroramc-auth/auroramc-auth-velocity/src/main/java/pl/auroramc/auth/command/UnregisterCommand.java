@@ -1,6 +1,5 @@
 package pl.auroramc.auth.command;
 
-import static java.util.concurrent.CompletableFuture.completedFuture;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.message.MutableMessage.empty;
 
@@ -40,7 +39,8 @@ public class UnregisterCommand {
 
   @Execute
   public CompletableFuture<MutableMessage> unregister(
-      final Player player, final @Arg String password) {
+      final Player player, final @Arg String password
+  ) {
     return userFacade.getUserByUniqueId(player.getUniqueId())
         .thenCompose(user -> handleUserUnregistration(player, user, password))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
@@ -50,19 +50,23 @@ public class UnregisterCommand {
       final Player player, final User user, final String password
   ) {
     if (user.isPremium()) {
-      return completedFuture(messageSource.notAllowedBecauseOfPremiumAccount);
+      return messageSource.notAllowedBecauseOfPremiumAccount
+          .asCompletedFuture();
     }
 
     if (!user.isRegistered()) {
-      return completedFuture(messageSource.notAllowedBecauseOfRegisteredAccount);
+      return messageSource.notAllowedBecauseOfRegisteredAccount
+          .asCompletedFuture();
     }
 
     if (!user.isAuthenticated()) {
-      return completedFuture(messageSource.notAllowedBecauseOfMissingAuthorization);
+      return messageSource.notAllowedBecauseOfMissingAuthorization
+          .asCompletedFuture();
     }
 
     if (!hashingStrategy.verifyPassword(password, user.getPassword())) {
-      return completedFuture(messageSource.specifiedPasswordIsInvalid);
+      return messageSource.specifiedPasswordIsInvalid
+          .asCompletedFuture();
     }
 
     user.setPassword(null);
