@@ -73,9 +73,15 @@ public class QuestTrackController {
     objectiveProgressFacade.deleteObjectiveProgressByUserIdAndQuestId(user.getId(), quest.getKey().getId());
 
     final QuestTrack questTrack = questTrackFacade.getQuestTrackByUserUniqueIdAndQuestId(user.getUniqueId(), quest.getKey().getId())
-        .orElseThrow(() -> new QuestTrackResolvingException(
-            "Could not get quest track for user %s and quest %d".formatted(
-            user.getUniqueId(), quest.getKey().getId())));
+        .orElseThrow(() ->
+            new QuestTrackResolvingException(
+                "Could not get quest track for user %s and quest %d"
+                    .formatted(
+                        user.getUniqueId(),
+                        quest.getKey().getId()
+                    )
+            )
+        );
     questTrack.setQuestState(COMPLETED);
     questTrackFacade.updateQuestTrack(questTrack);
 

@@ -57,7 +57,14 @@ public final class Quest extends Resource {
         .filter(objective -> objective.getKey().getId() == objectiveId)
         .map(objectiveType::cast)
         .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("Objective with id %s not found.".formatted(objectiveId)));
+        .orElseThrow(() ->
+            new IllegalArgumentException(
+                "Objective with id %s not found."
+                    .formatted(
+                        objectiveId
+                    )
+            )
+        );
   }
 
   public Objective<?> getObjectiveByObjectiveId(final long objectiveId) {

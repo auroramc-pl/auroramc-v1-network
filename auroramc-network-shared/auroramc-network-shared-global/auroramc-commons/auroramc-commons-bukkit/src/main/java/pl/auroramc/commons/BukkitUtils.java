@@ -35,8 +35,14 @@ public final class BukkitUtils {
   public static <T> T resolveService(final Server server, final Class<T> serviceType) {
     return Optional.ofNullable(server.getServicesManager().getRegistration(serviceType))
         .map(RegisteredServiceProvider::getProvider)
-        .orElseThrow(() -> new BukkitServiceRetrievalException(
-            "Could not resolve %s service through bukkit's services.".formatted(serviceType.getSimpleName())));
+        .orElseThrow(() ->
+            new BukkitServiceRetrievalException(
+                "Could not resolve %s service through bukkit's services."
+                    .formatted(
+                        serviceType.getSimpleName()
+                    )
+            )
+        );
   }
 
   public static void registerServices(
