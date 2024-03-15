@@ -1,27 +1,29 @@
 package pl.auroramc.gamble.gamble;
 
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
-import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.unparsed;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 
-import java.util.List;
 import java.util.logging.Logger;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
+import pl.auroramc.gamble.message.MessageSource;
 
 class GambleService implements GambleFacade {
 
   private final Logger logger;
   private final Currency fundsCurrency;
+  private final MessageSource messageSource;
   private final EconomyFacade economyFacade;
 
   GambleService(
-      final Logger logger, final Currency fundsCurrency, final EconomyFacade economyFacade
+      final Logger logger,
+      final Currency fundsCurrency,
+      final MessageSource messageSource,
+      final EconomyFacade economyFacade
   ) {
     this.logger = logger;
     this.fundsCurrency = fundsCurrency;
+    this.messageSource = messageSource;
     this.economyFacade = economyFacade;
   }
 
@@ -41,16 +43,20 @@ class GambleService implements GambleFacade {
         )
         .thenAccept(state -> {
           winnerParticipant.sendMessage(
-              miniMessage().deserialize(
-                  "<gray>Wygrałeś <hover:show_text:'<gray>Unikalny identyfikator: <white><gamble_unique_id>'>zakład</hover> <gray>o stawce <white><stake_symbol><stake> <gray>mierząc się z <white><competitor><gray>.",
-                  getGambleTagResolvers(gamble, losingParticipant)
-              )
+              messageSource.stakeWon
+                  .with("unique_id", gamble.getGambleContext().gambleUniqueId().toString())
+                  .with("symbol", fundsCurrency.getSymbol())
+                  .with("stake", getFormattedDecimal(gamble.getGambleContext().stake()))
+                  .with("competitor", losingParticipant.username())
+                  .compile()
           );
           losingParticipant.sendMessage(
-              miniMessage().deserialize(
-                  "<gray>Przegrałeś <hover:show_text:'<gray>Unikalny identyfikator: <white><gamble_unique_id>'>zakład</hover> <gray>o stawce <white><stake_symbol><stake> <gray>mierząc się z <white><competitor><gray>.",
-                  getGambleTagResolvers(gamble, winnerParticipant)
-              )
+              messageSource.stakeLost
+                  .with("unique_id", gamble.getGambleContext().gambleUniqueId().toString())
+                  .with("symbol", fundsCurrency.getSymbol())
+                  .with("stake", getFormattedDecimal(gamble.getGambleContext().stake()))
+                  .with("competitor", winnerParticipant.username())
+                  .compile()
           );
         })
         .exceptionally(exception -> delegateCaughtException(logger, exception));
@@ -60,14 +66,5 @@ class GambleService implements GambleFacade {
     return gamble.getGambleContext().initiator().equals(participant)
         ? gamble.getGambleContext().competitor()
         : gamble.getGambleContext().initiator();
-  }
-
-  private TagResolver[] getGambleTagResolvers(final Gamble gamble, final Participant competitor) {
-    return List.of(
-        unparsed("gamble_unique_id", gamble.getGambleContext().gambleUniqueId().toString()),
-        unparsed("stake", getFormattedDecimal(gamble.getGambleContext().stake())),
-        unparsed("stake_symbol", fundsCurrency.getSymbol()),
-        unparsed("competitor", competitor.username())
-    ).toArray(TagResolver[]::new);
   }
 }

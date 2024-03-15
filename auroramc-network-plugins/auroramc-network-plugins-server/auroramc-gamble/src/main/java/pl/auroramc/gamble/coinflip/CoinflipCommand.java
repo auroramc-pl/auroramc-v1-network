@@ -4,8 +4,6 @@ import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_DOWN;
 import static java.util.Locale.ROOT;
 import static java.util.concurrent.CompletableFuture.completedFuture;
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
-import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.unparsed;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
@@ -19,11 +17,12 @@ import java.math.BigDecimal;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
-import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
+import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.gamble.gamble.Participant;
+import pl.auroramc.gamble.message.MessageSource;
 import pl.auroramc.gamble.stake.StakeContext;
 import pl.auroramc.gamble.stake.StakeFacade;
 import pl.auroramc.gamble.stake.view.StakeViewFacade;
@@ -36,6 +35,7 @@ public class CoinflipCommand {
   private final StakeFacade stakeFacade;
   private final StakeViewFacade stakeViewFacade;
   private final Currency fundsCurrency;
+  private final MessageSource messageSource;
   private final EconomyFacade economyFacade;
 
   public CoinflipCommand(
@@ -43,22 +43,26 @@ public class CoinflipCommand {
       final StakeFacade stakeFacade,
       final StakeViewFacade stakeViewFacade,
       final Currency fundsCurrency,
+      final MessageSource messageSource,
       final EconomyFacade economyFacade
   ) {
     this.logger = logger;
     this.stakeFacade = stakeFacade;
     this.stakeViewFacade = stakeViewFacade;
     this.fundsCurrency = fundsCurrency;
+    this.messageSource = messageSource;
     this.economyFacade = economyFacade;
   }
 
   @Execute
-  public CompletableFuture<Component> coinflip(
+  public CompletableFuture<MutableMessage> coinflip(
       final Player player, final @Arg CoinSide prediction, final @Arg BigDecimal stake
   ) {
     final BigDecimal fixedStake = stake.setScale(2, HALF_DOWN);
     if (fixedStake.compareTo(ZERO) <= 0) {
-      return completedFuture(miniMessage().deserialize("<red>Stawka musi być większa od zera."));
+      return completedFuture(
+          messageSource.stakeMustBeGreaterThanZero
+      );
     }
 
     return economyFacade.has(player.getUniqueId(), fundsCurrency, fixedStake)
@@ -70,15 +74,16 @@ public class CoinflipCommand {
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
-  private CompletableFuture<Component> completeCoinflipGambleCreation(
+  private CompletableFuture<MutableMessage> completeCoinflipGambleCreation(
       final Player player,
       final CoinSide prediction,
       final BigDecimal stake,
       final boolean whetherPlayerHasEnoughFunds
   ) {
     if (!whetherPlayerHasEnoughFunds) {
-      return completedFuture(miniMessage().deserialize(
-          "<red>Nie posiadasz wystarczających środków aby utworzyć ten zakład."));
+      return completedFuture(
+          messageSource.stakeMissingBalance
+      );
     }
 
     return economyFacade.withdraw(player.getUniqueId(), fundsCurrency, stake)
@@ -98,13 +103,10 @@ public class CoinflipCommand {
               .build()
           );
           stakeViewFacade.recalculate();
-
-          return miniMessage().deserialize(
-              "<gray>Zakład o stawce <white><stake_symbol><stake> <gray>na <white><prediction> <gray>został utworzony i oczekuje na przeciwnika.",
-              unparsed("stake", getFormattedDecimal(stake)),
-              unparsed("stake_symbol", fundsCurrency.getSymbol()),
-              unparsed("prediction", capitalize(prediction.name().toLowerCase(ROOT)))
-          );
+          return messageSource.stakeCreated
+              .with("symbol", fundsCurrency.getSymbol())
+              .with("stake", getFormattedDecimal(stake))
+              .with("prediction", capitalize(prediction.name().toLowerCase(ROOT)));
         })
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }

@@ -74,7 +74,7 @@ public class MessageSource extends OkaeriConfig {
 
   public MutableMessage auctionSummary = MutableMessage.of(
       """
-      <gray>Informacje na temat bieżącej <hover:show_text:{unique_id}>aukcji</hover><dark_gray>:
+      <gray>Informacje na temat bieżącej <hover:show_text:'<gray>Unikalny identyfikator: <white>{unique_id}'>aukcji</hover><dark_gray>:
       <dark_gray>► <gray>Przedmiot: <white>{subject}
       <dark_gray>► <gray>Osoba wystawiająca: <white>{vendor}
       <dark_gray>► <gray>Największa oferta: {highest_bid}
@@ -100,26 +100,26 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage auctionNearCompletion = MutableMessage.of(
-      "<gray><hover:show_text:{unique_id}>Aukcja</hover> zakończy się za <white>{period}s<gray>."
+      "<hover:show_text:'<gray>Unikalny identyfikator: <white>{unique_id}'>Aukcja</hover> zakończy się za <white>{period}s<gray>."
   );
 
   public MutableMessage auctionHasStarted = MutableMessage.of(
-      "<gray>Gracz <white>{vendor}</white> rozpoczął <hover:show_text:{unique_id}>aukcję</hover> o przedmiot <white>{subject}</white>. Kwota początkowa wynosi <white>{symbol}{minimal_price}</white>, a minimalna kwota przebicia to <white>{symbol}{minimal_price_puncture}</white>."
+      "<gray>Gracz <white>{vendor}</white> rozpoczął <hover:show_text:'<gray>Unikalny identyfikator: <white>{unique_id}'>aukcję</hover> o przedmiot <white>{subject}</white>. Kwota początkowa wynosi <white>{symbol}{minimal_price}</white>, a minimalna kwota przebicia to <white>{symbol}{minimal_price_puncture}</white>."
   );
 
   public MutableMessage auctionHasCompletedWithoutOffers = MutableMessage.of(
-      "<gray><hover:show_text:{unique_id}>Aukcja</hover> zakończyła się bez ofert. Przedmiot został zwrócony do <white>{vendor}</white>."
+      "<gray><hover:show_text:'<gray>Unikalny identyfikator: <white>{unique_id}'>Aukcja</hover> zakończyła się bez ofert. Przedmiot został zwrócony do <white>{vendor}</white>."
   );
 
   public MutableMessage auctionHasCompleted = MutableMessage.of(
-      "<gray><hover:show_text:{unique_id}>Aukcja</hover> gracza <white>{vendor}</white> zakończyła się. Przedmiot <white>{subject}</white> został sprzedany za <white>{symbol}{current_offer}</white> graczowi <white>{current_trader}</white>."
+      "<gray><hover:show_text:'<gray>Unikalny identyfikator: <white>{unique_id}'>Aukcja</hover> gracza <white>{vendor}</white> zakończyła się. Przedmiot <white>{subject}</white> został sprzedany za <white>{symbol}{current_offer}</white> graczowi <white>{current_trader}</white>."
   );
 
   public MutableMessage auctionReceivedOffer = MutableMessage.of(
-      "<gray>Gracz <white>{current_trader}</white> złożył ofertę <white>{symbol}{current_offer}</white> na <hover:show_text:{unique_id}>aukcję</hover> o przedmiot <white>{subject}</white>."
+      "<gray>Gracz <white>{current_trader}</white> złożył ofertę <white>{symbol}{current_offer}</white> na <hover:show_text:'<gray>Unikalny identyfikator: <white>{unique_id}'>aukcję</hover> o przedmiot <white>{subject}</white>."
   );
 
   public MutableMessage auctionHasBeenExtended = MutableMessage.of(
-      "<gray>Czas trwania <hover:show_text:{unique_id}>aukcji</hover> został przedłużony o <white>{offset}</white>."
+      "<gray>Czas trwania <hover:show_text:'<gray>Unikalny identyfikator: <white>{unique_id}'>aukcji</hover> został przedłużony o <white>{offset}</white>."
   );
 }
