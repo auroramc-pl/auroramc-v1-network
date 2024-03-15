@@ -60,7 +60,7 @@ public class MessageSource extends OkaeriConfig {
       "<gray>Złożyłeś ofertę w wysokości <white>{symbol}{offer}<gray>."
   );
 
-  public MutableMessage offeringFailure = MutableMessage.of(
+  public MutableMessage offeringFailed = MutableMessage.of(
       "<red>Wystąpił nieoczekiwany błąd podczas złożenia oferty."
   );
 

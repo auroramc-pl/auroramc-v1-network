@@ -1,9 +1,5 @@
 package pl.auroramc.economy;
 
-import static java.util.concurrent.CompletableFuture.completedFuture;
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
-import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.component;
-import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.unparsed;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 
@@ -13,36 +9,38 @@ import dev.rollczi.litecommands.command.permission.Permission;
 import dev.rollczi.litecommands.command.route.Route;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
 import java.util.logging.Logger;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.entity.Player;
+import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
+import pl.auroramc.economy.message.MessageSource;
 
 @Permission("auroramc.economy.economy")
 @Route(name = "economy", aliases = "eco")
 public class EconomyCommand {
 
   private final Logger logger;
+  private final MessageSource messageSource;
   private final EconomyFacade economyFacade;
   private final CurrencyFacade currencyFacade;
 
   public EconomyCommand(
       final Logger logger,
+      final MessageSource messageSource,
       final EconomyFacade economyFacade,
       final CurrencyFacade currencyFacade
   ) {
     this.logger = logger;
+    this.messageSource = messageSource;
     this.economyFacade = economyFacade;
     this.currencyFacade = currencyFacade;
   }
 
   @Execute(route = "set")
-  public CompletableFuture<Component> set(
+  public CompletableFuture<MutableMessage> set(
       final @Arg Player target, final @Arg Long currencyId, final @Arg BigDecimal amount
   ) {
     return processIncomingModification(currencyId, amount,
@@ -52,7 +50,7 @@ public class EconomyCommand {
   }
 
   @Execute(route = "add")
-  public CompletableFuture<Component> add(
+  public CompletableFuture<MutableMessage> add(
       final @Arg Player target, final @Arg Long currencyId, final @Arg BigDecimal amount
   ) {
     return processIncomingModification(currencyId, amount,
@@ -62,7 +60,7 @@ public class EconomyCommand {
   }
 
   @Execute(route = "take")
-  public CompletableFuture<Component> take(
+  public CompletableFuture<MutableMessage> take(
       final @Arg Player target, final @Arg Long currencyId, final @Arg BigDecimal amount
   ) {
     return processIncomingModification(currencyId, amount,
@@ -71,15 +69,15 @@ public class EconomyCommand {
     ).exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
-  private CompletableFuture<Component> balance(
+  private CompletableFuture<MutableMessage> balance(
       final Player player, final Currency currency, final BigDecimal amount
   ) {
     return economyFacade.balance(player.getUniqueId(), currency, amount)
         .thenApply(state ->
-            miniMessage().deserialize(
-                "<gray>Ustawiono saldo gracza <white><player><gray> dla waluty <white><currency_name> <dark_gray>(<white><currency_id><dark_gray>) <gray>na <white><symbol><amount><gray>.",
-                getModificationTagResolvers(player, currency, amount)
-            )
+            messageSource.balanceSet
+                .with("username", player.name())
+                .with("symbol", currency.getSymbol())
+                .with("amount", getFormattedDecimal(amount))
         ).exceptionally(exception -> {
           throw new EconomyException(
               "Could not set balance of %s for %d to %.2f."
@@ -93,15 +91,15 @@ public class EconomyCommand {
         });
   }
 
-  private CompletableFuture<Component> deposit(
+  private CompletableFuture<MutableMessage> deposit(
       final Player player, final Currency currency, final BigDecimal amount
   ) {
     return economyFacade.deposit(player.getUniqueId(), currency, amount)
         .thenApply(state ->
-            miniMessage().deserialize(
-                "<gray>Dodano <white><symbol><amount> <gray>do salda gracza <white><player><gray> dla waluty <white><currency_name> <dark_gray>(<white><currency_id><dark_gray>)<gray>.",
-                getModificationTagResolvers(player, currency, amount)
-            )
+            messageSource.balanceDeposited
+                .with("username", player.name())
+                .with("symbol", currency.getSymbol())
+                .with("amount", getFormattedDecimal(amount))
         )
         .exceptionally(exception -> {
           throw new EconomyException(
@@ -116,15 +114,15 @@ public class EconomyCommand {
         });
   }
 
-  private CompletableFuture<Component> withdraw(
+  private CompletableFuture<MutableMessage> withdraw(
       final Player player, final Currency currency, final BigDecimal amount
   ) {
     return economyFacade.withdraw(player.getUniqueId(), currency, amount)
         .thenApply(state ->
-            miniMessage().deserialize(
-                "<gray>Odebrano <white><symbol><amount> <gray>z salda gracza <white><player><gray> dla waluty <white><currency_name> <dark_gray>(<white><currency_id><dark_gray>)<gray>.",
-                getModificationTagResolvers(player, currency, amount)
-            )
+            messageSource.balanceWithdrawn
+                .with("username", player.name())
+                .with("symbol", currency.getSymbol())
+                .with("amount", getFormattedDecimal(amount))
         )
         .exceptionally(exception -> {
           throw new EconomyException(
@@ -139,40 +137,25 @@ public class EconomyCommand {
         });
   }
 
-  private TagResolver[] getModificationTagResolvers(
-      final Player player, final Currency currency, final BigDecimal amount
-  ) {
-    return
-        List.of(
-            component("player", player.name()),
-            unparsed("currency_name", currency.getName()),
-            unparsed("currency_id", String.valueOf(currency.getId())),
-            unparsed("symbol", currency.getSymbol()),
-            unparsed("amount", getFormattedDecimal(amount))
-        ).toArray(TagResolver[]::new);
-  }
-
-  private CompletableFuture<Component> processIncomingModification(
+  private CompletableFuture<MutableMessage> processIncomingModification(
       final Long currencyId,
       final BigDecimal amount,
-      final BiFunction<Currency, BigDecimal, CompletableFuture<Component>> modificationFunction,
+      final BiFunction<Currency, BigDecimal, CompletableFuture<MutableMessage>> modifier,
       final boolean requiresAmountValidation
   ) {
     final BigDecimal fixedAmount = amount.setScale(2, RoundingMode.HALF_DOWN);
     if (requiresAmountValidation && fixedAmount.compareTo(BigDecimal.ZERO) <= 0) {
-      return completedFuture(miniMessage().deserialize("<red>Kwota musi być większa od zera."));
+      return messageSource.modificationAmountHasToBeGreaterThanZero
+          .asCompletedFuture();
     }
 
     final Currency currency = currencyFacade.getCurrencyById(currencyId);
     if (currency == null) {
-      return completedFuture(
-          miniMessage().deserialize(
-              "<red>Operacja nie została wykonana, gdyż nie udało się odnaleźć waluty z id pasującym do <yellow><currency_id><red>.",
-              unparsed("currency_id", String.valueOf(currencyId))
-          )
-      );
+      return messageSource.modificationFailed
+          .with("currency_id", currencyId)
+          .asCompletedFuture();
     }
 
-    return modificationFunction.apply(currency, fixedAmount);
+    return modifier.apply(currency, fixedAmount);
   }
 }

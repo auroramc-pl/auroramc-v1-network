@@ -171,7 +171,7 @@ public class AuctionCommand {
         )
         .exceptionally(exception -> {
           delegateCaughtException(logger, exception);
-          return messageSource.offeringFailure;
+          return messageSource.offeringFailed;
         });
   }
 

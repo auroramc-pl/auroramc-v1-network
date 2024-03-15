@@ -53,7 +53,8 @@ class EconomyPlaceholderExpansion extends PlaceholderExpansion {
           variablesIncludingName, 1, variablesIncludingName.length);
       if (variables.length == 0) {
         logger.warning(
-            "Could not retrieve any variables from the balance retrieval.");
+            "Could not retrieve any variables from the balance retrieval."
+        );
         return null;
       }
 
@@ -61,7 +62,11 @@ class EconomyPlaceholderExpansion extends PlaceholderExpansion {
       final Currency currency = currencyFacade.getCurrencyById(currencyId);
       if (currency == null) {
         logger.warning(
-            "Could not find currency with id %s to process the balance retrieval.".formatted(currencyId));
+            "Could not find currency with id %s to process the balance retrieval."
+                .formatted(
+                    currencyId
+                )
+        );
         return null;
       }
 

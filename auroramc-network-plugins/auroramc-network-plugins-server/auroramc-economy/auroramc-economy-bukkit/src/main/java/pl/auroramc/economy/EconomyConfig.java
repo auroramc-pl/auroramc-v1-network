@@ -8,9 +8,9 @@ import pl.auroramc.economy.payment.PaymentConfig;
 import pl.auroramc.economy.rest.server.RestServerConfig;
 import pl.auroramc.economy.transfer.TransferConfig;
 
-public class EconomyBukkitPluginConfig extends OkaeriConfig {
+public class EconomyConfig extends OkaeriConfig {
 
-  public static final @Exclude String PLUGIN_CONFIG_FILE_NAME = "config.yml";
+  public static final @Exclude String ECONOMY_CONFIG_FILE_NAME = "config.yml";
 
   public BalanceConfig balance = new BalanceConfig();
 

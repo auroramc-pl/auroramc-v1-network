@@ -1,8 +1,8 @@
 package pl.auroramc.economy.transfer;
 
+import static java.math.BigDecimal.ZERO;
+import static java.math.RoundingMode.HALF_DOWN;
 import static java.util.logging.Level.SEVERE;
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
-import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.unparsed;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.lazy.Lazy.lazy;
@@ -12,29 +12,32 @@ import dev.rollczi.litecommands.command.execute.Execute;
 import dev.rollczi.litecommands.command.permission.Permission;
 import dev.rollczi.litecommands.command.route.Route;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.logging.Logger;
 import org.bukkit.entity.Player;
 import pl.auroramc.commons.lazy.Lazy;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
+import pl.auroramc.economy.message.MessageSource;
 
 @Permission("auroramc.economy.transfer")
 @Route(name = "transfer", aliases = {"pay", "przelej", "zaplac"})
 public class TransferCommand {
 
   private final Logger logger;
+  private final MessageSource messageSource;
   private final EconomyFacade economyFacade;
   private final Lazy<Currency> transferCurrency;
 
   public TransferCommand(
       final Logger logger,
+      final MessageSource messageSource,
       final EconomyFacade economyFacade,
       final TransferConfig transferConfig,
       final CurrencyFacade currencyFacade
   ) {
     this.logger = logger;
+    this.messageSource = messageSource;
     this.economyFacade = economyFacade;
     this.transferCurrency = lazy(
         () -> currencyFacade.getCurrencyById(transferConfig.transferableCurrencyId)
@@ -45,21 +48,29 @@ public class TransferCommand {
   public void transfer(
       final Player source, final @Arg Player target, final @Arg BigDecimal amount
   ) {
-    final BigDecimal fixedAmount = amount.setScale(2, RoundingMode.HALF_DOWN);
-
-    if (fixedAmount.compareTo(BigDecimal.ZERO) <= 0) {
-      source.sendMessage(miniMessage().deserialize("<red>Kwota musi być większa od zera."));
+    final BigDecimal fixedAmount = amount.setScale(2, HALF_DOWN);
+    if (fixedAmount.compareTo(ZERO) <= 0) {
+      source.sendMessage(
+          messageSource.transferAmountHasToBeGreaterThanZero
+              .compile()
+      );
       return;
     }
 
     if (source.getUniqueId().equals(target.getUniqueId())) {
-      source.sendMessage(miniMessage().deserialize("<red>Nie możesz przelać pieniędzy samemu sobie."));
+      source.sendMessage(
+          messageSource.transferRequiresTarget
+              .compile()
+      );
       return;
     }
 
     economyFacade.has(source.getUniqueId(), transferCurrency.get(), fixedAmount)
-        .thenAccept(whetherTransferCouldBeFinalized -> processTransfer(
-            source, target, fixedAmount, whetherTransferCouldBeFinalized))
+        .thenAccept(whetherTransferCouldBeFinalized ->
+            processTransfer(
+                source, target, fixedAmount, whetherTransferCouldBeFinalized
+            )
+        )
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
@@ -70,8 +81,10 @@ public class TransferCommand {
       final boolean whetherTransferCouldBeFinalized
   ) {
     if (!whetherTransferCouldBeFinalized) {
-      source.sendMessage(miniMessage().deserialize(
-          "<red>Nie posiadasz wystarczającej ilości pieniędzy, aby wykonać ten przelew."));
+      source.sendMessage(
+          messageSource.transferMissingBalance
+              .compile()
+      );
       return;
     }
 
@@ -81,20 +94,18 @@ public class TransferCommand {
     economyFacade.transfer(source.getUniqueId(), target.getUniqueId(), resolvedCurrency, amount)
         .thenAccept(state -> {
           source.sendMessage(
-              miniMessage().deserialize(
-                  "<gray>Wysłałeś przelew do <white><target><gray>, <gray>z twojego konta zostało odebrane <white><symbol><amount><gray>.",
-                  unparsed("target", target.getName()),
-                  unparsed("symbol", resolvedCurrency.getSymbol()),
-                  unparsed("amount", preformattedAmount)
-              )
+              messageSource.transferSent
+                  .with("target", target.getName())
+                  .with("symbol", resolvedCurrency.getSymbol())
+                  .with("amount", preformattedAmount)
+                  .compile()
           );
           target.sendMessage(
-              miniMessage().deserialize(
-                  "<gray>Otrzymałeś przelew od <white><source><gray>, do twojego konta zostało dodane <white><symbol><amount><gray>.",
-                  unparsed("source", source.getName()),
-                  unparsed("symbol", resolvedCurrency.getSymbol()),
-                  unparsed("amount", preformattedAmount)
-              )
+              messageSource.transferReceived
+                  .with("source", source.getName())
+                  .with("symbol", resolvedCurrency.getSymbol())
+                  .with("amount", preformattedAmount)
+                  .compile()
           );
         })
         .exceptionally(exception -> {
@@ -105,11 +116,11 @@ public class TransferCommand {
                       source.getName(),
                       target.getName()
                   ),
-              exception);
+              exception
+          );
           source.sendMessage(
-              miniMessage().deserialize(
-                  "<red>Wystąpił błąd podczas wykonywania przelewu. Spróbuj ponownię wykonać przelew, jeśli błąd wystąpi ponownie zgłoś to administracji."
-              )
+              messageSource.transferFailed
+                  .compile()
           );
           return null;
         });

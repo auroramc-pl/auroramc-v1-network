@@ -1,10 +1,5 @@
 package pl.auroramc.economy.payment;
 
-import static net.kyori.adventure.text.Component.empty;
-import static net.kyori.adventure.text.Component.newline;
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
-import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.component;
-import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.unparsed;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.period.PeriodFormatter.getFormattedPeriod;
 
@@ -15,9 +10,9 @@ import dev.rollczi.litecommands.command.route.Route;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.LongFunction;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.entity.Player;
+import pl.auroramc.commons.message.MutableMessage;
+import pl.auroramc.economy.message.MessageSource;
 import pl.auroramc.registry.user.User;
 import pl.auroramc.registry.user.UserFacade;
 
@@ -26,69 +21,63 @@ import pl.auroramc.registry.user.UserFacade;
 public class PaymentCommand {
 
   private final UserFacade userFacade;
+  private final MessageSource messageSource;
   private final PaymentFacade paymentFacade;
 
   public PaymentCommand(
       final UserFacade userFacade,
+      final MessageSource messageSource,
       final PaymentFacade paymentFacade
   ) {
     this.userFacade = userFacade;
+    this.messageSource = messageSource;
     this.paymentFacade = paymentFacade;
   }
 
   @Execute(route = "incoming", aliases = "in")
-  public CompletableFuture<Component> incoming(final @Arg Player target) {
+  public CompletableFuture<MutableMessage> incoming(final @Arg Player target) {
     return getPayments(target, paymentFacade::getPaymentSummariesByReceiverId)
-        .thenApply(payments ->
-            miniMessage().deserialize(
-                payments.isEmpty()
-                    ? "<red>Gracz <yellow><target> <red>nie otrzymał jeszcze żadnych płatności przychodzących."
-                    : "<gray>Płatności przychodzące dla <white><target><dark_gray>:<payments>",
-                getPaymentTagResolvers(target, payments)
-            )
-        );
+        .thenApply(payments -> {
+          if (payments.isEmpty()) {
+            return messageSource.noIncomingPayments
+                .with("username", target.getName());
+          }
+
+          return messageSource.incomingPaymentsHeader
+              .with("username", target.getName())
+              .append(getParsedPayments(payments));
+        });
   }
 
   @Execute(route = "outgoing", aliases = "out")
-  public CompletableFuture<Component> outgoing(final @Arg Player target) {
+  public CompletableFuture<MutableMessage> outgoing(final @Arg Player target) {
     return getPayments(target, paymentFacade::getPaymentSummariesByInitiatorId)
-        .thenApply(payments ->
-            miniMessage().deserialize(
-                payments.isEmpty()
-                    ? "<red>Gracz <yellow><target> <red>nie wykonał jeszcze żadnych płatności wychodzących."
-                    : "<gray>Płatności wychodzące od <white><target><dark_gray>:<payments>",
-                getPaymentTagResolvers(target, payments)
-            )
-        );
+        .thenApply(payments -> {
+          if (payments.isEmpty()) {
+            return messageSource.noOutgoingPayments
+                .with("username", target.getName());
+          }
+
+          return messageSource.outgoingPaymentsHeader
+              .with("username", target.getName())
+              .append(getParsedPayments(payments));
+        });
   }
 
-  private TagResolver getPaymentTagResolvers(
-      final Player target, final List<PaymentSummary> paymentSummaries) {
-    return TagResolver.builder()
-        .resolver(component("target", target.name()))
-        .resolver(component("payments", getParsedPayments(paymentSummaries)))
-        .build();
+  private MutableMessage getParsedPayments(final List<PaymentSummary> paymentSummaries) {
+    return paymentSummaries.stream()
+        .map(this::getParsedPayment)
+        .collect(MutableMessage.collector());
   }
 
-  private Component getParsedPayments(final List<PaymentSummary> paymentSummaries) {
-    Component reducer = empty();
-    for (final PaymentSummary paymentSummary : paymentSummaries) {
-      reducer = reducer
-          .append(newline())
-          .append(getParsedPayment(paymentSummary));
-    }
-    return reducer;
-  }
-
-  private Component getParsedPayment(final PaymentSummary paymentSummary) {
-    return miniMessage().deserialize(
-        "<gray>• <dark_gray><transaction_time> <dark_gray>(<white><id><dark_gray>) <dark_gray>(<white><initiator> <dark_gray>→ <white><receiver><dark_gray>) <dark_gray>- <white><amount>",
-        unparsed("transaction_time", getFormattedPeriod(paymentSummary.transactionTime())),
-        unparsed("id", paymentSummary.id().toString()),
-        unparsed("initiator", paymentSummary.initiatorUsername()),
-        unparsed("receiver", paymentSummary.receiverUsername()),
-        unparsed("amount", getFormattedDecimal(paymentSummary.amount()))
-    );
+  private MutableMessage getParsedPayment(final PaymentSummary paymentSummary) {
+    return messageSource.paymentEntry
+        .with("transaction_time", getFormattedPeriod(paymentSummary.transactionTime()))
+        .with("id", paymentSummary.id().toString())
+        .with("initiator", paymentSummary.initiatorUsername())
+        .with("receiver", paymentSummary.receiverUsername())
+        .with("symbol", paymentSummary.currencySymbol())
+        .with("amount", getFormattedDecimal(paymentSummary.amount()));
   }
 
   private CompletableFuture<List<PaymentSummary>> getPayments(
