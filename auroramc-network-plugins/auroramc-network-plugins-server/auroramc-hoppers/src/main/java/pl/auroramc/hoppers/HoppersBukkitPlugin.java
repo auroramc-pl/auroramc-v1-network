@@ -4,6 +4,7 @@ import static com.jeff_media.customblockdata.CustomBlockData.registerListener;
 import static java.lang.String.join;
 import static pl.auroramc.commons.BukkitUtils.registerListeners;
 import static pl.auroramc.hoppers.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
+import static pl.auroramc.hoppers.message.MessageVariableKey.SCHEMATICS_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.adventure.paper.LitePaperAdventureFactory;
@@ -66,7 +67,7 @@ public class HoppersBukkitPlugin extends JavaPlugin {
         )
         .redirectResult(Schematic.class, MutableMessage.class,
             context -> messageSource.availableSchematicsSuggestion
-                .with("schematics", join(", ", context.getSchematics()))
+                .with(SCHEMATICS_VARIABLE_KEY, join("<newline>", context.getSchematics()))
         )
         .resultHandler(MutableMessage.class, new MutableMessageResultHandler())
         .register();

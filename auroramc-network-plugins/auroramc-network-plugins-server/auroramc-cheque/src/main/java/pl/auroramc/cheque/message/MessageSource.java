@@ -29,11 +29,11 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage chequeCouldNotBeCreatedBecauseOfDigits = MutableMessage.of(
-      "<red>Wprowadzona przez ciebie kwota czeku jest niepoprawna, gdyż maksymalnie może ona posiadać {maximum-integral-length} liczb przed przecinkiem oraz {maximum-fraction-length} liczb po przecinku."
+      "<red>Wprowadzona przez ciebie kwota czeku jest niepoprawna, gdyż maksymalnie może ona posiadać {maximumIntegralLength} liczb przed przecinkiem oraz {maximumFractionLength} liczb po przecinku."
   );
 
   public MutableMessage chequeCouldNotBeCreatedBecauseOfAmount = MutableMessage.of(
-      "<red>Wprowadzona przez ciebie kwota czeku jest niepoprawna, gdyż musi ona wynosić co najmniej {symbol}{minimum-cheque-worth} oraz co najwyżej {symbol}{maximum-cheque-worth}."
+      "<red>Wprowadzona przez ciebie kwota czeku jest niepoprawna, gdyż musi ona wynosić co najmniej {symbol}{minimumChequeWorth} oraz co najwyżej {symbol}{maximumChequeWorth}."
   );
 
   public MutableMessage chequeCouldNotBeCreatedBecauseOfMoney = MutableMessage.of(

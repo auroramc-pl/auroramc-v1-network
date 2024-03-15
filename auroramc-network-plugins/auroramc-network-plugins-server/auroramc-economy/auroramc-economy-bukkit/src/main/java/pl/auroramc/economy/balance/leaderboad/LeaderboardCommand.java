@@ -2,6 +2,11 @@ package pl.auroramc.economy.balance.leaderboad;
 
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.message.MutableMessage.empty;
+import static pl.auroramc.economy.message.MessageVariableKey.BALANCE_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MessageVariableKey.CURRENCY_ID_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MessageVariableKey.POSITION_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MessageVariableKey.USERNAME_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.argument.option.Opt;
 import dev.rollczi.litecommands.command.execute.Execute;
@@ -43,7 +48,7 @@ public class LeaderboardCommand {
     final Currency currency = currencyFacade.getCurrencyById(currencyIdOrDefault);
     if (currency == null) {
       return messageSource.missingCurrency
-          .with("currency_id", currencyIdOrDefault);
+          .with(CURRENCY_ID_VARIABLE_KEY, currencyIdOrDefault);
     }
 
     return getLeaderboardView(player, currency);
@@ -74,10 +79,10 @@ public class LeaderboardCommand {
       final Currency currency, final LeaderboardEntry entry
   ) {
     return messageSource.leaderboardFooter
-        .with("symbol", currency.getSymbol())
-        .with("position", entry.position())
-        .with("username", entry.username())
-        .with("balance", getFormattedDecimal(entry.balance()));
+        .with(SYMBOL_VARIABLE_KEY, currency.getSymbol())
+        .with(POSITION_VARIABLE_KEY, entry.position())
+        .with(USERNAME_VARIABLE_KEY, entry.username())
+        .with(BALANCE_VARIABLE_KEY, getFormattedDecimal(entry.balance()));
   }
 
   private MutableMessage getLeaderboardFooter(
@@ -100,9 +105,9 @@ public class LeaderboardCommand {
       final Currency currency, final LeaderboardEntry entry
   ) {
     return messageSource.leaderboardEntry
-        .with("symbol", currency.getSymbol())
-        .with("position", entry.position())
-        .with("username", entry.username())
-        .with("balance", getFormattedDecimal(entry.balance()));
+        .with(SYMBOL_VARIABLE_KEY, currency.getSymbol())
+        .with(POSITION_VARIABLE_KEY, entry.position())
+        .with(USERNAME_VARIABLE_KEY, entry.username())
+        .with(BALANCE_VARIABLE_KEY, getFormattedDecimal(entry.balance()));
   }
 }

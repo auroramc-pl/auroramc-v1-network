@@ -3,6 +3,11 @@ package pl.auroramc.bazaars.bazaar;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 import static pl.auroramc.bazaars.bazaar.BazaarUtils.getEmptySlotsCount;
 import static pl.auroramc.bazaars.bazaar.BazaarUtils.getQuantityInSlots;
+import static pl.auroramc.bazaars.message.MessageVariableKey.MATERIAL_VARIABLE_KEY;
+import static pl.auroramc.bazaars.message.MessageVariableKey.MERCHANT_VARIABLE_KEY;
+import static pl.auroramc.bazaars.message.MessageVariableKey.PRICE_VARIABLE_KEY;
+import static pl.auroramc.bazaars.message.MessageVariableKey.QUANTITY_VARIABLE_KEY;
+import static pl.auroramc.bazaars.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
 import static pl.auroramc.commons.BukkitUtils.postToMainThread;
 
 import java.text.DecimalFormat;
@@ -109,11 +114,11 @@ class BazaarService implements BazaarFacade {
         )
         .thenApply(state ->
             messageSource.productBought
-                .with("quantity", parsingContext.quantity())
-                .with("material", capitalize(parsingContext.material().name().toLowerCase(Locale.ROOT)))
-                .with("merchant", parsingContext.merchant())
-                .with("symbol", fundsCurrency.getSymbol())
-                .with("price", priceFormat.format(parsingContext.price()))
+                .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+                .with(QUANTITY_VARIABLE_KEY, parsingContext.quantity())
+                .with(MATERIAL_VARIABLE_KEY, capitalize(parsingContext.material().name().toLowerCase(Locale.ROOT)))
+                .with(MERCHANT_VARIABLE_KEY, parsingContext.merchant())
+                .with(PRICE_VARIABLE_KEY, priceFormat.format(parsingContext.price()))
         );
   }
 
@@ -163,11 +168,11 @@ class BazaarService implements BazaarFacade {
         )
         .thenApply(state ->
             messageSource.productSold
-                .with("quantity", parsingContext.quantity())
-                .with("material", capitalize(parsingContext.material().name().toLowerCase(Locale.ROOT)))
-                .with("merchant", parsingContext.merchant())
-                .with("symbol", fundsCurrency.getSymbol())
-                .with("price", priceFormat.format(parsingContext.price()))
+                .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+                .with(QUANTITY_VARIABLE_KEY, parsingContext.quantity())
+                .with(MATERIAL_VARIABLE_KEY, capitalize(parsingContext.material().name().toLowerCase(Locale.ROOT)))
+                .with(MERCHANT_VARIABLE_KEY, parsingContext.merchant())
+                .with(PRICE_VARIABLE_KEY, priceFormat.format(parsingContext.price()))
         );
   }
 

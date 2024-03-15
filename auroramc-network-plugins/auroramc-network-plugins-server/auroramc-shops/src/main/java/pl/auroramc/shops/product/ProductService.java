@@ -3,6 +3,10 @@ package pl.auroramc.shops.product;
 import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static pl.auroramc.commons.BukkitUtils.postToMainThread;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
+import static pl.auroramc.shops.message.MessageVariableKey.AMOUNT_VARIABLE_KEY;
+import static pl.auroramc.shops.message.MessageVariableKey.MATERIAL_VARIABLE_KEY;
+import static pl.auroramc.shops.message.MessageVariableKey.QUANTITY_VARIABLE_KEY;
+import static pl.auroramc.shops.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
 import static pl.auroramc.shops.product.ProductUtils.getEmptySlotsCount;
 import static pl.auroramc.shops.product.ProductUtils.getQuantityInSlots;
 import static pl.auroramc.shops.product.ProductViewFactory.produceProductGui;
@@ -50,7 +54,9 @@ class ProductService implements ProductFacade {
   public void showProducts(
       final HumanEntity entity, final Shop shop, final ChestGui shopsGui
   ) {
-    produceProductGui(plugin, fundsCurrency, this, priceFormat,shop, shopsGui).show(entity);
+    produceProductGui(
+        plugin, fundsCurrency, messageSource,this, priceFormat, shop, shopsGui
+    ).show(entity);
   }
 
   @Override
@@ -68,7 +74,7 @@ class ProductService implements ProductFacade {
                 )
             )
         )
-        .thenApply(state -> getProductMutableMessage(messageSource.productSold, product, product.priceForSale()))
+        .thenApply(state -> getProductMessage(messageSource.productSold, product, product.priceForSale()))
         .thenApply(MutableMessage::compile)
         .thenAccept(entity::sendMessage)
         .exceptionally(exception -> delegateCaughtException(logger, exception));
@@ -121,21 +127,21 @@ class ProductService implements ProductFacade {
             )
         )
         .thenApply(
-            state -> getProductMutableMessage(
+            state -> getProductMessage(
                 messageSource.productBought, product, product.priceForPurchase()
             )
         )
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
-  private MutableMessage getProductMutableMessage(
+  private MutableMessage getProductMessage(
       final MutableMessage template, final Product product, final BigDecimal merchandiseValue
   ) {
     return template
-        .with("material", miniMessage().serialize(product.subject().displayName()))
-        .with("quantity", product.quantity())
-        .with("merchandise_symbol", fundsCurrency.getSymbol())
-        .with("merchandise_value", priceFormat.format(merchandiseValue));
+        .with(MATERIAL_VARIABLE_KEY, miniMessage().serialize(product.subject().displayName()))
+        .with(QUANTITY_VARIABLE_KEY, product.quantity())
+        .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+        .with(AMOUNT_VARIABLE_KEY, priceFormat.format(merchandiseValue));
   }
 
   private void giveItemOrDropIfFull(final HumanEntity entity, final ItemStack itemStack) {

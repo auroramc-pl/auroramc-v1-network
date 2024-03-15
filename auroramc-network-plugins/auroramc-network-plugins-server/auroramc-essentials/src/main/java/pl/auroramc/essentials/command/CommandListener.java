@@ -9,6 +9,10 @@ import static net.kyori.adventure.text.event.ClickEvent.suggestCommand;
 import static org.bukkit.event.EventPriority.HIGHEST;
 import static pl.auroramc.commons.command.CommandUtils.resolveCommand;
 import static pl.auroramc.commons.lazy.Lazy.lazy;
+import static pl.auroramc.essentials.message.MessageVariableKey.PLUGINS_PERCENTAGE_VARIABLE_KEY;
+import static pl.auroramc.essentials.message.MessageVariableKey.PLUGIN_NAME_VARIABLE_KEY;
+import static pl.auroramc.essentials.message.MessageVariableKey.SEPARATOR_VARIABLE_KEY;
+import static pl.auroramc.essentials.message.MessageVariableKey.SUGGESTION_VARIABLE_KEY;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -84,9 +88,11 @@ public class CommandListener implements Listener {
         input.substring(performedCommand.length() + (whetherHasArguments ? COMMAND_ARGUMENTS_OFFSET : 0)));
 
     event.message(messageSource.unknownCommandWithPotentialSuggestion
-        .with("suggestion", text(suggestedCommand)
-            .hoverEvent(messageSource.potentialSuggestionHover.compile())
-            .clickEvent(suggestCommand("/%s%s".formatted(suggestedCommand, arguments))))
+        .with(SUGGESTION_VARIABLE_KEY,
+            text(suggestedCommand)
+                .hoverEvent(messageSource.potentialSuggestionHover.compile())
+                .clickEvent(suggestCommand("/%s%s".formatted(suggestedCommand, arguments)))
+        )
         .compile());
   }
 
@@ -153,7 +159,7 @@ public class CommandListener implements Listener {
 
   private Component getTitleOfPluginSummary(final int percentageOfCustomPlugins) {
     return messageSource.titleOfSummary
-        .with("plugins_percentage", percentageOfCustomPlugins)
+        .with(PLUGINS_PERCENTAGE_VARIABLE_KEY, percentageOfCustomPlugins)
         .compile();
   }
 
@@ -171,8 +177,8 @@ public class CommandListener implements Listener {
 
   private Component getEntryOfPluginSummary(final Plugin plugin, final boolean whetherIsClosingEntry) {
     return messageSource.entryOfSummary
-        .with("plugin_name", plugin.getName())
-        .with("separator", whetherIsClosingEntry ? PLUGIN_SEPARATOR_CLOSING : PLUGIN_SEPARATOR)
+        .with(PLUGIN_NAME_VARIABLE_KEY, plugin.getName())
+        .with(SEPARATOR_VARIABLE_KEY, whetherIsClosingEntry ? PLUGIN_SEPARATOR_CLOSING : PLUGIN_SEPARATOR)
         .compile();
   }
 

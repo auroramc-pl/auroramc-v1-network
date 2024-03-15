@@ -6,6 +6,12 @@ import static pl.auroramc.commons.period.PeriodFormatter.getFormattedPeriod;
 import static pl.auroramc.commons.period.PeriodFormatter.getFormattedPeriodShortly;
 import static pl.auroramc.commons.period.PeriodUtils.getMaximumTimeOfDay;
 import static pl.auroramc.commons.period.PeriodUtils.getMinimumTimeOfDay;
+import static pl.auroramc.dailyrewards.message.MessageVariableKey.FROM_VARIABLE_KEY;
+import static pl.auroramc.dailyrewards.message.MessageVariableKey.PERIOD_VARIABLE_KEY;
+import static pl.auroramc.dailyrewards.message.MessageVariableKey.PLAYTIME_VARIABLE_KEY;
+import static pl.auroramc.dailyrewards.message.MessageVariableKey.SESSION_DITCH_VARIABLE_KEY;
+import static pl.auroramc.dailyrewards.message.MessageVariableKey.SESSION_START_VARIABLE_KEY;
+import static pl.auroramc.dailyrewards.message.MessageVariableKey.TO_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.argument.Arg;
 import dev.rollczi.litecommands.command.execute.Execute;
@@ -66,13 +72,13 @@ public class VisitCommand {
 
   private MutableMessage getFormattedVisitHeader(final Instant period) {
     return messageSource.visitDailySummary
-        .with("period", getFormattedPeriodShortly(period));
+        .with(PERIOD_VARIABLE_KEY, getFormattedPeriodShortly(period));
   }
 
   private MutableMessage getFormattedVisitHeader(final Instant from, final Instant to) {
     return messageSource.visitRangeSummary
-        .with("from", getFormattedPeriodShortly(from))
-        .with("to", getFormattedPeriodShortly(to));
+        .with(FROM_VARIABLE_KEY, getFormattedPeriodShortly(from))
+        .with(TO_VARIABLE_KEY, getFormattedPeriodShortly(to));
   }
 
   private MutableMessage getFormattedVisits(final Instant period, final Set<Visit> visits) {
@@ -91,9 +97,9 @@ public class VisitCommand {
 
   private MutableMessage getFormattedVisit(final Visit visit) {
     return messageSource.visitEntry
-        .with("session_start", getFormattedPeriod(visit.getSessionStartTime()))
-        .with("session_ditch", getFormattedPeriod(visit.getSessionDitchTime()))
-        .with("playtime", durationFormatter.getFormattedDuration(visit.getSessionDuration()));
+        .with(SESSION_START_VARIABLE_KEY, getFormattedPeriod(visit.getSessionStartTime()))
+        .with(SESSION_DITCH_VARIABLE_KEY, getFormattedPeriod(visit.getSessionDitchTime()))
+        .with(PLAYTIME_VARIABLE_KEY, durationFormatter.getFormattedDuration(visit.getSessionDuration()));
   }
 
   private MutableMessage getFormattedVisits(final Set<Visit> visits) {

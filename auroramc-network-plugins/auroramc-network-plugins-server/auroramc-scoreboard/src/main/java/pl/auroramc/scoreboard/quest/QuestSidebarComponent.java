@@ -6,6 +6,7 @@ import static java.util.Map.Entry.comparingByKey;
 import static net.kyori.adventure.text.Component.empty;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.quests.objective.ObjectiveUtils.getQuestObjective;
+import static pl.auroramc.scoreboard.message.MessageVariableKey.QUEST_VARIABLE_KEY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +80,8 @@ public class QuestSidebarComponent implements SidebarComponentKyori<Quest> {
   private List<Component> renderQuestName(final Quest quest) {
     return Stream.of(
         messageSource.quest.observedQuest,
-        messageSource.quest.observedQuestName.with("quest", quest.getKey().getName())
+        messageSource.quest.observedQuestName
+            .with(QUEST_VARIABLE_KEY, quest.getKey().getName())
     )
         .map(MutableMessage::compile)
         .toList();

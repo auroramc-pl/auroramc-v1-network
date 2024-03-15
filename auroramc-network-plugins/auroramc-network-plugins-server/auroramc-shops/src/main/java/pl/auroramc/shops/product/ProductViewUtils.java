@@ -10,6 +10,7 @@ import java.util.Optional;
 import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
 import pl.auroramc.commons.item.ItemStackBuilder;
+import pl.auroramc.commons.message.MutableMessage;
 
 final class ProductViewUtils {
 
@@ -17,13 +18,16 @@ final class ProductViewUtils {
 
   }
 
-  static ItemStack mergeLoreOnItemStack(final ItemStack source, final List<Component> lines) {
+  static ItemStack mergeLoreOnItemStack(
+      final ItemStack source, final List<MutableMessage> lines
+  ) {
     return ItemStackBuilder.newBuilder(source)
         .lore(
             merge(
                 Optional.ofNullable(source.lore())
                     .orElse(Collections.emptyList()),
                 lines.stream()
+                    .map(MutableMessage::compile)
                     .map(line -> line.decoration(ITALIC, FALSE))
                     .toList(),
                 Component[]::new

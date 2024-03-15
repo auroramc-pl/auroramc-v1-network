@@ -6,6 +6,7 @@ import static pl.auroramc.commons.BukkitUtils.resolveService;
 import static pl.auroramc.gamble.GambleConfig.GAMBLING_CONFIG_FILE_NAME;
 import static pl.auroramc.gamble.gamble.GambleFacade.getGambleFacade;
 import static pl.auroramc.gamble.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
+import static pl.auroramc.gamble.message.MessageVariableKey.SCHEMATICS_VARIABLE_KEY;
 import static pl.auroramc.gamble.stake.StakeFacade.getStakeFacade;
 import static pl.auroramc.gamble.stake.view.StakeViewFacade.getStakeViewFacade;
 
@@ -101,7 +102,7 @@ public class GambleBukkitPlugin extends JavaPlugin {
         )
         .redirectResult(Schematic.class, MutableMessage.class,
             context -> messageSource.availableSchematicsSuggestion
-                .with("schematics", join("<newline>", context.getSchematics()))
+                .with(SCHEMATICS_VARIABLE_KEY, join("<newline>", context.getSchematics()))
         )
         .resultHandler(MutableMessage.class, new MutableMessageResultHandler())
         .register();

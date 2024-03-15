@@ -6,6 +6,7 @@ import static java.nio.file.Files.exists;
 import static pl.auroramc.commons.BukkitUtils.resolveService;
 import static pl.auroramc.shops.ShopsConfig.SHOPS_CONFIG_FILE_NAME;
 import static pl.auroramc.shops.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
+import static pl.auroramc.shops.message.MessageVariableKey.SCHEMATICS_VARIABLE_KEY;
 import static pl.auroramc.shops.product.ProductFacade.getProductFacade;
 import static pl.auroramc.shops.shop.ShopFacade.getShopFacade;
 
@@ -82,7 +83,7 @@ public class ShopsBukkitPlugin extends JavaPlugin {
         )
         .redirectResult(Schematic.class, MutableMessage.class,
             context -> messageSource.availableSchematicsSuggestion
-                .with("schematics", join("<newline>", context.getSchematics()))
+                .with(SCHEMATICS_VARIABLE_KEY, join("<newline>", context.getSchematics()))
         )
         .resultHandler(MutableMessage.class, new MutableMessageResultHandler())
         .register();

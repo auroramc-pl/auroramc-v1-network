@@ -1,6 +1,7 @@
 package pl.auroramc.dailyrewards.nametag;
 
 import static org.bukkit.Bukkit.getOnlinePlayers;
+import static pl.auroramc.dailyrewards.message.MessageVariableKey.PLAYTIME_VARIABLE_KEY;
 
 import java.time.Duration;
 import org.bukkit.entity.Player;
@@ -40,7 +41,7 @@ public class NametagUpdateScheduler implements Runnable {
     final Duration visitPeriod = visitController.getVisitPeriod(player.getUniqueId());
     nametagFacade.belowName(player,
         messageSource.belowName
-            .with("visit_period", durationFormatter.getFormattedDuration(visitPeriod))
+            .with(PLAYTIME_VARIABLE_KEY, durationFormatter.getFormattedDuration(visitPeriod))
             .compile()
     );
   }

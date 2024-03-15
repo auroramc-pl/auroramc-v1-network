@@ -49,10 +49,10 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage stakeWon = MutableMessage.of(
-      "<gray>Wygrałeś <hover:show_text:'<gray>Unikalny identyfikator: <white>{unique_id}'>zakład</hover> <gray>o stawce <white>{symbol}{stake} <gray>mierząc się z <white>{competitor}<gray>."
+      "<gray>Wygrałeś <hover:show_text:'<gray>Unikalny identyfikator: <white>{uniqueId}'>zakład</hover> <gray>o stawce <white>{symbol}{stake} <gray>mierząc się z <white>{competitor}<gray>."
   );
 
   public MutableMessage stakeLost = MutableMessage.of(
-      "<gray>Przegrałeś <hover:show_text:'<gray>Unikalny identyfikator: <white>{unique_id}'>zakład</hover> <gray>o stawce <white>{symbol}{stake} <gray>mierząc się z <white>{competitor}<gray>."
+      "<gray>Przegrałeś <hover:show_text:'<gray>Unikalny identyfikator: <white>{uniqueId}'>zakład</hover> <gray>o stawce <white>{symbol}{stake} <gray>mierząc się z <white>{competitor}<gray>."
   );
 }

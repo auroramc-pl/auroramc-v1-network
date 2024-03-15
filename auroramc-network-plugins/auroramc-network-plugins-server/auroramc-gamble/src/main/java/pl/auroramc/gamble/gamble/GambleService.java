@@ -2,6 +2,10 @@ package pl.auroramc.gamble.gamble;
 
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
+import static pl.auroramc.gamble.message.MessageVariableKey.COMPETITOR_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MessageVariableKey.STAKE_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MessageVariableKey.UNIQUE_ID_VARIABLE_KEY;
 
 import java.util.logging.Logger;
 import pl.auroramc.economy.EconomyFacade;
@@ -44,18 +48,18 @@ class GambleService implements GambleFacade {
         .thenAccept(state -> {
           winnerParticipant.sendMessage(
               messageSource.stakeWon
-                  .with("unique_id", gamble.getGambleContext().gambleUniqueId().toString())
-                  .with("symbol", fundsCurrency.getSymbol())
-                  .with("stake", getFormattedDecimal(gamble.getGambleContext().stake()))
-                  .with("competitor", losingParticipant.username())
+                  .with(UNIQUE_ID_VARIABLE_KEY, gamble.getGambleContext().gambleUniqueId().toString())
+                  .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+                  .with(STAKE_VARIABLE_KEY, getFormattedDecimal(gamble.getGambleContext().stake()))
+                  .with(COMPETITOR_VARIABLE_KEY, losingParticipant.username())
                   .compile()
           );
           losingParticipant.sendMessage(
               messageSource.stakeLost
-                  .with("unique_id", gamble.getGambleContext().gambleUniqueId().toString())
-                  .with("symbol", fundsCurrency.getSymbol())
-                  .with("stake", getFormattedDecimal(gamble.getGambleContext().stake()))
-                  .with("competitor", winnerParticipant.username())
+                  .with(UNIQUE_ID_VARIABLE_KEY, gamble.getGambleContext().gambleUniqueId().toString())
+                  .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+                  .with(STAKE_VARIABLE_KEY, getFormattedDecimal(gamble.getGambleContext().stake()))
+                  .with(COMPETITOR_VARIABLE_KEY, winnerParticipant.username())
                   .compile()
           );
         })

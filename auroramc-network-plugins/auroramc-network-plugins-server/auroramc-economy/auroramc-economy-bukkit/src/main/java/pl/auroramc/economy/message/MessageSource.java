@@ -9,7 +9,7 @@ public class MessageSource extends OkaeriConfig {
   public static final @Exclude String MESSAGE_SOURCE_FILE_NAME = "messages.yml";
 
   public MutableMessage missingCurrency = MutableMessage.of(
-      "<red>Wprowadzona przez ciebie waluta <dark_gray>(<yellow>{currency_id}<dark_gray>) <red>nie została odnaleziona, upewnij się, czy jest ona poprawna."
+      "<red>Wprowadzona przez ciebie waluta <dark_gray>(<yellow>{currencyId}<dark_gray>) <red>nie została odnaleziona, upewnij się, czy jest ona poprawna."
   );
 
   public MutableMessage leaderboardHeader = MutableMessage.of(
@@ -53,7 +53,7 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage paymentEntry = MutableMessage.of(
-      "<gray>• <dark_gray>{transaction_time} <dark_gray>(<white>{id}<dark_gray>) <dark_gray>(<white>{initiator} <dark_gray>→ <white>{receiver}<dark_gray>) <dark_gray>- <white>{symbol}{amount}"
+      "<gray>• <dark_gray>{transactionTime} <dark_gray>(<white>{transactionId}<dark_gray>) <dark_gray>(<white>{initiator} <dark_gray>→ <white>{receiver}<dark_gray>) <dark_gray>- <white>{symbol}{amount}"
   );
 
   public MutableMessage transferAmountHasToBeGreaterThanZero = MutableMessage.of(
@@ -77,7 +77,7 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage transferFailed = MutableMessage.of(
-      "<red>Operacja nie została wykonana, gdyż nie udało się odnaleźć waluty z id pasującym do <yellow>{currency_id}<red>."
+      "<red>Operacja nie została wykonana, gdyż nie udało się odnaleźć waluty z id pasującym do <yellow>{currencyId}<red>."
   );
 
   public MutableMessage balanceSet = MutableMessage.of(
@@ -97,6 +97,6 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage modificationFailed = MutableMessage.of(
-      "<red>Operacja nie została wykonana, gdyż nie udało się odnaleźć waluty z id pasującym do <yellow>{currency_id}<red>."
+      "<red>Operacja nie została wykonana, gdyż nie udało się odnaleźć waluty z id pasującym do <yellow>{currencyId}<red>."
   );
 }

@@ -13,6 +13,7 @@ import static pl.auroramc.auth.hash.HashingStrategyFactory.getHashingStrategy;
 import static pl.auroramc.auth.hash.salt.SaltGeneratorFactory.getSaltGenerator;
 import static pl.auroramc.auth.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
 import static pl.auroramc.auth.identity.generator.IdentityGeneratorFactory.getIdentityGenerator;
+import static pl.auroramc.auth.message.MessageVariableKey.SCHEMATICS_VARIABLE_KEY;
 import static pl.auroramc.auth.password.PasswordValidatorFactory.getPasswordValidator;
 import static pl.auroramc.auth.timeout.TimeoutFacadeFactory.getTimeoutFacade;
 import static pl.auroramc.auth.user.UserFacadeFactory.getUserFacade;
@@ -177,7 +178,7 @@ public class AuthVelocityPlugin {
         )
         .redirectResult(Schematic.class, MutableMessage.class,
             context -> messageSource.availableSchematicsSuggestion
-                .with("schematics", join("<newline>", context.getSchematics()))
+                .with(SCHEMATICS_VARIABLE_KEY, join("<newline>", context.getSchematics()))
         )
         .resultHandler(MutableMessage.class, new MutableMessageResultHandler())
         .register();

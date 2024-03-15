@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 import org.bukkit.plugin.Plugin;
 import pl.auroramc.economy.currency.Currency;
+import pl.auroramc.shops.message.MessageSource;
 import pl.auroramc.shops.shop.Shop;
 
 final class ProductViewFactory {
@@ -21,6 +22,7 @@ final class ProductViewFactory {
   static ChestGui produceProductGui(
       final Plugin plugin,
       final Currency fundsCurrency,
+      final MessageSource messageSource,
       final ProductFacade productFacade,
       final DecimalFormat priceFormat,
       final Shop shop,
@@ -29,14 +31,22 @@ final class ProductViewFactory {
     try (final InputStream inputStream = plugin.getResource(VIEW_DEFINITION_RESOURCE_PATH)) {
       if (inputStream == null) {
         throw new ProductViewInstantiationException(
-            "Could not find product gui definition in resources.");
+            "Could not find product gui definition in resources."
+        );
       }
 
-      return load(new ProductView(fundsCurrency, priceFormat, productFacade, shop, shopsGui), inputStream, plugin);
+      return load(
+          new ProductView(
+              fundsCurrency, messageSource, priceFormat, productFacade, shop, shopsGui
+          ),
+          inputStream,
+          plugin
+      );
     } catch (final IOException exception) {
       throw new ProductViewInstantiationException(
           "Could not load product gui from resources, because of unexpected exception.",
-          exception);
+          exception
+      );
     }
   }
 }

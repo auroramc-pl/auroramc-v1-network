@@ -1,5 +1,11 @@
 package pl.auroramc.cheque;
 
+import static pl.auroramc.cheque.message.MessageVariableKey.AMOUNT_VARIABLE_KEY;
+import static pl.auroramc.cheque.message.MessageVariableKey.MAXIMUM_CHEQUE_WORTH_VARIABLE_KEY;
+import static pl.auroramc.cheque.message.MessageVariableKey.MAXIMUM_FRACTION_LENGTH_VARIABLE_KEY;
+import static pl.auroramc.cheque.message.MessageVariableKey.MAXIMUM_INTEGRAL_LENGTH_VARIABLE_KEY;
+import static pl.auroramc.cheque.message.MessageVariableKey.MINIMUM_CHEQUE_WORTH_VARIABLE_KEY;
+import static pl.auroramc.cheque.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.decimal.DecimalUtils.getLengthOfFractionalPart;
@@ -23,8 +29,8 @@ import pl.auroramc.economy.currency.Currency;
 @Route(name = "cheque", aliases = {"czek", "banknot"})
 class ChequeCommand {
 
-  public static final int MAXIMUM_INTEGRAL_LENGTH = 9;
-  public static final int MAXIMUM_FRACTION_LENGTH = 2;
+  private static final int MAXIMUM_INTEGRAL_LENGTH = 9;
+  private static final int MAXIMUM_FRACTION_LENGTH = 2;
   private static final BigDecimal MINIMUM_CHEQUE_WORTH = BigDecimal.valueOf(100);
   private static final BigDecimal MAXIMUM_CHEQUE_WORTH = BigDecimal.valueOf(1_000_000);
   private final Logger logger;
@@ -53,22 +59,23 @@ class ChequeCommand {
   ) {
     if (getLengthOfIntegralPart(amount) > 9 || getLengthOfFractionalPart(amount) > 2) {
       return messageSource.chequeCouldNotBeCreatedBecauseOfDigits
-          .with("maximum-integral-length", MAXIMUM_INTEGRAL_LENGTH)
-          .with("maximum-fraction-length", MAXIMUM_FRACTION_LENGTH)
+          .with(MAXIMUM_INTEGRAL_LENGTH_VARIABLE_KEY, MAXIMUM_INTEGRAL_LENGTH)
+          .with(MAXIMUM_FRACTION_LENGTH_VARIABLE_KEY, MAXIMUM_FRACTION_LENGTH)
           .asCompletedFuture();
     }
 
     if (amount.compareTo(MINIMUM_CHEQUE_WORTH) < 0 || amount.compareTo(MAXIMUM_CHEQUE_WORTH) > 0) {
       return messageSource.chequeCouldNotBeCreatedBecauseOfAmount
-          .with("symbol", fundsCurrency.getSymbol())
-          .with("minimum-cheque-worth", getFormattedDecimal(MINIMUM_CHEQUE_WORTH))
-          .with("maximum-cheque-worth", getFormattedDecimal(MAXIMUM_CHEQUE_WORTH))
+          .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+          .with(MINIMUM_CHEQUE_WORTH_VARIABLE_KEY, getFormattedDecimal(MINIMUM_CHEQUE_WORTH))
+          .with(MAXIMUM_CHEQUE_WORTH_VARIABLE_KEY, getFormattedDecimal(MAXIMUM_CHEQUE_WORTH))
           .asCompletedFuture();
     }
 
     return economyFacade.has(invoker.getUniqueId(), fundsCurrency, amount)
         .thenCompose(whetherPlayerHasEnoughFunds ->
-            completeChequeCreation(invoker, amount, whetherPlayerHasEnoughFunds))
+            completeChequeCreation(invoker, amount, whetherPlayerHasEnoughFunds)
+        )
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
@@ -84,8 +91,9 @@ class ChequeCommand {
         .thenApply(chequeFacade::createCheque)
         .thenAccept(chequeItem -> giveItemOrThrowIfFull(player, chequeItem))
         .thenApply(state -> messageSource.chequeIssued
-            .with("symbol", fundsCurrency.getSymbol())
-            .with("amount", getFormattedDecimal(amount)))
+            .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+            .with(AMOUNT_VARIABLE_KEY, getFormattedDecimal(amount))
+        )
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 

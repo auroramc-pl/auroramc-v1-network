@@ -4,6 +4,10 @@ import static java.util.Arrays.stream;
 import static java.util.Locale.ROOT;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toMap;
+import static pl.auroramc.quests.message.MessageVariableKey.DATA_VARIABLE_KEY;
+import static pl.auroramc.quests.message.MessageVariableKey.GOAL_VARIABLE_KEY;
+import static pl.auroramc.quests.message.MessageVariableKey.ITEM_VARIABLE_KEY;
+import static pl.auroramc.quests.message.MessageVariableKey.TYPE_VARIABLE_KEY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,16 +54,16 @@ public final class ObjectiveUtils {
       final ObjectiveProgress objectiveProgress
   ) {
     return objective.getMessage()
-        .with("type", getFormattedNameOfMaterial(objective.getType()))
-        .with("data", objectiveProgress.getData())
-        .with("goal", objectiveProgress.getGoal());
+        .with(TYPE_VARIABLE_KEY, getFormattedNameOfMaterial(objective.getType()))
+        .with(DATA_VARIABLE_KEY, objectiveProgress.getData())
+        .with(GOAL_VARIABLE_KEY, objectiveProgress.getGoal());
   }
 
   private static MutableMessage getObjectiveRequirement(
       final ObjectiveRequirement requirement
   ) {
     return requirement.getMessage()
-        .with("item",
+        .with(ITEM_VARIABLE_KEY,
             requirement instanceof HeldItemRequirement heldItemRequirement
                 ? getFormattedNameOfMaterial(heldItemRequirement.getRequiredMaterial())
                 : EMPTY_ARGUMENT

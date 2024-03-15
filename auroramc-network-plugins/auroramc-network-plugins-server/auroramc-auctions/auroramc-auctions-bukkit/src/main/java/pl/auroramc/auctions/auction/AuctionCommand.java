@@ -2,6 +2,15 @@ package pl.auroramc.auctions.auction;
 
 import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_DOWN;
+import static pl.auroramc.auctions.message.MessageVariableKey.HIGHEST_BID_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MessageVariableKey.MINIMAL_PRICE_PUNCTURE_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MessageVariableKey.MINIMAL_PRICE_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MessageVariableKey.OFFER_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MessageVariableKey.SUBJECT_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MessageVariableKey.TRADER_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MessageVariableKey.UNIQUE_ID_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MessageVariableKey.VENDOR_VARIABLE_KEY;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.item.ItemStackFormatter.getFormattedItemStack;
@@ -198,8 +207,8 @@ public class AuctionCommand {
         )
         .thenApply(state ->
             messageSource.offered
-                .with("symbol", fundsCurrency.getSymbol())
-                .with("offer", getFormattedDecimal(offer))
+                .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+                .with(OFFER_VARIABLE_KEY, getFormattedDecimal(offer))
         );
   }
 
@@ -224,13 +233,17 @@ public class AuctionCommand {
     }
 
     return messageSource.auctionSummary
-        .with("unique_id", auction.getAuctionUniqueId())
-        .with("subject", getFormattedItemStack(ItemStack.deserializeBytes(auction.getSubject())))
-        .with("vendor", getDisplayNameByUniqueId(auction.getVendorUniqueId()))
-        .with("highest_bid", getHighestBid(auction, fundsCurrency))
-        .with("symbol", fundsCurrency.getSymbol())
-        .with("minimal_price", getFormattedDecimal(auction.getMinimalPrice()))
-        .with("minimal_price_puncture", getFormattedDecimal(auction.getMinimalPricePuncture()));
+        .with(UNIQUE_ID_VARIABLE_KEY, auction.getAuctionUniqueId())
+        .with(
+            SUBJECT_VARIABLE_KEY, getFormattedItemStack(ItemStack.deserializeBytes(auction.getSubject()))
+        )
+        .with(VENDOR_VARIABLE_KEY, getDisplayNameByUniqueId(auction.getVendorUniqueId()))
+        .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+        .with(HIGHEST_BID_VARIABLE_KEY, getHighestBid(auction, fundsCurrency))
+        .with(MINIMAL_PRICE_VARIABLE_KEY, getFormattedDecimal(auction.getMinimalPrice()))
+        .with(
+            MINIMAL_PRICE_PUNCTURE_VARIABLE_KEY, getFormattedDecimal(auction.getMinimalPricePuncture())
+        );
   }
 
   @Permission("auroramc.auctions.auction.notifications")
@@ -254,9 +267,9 @@ public class AuctionCommand {
     }
 
     return messageSource.auctionWinningBid
-        .with("symbol", fundsCurrency.getSymbol())
-        .with("offer", getFormattedDecimal(auction.getCurrentOffer()))
-        .with("trader", getDisplayNameByUniqueId(auction.getTraderUniqueId()));
+        .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+        .with(OFFER_VARIABLE_KEY, getFormattedDecimal(auction.getCurrentOffer()))
+        .with(TRADER_VARIABLE_KEY, getDisplayNameByUniqueId(auction.getTraderUniqueId()));
   }
 
   private Component getDisplayNameByUniqueId(final UUID playerUniqueId) {

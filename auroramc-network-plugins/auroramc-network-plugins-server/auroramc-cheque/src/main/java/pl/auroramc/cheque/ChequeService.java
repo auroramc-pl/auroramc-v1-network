@@ -6,6 +6,9 @@ import static net.kyori.adventure.text.format.TextDecoration.ITALIC;
 import static net.kyori.adventure.text.format.TextDecoration.State.FALSE;
 import static org.bukkit.Material.PAPER;
 import static org.bukkit.persistence.PersistentDataType.STRING;
+import static pl.auroramc.cheque.message.MessageVariableKey.AMOUNT_VARIABLE_KEY;
+import static pl.auroramc.cheque.message.MessageVariableKey.ISSUER_VARIABLE_KEY;
+import static pl.auroramc.cheque.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 
@@ -83,14 +86,14 @@ class ChequeService implements ChequeFacade {
     final ItemStack renderOfItemStack = ItemStackBuilder.newBuilder(PAPER)
         .displayName(
             messageSource.titleOfCheque
-                .with("symbol", fundsCurrency.getSymbol())
-                .with("amount", getFormattedDecimal(chequeContext.amount()))
+                .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+                .with(AMOUNT_VARIABLE_KEY, getFormattedDecimal(chequeContext.amount()))
                 .compile()
                 .decoration(ITALIC, FALSE)
         )
         .lore(
             messageSource.linesOfCheque
-                .with("issuer", chequeContext.issuer().username())
+                .with(ISSUER_VARIABLE_KEY, chequeContext.issuer().username())
                 .compile()
                 .decoration(ITALIC, FALSE)
         )
@@ -141,9 +144,9 @@ class ChequeService implements ChequeFacade {
         )
         .thenApply(state ->
             messageSource.chequeFinalized
-                .with("symbol", fundsCurrency.getSymbol())
-                .with("amount", getFormattedDecimal(chequeContext.amount()))
-                .with("issuer", chequeContext.issuer().username())
+                .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+                .with(AMOUNT_VARIABLE_KEY, getFormattedDecimal(chequeContext.amount()))
+                .with(ISSUER_VARIABLE_KEY, chequeContext.issuer().username())
         )
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }

@@ -1,5 +1,6 @@
 package pl.auroramc.auth.mail;
 
+import static pl.auroramc.auth.message.MessageVariableKey.EMAIL_VARIABLE_KEY;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 
 import com.velocitypowered.api.proxy.Player;
@@ -92,7 +93,10 @@ public class MailCommand {
 
     user.setEmail(email);
     return userFacade.updateUser(user)
-        .exceptionally(exception -> delegateCaughtException(logger, exception))
-        .thenApply(state -> messageSource.emailHasBeenChanged.with("email", email));
+        .thenApply(state ->
+            messageSource.emailHasBeenChanged
+                .with(EMAIL_VARIABLE_KEY, email)
+        )
+        .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 }

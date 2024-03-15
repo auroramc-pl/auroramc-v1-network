@@ -9,6 +9,7 @@ import static pl.auroramc.commons.BukkitUtils.getTicksOf;
 import static pl.auroramc.commons.BukkitUtils.registerListeners;
 import static pl.auroramc.lobby.LobbyConfig.PLUGIN_CONFIG_FILE_NAME;
 import static pl.auroramc.lobby.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
+import static pl.auroramc.lobby.message.MessageVariableKey.SCHEMATICS_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.adventure.LiteAdventureExtension;
@@ -54,7 +55,7 @@ public class LobbyBukkitPlugin extends JavaPlugin {
         )
         .message(INVALID_USAGE,
             context -> messageSource.availableSchematicsSuggestion
-                .with("schematics", context.getSchematic().join("<newline>"))
+                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join("<newline>"))
         )
         .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
         .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)

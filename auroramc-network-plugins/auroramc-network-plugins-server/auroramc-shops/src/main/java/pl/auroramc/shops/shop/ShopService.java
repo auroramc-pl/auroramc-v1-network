@@ -42,7 +42,8 @@ class ShopService implements ShopFacade {
     } catch (final Exception exception) {
       throw new ShopDiscoveryException(
           "Could not discover shops in %s path, because of unexpected exception.".formatted(traversalPath.toString()),
-          exception);
+          exception
+      );
     }
   }
 

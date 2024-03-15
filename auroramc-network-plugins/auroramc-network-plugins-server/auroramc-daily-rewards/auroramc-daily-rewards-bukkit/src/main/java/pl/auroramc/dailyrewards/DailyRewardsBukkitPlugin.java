@@ -12,6 +12,7 @@ import static pl.auroramc.commons.duration.DurationFormatterStyle.SHORTLY;
 import static pl.auroramc.commons.plural.Pluralizers.getPluralizer;
 import static pl.auroramc.dailyrewards.DailyRewardsConfig.PLUGIN_CONFIG_FILE_NAME;
 import static pl.auroramc.dailyrewards.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
+import static pl.auroramc.dailyrewards.message.MessageVariableKey.SCHEMATICS_VARIABLE_KEY;
 import static pl.auroramc.dailyrewards.visit.VisitFacadeFactory.getVisitFacade;
 import static pl.auroramc.nametag.NametagFacade.getNametagFacade;
 import static pl.auroramc.nametag.context.NametagContextFacade.getNametagContextFacade;
@@ -123,7 +124,7 @@ public class DailyRewardsBukkitPlugin extends JavaPlugin {
         )
         .redirectResult(Schematic.class, MutableMessage.class,
             context -> messageSource.availableSchematicsSuggestion
-                .with("schematics", join("<newline>", context.getSchematics()))
+                .with(SCHEMATICS_VARIABLE_KEY, join("<newline>", context.getSchematics()))
         )
         .resultHandler(MutableMessage.class, new MutableMessageResultHandler())
         .register();

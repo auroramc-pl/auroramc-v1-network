@@ -1,7 +1,13 @@
 package pl.auroramc.economy;
 
+import static java.math.BigDecimal.ZERO;
+import static java.math.RoundingMode.HALF_DOWN;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
+import static pl.auroramc.economy.message.MessageVariableKey.AMOUNT_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MessageVariableKey.CURRENCY_ID_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MessageVariableKey.USERNAME_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.argument.Arg;
 import dev.rollczi.litecommands.command.execute.Execute;
@@ -17,6 +23,7 @@ import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
 import pl.auroramc.economy.message.MessageSource;
+import pl.auroramc.economy.message.MessageVariableKey;
 
 @Permission("auroramc.economy.economy")
 @Route(name = "economy", aliases = "eco")
@@ -75,9 +82,9 @@ public class EconomyCommand {
     return economyFacade.balance(player.getUniqueId(), currency, amount)
         .thenApply(state ->
             messageSource.balanceSet
-                .with("username", player.name())
-                .with("symbol", currency.getSymbol())
-                .with("amount", getFormattedDecimal(amount))
+                .with(USERNAME_VARIABLE_KEY, player.name())
+                .with(SYMBOL_VARIABLE_KEY, currency.getSymbol())
+                .with(AMOUNT_VARIABLE_KEY, getFormattedDecimal(amount))
         ).exceptionally(exception -> {
           throw new EconomyException(
               "Could not set balance of %s for %d to %.2f."
@@ -97,9 +104,9 @@ public class EconomyCommand {
     return economyFacade.deposit(player.getUniqueId(), currency, amount)
         .thenApply(state ->
             messageSource.balanceDeposited
-                .with("username", player.name())
-                .with("symbol", currency.getSymbol())
-                .with("amount", getFormattedDecimal(amount))
+                .with(USERNAME_VARIABLE_KEY, player.name())
+                .with(SYMBOL_VARIABLE_KEY, currency.getSymbol())
+                .with(AMOUNT_VARIABLE_KEY, getFormattedDecimal(amount))
         )
         .exceptionally(exception -> {
           throw new EconomyException(
@@ -120,9 +127,9 @@ public class EconomyCommand {
     return economyFacade.withdraw(player.getUniqueId(), currency, amount)
         .thenApply(state ->
             messageSource.balanceWithdrawn
-                .with("username", player.name())
-                .with("symbol", currency.getSymbol())
-                .with("amount", getFormattedDecimal(amount))
+                .with(USERNAME_VARIABLE_KEY, player.name())
+                .with(SYMBOL_VARIABLE_KEY, currency.getSymbol())
+                .with(AMOUNT_VARIABLE_KEY, getFormattedDecimal(amount))
         )
         .exceptionally(exception -> {
           throw new EconomyException(
@@ -143,8 +150,8 @@ public class EconomyCommand {
       final BiFunction<Currency, BigDecimal, CompletableFuture<MutableMessage>> modifier,
       final boolean requiresAmountValidation
   ) {
-    final BigDecimal fixedAmount = amount.setScale(2, RoundingMode.HALF_DOWN);
-    if (requiresAmountValidation && fixedAmount.compareTo(BigDecimal.ZERO) <= 0) {
+    final BigDecimal fixedAmount = amount.setScale(2, HALF_DOWN);
+    if (requiresAmountValidation && fixedAmount.compareTo(ZERO) <= 0) {
       return messageSource.modificationAmountHasToBeGreaterThanZero
           .asCompletedFuture();
     }
@@ -152,7 +159,7 @@ public class EconomyCommand {
     final Currency currency = currencyFacade.getCurrencyById(currencyId);
     if (currency == null) {
       return messageSource.modificationFailed
-          .with("currency_id", currencyId)
+          .with(CURRENCY_ID_VARIABLE_KEY, currencyId)
           .asCompletedFuture();
     }
 

@@ -19,6 +19,7 @@ import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.BACKWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.FORWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationUtils.navigate;
+import static pl.auroramc.quests.message.MessageVariableKey.QUEST_VARIABLE_KEY;
 import static pl.auroramc.quests.objective.ObjectiveUtils.getQuestObjective;
 import static pl.auroramc.quests.quest.QuestState.IN_PROGRESS;
 import static pl.auroramc.quests.quest.QuestsViewUtils.mergeLists;
@@ -202,7 +203,7 @@ public class QuestsView {
 
           viewer.sendMessage(
               messageSource.observingQuest
-                  .with("quest", miniMessage().serialize(quest.getIcon().displayName()))
+                  .with(QUEST_VARIABLE_KEY, miniMessage().serialize(quest.getIcon().displayName()))
                   .compile()
           );
         })

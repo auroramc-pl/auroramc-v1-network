@@ -3,12 +3,11 @@ package pl.auroramc.auctions;
 import static java.lang.String.join;
 import static java.time.Duration.ofSeconds;
 import static moe.rafal.juliet.datasource.HikariPooledDataSourceFactory.produceHikariDataSource;
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
-import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.parsed;
 import static pl.auroramc.auctions.AuctionsConfig.PLUGIN_CONFIG_FILE_NAME;
 import static pl.auroramc.auctions.auction.AuctionFacadeFactory.getAuctionFacade;
 import static pl.auroramc.auctions.message.MessageFacade.getMessageFacade;
 import static pl.auroramc.auctions.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
+import static pl.auroramc.auctions.message.MessageVariableKey.SCHEMATICS_VARIABLE_KEY;
 import static pl.auroramc.auctions.message.viewer.MessageViewerFacadeFactory.getMessageViewerFacade;
 import static pl.auroramc.auctions.vault.VaultFacadeFactory.getVaultFacade;
 import static pl.auroramc.auctions.vault.item.VaultItemFacadeFactory.getVaultItemFacade;
@@ -27,7 +26,6 @@ import java.util.Optional;
 import java.util.logging.Logger;
 import moe.rafal.juliet.Juliet;
 import moe.rafal.juliet.JulietBuilder;
-import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -49,6 +47,7 @@ import pl.auroramc.commons.config.serdes.juliet.JulietConfig;
 import pl.auroramc.commons.config.serdes.juliet.SerdesJuliet;
 import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
 import pl.auroramc.commons.event.publisher.EventPublisher;
+import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
@@ -141,7 +140,7 @@ public class AuctionsBukkitPlugin extends JavaPlugin {
     commands = LitePaperAdventureFactory.builder(getServer(), getName())
         .contextualBind(Player.class,
             new BukkitOnlyPlayerContextual<>(
-                miniMessage().deserialize("<red>Nie możesz użyć tej konsoli z poziomu konsoli.")
+                messageSource.executionFromConsoleIsUnsupported
             )
         )
         .commandInstance(new VaultCommand(this, vaultController))
@@ -156,16 +155,12 @@ public class AuctionsBukkitPlugin extends JavaPlugin {
                 eventPublisher
             )
         )
-        .redirectResult(RequiredPermissions.class, Component.class,
-            context -> miniMessage().deserialize(
-                "<red>Nie posiadasz wystarczających uprawnień aby użyć tej komendy."
-            )
+        .redirectResult(RequiredPermissions.class, MutableMessage.class,
+            context -> messageSource.executionOfCommandIsNotPermitted
         )
-        .redirectResult(Schematic.class, Component.class,
-            context -> miniMessage().deserialize(
-                "<red>Poprawne użycie: <yellow><newline><schematics>",
-                parsed("schematics", join("<newline>", context.getSchematics()))
-            )
+        .redirectResult(Schematic.class, MutableMessage.class,
+            context -> messageSource.availableSchematicsSuggestion
+                .with(SCHEMATICS_VARIABLE_KEY, join("<newline>", context.getSchematics()))
         )
         .register();
   }

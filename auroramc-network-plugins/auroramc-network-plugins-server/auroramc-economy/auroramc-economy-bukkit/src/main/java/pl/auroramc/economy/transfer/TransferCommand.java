@@ -6,6 +6,10 @@ import static java.util.logging.Level.SEVERE;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.lazy.Lazy.lazy;
+import static pl.auroramc.economy.message.MessageVariableKey.AMOUNT_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MessageVariableKey.SOURCE_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MessageVariableKey.TARGET_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.argument.Arg;
 import dev.rollczi.litecommands.command.execute.Execute;
@@ -95,16 +99,16 @@ public class TransferCommand {
         .thenAccept(state -> {
           source.sendMessage(
               messageSource.transferSent
-                  .with("target", target.getName())
-                  .with("symbol", resolvedCurrency.getSymbol())
-                  .with("amount", preformattedAmount)
+                  .with(TARGET_VARIABLE_KEY, target.getName())
+                  .with(SYMBOL_VARIABLE_KEY, resolvedCurrency.getSymbol())
+                  .with(AMOUNT_VARIABLE_KEY, preformattedAmount)
                   .compile()
           );
           target.sendMessage(
               messageSource.transferReceived
-                  .with("source", source.getName())
-                  .with("symbol", resolvedCurrency.getSymbol())
-                  .with("amount", preformattedAmount)
+                  .with(SOURCE_VARIABLE_KEY, source.getName())
+                  .with(SYMBOL_VARIABLE_KEY, resolvedCurrency.getSymbol())
+                  .with(AMOUNT_VARIABLE_KEY, preformattedAmount)
                   .compile()
           );
         })

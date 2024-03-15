@@ -3,6 +3,8 @@ package pl.auroramc.auctions.auction;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.time.Duration.between;
 import static java.time.Duration.ofSeconds;
+import static pl.auroramc.auctions.message.MessageVariableKey.PERIOD_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MessageVariableKey.UNIQUE_ID_VARIABLE_KEY;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -41,8 +43,8 @@ public class AuctionCompletionScheduler implements Runnable {
       if (remainingDurationOfAuction.compareTo(AUCTION_NOTIFY_SINCE) < 0) {
         messageFacade.deliverMessageToOnlinePlayers(
             messageSource.auctionNearCompletion
-                .with("unique_id", auction.getAuctionUniqueId())
-                .with("period", remainingDurationOfAuction.getSeconds())
+                .with(UNIQUE_ID_VARIABLE_KEY, auction.getAuctionUniqueId())
+                .with(PERIOD_VARIABLE_KEY, remainingDurationOfAuction.getSeconds())
         );
       }
     }

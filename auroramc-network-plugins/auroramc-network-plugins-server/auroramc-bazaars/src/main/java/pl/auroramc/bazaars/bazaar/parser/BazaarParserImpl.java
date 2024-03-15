@@ -1,6 +1,7 @@
 package pl.auroramc.bazaars.bazaar.parser;
 
 import static java.lang.Integer.parseInt;
+import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_DOWN;
 import static net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText;
 import static org.bukkit.Material.matchMaterial;
@@ -58,7 +59,7 @@ class BazaarParserImpl implements BazaarParser {
       );
     }
 
-    if (price.compareTo(BigDecimal.ZERO) <= 0) {
+    if (price.compareTo(ZERO) <= 0) {
       throw new BazaarParsingException(
           "Could not parse bazaar, because of price equal or less than zero."
       );

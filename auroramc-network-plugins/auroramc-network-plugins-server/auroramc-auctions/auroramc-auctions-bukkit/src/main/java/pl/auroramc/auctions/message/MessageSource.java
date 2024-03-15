@@ -8,6 +8,18 @@ public class MessageSource extends OkaeriConfig {
 
   public static final @Exclude String MESSAGE_SOURCE_FILE_NAME = "messages.yml";
 
+  public MutableMessage availableSchematicsSuggestion = MutableMessage.of(
+      "<red>Poprawne użycie: <yellow><newline>{schematics}"
+  );
+
+  public MutableMessage executionOfCommandIsNotPermitted = MutableMessage.of(
+      "<red>Nie posiadasz wystarczających uprawnień aby użyć tej komendy."
+  );
+
+  public MutableMessage executionFromConsoleIsUnsupported = MutableMessage.of(
+      "<red>Nie możesz użyć tej konsoli z poziomu konsoli."
+  );
+
   public MutableMessage auctionQueueIsFull = MutableMessage.of(
       "<red>Musisz spróbować wystawić przedmiot później, gdyż aktualnie osiągnięty został limit oczekujących aukcji."
   );
@@ -74,12 +86,12 @@ public class MessageSource extends OkaeriConfig {
 
   public MutableMessage auctionSummary = MutableMessage.of(
       """
-      <gray>Informacje na temat bieżącej <hover:show_text:'<gray>Unikalny identyfikator: <white>{unique_id}'>aukcji</hover><dark_gray>:
+      <gray>Informacje na temat bieżącej <hover:show_text:'<gray>Unikalny identyfikator: <white>{uniqueId}'>aukcji</hover><dark_gray>:
       <dark_gray>► <gray>Przedmiot: <white>{subject}
       <dark_gray>► <gray>Osoba wystawiająca: <white>{vendor}
-      <dark_gray>► <gray>Największa oferta: {highest_bid}
-      <dark_gray>► <gray>Minimalna kwota startowa: <white>{symbol}{minimal_price}
-      <dark_gray>► <gray>Minimalna kwota przebicia: <white>{symbol}{minimal_price_puncture}
+      <dark_gray>► <gray>Największa oferta: {highestBid}
+      <dark_gray>► <gray>Minimalna kwota startowa: <white>{symbol}{minimalPrice}
+      <dark_gray>► <gray>Minimalna kwota przebicia: <white>{symbol}{minimalPricePuncture}
       """.trim()
   );
 
@@ -100,19 +112,19 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage auctionNearCompletion = MutableMessage.of(
-      "<hover:show_text:'<gray>Unikalny identyfikator: <white>{unique_id}'>Aukcja</hover> zakończy się za <white>{period}s<gray>."
+      "<hover:show_text:'<gray>Unikalny identyfikator: <white>{uniqueId}'>Aukcja</hover> zakończy się za <white>{period}s<gray>."
   );
 
   public MutableMessage auctionHasStarted = MutableMessage.of(
-      "<gray>Gracz <white>{vendor}</white> rozpoczął <hover:show_text:'<gray>Unikalny identyfikator: <white>{unique_id}'>aukcję</hover> o przedmiot <white>{subject}</white>. Kwota początkowa wynosi <white>{symbol}{minimal_price}</white>, a minimalna kwota przebicia to <white>{symbol}{minimal_price_puncture}</white>."
+      "<gray>Gracz <white>{vendor}</white> rozpoczął <hover:show_text:'<gray>Unikalny identyfikator: <white>{uniqueId}'>aukcję</hover> o przedmiot <white>{subject}</white>. Kwota początkowa wynosi <white>{symbol}{minimalPrice}</white>, a minimalna kwota przebicia to <white>{symbol}{minimalPricePuncture}</white>."
   );
 
   public MutableMessage auctionHasCompletedWithoutOffers = MutableMessage.of(
-      "<gray><hover:show_text:'<gray>Unikalny identyfikator: <white>{unique_id}'>Aukcja</hover> zakończyła się bez ofert. Przedmiot został zwrócony do <white>{vendor}</white>."
+      "<gray><hover:show_text:'<gray>Unikalny identyfikator: <white>{uniqueId}'>Aukcja</hover> zakończyła się bez ofert. Przedmiot został zwrócony do <white>{vendor}</white>."
   );
 
   public MutableMessage auctionHasCompleted = MutableMessage.of(
-      "<gray><hover:show_text:'<gray>Unikalny identyfikator: <white>{unique_id}'>Aukcja</hover> gracza <white>{vendor}</white> zakończyła się. Przedmiot <white>{subject}</white> został sprzedany za <white>{symbol}{current_offer}</white> graczowi <white>{current_trader}</white>."
+      "<gray><hover:show_text:'<gray>Unikalny identyfikator: <white>{uniqueId}'>Aukcja</hover> gracza <white>{vendor}</white> zakończyła się. Przedmiot <white>{subject}</white> został sprzedany za <white>{symbol}{currentOffer}</white> graczowi <white>{currentTrader}</white>."
   );
 
   public MutableMessage auctionReceivedOffer = MutableMessage.of(

@@ -4,6 +4,7 @@ import static java.lang.String.join;
 import static moe.rafal.juliet.datasource.HikariPooledDataSourceFactory.produceHikariDataSource;
 import static pl.auroramc.cheque.ChequeConfig.PLUGIN_CONFIG_FILE_NAME;
 import static pl.auroramc.cheque.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
+import static pl.auroramc.cheque.message.MessageVariableKey.SCHEMATICS_VARIABLE_KEY;
 import static pl.auroramc.cheque.payment.PaymentFacade.getPaymentFacade;
 import static pl.auroramc.commons.BukkitUtils.registerListeners;
 import static pl.auroramc.commons.BukkitUtils.resolveService;
@@ -98,7 +99,7 @@ public class ChequeBukkitPlugin extends JavaPlugin {
         )
         .redirectResult(Schematic.class, MutableMessage.class,
             context -> messageSource.availableSchematicsSuggestion
-                .with("schematics", join("<newline>", context.getSchematics()))
+                .with(SCHEMATICS_VARIABLE_KEY, join("<newline>", context.getSchematics()))
         )
         .resultHandler(MutableMessage.class, new MutableMessageResultHandler())
         .register();

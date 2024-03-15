@@ -10,7 +10,7 @@ public class MessageSource extends OkaeriConfig {
 
   public MutableMessage titleOfSummary = MutableMessage.of(
       """
-      <gray>Serwer składa się w <white>{plugins_percentage}% <gray>z autorskich wtyczek
+      <gray>Serwer składa się w <white>{pluginsPercentage}% <gray>z autorskich wtyczek
       stworzonych dedykowanie dla naszego serwera, wszystkie z nich nie są dostępne
       do uzyskania dla osób trzecich. Niżej dostępna lista wtyczek zawiera tylko
       autorskie wtyczki, w celu zapobiegnięcia próbom znalezienia oraz
@@ -21,7 +21,7 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage entryOfSummary = MutableMessage.of(
-      "<white>{plugin_name}<gray>{separator}"
+      "<white>{pluginName}<gray>{separator}"
   );
 
   public MutableMessage unknownCommand = MutableMessage.of(

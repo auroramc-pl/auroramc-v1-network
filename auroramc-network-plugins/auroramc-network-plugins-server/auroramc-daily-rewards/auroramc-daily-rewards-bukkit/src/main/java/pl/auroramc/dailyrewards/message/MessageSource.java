@@ -25,7 +25,7 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage belowName = MutableMessage.of(
-      "<dark_gray>[ <gradient:white:gray>{visit_period} <dark_gray>]"
+      "<dark_gray>[ <gradient:white:gray>{playtime} <dark_gray>]"
   );
 
   public MutableMessage visitDailySummary = MutableMessage.of(
@@ -37,7 +37,7 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage visitEntry = MutableMessage.of(
-      "<dark_gray>► (<white>{session_start} <dark_gray>- <white>{session_ditch}<dark_gray>) <dark_gray>- <gray>{playtime}"
+      "<dark_gray>► (<white>{sessionStart} <dark_gray>- <white>{sessionDitch}<dark_gray>) <dark_gray>- <gray>{playtime}"
   );
 
   public MutableMessage noVisits = MutableMessage.of(

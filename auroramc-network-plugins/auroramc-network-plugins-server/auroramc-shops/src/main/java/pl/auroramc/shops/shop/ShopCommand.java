@@ -27,6 +27,7 @@ public class ShopCommand {
 
   @Execute
   public void shop(final Player player) {
-    produceShopsGui(plugin, shopFacade, productFacade).show(player);
+    produceShopsGui(plugin, shopFacade, productFacade)
+        .show(player);
   }
 }

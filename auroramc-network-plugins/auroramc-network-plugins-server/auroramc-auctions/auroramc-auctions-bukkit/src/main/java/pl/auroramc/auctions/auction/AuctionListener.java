@@ -1,6 +1,15 @@
 package pl.auroramc.auctions.auction;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static pl.auroramc.auctions.message.MessageVariableKey.CURRENT_OFFER_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MessageVariableKey.CURRENT_TRADER_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MessageVariableKey.MINIMAL_PRICE_PUNCTURE_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MessageVariableKey.MINIMAL_PRICE_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MessageVariableKey.OFFSET_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MessageVariableKey.SUBJECT_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MessageVariableKey.UNIQUE_ID_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MessageVariableKey.VENDOR_VARIABLE_KEY;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.item.ItemStackFormatter.getFormattedItemStack;
@@ -88,11 +97,13 @@ public class AuctionListener implements Listener {
     final Auction auction = event.getAuction();
     messageFacade.deliverMessageToOnlinePlayers(
         messageSource.auctionHasStarted
-            .with("unique_id", auction.getAuctionUniqueId())
-            .with("vendor", vendorName)
-            .with("subject", getFormattedItemStack(auction.getSubject()))
-            .with("minimal_price", getFormattedDecimal(auction.getMinimalPrice()))
-            .with("minimal_price_puncture", getFormattedDecimal(auction.getMinimalPricePuncture()))
+            .with(UNIQUE_ID_VARIABLE_KEY, auction.getAuctionUniqueId())
+            .with(VENDOR_VARIABLE_KEY, vendorName)
+            .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(auction.getSubject()))
+            .with(MINIMAL_PRICE_VARIABLE_KEY, getFormattedDecimal(auction.getMinimalPrice()))
+            .with(
+                MINIMAL_PRICE_PUNCTURE_VARIABLE_KEY, getFormattedDecimal(auction.getMinimalPricePuncture())
+            )
     );
   }
 
@@ -106,8 +117,8 @@ public class AuctionListener implements Listener {
       );
       messageFacade.deliverMessageToOnlinePlayers(
           messageSource.auctionHasCompletedWithoutOffers
-              .with("unique_id", event.getAuction().getAuctionUniqueId())
-              .with("vendor", vendorName)
+              .with(UNIQUE_ID_VARIABLE_KEY, event.getAuction().getAuctionUniqueId())
+              .with(VENDOR_VARIABLE_KEY, vendorName)
       );
       return;
     }
@@ -137,11 +148,11 @@ public class AuctionListener implements Listener {
 
     messageFacade.deliverMessageToOnlinePlayers(
         messageSource.auctionReceivedOffer
-            .with("unique_id", event.getAuction().getAuctionUniqueId())
-            .with("subject", getFormattedItemStack(event.getSubject()))
-            .with("current_trader", traderName)
-            .with("current_offer", getFormattedDecimal(event.getAuction().getCurrentOffer()))
-            .with("symbol", fundsCurrency.getSymbol())
+            .with(UNIQUE_ID_VARIABLE_KEY, event.getAuction().getAuctionUniqueId())
+            .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+            .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(event.getSubject()))
+            .with(CURRENT_TRADER_VARIABLE_KEY, traderName)
+            .with(CURRENT_OFFER_VARIABLE_KEY, getFormattedDecimal(event.getAuction().getCurrentOffer()))
     );
 
     final Duration remainingDurationOfAuction = Duration.between(Instant.now(), event.getAuction().getAvailableUntil());
@@ -154,8 +165,8 @@ public class AuctionListener implements Listener {
 
       messageFacade.deliverMessageToOnlinePlayers(
           messageSource.auctionHasBeenExtended
-              .with("unique_id", event.getAuction().getAuctionUniqueId())
-              .with("offset", AUCTION_BIDDING_OFFSET.getSeconds())
+              .with(UNIQUE_ID_VARIABLE_KEY, event.getAuction().getAuctionUniqueId())
+              .with(OFFSET_VARIABLE_KEY, AUCTION_BIDDING_OFFSET.getSeconds())
       );
     }
   }
@@ -180,12 +191,14 @@ public class AuctionListener implements Listener {
     );
     messageFacade.deliverMessageToOnlinePlayers(
         messageSource.auctionHasCompleted
-            .with("unique_id", event.getAuction().getAuctionUniqueId())
-            .with("vendor", vendorName)
-            .with("subject", getFormattedItemStack(event.getSubject()))
-            .with("current_offer", getFormattedDecimal(event.getAuction().getCurrentOffer()))
-            .with("current_trader", traderName)
-            .with("symbol", fundsCurrency.getSymbol())
+            .with(UNIQUE_ID_VARIABLE_KEY, event.getAuction().getAuctionUniqueId())
+            .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+            .with(VENDOR_VARIABLE_KEY, vendorName)
+            .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(event.getSubject()))
+            .with(
+                CURRENT_OFFER_VARIABLE_KEY, getFormattedDecimal(event.getAuction().getCurrentOffer())
+            )
+            .with(CURRENT_TRADER_VARIABLE_KEY, traderName)
     );
   }
 

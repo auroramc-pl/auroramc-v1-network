@@ -2,6 +2,13 @@ package pl.auroramc.economy.payment;
 
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.period.PeriodFormatter.getFormattedPeriod;
+import static pl.auroramc.economy.message.MessageVariableKey.AMOUNT_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MessageVariableKey.INITIATOR_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MessageVariableKey.RECEIVER_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MessageVariableKey.TRANSACTION_ID_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MessageVariableKey.TRANSACTION_TIME_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MessageVariableKey.USERNAME_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.argument.Arg;
 import dev.rollczi.litecommands.command.execute.Execute;
@@ -40,11 +47,11 @@ public class PaymentCommand {
         .thenApply(payments -> {
           if (payments.isEmpty()) {
             return messageSource.noIncomingPayments
-                .with("username", target.getName());
+                .with(USERNAME_VARIABLE_KEY, target.getName());
           }
 
           return messageSource.incomingPaymentsHeader
-              .with("username", target.getName())
+              .with(USERNAME_VARIABLE_KEY, target.getName())
               .append(getParsedPayments(payments));
         });
   }
@@ -55,11 +62,11 @@ public class PaymentCommand {
         .thenApply(payments -> {
           if (payments.isEmpty()) {
             return messageSource.noOutgoingPayments
-                .with("username", target.getName());
+                .with(USERNAME_VARIABLE_KEY, target.getName());
           }
 
           return messageSource.outgoingPaymentsHeader
-              .with("username", target.getName())
+              .with(USERNAME_VARIABLE_KEY, target.getName())
               .append(getParsedPayments(payments));
         });
   }
@@ -72,12 +79,12 @@ public class PaymentCommand {
 
   private MutableMessage getParsedPayment(final PaymentSummary paymentSummary) {
     return messageSource.paymentEntry
-        .with("transaction_time", getFormattedPeriod(paymentSummary.transactionTime()))
-        .with("id", paymentSummary.id().toString())
-        .with("initiator", paymentSummary.initiatorUsername())
-        .with("receiver", paymentSummary.receiverUsername())
-        .with("symbol", paymentSummary.currencySymbol())
-        .with("amount", getFormattedDecimal(paymentSummary.amount()));
+        .with(TRANSACTION_ID_VARIABLE_KEY, paymentSummary.id().toString())
+        .with(TRANSACTION_TIME_VARIABLE_KEY, getFormattedPeriod(paymentSummary.transactionTime()))
+        .with(INITIATOR_VARIABLE_KEY, paymentSummary.initiatorUsername())
+        .with(RECEIVER_VARIABLE_KEY, paymentSummary.receiverUsername())
+        .with(SYMBOL_VARIABLE_KEY, paymentSummary.currencySymbol())
+        .with(AMOUNT_VARIABLE_KEY, getFormattedDecimal(paymentSummary.amount()));
   }
 
   private CompletableFuture<List<PaymentSummary>> getPayments(

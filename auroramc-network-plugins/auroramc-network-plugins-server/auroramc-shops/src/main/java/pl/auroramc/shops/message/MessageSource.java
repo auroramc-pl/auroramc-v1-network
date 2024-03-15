@@ -21,7 +21,7 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage productBought = MutableMessage.of(
-      "<gray>Zakupiłeś <white>x{quantity} {material} <gray>w zamian za <white>{merchandise_symbol}{merchandise_value}<gray>, które zostały pobrane z twojego konta."
+      "<gray>Zakupiłeś <white>x{quantity} {material} <gray>w zamian za <white>{symbol}{amount}<gray>, które zostały pobrane z twojego konta."
   );
 
   public MutableMessage productCouldNotBeBoughtBecauseOfMissingMoney = MutableMessage.of(
@@ -33,10 +33,26 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage productSold = MutableMessage.of(
-      "<gray>Sprzedałeś <white>x{quantity} {material} <gray>w zamian za <white>{merchandise_symbol}{merchandise_value}<gray>, które zostały przelane na twoje konto."
+      "<gray>Sprzedałeś <white>x{quantity} {material} <gray>w zamian za <white>{symbol}{amount}<gray>, które zostały przelane na twoje konto."
   );
 
   public MutableMessage productCouldNotBeSoldBecauseOfMissingStock = MutableMessage.of(
       "<red>Nie posiadasz wystarczającej ilości tego przedmiotu, aby go sprzedać."
+  );
+
+  public MutableMessage purchaseTag = MutableMessage.of(
+      "<gray>Cena zakupu: <white>{symbol}{price}"
+  );
+
+  public MutableMessage purchaseSuggestion = MutableMessage.of(
+      "<gray>Naciśnij <white>LPM <gray>aby zakupić ten przedmiot."
+  );
+
+  public MutableMessage sellTag = MutableMessage.of(
+      "<gray>Cena sprzedaży: <white>{symbol}{price}"
+  );
+
+  public MutableMessage sellSuggestion = MutableMessage.of(
+      "<gray>Naciśnij <white>PPM <gray>aby sprzedać ten przedmiot."
   );
 }

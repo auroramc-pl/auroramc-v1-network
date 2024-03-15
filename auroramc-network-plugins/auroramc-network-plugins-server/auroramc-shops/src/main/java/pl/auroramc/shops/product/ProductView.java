@@ -1,9 +1,10 @@
 package pl.auroramc.shops.product;
 
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.BACKWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.FORWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationUtils.navigate;
+import static pl.auroramc.shops.message.MessageVariableKey.PRICE_VARIABLE_KEY;
+import static pl.auroramc.shops.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
 import static pl.auroramc.shops.product.ProductViewUtils.mergeLoreOnItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
@@ -11,18 +12,18 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import java.text.DecimalFormat;
 import java.util.List;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.ApiStatus.Internal;
+import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.currency.Currency;
+import pl.auroramc.shops.message.MessageSource;
 import pl.auroramc.shops.shop.Shop;
 
 class ProductView {
 
   private final Currency fundsCurrency;
+  private final MessageSource messageSource;
   private final DecimalFormat priceFormat;
   private final ProductFacade productFacade;
   private final Shop shop;
@@ -32,12 +33,14 @@ class ProductView {
 
   ProductView(
       final Currency fundsCurrency,
+      final MessageSource messageSource,
       final DecimalFormat priceFormat,
       final ProductFacade productFacade,
       final Shop shop,
       final ChestGui shopsGui
   ) {
     this.fundsCurrency = fundsCurrency;
+    this.messageSource = messageSource;
     this.priceFormat = priceFormat;
     this.productFacade = productFacade;
     this.shop = shop;
@@ -75,8 +78,7 @@ class ProductView {
   ) {
     if (event.isLeftClick()) {
       productFacade.purchaseProduct(event.getWhoClicked(), product);
-    }
-    else if (event.isRightClick()) {
+    } else if (event.isRightClick()) {
       productFacade.saleProduct(event.getWhoClicked(), product);
     }
   }
@@ -86,34 +88,22 @@ class ProductView {
     final ItemStack renderItemStack = mergeLoreOnItemStack(
         originItemStack, getAdditionalLoreForProductItem(product)
     );
-    return new GuiItem(renderItemStack, event -> requestTransactionFinalization(event, product));
-  }
-
-  private List<Component> getAdditionalLoreForProductItem(final Product product) {
-    return List.of(
-        miniMessage().deserialize(
-            "<gray>Cena zakupu: <white><price_symbol><price_for_purchase>",
-            getProductItemTagResolvers(product)
-        ),
-        miniMessage().deserialize(
-            "<gray>Cena sprzedaży: <white><price_symbol><price_for_sale>",
-            getProductItemTagResolvers(product)
-        ),
-        miniMessage().deserialize(
-            "<gray>Naciśnij <white>LPM <gray>aby zakupić ten przedmiot."
-        ),
-        miniMessage().deserialize(
-            "<gray>Naciśnij <white>PPM <gray>aby sprzedać ten przedmiot."
-        )
+    return new GuiItem(renderItemStack,
+        event -> requestTransactionFinalization(event, product)
     );
   }
 
-  private TagResolver[] getProductItemTagResolvers(final Product product) {
+  private List<MutableMessage> getAdditionalLoreForProductItem(final Product product) {
     return List.of(
-        Placeholder.unparsed("price_symbol", fundsCurrency.getSymbol()),
-        Placeholder.unparsed("price_for_sale", priceFormat.format(product.priceForSale())),
-        Placeholder.unparsed("price_for_purchase", priceFormat.format(product.priceForPurchase()))
-    ).toArray(TagResolver[]::new);
+        messageSource.sellTag
+            .with(PRICE_VARIABLE_KEY, priceFormat.format(product.priceForSale()))
+            .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol()),
+        messageSource.purchaseTag
+            .with(PRICE_VARIABLE_KEY, priceFormat.format(product.priceForPurchase()))
+            .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol()),
+        messageSource.sellSuggestion,
+        messageSource.purchaseSuggestion
+    );
   }
 
   private List<GuiItem> getProductItems(final List<Product> products) {
