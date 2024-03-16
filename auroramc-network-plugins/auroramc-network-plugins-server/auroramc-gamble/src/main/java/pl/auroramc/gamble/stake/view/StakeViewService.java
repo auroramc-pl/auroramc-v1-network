@@ -3,7 +3,7 @@ package pl.auroramc.gamble.stake.view;
 import static java.util.List.copyOf;
 import static java.util.stream.Collectors.toMap;
 import static pl.auroramc.commons.BukkitUtils.postToMainThread;
-import static pl.auroramc.gamble.stake.view.StakeViewUtils.partition;
+import static pl.auroramc.commons.collection.CollectionUtils.partition;
 
 import java.util.Collection;
 import java.util.List;

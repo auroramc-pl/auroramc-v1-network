@@ -1,9 +1,6 @@
 package pl.auroramc.gamble.stake.view;
 
-import static java.lang.Math.min;
-import static java.util.stream.IntStream.iterate;
 
-import java.util.List;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -29,12 +26,5 @@ final class StakeViewUtils {
 
   static int getSlotIndexOf(final int x, final int y) {
     return (x - COORDINATE_OFFSET) + ((y - COORDINATE_OFFSET) * ROW_LENGTH);
-  }
-
-  static <T> List<List<T>> partition(final List<T> items, final int partitionSize) {
-    return iterate(0, index -> index + partitionSize)
-        .limit((long) Math.ceil((double) items.size() / partitionSize))
-        .mapToObj(i -> items.subList(i, min(i + partitionSize, items.size())))
-        .toList();
   }
 }
