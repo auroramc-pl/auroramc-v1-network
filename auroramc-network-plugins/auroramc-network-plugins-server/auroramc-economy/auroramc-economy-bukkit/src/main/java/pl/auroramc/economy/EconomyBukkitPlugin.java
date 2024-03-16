@@ -1,6 +1,9 @@
 package pl.auroramc.economy;
 
-import static java.lang.String.join;
+import static dev.rollczi.litecommands.bukkit.LiteBukkitMessages.PLAYER_NOT_FOUND;
+import static dev.rollczi.litecommands.bukkit.LiteBukkitMessages.PLAYER_ONLY;
+import static dev.rollczi.litecommands.message.LiteMessages.INVALID_USAGE;
+import static dev.rollczi.litecommands.message.LiteMessages.MISSING_PERMISSIONS;
 import static moe.rafal.juliet.datasource.HikariPooledDataSourceFactory.produceHikariDataSource;
 import static pl.auroramc.commons.BukkitUtils.registerServices;
 import static pl.auroramc.commons.BukkitUtils.resolveService;
@@ -16,11 +19,9 @@ import static pl.auroramc.economy.message.MessageVariableKey.SCHEMATICS_VARIABLE
 import static pl.auroramc.economy.payment.PaymentFacadeFactory.producePaymentFacade;
 
 import dev.rollczi.litecommands.LiteCommands;
-import dev.rollczi.litecommands.bukkit.adventure.paper.LitePaperAdventureFactory;
-import dev.rollczi.litecommands.bukkit.tools.BukkitOnlyPlayerContextual;
-import dev.rollczi.litecommands.bukkit.tools.BukkitPlayerArgument;
-import dev.rollczi.litecommands.command.permission.RequiredPermissions;
-import dev.rollczi.litecommands.schematic.Schematic;
+import dev.rollczi.litecommands.adventure.LiteAdventureExtension;
+import dev.rollczi.litecommands.annotations.LiteCommandsAnnotations;
+import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import java.util.Map;
 import java.util.Set;
@@ -28,14 +29,13 @@ import java.util.logging.Logger;
 import moe.rafal.juliet.Juliet;
 import moe.rafal.juliet.JulietBuilder;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.auroramc.commons.config.ConfigFactory;
 import pl.auroramc.commons.config.serdes.SerdesCommons;
 import pl.auroramc.commons.config.serdes.juliet.JulietConfig;
 import pl.auroramc.commons.config.serdes.juliet.SerdesJuliet;
 import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
-import pl.auroramc.commons.integration.litecommands.v2.MutableMessageResultHandler;
+import pl.auroramc.commons.integration.litecommands.MutableMessageResultHandler;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.account.AccountFacade;
 import pl.auroramc.economy.balance.BalanceCommand;
@@ -98,47 +98,38 @@ public class EconomyBukkitPlugin extends JavaPlugin {
 
     final LeaderboardFacade leaderboardFacade = getLeaderboardFacade(juliet);
 
-    commands = LitePaperAdventureFactory.builder(getServer(), getName())
-        .contextualBind(Player.class,
-            new BukkitOnlyPlayerContextual<>(
-                messageSource.executionFromConsoleIsUnsupported
-            )
+    commands = LiteBukkitFactory.builder(getName(), this)
+        .extension(new LiteAdventureExtension<>(),
+            configurer -> configurer.miniMessage(true)
         )
-        .commandInstance(
-            new BalanceCommand(
-                logger, economyFacade, economyConfig.balance, messageSource, currencyFacade
-            )
-        )
-        .commandInstance(
-            new PaymentCommand(userFacade, messageSource, paymentFacade)
-        )
-        .commandInstance(
-            new TransferCommand(
-                logger, messageSource, economyFacade, economyConfig.transfer, currencyFacade
-            )
-        )
-        .commandInstance(
-            new EconomyCommand(logger, messageSource, economyFacade, currencyFacade)
-        )
-        .commandInstance(
-            new LeaderboardCommand(
-                messageSource, currencyFacade, leaderboardFacade, economyConfig.leaderboard
-            )
-        )
-        .argument(Player.class,
-            new BukkitPlayerArgument<>(
-                getServer(), messageSource.specifiedPlayerIsUnknown
-            )
-        )
-        .redirectResult(RequiredPermissions.class, MutableMessage.class,
-            context -> messageSource.executionOfCommandIsNotPermitted
-        )
-        .redirectResult(Schematic.class, MutableMessage.class,
+        .message(INVALID_USAGE,
             context -> messageSource.availableSchematicsSuggestion
-                .with(SCHEMATICS_VARIABLE_KEY, join("<newline>", context.getSchematics()))
+                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join("<newline>"))
         )
-        .resultHandler(MutableMessage.class, new MutableMessageResultHandler())
-        .register();
+        .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
+        .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
+        .message(PLAYER_NOT_FOUND, messageSource.specifiedPlayerIsUnknown)
+        .commands(
+            LiteCommandsAnnotations.of(
+                new BalanceCommand(
+                    logger, economyFacade, economyConfig.balance, messageSource, currencyFacade
+                ),
+                new PaymentCommand(
+                    userFacade, messageSource, paymentFacade
+                ),
+                new TransferCommand(
+                    logger, messageSource, economyFacade, economyConfig.transfer, currencyFacade
+                ),
+                new EconomyCommand(
+                    logger, messageSource, economyFacade, currencyFacade
+                ),
+                new LeaderboardCommand(
+                    messageSource, currencyFacade, leaderboardFacade, economyConfig.leaderboard
+                )
+            )
+        )
+        .result(MutableMessage.class, new MutableMessageResultHandler<>())
+        .build();
 
     restServerExtension = new RestServerExtension(economyConfig, economyFacade, currencyFacade);
     restServerExtension.enableRestServerIfConfigured();
@@ -146,7 +137,7 @@ public class EconomyBukkitPlugin extends JavaPlugin {
 
   @Override
   public void onDisable() {
-    commands.getPlatform().unregisterAll();
+    commands.unregister();
 
     restServerExtension.disableRestServerIfRunning();
   }

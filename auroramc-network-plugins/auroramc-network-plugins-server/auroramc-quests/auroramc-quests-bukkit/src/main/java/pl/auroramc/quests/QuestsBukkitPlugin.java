@@ -46,7 +46,7 @@ import pl.auroramc.commons.config.ConfigFactory;
 import pl.auroramc.commons.config.serdes.juliet.SerdesJuliet;
 import pl.auroramc.commons.event.publisher.EventPublisher;
 import pl.auroramc.quests.message.MessageSource;
-import pl.auroramc.commons.integration.litecommands.v3.MutableMessageResultHandler;
+import pl.auroramc.commons.integration.litecommands.MutableMessageResultHandler;
 import pl.auroramc.quests.objective.Objective;
 import pl.auroramc.quests.objectives.block.BreakBlockObjectiveHandler;
 import pl.auroramc.quests.objectives.travel.DistanceObjective;
@@ -167,8 +167,12 @@ public class QuestsBukkitPlugin extends JavaPlugin {
         .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
         .message(PLAYER_NOT_FOUND, messageSource.specifiedPlayerIsUnknown)
         .argument(Quest.class, new QuestArgumentResolver<>(messageSource, questIndex))
-        .commands(LiteCommandsAnnotations.of(
-            new QuestsCommand(logger, messageSource, userFacade, questsView, questTrackFacade, questTrackController))
+        .commands(
+            LiteCommandsAnnotations.of(
+                new QuestsCommand(
+                    logger, messageSource, userFacade, questsView, questTrackFacade, questTrackController
+                )
+            )
         )
         .result(MutableMessage.class, new MutableMessageResultHandler<>())
         .build();

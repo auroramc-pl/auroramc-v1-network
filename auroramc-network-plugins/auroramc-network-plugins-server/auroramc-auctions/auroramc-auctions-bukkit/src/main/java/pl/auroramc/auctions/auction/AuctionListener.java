@@ -100,6 +100,7 @@ public class AuctionListener implements Listener {
             .with(UNIQUE_ID_VARIABLE_KEY, auction.getAuctionUniqueId())
             .with(VENDOR_VARIABLE_KEY, vendorName)
             .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(auction.getSubject()))
+            .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
             .with(MINIMAL_PRICE_VARIABLE_KEY, getFormattedDecimal(auction.getMinimalPrice()))
             .with(
                 MINIMAL_PRICE_PUNCTURE_VARIABLE_KEY, getFormattedDecimal(auction.getMinimalPricePuncture())

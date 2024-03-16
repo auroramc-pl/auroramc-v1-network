@@ -9,10 +9,10 @@ import static pl.auroramc.economy.message.MessageVariableKey.CURRENCY_ID_VARIABL
 import static pl.auroramc.economy.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MessageVariableKey.USERNAME_VARIABLE_KEY;
 
-import dev.rollczi.litecommands.argument.Arg;
-import dev.rollczi.litecommands.command.execute.Execute;
-import dev.rollczi.litecommands.command.permission.Permission;
-import dev.rollczi.litecommands.command.route.Route;
+import dev.rollczi.litecommands.annotations.argument.Arg;
+import dev.rollczi.litecommands.annotations.command.Command;
+import dev.rollczi.litecommands.annotations.execute.Execute;
+import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
@@ -24,7 +24,7 @@ import pl.auroramc.economy.currency.CurrencyFacade;
 import pl.auroramc.economy.message.MessageSource;
 
 @Permission("auroramc.economy.economy")
-@Route(name = "economy", aliases = "eco")
+@Command(name = "economy", aliases = "eco")
 public class EconomyCommand {
 
   private final Logger logger;
@@ -44,9 +44,11 @@ public class EconomyCommand {
     this.currencyFacade = currencyFacade;
   }
 
-  @Execute(route = "set")
+  @Execute(name = "set")
   public CompletableFuture<MutableMessage> set(
-      final @Arg Player target, final @Arg Long currencyId, final @Arg BigDecimal amount
+      final @Arg Player target,
+      final @Arg Long currencyId,
+      final @Arg BigDecimal amount
   ) {
     return processIncomingModification(currencyId, amount,
         (currency, fixedAmount) -> balance(target, currency, fixedAmount),
@@ -54,9 +56,11 @@ public class EconomyCommand {
     ).exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
-  @Execute(route = "add")
+  @Execute(name = "add")
   public CompletableFuture<MutableMessage> add(
-      final @Arg Player target, final @Arg Long currencyId, final @Arg BigDecimal amount
+      final @Arg Player target,
+      final @Arg Long currencyId,
+      final @Arg BigDecimal amount
   ) {
     return processIncomingModification(currencyId, amount,
         (currency, fixedAmount) -> deposit(target, currency, fixedAmount),
@@ -64,9 +68,11 @@ public class EconomyCommand {
     ).exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
-  @Execute(route = "take")
+  @Execute(name = "take")
   public CompletableFuture<MutableMessage> take(
-      final @Arg Player target, final @Arg Long currencyId, final @Arg BigDecimal amount
+      final @Arg Player target,
+      final @Arg Long currencyId,
+      final @Arg BigDecimal amount
   ) {
     return processIncomingModification(currencyId, amount,
         (currency, fixedAmount) -> withdraw(target, currency, fixedAmount),

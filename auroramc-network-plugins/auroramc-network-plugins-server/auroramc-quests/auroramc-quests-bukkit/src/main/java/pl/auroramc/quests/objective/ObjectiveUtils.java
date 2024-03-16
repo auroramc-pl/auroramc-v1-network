@@ -4,15 +4,15 @@ import static java.util.Arrays.stream;
 import static java.util.Locale.ROOT;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Stream.concat;
 import static pl.auroramc.quests.message.MessageVariableKey.DATA_VARIABLE_KEY;
 import static pl.auroramc.quests.message.MessageVariableKey.GOAL_VARIABLE_KEY;
 import static pl.auroramc.quests.message.MessageVariableKey.ITEM_VARIABLE_KEY;
 import static pl.auroramc.quests.message.MessageVariableKey.TYPE_VARIABLE_KEY;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import net.kyori.adventure.text.Component;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.quests.objective.progress.ObjectiveProgress;
@@ -35,18 +35,44 @@ public final class ObjectiveUtils {
         .collect(toMap(quest -> quest, quest -> quest.getObjectives(objectiveType)));
   }
 
-  public static List<Component> getQuestObjective(
+  public static MutableMessage getQuestObjectives(
+      final List<? extends Objective<?>> objectives,
+      final Map<? extends Objective<?>, ObjectiveProgress> objectiveToObjectiveProgress
+  ) {
+    return objectives.stream()
+        .map(objective ->
+            getQuestObjective(
+                objective,
+                objectiveToObjectiveProgress.get(objective)
+            )
+        )
+        .collect(MutableMessage.collector());
+  }
+
+  public static String getQuestObjectivesTemplate(
+      final List<? extends Objective<?>> objectives,
+      final Map<? extends Objective<?>, ObjectiveProgress> objectiveToObjectiveProgress
+  ) {
+    return getQuestObjectives(objectives, objectiveToObjectiveProgress).getTemplate();
+  }
+
+  public static MutableMessage getQuestObjective(
       final Objective<?> objective,
       final ObjectiveProgress objectiveProgress
   ) {
-    final List<Component> aggregator = new ArrayList<>();
+    return concat(
+        Stream.of(getQuestObjective0(objective, objectiveProgress)),
+        objective.getRequirements()
+            .stream()
+            .map(ObjectiveUtils::getObjectiveRequirement)
+    ).collect(MutableMessage.collector());
+  }
 
-    aggregator.add(getQuestObjective0(objective, objectiveProgress).compile());
-    for (final ObjectiveRequirement requirement : objective.getRequirements()) {
-      aggregator.add(getObjectiveRequirement(requirement).compile());
-    }
-
-    return aggregator;
+  public static String getQuestObjectiveTemplate(
+      final Objective<?> objective,
+      final ObjectiveProgress objectiveProgress
+  ) {
+    return getQuestObjective(objective, objectiveProgress).getTemplate();
   }
 
   private static MutableMessage getQuestObjective0(

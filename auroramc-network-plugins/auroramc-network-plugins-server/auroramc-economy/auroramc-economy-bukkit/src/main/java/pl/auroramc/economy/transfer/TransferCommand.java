@@ -11,10 +11,11 @@ import static pl.auroramc.economy.message.MessageVariableKey.SOURCE_VARIABLE_KEY
 import static pl.auroramc.economy.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MessageVariableKey.TARGET_VARIABLE_KEY;
 
-import dev.rollczi.litecommands.argument.Arg;
-import dev.rollczi.litecommands.command.execute.Execute;
-import dev.rollczi.litecommands.command.permission.Permission;
-import dev.rollczi.litecommands.command.route.Route;
+import dev.rollczi.litecommands.annotations.argument.Arg;
+import dev.rollczi.litecommands.annotations.command.Command;
+import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.execute.Execute;
+import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.math.BigDecimal;
 import java.util.logging.Logger;
 import org.bukkit.entity.Player;
@@ -25,7 +26,7 @@ import pl.auroramc.economy.currency.CurrencyFacade;
 import pl.auroramc.economy.message.MessageSource;
 
 @Permission("auroramc.economy.transfer")
-@Route(name = "transfer", aliases = {"pay", "przelej", "zaplac"})
+@Command(name = "transfer", aliases = {"pay", "przelej", "zaplac"})
 public class TransferCommand {
 
   private final Logger logger;
@@ -50,7 +51,9 @@ public class TransferCommand {
 
   @Execute
   public void transfer(
-      final Player source, final @Arg Player target, final @Arg BigDecimal amount
+      final @Context Player source,
+      final @Arg Player target,
+      final @Arg BigDecimal amount
   ) {
     final BigDecimal fixedAmount = amount.setScale(2, HALF_DOWN);
     if (fixedAmount.compareTo(ZERO) <= 0) {

@@ -11,10 +11,11 @@ import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.decimal.DecimalUtils.getLengthOfFractionalPart;
 import static pl.auroramc.commons.decimal.DecimalUtils.getLengthOfIntegralPart;
 
-import dev.rollczi.litecommands.argument.Arg;
-import dev.rollczi.litecommands.command.execute.Execute;
-import dev.rollczi.litecommands.command.permission.Permission;
-import dev.rollczi.litecommands.command.route.Route;
+import dev.rollczi.litecommands.annotations.argument.Arg;
+import dev.rollczi.litecommands.annotations.command.Command;
+import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.execute.Execute;
+import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
@@ -26,7 +27,7 @@ import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
 
 @Permission("auroramc.cheques.cheque")
-@Route(name = "cheque", aliases = {"czek", "banknot"})
+@Command(name = "cheque", aliases = {"czek", "banknot"})
 class ChequeCommand {
 
   private static final int MAXIMUM_INTEGRAL_LENGTH = 9;
@@ -55,7 +56,8 @@ class ChequeCommand {
 
   @Execute
   public CompletableFuture<MutableMessage> cheque(
-      final Player player, final @Arg BigDecimal amount
+      final @Context Player player,
+      final @Arg BigDecimal amount
   ) {
     if (getLengthOfIntegralPart(amount) > 9 || getLengthOfFractionalPart(amount) > 2) {
       return messageSource.chequeCouldNotBeCreatedBecauseOfDigits
@@ -80,7 +82,8 @@ class ChequeCommand {
   }
 
   private CompletableFuture<MutableMessage> completeChequeCreation(
-      final Player player, final BigDecimal amount, final boolean whetherPlayerHasEnoughFunds) {
+      final Player player, final BigDecimal amount, final boolean whetherPlayerHasEnoughFunds
+  ) {
     if (!whetherPlayerHasEnoughFunds) {
       return messageSource.chequeCouldNotBeCreatedBecauseOfMoney
           .asCompletedFuture();

@@ -72,7 +72,7 @@ import pl.auroramc.commons.config.serdes.juliet.JulietConfig;
 import pl.auroramc.commons.config.serdes.juliet.SerdesJuliet;
 import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
 import pl.auroramc.commons.duration.DurationFormatter;
-import pl.auroramc.commons.integration.litecommands.v3.MutableMessageResultHandler;
+import pl.auroramc.commons.integration.litecommands.MutableMessageResultHandler;
 import pl.auroramc.commons.message.MutableMessage;
 
 @Plugin(id = PROJECT_ARTIFACT_ID, version = PROJECT_VERSION, authors = "shitzuu <hello@rafal.moe>")
@@ -166,26 +166,28 @@ public class AuthVelocityPlugin {
                 .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join("<newline>"))
         )
         .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
-        .commands(LiteCommandsAnnotations.of(
-            new MailCommand(
-                logger, messageSource, userFacade, authConfig.emailPattern
-            ),
-            new LoginCommand(
-                logger, messageSource, userFacade, userController, hashingStrategy, timeoutFacade
-            ),
-            new PasswordChangeCommand(
-                logger, messageSource, hashingStrategy, passwordController
-            ),
-            new RecoveryCommand(
-                logger, mailer, mailFacade, userFacade
-            ),
-            new RegisterCommand(
-                logger, messageSource, timeoutFacade, passwordController
-            ),
-            new UnregisterCommand(
-                logger, messageSource, userFacade, hashingStrategy
+        .commands(
+            LiteCommandsAnnotations.of(
+                new MailCommand(
+                    logger, messageSource, userFacade, authConfig.emailPattern
+                ),
+                new LoginCommand(
+                    logger, messageSource, userFacade, userController, hashingStrategy, timeoutFacade
+                ),
+                new PasswordChangeCommand(
+                    logger, messageSource, hashingStrategy, passwordController
+                ),
+                new RecoveryCommand(
+                    logger, mailer, mailFacade, userFacade
+                ),
+                new RegisterCommand(
+                    logger, messageSource, timeoutFacade, passwordController
+                ),
+                new UnregisterCommand(
+                    logger, messageSource, userFacade, hashingStrategy
+                )
             )
-        ))
+        )
         .result(MutableMessage.class, new MutableMessageResultHandler<>())
         .build();
   }

@@ -87,9 +87,9 @@ public class MessageSource extends OkaeriConfig {
   public MutableMessage auctionSummary = MutableMessage.of(
       """
       <gray>Informacje na temat bieżącej <hover:show_text:'<gray>Unikalny identyfikator: <white>{uniqueId}'>aukcji</hover><dark_gray>:
-      <dark_gray>► <gray>Przedmiot: <white>{subject}
+      <dark_gray>► <gray>Przedmiot: <white>{subject}</hover>
       <dark_gray>► <gray>Osoba wystawiająca: <white>{vendor}
-      <dark_gray>► <gray>Największa oferta: {highestBid}
+      <dark_gray>► <gray>Największa oferta: <white>{highestBid}
       <dark_gray>► <gray>Minimalna kwota startowa: <white>{currency}{minimalPrice}
       <dark_gray>► <gray>Minimalna kwota przebicia: <white>{currency}{minimalPricePuncture}
       """.trim()
@@ -112,11 +112,11 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage auctionNearCompletion = MutableMessage.of(
-      "<hover:show_text:'<gray>Unikalny identyfikator: <white>{uniqueId}'>Aukcja</hover> zakończy się za <white>{period}s<gray>."
+      "<gray><hover:show_text:'<gray>Unikalny identyfikator: <white>{uniqueId}'>Aukcja</hover> <gray>zakończy się za <white>{period}s<gray>."
   );
 
   public MutableMessage auctionHasStarted = MutableMessage.of(
-      "<gray>Gracz <white>{vendor}</white> rozpoczął <hover:show_text:'<gray>Unikalny identyfikator: <white>{uniqueId}'>aukcję</hover> o przedmiot <white>{subject}</white>. Kwota początkowa wynosi <white>{currency}{minimalPrice}</white>, a minimalna kwota przebicia to <white>{currency}{minimalPricePuncture}</white>."
+      "<gray>Gracz <white>{vendor}</white> rozpoczął <hover:show_text:'<gray>Unikalny identyfikator: <white>{uniqueId}'>aukcję</hover> o przedmiot <white>{subject}</hover></white><gray>. Kwota początkowa wynosi <white>{currency}{minimalPrice}</white>, a minimalna kwota przebicia to <white>{currency}{minimalPricePuncture}</white>."
   );
 
   public MutableMessage auctionHasCompletedWithoutOffers = MutableMessage.of(
@@ -124,11 +124,11 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage auctionHasCompleted = MutableMessage.of(
-      "<gray><hover:show_text:'<gray>Unikalny identyfikator: <white>{uniqueId}'>Aukcja</hover> gracza <white>{vendor}</white> zakończyła się. Przedmiot <white>{subject}</white> został sprzedany za <white>{currency}{currentOffer}</white> graczowi <white>{currentTrader}</white>."
+      "<gray><hover:show_text:'<gray>Unikalny identyfikator: <white>{uniqueId}'>Aukcja</hover> gracza <white>{vendor}</white> zakończyła się. Przedmiot <white>{subject}</hover></white> został sprzedany za <white>{currency}{currentOffer}</white> graczowi <white>{currentTrader}</white>."
   );
 
   public MutableMessage auctionReceivedOffer = MutableMessage.of(
-      "<gray>Gracz <white>{current_trader}</white> złożył ofertę <white>{currency}{current_offer}</white> na <hover:show_text:'<gray>Unikalny identyfikator: <white>{unique_id}'>aukcję</hover> o przedmiot <white>{subject}</white>."
+      "<gray>Gracz <white>{currentTrader}</white> złożył ofertę <white>{currency}{currentOffer}</white> na <hover:show_text:'<gray>Unikalny identyfikator: <white>{unique_id}'>aukcję</hover> o przedmiot <white>{subject}</hover></white>."
   );
 
   public MutableMessage auctionHasBeenExtended = MutableMessage.of(

@@ -7,10 +7,11 @@ import static pl.auroramc.economy.message.MessageVariableKey.NAME_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MessageVariableKey.USERNAME_VARIABLE_KEY;
 
-import dev.rollczi.litecommands.argument.Arg;
-import dev.rollczi.litecommands.command.execute.Execute;
-import dev.rollczi.litecommands.command.permission.Permission;
-import dev.rollczi.litecommands.command.route.Route;
+import dev.rollczi.litecommands.annotations.argument.Arg;
+import dev.rollczi.litecommands.annotations.command.Command;
+import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.execute.Execute;
+import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
@@ -23,7 +24,7 @@ import pl.auroramc.economy.currency.CurrencyFacade;
 import pl.auroramc.economy.message.MessageSource;
 
 @Permission("auroramc.economy.balance")
-@Route(name = "balance", aliases = {"bal", "saldo"})
+@Command(name = "balance", aliases = {"bal", "saldo"})
 public class BalanceCommand {
 
   private final Logger logger;
@@ -46,8 +47,10 @@ public class BalanceCommand {
     this.currencyFacade = currencyFacade;
   }
 
-  @Execute(required = 0)
-  public CompletableFuture<MutableMessage> getBalance(final Player player) {
+  @Execute
+  public CompletableFuture<MutableMessage> getBalance(
+      final @Context Player player
+  ) {
     return retrieveBalanceSummaries(player.getUniqueId())
         .thenApply(balanceSummaries ->
             messageSource.balanceSummaryHeader.append(balanceSummaries)
@@ -57,7 +60,9 @@ public class BalanceCommand {
 
   @Permission("auroramc.economy.balance.other")
   @Execute
-  public CompletableFuture<MutableMessage> getBalance(final Player player, final @Arg Player target) {
+  public CompletableFuture<MutableMessage> getBalance(
+      final @Context Player player, final @Arg Player target
+  ) {
     return retrieveBalanceSummaries(target.getUniqueId())
         .thenApply(balanceSummaries ->
             messageSource.balanceSummaryHeaderTargeted

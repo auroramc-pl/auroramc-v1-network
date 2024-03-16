@@ -29,6 +29,18 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>dev.rollczi</groupId>
+      <artifactId>litecommands-bukkit</artifactId>
+      <version>3.4.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>dev.rollczi</groupId>
+      <artifactId>litecommands-adventure-platform</artifactId>
+      <version>3.4.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>org.apache.groovy</groupId>
       <artifactId>groovy-jsr223</artifactId>
       <version>5.0.0-alpha-7</version>
@@ -40,12 +52,6 @@
       <artifactId>IF</artifactId>
       <version>0.10.13</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>dev.rollczi.litecommands</groupId>
-      <artifactId>bukkit-adventure</artifactId>
-      <version>2.9.0-SNAPSHOT</version>
-      <scope>compile</scope>
     </dependency>
   </dependencies>
 

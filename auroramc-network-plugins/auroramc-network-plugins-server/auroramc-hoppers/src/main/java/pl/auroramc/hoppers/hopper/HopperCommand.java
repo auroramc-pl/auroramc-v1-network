@@ -4,10 +4,11 @@ import static org.bukkit.Material.HOPPER;
 import static org.bukkit.persistence.PersistentDataType.INTEGER;
 import static pl.auroramc.hoppers.message.MessageVariableKey.QUANTITY_VARIABLE_KEY;
 
-import dev.rollczi.litecommands.argument.Arg;
-import dev.rollczi.litecommands.command.execute.Execute;
-import dev.rollczi.litecommands.command.permission.Permission;
-import dev.rollczi.litecommands.command.route.Route;
+import dev.rollczi.litecommands.annotations.argument.Arg;
+import dev.rollczi.litecommands.annotations.command.Command;
+import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.execute.Execute;
+import dev.rollczi.litecommands.annotations.permission.Permission;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -16,7 +17,7 @@ import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.hoppers.message.MessageSource;
 
 @Permission("auroramc.hoppers.hopper")
-@Route(name = "hopper", aliases = "hoppers")
+@Command(name = "hopper", aliases = "hoppers")
 public class HopperCommand {
 
   private final MessageSource messageSource;
@@ -28,7 +29,10 @@ public class HopperCommand {
   }
 
   @Execute
-  MutableMessage hopper(final Player player, final @Arg Integer transferQuantity) {
+  MutableMessage hopper(
+      final @Context Player player,
+      final @Arg Integer transferQuantity
+  ) {
     player.getInventory().addItem(getHopperItem(transferQuantity));
     return messageSource.hopperHasBeenGiven
         .with(QUANTITY_VARIABLE_KEY, transferQuantity);

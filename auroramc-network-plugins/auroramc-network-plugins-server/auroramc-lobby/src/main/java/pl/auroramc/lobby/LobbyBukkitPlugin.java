@@ -21,7 +21,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.auroramc.commons.config.ConfigFactory;
 import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
-import pl.auroramc.commons.integration.litecommands.v3.MutableMessageResultHandler;
+import pl.auroramc.commons.integration.litecommands.MutableMessageResultHandler;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.lobby.message.MessageSource;
 import pl.auroramc.lobby.spawn.SpawnCommand;

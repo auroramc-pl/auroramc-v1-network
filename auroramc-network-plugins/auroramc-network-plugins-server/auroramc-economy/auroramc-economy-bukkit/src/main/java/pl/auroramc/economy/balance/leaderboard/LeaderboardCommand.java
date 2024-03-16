@@ -9,20 +9,20 @@ import static pl.auroramc.economy.message.MessageVariableKey.POSITION_VARIABLE_K
 import static pl.auroramc.economy.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MessageVariableKey.USERNAME_VARIABLE_KEY;
 
-import dev.rollczi.litecommands.argument.option.Opt;
-import dev.rollczi.litecommands.command.execute.Execute;
-import dev.rollczi.litecommands.command.permission.Permission;
-import dev.rollczi.litecommands.command.route.Route;
+import dev.rollczi.litecommands.annotations.command.Command;
+import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.execute.Execute;
+import dev.rollczi.litecommands.annotations.optional.OptionalArg;
+import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.util.List;
 import org.bukkit.entity.Player;
-import panda.std.Option;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
 import pl.auroramc.economy.message.MessageSource;
 
 @Permission("auroramc.economy.leaderboard")
-@Route(name = "leaderboard", aliases = "baltop")
+@Command(name = "leaderboard", aliases = "baltop")
 public class LeaderboardCommand {
 
   private final MessageSource messageSource;
@@ -43,8 +43,13 @@ public class LeaderboardCommand {
   }
 
   @Execute
-  public MutableMessage leaderboard(final Player player, final @Opt Option<Long> currencyId) {
-    final Long currencyIdOrDefault = currencyId.orElseGet(leaderboardConfig.defaultCurrencyId);
+  public MutableMessage leaderboard(
+      final @Context Player player,
+      final @OptionalArg Long currencyId
+  ) {
+    final Long currencyIdOrDefault = currencyId == null
+        ? leaderboardConfig.defaultCurrencyId
+        : currencyId;
 
     final Currency currency = currencyFacade.getCurrencyById(currencyIdOrDefault);
     if (currency == null) {

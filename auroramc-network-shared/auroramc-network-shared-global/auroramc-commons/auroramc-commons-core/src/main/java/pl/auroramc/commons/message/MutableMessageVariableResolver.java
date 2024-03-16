@@ -15,7 +15,18 @@ record MutableMessageVariableResolver<T>(Function<T, String> resolver) {
 
   static {
     MESSAGE_VARIABLE_RESOLVERS = new HashMap<>();
-    MESSAGE_VARIABLE_RESOLVERS.put(TextComponent.class, new MutableMessageVariableResolver<>(miniMessage()::serialize));
+    MESSAGE_VARIABLE_RESOLVERS.put(
+        TextComponent.class,
+        new MutableMessageVariableResolver<>(
+            miniMessage()::serialize
+        )
+    );
+    MESSAGE_VARIABLE_RESOLVERS.put(
+        MutableMessage.class,
+        new MutableMessageVariableResolver<MutableMessage>(message ->
+            miniMessage().serialize(message.compile())
+        )
+    );
   }
 
   static MutableMessageVariableResolver<?> getMessageVariableResolver(

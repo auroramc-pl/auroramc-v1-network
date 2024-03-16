@@ -1,6 +1,8 @@
 package pl.auroramc.auctions;
 
-import static java.lang.String.join;
+import static dev.rollczi.litecommands.bukkit.LiteBukkitMessages.PLAYER_ONLY;
+import static dev.rollczi.litecommands.message.LiteMessages.INVALID_USAGE;
+import static dev.rollczi.litecommands.message.LiteMessages.MISSING_PERMISSIONS;
 import static java.time.Duration.ofSeconds;
 import static moe.rafal.juliet.datasource.HikariPooledDataSourceFactory.produceHikariDataSource;
 import static pl.auroramc.auctions.AuctionsConfig.PLUGIN_CONFIG_FILE_NAME;
@@ -17,17 +19,15 @@ import static pl.auroramc.commons.BukkitUtils.resolveService;
 import static pl.auroramc.commons.config.serdes.juliet.JulietConfig.JULIET_CONFIG_FILE_NAME;
 
 import dev.rollczi.litecommands.LiteCommands;
-import dev.rollczi.litecommands.bukkit.adventure.paper.LitePaperAdventureFactory;
-import dev.rollczi.litecommands.bukkit.tools.BukkitOnlyPlayerContextual;
-import dev.rollczi.litecommands.command.permission.RequiredPermissions;
-import dev.rollczi.litecommands.schematic.Schematic;
+import dev.rollczi.litecommands.adventure.LiteAdventureExtension;
+import dev.rollczi.litecommands.annotations.LiteCommandsAnnotations;
+import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import java.util.Optional;
 import java.util.logging.Logger;
 import moe.rafal.juliet.Juliet;
 import moe.rafal.juliet.JulietBuilder;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.auroramc.auctions.auction.AuctionCommand;
 import pl.auroramc.auctions.auction.AuctionCompletionScheduler;
@@ -47,6 +47,7 @@ import pl.auroramc.commons.config.serdes.juliet.JulietConfig;
 import pl.auroramc.commons.config.serdes.juliet.SerdesJuliet;
 import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
 import pl.auroramc.commons.event.publisher.EventPublisher;
+import pl.auroramc.commons.integration.litecommands.MutableMessageResultHandler;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
@@ -137,36 +138,38 @@ public class AuctionsBukkitPlugin extends JavaPlugin {
         getTicksOf(ofSeconds(1))
     );
 
-    commands = LitePaperAdventureFactory.builder(getServer(), getName())
-        .contextualBind(Player.class,
-            new BukkitOnlyPlayerContextual<>(
-                messageSource.executionFromConsoleIsUnsupported
-            )
+    commands = LiteBukkitFactory.builder(getName(), this)
+        .extension(new LiteAdventureExtension<>(),
+            configurer -> configurer.miniMessage(true)
         )
-        .commandInstance(new VaultCommand(this, messageSource, vaultController))
-        .commandInstance(
-            new AuctionCommand(
-                logger,
-                messageViewerFacade,
-                messageSource,
-                economyFacade,
-                fundsCurrency,
-                auctionController,
-                eventPublisher
-            )
-        )
-        .redirectResult(RequiredPermissions.class, MutableMessage.class,
-            context -> messageSource.executionOfCommandIsNotPermitted
-        )
-        .redirectResult(Schematic.class, MutableMessage.class,
+        .message(INVALID_USAGE,
             context -> messageSource.availableSchematicsSuggestion
-                .with(SCHEMATICS_VARIABLE_KEY, join("<newline>", context.getSchematics()))
+                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join("<newline>"))
         )
-        .register();
+        .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
+        .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
+        .commands(
+            LiteCommandsAnnotations.of(
+                new VaultCommand(
+                    this, messageSource, vaultController
+                ),
+                new AuctionCommand(
+                    logger,
+                    messageViewerFacade,
+                    messageSource,
+                    economyFacade,
+                    fundsCurrency,
+                    auctionController,
+                    eventPublisher
+                )
+            )
+        )
+        .result(MutableMessage.class, new MutableMessageResultHandler<>())
+        .build();
   }
 
   @Override
   public void onDisable() {
-    commands.getPlatform().unregisterAll();
+    commands.unregister();
   }
 }

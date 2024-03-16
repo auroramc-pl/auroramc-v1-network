@@ -10,10 +10,10 @@ import static pl.auroramc.economy.message.MessageVariableKey.TRANSACTION_ID_VARI
 import static pl.auroramc.economy.message.MessageVariableKey.TRANSACTION_TIME_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MessageVariableKey.USERNAME_VARIABLE_KEY;
 
-import dev.rollczi.litecommands.argument.Arg;
-import dev.rollczi.litecommands.command.execute.Execute;
-import dev.rollczi.litecommands.command.permission.Permission;
-import dev.rollczi.litecommands.command.route.Route;
+import dev.rollczi.litecommands.annotations.argument.Arg;
+import dev.rollczi.litecommands.annotations.command.Command;
+import dev.rollczi.litecommands.annotations.execute.Execute;
+import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.LongFunction;
@@ -24,7 +24,7 @@ import pl.auroramc.registry.user.User;
 import pl.auroramc.registry.user.UserFacade;
 
 @Permission("auroramc.economy.payments")
-@Route(name = "payments")
+@Command(name = "payments")
 public class PaymentCommand {
 
   private final UserFacade userFacade;
@@ -41,7 +41,7 @@ public class PaymentCommand {
     this.paymentFacade = paymentFacade;
   }
 
-  @Execute(route = "incoming", aliases = "in")
+  @Execute(name = "incoming", aliases = "in")
   public CompletableFuture<MutableMessage> incoming(final @Arg Player target) {
     return getPayments(target, paymentFacade::getPaymentSummariesByReceiverId)
         .thenApply(payments -> {
@@ -56,7 +56,7 @@ public class PaymentCommand {
         });
   }
 
-  @Execute(route = "outgoing", aliases = "out")
+  @Execute(name = "outgoing", aliases = "out")
   public CompletableFuture<MutableMessage> outgoing(final @Arg Player target) {
     return getPayments(target, paymentFacade::getPaymentSummariesByInitiatorId)
         .thenApply(payments -> {

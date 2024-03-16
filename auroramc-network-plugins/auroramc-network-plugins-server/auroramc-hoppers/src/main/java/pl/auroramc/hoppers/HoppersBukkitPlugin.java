@@ -1,25 +1,25 @@
 package pl.auroramc.hoppers;
 
 import static com.jeff_media.customblockdata.CustomBlockData.registerListener;
-import static java.lang.String.join;
+import static dev.rollczi.litecommands.bukkit.LiteBukkitMessages.PLAYER_NOT_FOUND;
+import static dev.rollczi.litecommands.bukkit.LiteBukkitMessages.PLAYER_ONLY;
+import static dev.rollczi.litecommands.message.LiteMessages.INVALID_USAGE;
+import static dev.rollczi.litecommands.message.LiteMessages.MISSING_PERMISSIONS;
 import static pl.auroramc.commons.BukkitUtils.registerListeners;
 import static pl.auroramc.hoppers.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
 import static pl.auroramc.hoppers.message.MessageVariableKey.SCHEMATICS_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.LiteCommands;
-import dev.rollczi.litecommands.bukkit.adventure.paper.LitePaperAdventureFactory;
-import dev.rollczi.litecommands.bukkit.tools.BukkitOnlyPlayerContextual;
-import dev.rollczi.litecommands.bukkit.tools.BukkitPlayerArgument;
-import dev.rollczi.litecommands.command.permission.RequiredPermissions;
-import dev.rollczi.litecommands.schematic.Schematic;
+import dev.rollczi.litecommands.adventure.LiteAdventureExtension;
+import dev.rollczi.litecommands.annotations.LiteCommandsAnnotations;
+import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.auroramc.commons.config.ConfigFactory;
 import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
-import pl.auroramc.commons.integration.litecommands.v2.MutableMessageResultHandler;
+import pl.auroramc.commons.integration.litecommands.MutableMessageResultHandler;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.hoppers.hopper.HopperCommand;
 import pl.auroramc.hoppers.hopper.HopperInitializeListener;
@@ -49,32 +49,28 @@ public class HoppersBukkitPlugin extends JavaPlugin {
         new HopperTransferListener(this, transferQuantityKey)
     );
 
-    commands = LitePaperAdventureFactory.builder(getServer(), getName())
-        .contextualBind(Player.class,
-            new BukkitOnlyPlayerContextual<>(
-                messageSource.executionFromConsoleIsUnsupported
-            )
+    commands = LiteBukkitFactory.builder(getName(), this)
+        .extension(new LiteAdventureExtension<>(),
+            configurer -> configurer.miniMessage(true)
         )
-        .commandInstance(new HopperCommand(messageSource, transferQuantityKey))
-        .argument(Player.class,
-            new BukkitPlayerArgument<>(
-                getServer(),
-                messageSource.specifiedPlayerIsUnknown
-            )
-        )
-        .redirectResult(RequiredPermissions.class, MutableMessage.class,
-            context -> messageSource.executionOfCommandIsNotPermitted
-        )
-        .redirectResult(Schematic.class, MutableMessage.class,
+        .message(INVALID_USAGE,
             context -> messageSource.availableSchematicsSuggestion
-                .with(SCHEMATICS_VARIABLE_KEY, join("<newline>", context.getSchematics()))
+                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join("<newline>"))
         )
-        .resultHandler(MutableMessage.class, new MutableMessageResultHandler())
-        .register();
+        .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
+        .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
+        .message(PLAYER_NOT_FOUND, messageSource.specifiedPlayerIsUnknown)
+        .commands(
+            LiteCommandsAnnotations.of(
+                new HopperCommand(messageSource, transferQuantityKey)
+            )
+        )
+        .result(MutableMessage.class, new MutableMessageResultHandler<>())
+        .build();
   }
 
   @Override
   public void onDisable() {
-    commands.getPlatform().unregisterAll();
+    commands.unregister();
   }
 }

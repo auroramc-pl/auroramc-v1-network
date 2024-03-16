@@ -15,13 +15,10 @@ public class MessageSource extends OkaeriConfig {
 
   public List<MutableMessage> lines = List.of(
       MutableMessage.of(
-          "<gray>Testowa linijka <white>1"
+          "<gray>Nazwa: <white>%player_name%"
       ),
       MutableMessage.of(
-          "<gray>Testowa linijka <white>2"
-      ),
-      MutableMessage.of(
-          "<gray>Testowa linijka <white>3"
+          "<gray>Ranga: <white>%luckperms_primary_group_name%"
       )
   );
 

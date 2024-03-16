@@ -1,12 +1,8 @@
 package pl.auroramc.quests.integration.placeholderapi;
 
 import static java.lang.String.join;
-import static java.lang.System.lineSeparator;
-import static java.util.stream.Collectors.joining;
-import static net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacyAmpersand;
 import static pl.auroramc.quests.objective.ObjectiveUtils.getQuestObjective;
 
-import java.util.List;
 import java.util.Map;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Server;
@@ -14,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.quests.objective.Objective;
 import pl.auroramc.quests.objective.progress.ObjectiveProgress;
 import pl.auroramc.quests.objective.progress.ObjectiveProgressController;
@@ -79,7 +76,8 @@ class QuestsPlaceholderExpansion extends PlaceholderExpansion {
   }
 
   private String aggregateQuestObjectives(
-      final Map<Objective<?>, ObjectiveProgress> objectivesToObjectiveProgresses) {
+      final Map<Objective<?>, ObjectiveProgress> objectivesToObjectiveProgresses
+  ) {
     return objectivesToObjectiveProgresses.entrySet().stream()
         .map(objectiveToObjectiveProgress ->
             getQuestObjective(
@@ -87,9 +85,8 @@ class QuestsPlaceholderExpansion extends PlaceholderExpansion {
                 objectiveToObjectiveProgress.getValue()
             )
         )
-        .flatMap(List::stream)
-        .map(legacyAmpersand()::serialize)
-        .collect(joining(lineSeparator()));
+        .collect(MutableMessage.collector())
+        .getTemplate();
   }
 
   @Override

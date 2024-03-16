@@ -12,10 +12,11 @@ import static pl.auroramc.gamble.message.MessageVariableKey.PREDICTION_VARIABLE_
 import static pl.auroramc.gamble.message.MessageVariableKey.STAKE_VARIABLE_KEY;
 import static pl.auroramc.gamble.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
 
-import dev.rollczi.litecommands.argument.Arg;
-import dev.rollczi.litecommands.command.execute.Execute;
-import dev.rollczi.litecommands.command.permission.Permission;
-import dev.rollczi.litecommands.command.route.Route;
+import dev.rollczi.litecommands.annotations.argument.Arg;
+import dev.rollczi.litecommands.annotations.command.Command;
+import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.execute.Execute;
+import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.math.BigDecimal;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -31,7 +32,7 @@ import pl.auroramc.gamble.stake.StakeFacade;
 import pl.auroramc.gamble.stake.view.StakeViewFacade;
 
 @Permission("auroramc.gamble.coinflip")
-@Route(name = "coinflip", aliases = "coin")
+@Command(name = "coinflip", aliases = "coin")
 public class CoinflipCommand {
 
   private final Logger logger;
@@ -59,7 +60,9 @@ public class CoinflipCommand {
 
   @Execute
   public CompletableFuture<MutableMessage> coinflip(
-      final Player player, final @Arg CoinSide prediction, final @Arg BigDecimal stake
+      final @Context Player player,
+      final @Arg CoinSide prediction,
+      final @Arg BigDecimal stake
   ) {
     final BigDecimal fixedStake = stake.setScale(2, HALF_DOWN);
     if (fixedStake.compareTo(ZERO) <= 0) {

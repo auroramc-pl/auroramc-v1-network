@@ -15,11 +15,12 @@ import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.item.ItemStackFormatter.getFormattedItemStack;
 
-import dev.rollczi.litecommands.argument.Arg;
-import dev.rollczi.litecommands.argument.option.Opt;
-import dev.rollczi.litecommands.command.execute.Execute;
-import dev.rollczi.litecommands.command.permission.Permission;
-import dev.rollczi.litecommands.command.route.Route;
+import dev.rollczi.litecommands.annotations.argument.Arg;
+import dev.rollczi.litecommands.annotations.command.Command;
+import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.execute.Execute;
+import dev.rollczi.litecommands.annotations.optional.OptionalArg;
+import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,7 +31,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import panda.std.Option;
 import pl.auroramc.auctions.auction.event.AuctionBidEvent;
 import pl.auroramc.auctions.message.MessageSource;
 import pl.auroramc.auctions.message.viewer.MessageViewer;
@@ -41,7 +41,7 @@ import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
 
 @Permission("auroramc.auctions.auction")
-@Route(name = "auction")
+@Command(name = "auction")
 public class AuctionCommand {
 
   private final Logger logger;
@@ -71,12 +71,12 @@ public class AuctionCommand {
   }
 
   @Permission("auroramc.auctions.auction.schedule")
-  @Execute(route = "schedule")
+  @Execute(name = "schedule")
   public MutableMessage schedule(
-      final Player player,
+      final @Context Player player,
       final @Arg BigDecimal minimalPrice,
       final @Arg BigDecimal minimalPricePuncture,
-      final @Opt Option<Integer> stock
+      final @OptionalArg Integer stock
   ) {
     if (!auctionController.whetherAuctionCouldBeScheduled()) {
       return messageSource.auctionQueueIsFull;
@@ -86,9 +86,9 @@ public class AuctionCommand {
       return messageSource.requiresHoldingItem;
     }
 
-    final int stockOrHeldAmount = stock.orElseGet(
-        player.getInventory().getItemInMainHand().getAmount()
-    );
+    final int stockOrHeldAmount = stock == null
+        ? player.getInventory().getItemInMainHand().getAmount()
+        : stock;
     if (stockOrHeldAmount <= 0) {
       return messageSource.invalidStock;
     }
@@ -137,9 +137,10 @@ public class AuctionCommand {
   }
 
   @Permission("auroramc.auctions.auction.bid")
-  @Execute(route = "bid")
+  @Execute(name = "bid")
   public CompletableFuture<MutableMessage> bid(
-      final Player player, final @Opt Option<BigDecimal> offer
+      final @Context Player player,
+      final @OptionalArg BigDecimal offer
   ) {
     final Auction auction = auctionController.getOngoingAuction();
     if (auction == null) {
@@ -212,20 +213,20 @@ public class AuctionCommand {
         );
   }
 
-  private BigDecimal resolveAuctionOffer(Auction auction, Option<BigDecimal> specifiedOffer) {
-    return specifiedOffer
-        .orElse(
-            auction.getCurrentOffer() == null
-                ? auction.getMinimalPrice()
-                : auction.getCurrentOffer()
-                    .add(auction.getMinimalPricePuncture())
-        )
-        .map(offer -> offer.setScale(2, HALF_DOWN))
-        .get();
+  private BigDecimal resolveAuctionOffer(final Auction auction, final BigDecimal offer) {
+    if (offer == null) {
+      return (
+          auction.getCurrentOffer() == null
+              ? auction.getMinimalPrice()
+              : auction.getCurrentOffer().add(auction.getMinimalPricePuncture())
+      ).setScale(2, HALF_DOWN);
+    }
+
+    return offer.setScale(2, HALF_DOWN);
   }
 
   @Permission("auroramc.auctions.auction.summary")
-  @Execute(route = "summary")
+  @Execute(name = "summary")
   public MutableMessage summary() {
     final Auction auction = auctionController.getOngoingAuction();
     if (auction == null) {
@@ -247,8 +248,8 @@ public class AuctionCommand {
   }
 
   @Permission("auroramc.auctions.auction.notifications")
-  @Execute(route = "notifications", aliases = {"notification", "notify"})
-  public CompletableFuture<MutableMessage> notifications(final Player player) {
+  @Execute(name = "notifications")
+  public CompletableFuture<MutableMessage> notifications(final @Context Player player) {
     return messageViewerFacade.getMessageViewerByUniqueId(player.getUniqueId())
         .thenApply(this::toggleNotifications);
   }

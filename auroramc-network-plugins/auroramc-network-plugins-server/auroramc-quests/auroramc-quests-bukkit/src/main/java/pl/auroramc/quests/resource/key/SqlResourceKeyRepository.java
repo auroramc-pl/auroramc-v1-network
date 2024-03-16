@@ -41,14 +41,12 @@ class SqlResourceKeyRepository implements ResourceKeyRepository {
   public List<ResourceKey> getResourceKeys() {
     try (
         final Connection connection = juliet.borrowConnection();
-        final Statement statement = connection.prepareStatement(GET_RESOURCE_KEYS)
+        final PreparedStatement statement = connection.prepareStatement(GET_RESOURCE_KEYS)
     ) {
       final List<ResourceKey> results = new ArrayList<>();
-      final ResultSet resultSet = statement.executeQuery(GET_RESOURCE_KEYS);
+      final ResultSet resultSet = statement.executeQuery();
       while (resultSet.next()) {
-        results.add(new ResourceKey(
-            resultSet.getLong("id"),
-            resultSet.getString("name")));
+        results.add(mapResultSetToResourceKey(resultSet));
       }
       return results;
     } catch (final SQLException exception) {
@@ -102,5 +100,12 @@ class SqlResourceKeyRepository implements ResourceKeyRepository {
           exception
       );
     }
+  }
+
+  private ResourceKey mapResultSetToResourceKey(final ResultSet resultSet) throws SQLException {
+    return new ResourceKey(
+        resultSet.getLong("id"),
+        resultSet.getString("name")
+    );
   }
 }

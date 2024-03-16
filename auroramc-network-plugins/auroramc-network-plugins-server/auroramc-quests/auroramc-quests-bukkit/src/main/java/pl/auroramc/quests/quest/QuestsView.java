@@ -1,12 +1,8 @@
 package pl.auroramc.quests.quest;
 
 import static com.github.stefvanschie.inventoryframework.pane.Pane.Priority.LOWEST;
-import static java.util.Arrays.stream;
 import static java.util.Comparator.comparingInt;
 import static java.util.stream.Collectors.toMap;
-import static net.kyori.adventure.text.Component.empty;
-import static net.kyori.adventure.text.format.TextDecoration.ITALIC;
-import static net.kyori.adventure.text.format.TextDecoration.State.FALSE;
 import static org.bukkit.Material.BLACK_STAINED_GLASS_PANE;
 import static org.bukkit.Material.PAPER;
 import static org.bukkit.enchantments.Enchantment.DURABILITY;
@@ -15,13 +11,15 @@ import static org.bukkit.event.inventory.ClickType.RIGHT;
 import static org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS;
 import static pl.auroramc.commons.BukkitUtils.postToMainThread;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
+import static pl.auroramc.commons.collection.CollectionUtils.merge;
+import static pl.auroramc.commons.message.MutableMessage.EMPTY_DELIMITER;
+import static pl.auroramc.commons.message.MutableMessage.empty;
+import static pl.auroramc.commons.message.MutableMessage.newline;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.BACKWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.FORWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationUtils.navigate;
 import static pl.auroramc.quests.message.MessageVariableKey.QUEST_VARIABLE_KEY;
-import static pl.auroramc.quests.objective.ObjectiveUtils.getQuestObjective;
 import static pl.auroramc.quests.quest.QuestState.IN_PROGRESS;
-import static pl.auroramc.quests.quest.QuestsViewUtils.mergeLists;
 
 import com.github.stefvanschie.inventoryframework.adventuresupport.ComponentHolder;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
@@ -36,6 +34,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Logger;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.format.TextDecoration.State;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -44,8 +44,11 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import pl.auroramc.commons.item.ItemStackBuilder;
 import pl.auroramc.commons.event.publisher.EventPublisher;
+import pl.auroramc.commons.message.MutableMessage;
+import pl.auroramc.commons.message.MutableMessageDecoration;
 import pl.auroramc.quests.message.MessageSource;
 import pl.auroramc.quests.objective.Objective;
+import pl.auroramc.quests.objective.ObjectiveUtils;
 import pl.auroramc.quests.objective.progress.ObjectiveProgress;
 import pl.auroramc.quests.objective.progress.ObjectiveProgressFacade;
 import pl.auroramc.quests.quest.observer.QuestObservedEvent;
@@ -154,9 +157,9 @@ public class QuestsView {
   ) {
     return ItemStackBuilder.newBuilder(quest.getIcon())
         .lore(
-            mergeLists(
+            merge(
                 Optional.ofNullable(quest.getIcon().lore()).orElse(List.of()),
-                getQuestState(quest, viewerUniqueId),
+                List.of(getQuestState(quest, viewerUniqueId)),
                 Component[]::new
             )
         )
@@ -210,43 +213,32 @@ public class QuestsView {
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
-  private List<Component> getQuestState(final Quest quest, final UUID viewerUniqueId) {
+  private Component[] getQuestState(final Quest quest, final UUID viewerUniqueId) {
     final Optional<QuestTrack> questTrack = questTrackController.getQuestByUserIdAndQuestId(
-        viewerUniqueId, quest.getKey().getId());
+        viewerUniqueId, quest.getKey().getId()
+    );
     return questTrack
         .map(track ->
             switch (track.getQuestState()) {
-              case COMPLETED -> List.of(
-                  messageSource.questIsCompleted.compile()
-              );
+              case COMPLETED ->
+                  messageSource.questIsCompleted;
               case IN_PROGRESS ->
-                  stream(
-                      mergeLists(
-                          stream(
-                              mergeLists(
-                                  List.of(
-                                      getQuestObjectives(quest, viewerUniqueId)
-                                  ),
-                                  List.of(
-                                      messageSource.questRequiresCompletionOfAllObjectives.compile()
-                                  ),
-                                  Component[]::new
-                              )
-                          ).toList(),
-                          List.of(
-                              empty(), messageSource.questCouldBeTracked.compile()
-                          ),
-                          Component[]::new
-                      )
-                  ).toList();
+                  newline()
+                      .append(
+                          getQuestObjectives(quest, viewerUniqueId)
+                              .append(messageSource.questRequiresCompletionOfAllObjectives)
+                              .append(empty())
+                              .append(messageSource.questCouldBeTracked),
+                          EMPTY_DELIMITER
+                      );
             })
-        .orElse(List.of(messageSource.questCouldBeStarted.compile()))
-        .stream()
-        .map(line -> line.decoration(ITALIC, FALSE))
-        .toList();
+        .orElse(messageSource.questCouldBeStarted)
+        .compileChildren(
+            MutableMessageDecoration.of(TextDecoration.ITALIC, State.FALSE)
+        );
   }
 
-  private Component[] getQuestObjectives(final Quest quest, final UUID viewerUniqueId) {
+  private MutableMessage getQuestObjectives(final Quest quest, final UUID viewerUniqueId) {
     final Map<? extends Objective<?>, ObjectiveProgress> objectiveToObjectiveProgress =
         quest.getObjectives().stream()
             .collect(toMap(
@@ -261,14 +253,10 @@ public class QuestsView {
                 )
             );
 
-    return mergeLists(
-        List.of(messageSource.questObjectivesHeader.compile()),
-        quest.getObjectives().stream()
-            .map(objective -> getQuestObjective(objective, objectiveToObjectiveProgress.get(objective)))
-            .flatMap(List::stream)
-            .toList(),
-        Component[]::new
-    );
+    return messageSource.questObjectivesHeader
+        .append(
+            ObjectiveUtils.getQuestObjectives(quest.getObjectives(), objectiveToObjectiveProgress)
+        );
   }
 
   private StaticPane getNavigationPane(final ChestGui questsGui, final PaginatedPane questsPane) {
@@ -276,31 +264,45 @@ public class QuestsView {
     navigationPane.addItem(
         new GuiItem(
             ItemStackBuilder.newBuilder(PAPER)
-                .displayName(messageSource.nameOfPrevPageNavigationButton.compile()
-                    .decoration(ITALIC, FALSE)
+                .displayName(
+                    messageSource.nameOfPrevPageNavigationButton
+                        .compile(
+                            MutableMessageDecoration.of(TextDecoration.ITALIC, State.FALSE)
+                        )
                 )
-                .lore(messageSource.loreOfPrevPageNavigationButton.compile()
-                    .decoration(ITALIC, FALSE)
+                .lore(
+                    messageSource.loreOfPrevPageNavigationButton
+                        .compileChildren(
+                            MutableMessageDecoration.of(TextDecoration.ITALIC, State.FALSE)
+                        )
                 )
                 .build(),
             event -> navigateToPrevPage(questsGui, questsPane),
             plugin
         ),
-        3, 0);
+        3, 0
+    );
     navigationPane.addItem(
         new GuiItem(
             ItemStackBuilder.newBuilder(PAPER)
-                .displayName(messageSource.nameOfNextPageNavigationButton.compile()
-                    .decoration(ITALIC, FALSE)
+                .displayName(
+                    messageSource.nameOfNextPageNavigationButton
+                        .compile(
+                            MutableMessageDecoration.of(TextDecoration.ITALIC, State.FALSE)
+                        )
                 )
-                .lore(messageSource.loreOfNextPageNavigationButton.compile()
-                    .decoration(ITALIC, FALSE)
+                .lore(
+                    messageSource.loreOfNextPageNavigationButton
+                        .compileChildren(
+                            MutableMessageDecoration.of(TextDecoration.ITALIC, State.FALSE)
+                        )
                 )
                 .build(),
             event -> navigateToNextPage(questsGui, questsPane),
             plugin
         ),
-        5, 0);
+        5, 0
+    );
     return navigationPane;
   }
 

@@ -8,7 +8,7 @@ public class MessageSource extends OkaeriConfig {
 
   public static final @Exclude String MESSAGE_SOURCE_FILE_NAME = "messages.yml";
 
-  public MutableMessage specifiedPlayerIsOffline = MutableMessage.of(
+  public MutableMessage specifiedPlayerIsUnknown = MutableMessage.of(
       "<red>Gracz o wskazanej przez ciebie nazwie jest Offline."
   );
 

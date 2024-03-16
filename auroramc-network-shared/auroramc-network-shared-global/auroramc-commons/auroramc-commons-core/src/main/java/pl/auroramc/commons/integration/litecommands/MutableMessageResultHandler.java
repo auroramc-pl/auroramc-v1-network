@@ -1,4 +1,4 @@
-package pl.auroramc.commons.integration.litecommands.v3;
+package pl.auroramc.commons.integration.litecommands;
 
 import dev.rollczi.litecommands.handler.result.ResultHandler;
 import dev.rollczi.litecommands.handler.result.ResultHandlerChain;

@@ -1,6 +1,8 @@
 package pl.auroramc.commons.message;
 
+import static java.util.Arrays.stream;
 import static java.util.concurrent.CompletableFuture.completedFuture;
+import static java.util.stream.Collectors.toMap;
 import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static pl.auroramc.commons.lazy.Lazy.lazy;
 import static pl.auroramc.commons.message.MutableMessageVariableResolver.getResolvedMessageVariable;
@@ -13,11 +15,12 @@ import pl.auroramc.commons.lazy.Lazy;
 
 public class MutableMessage {
 
-  private static final MutableMessage EMPTY_MUTABLE_MESSAGE = of("");
   private static final char PLACEHOLDER_KEY_INITIATOR = '{';
   private static final char PLACEHOLDER_KEY_TERMINATOR = '}';
   private static final String LINE_SEPARATOR = "<newline>";
   public static final String EMPTY_DELIMITER = "";
+  private static final MutableMessage EMPTY_MUTABLE_MESSAGE = of(EMPTY_DELIMITER);
+  private static final MutableMessage NEWLINE_MUTABLE_MESSAGE = of(LINE_SEPARATOR);
   private final String template;
   private final Lazy<Component> templateCompiled;
 
@@ -32,6 +35,10 @@ public class MutableMessage {
 
   public static MutableMessage empty() {
     return EMPTY_MUTABLE_MESSAGE;
+  }
+
+  public static MutableMessage newline() {
+    return NEWLINE_MUTABLE_MESSAGE;
   }
 
   public static MutableMessageCollector collector() {
@@ -77,18 +84,29 @@ public class MutableMessage {
     return children(LINE_SEPARATOR);
   }
 
-  public Component compile() {
-    return templateCompiled.get();
+  public Component compile(final MutableMessageDecoration... decorations) {
+    return templateCompiled.get()
+        .decorations(
+            stream(decorations)
+                .collect(
+                    toMap(
+                        MutableMessageDecoration::decoration,
+                        MutableMessageDecoration::state
+                    )
+                )
+        );
   }
 
-  public Component[] compileChildren(final String delimiter) {
+  public Component[] compileChildren(
+      final String delimiter, final MutableMessageDecoration... decorations
+  ) {
     return children(delimiter).stream()
-        .map(MutableMessage::compile)
+        .map(message -> message.compile(decorations))
         .toArray(Component[]::new);
   }
 
-  public Component[] compileChildren() {
-    return compileChildren(LINE_SEPARATOR);
+  public Component[] compileChildren(final MutableMessageDecoration... decorations) {
+    return compileChildren(LINE_SEPARATOR, decorations);
   }
 
   public String getTemplate() {

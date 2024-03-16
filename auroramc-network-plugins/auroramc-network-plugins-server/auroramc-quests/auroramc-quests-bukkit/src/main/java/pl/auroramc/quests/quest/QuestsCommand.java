@@ -15,7 +15,6 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 import org.bukkit.entity.Player;
-import panda.std.Option;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.quests.message.MessageSource;
 import pl.auroramc.quests.quest.track.QuestTrack;
@@ -58,10 +57,12 @@ public class QuestsCommand {
 
   @Execute(name = "assign")
   public CompletableFuture<MutableMessage> assign(
-      final @Arg Player target, final @Arg Quest quest, final @Arg Option<QuestState> state
+      final @Arg Player target,
+      final @Arg Quest quest,
+      final @Arg Optional<QuestState> state
   ) {
     return userFacade.getUserByUniqueId(target.getUniqueId())
-        .thenApply(user -> assignQuest(user, quest, state.orElseGet(IN_PROGRESS)))
+        .thenApply(user -> assignQuest(user, quest, state.orElse(IN_PROGRESS)))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 

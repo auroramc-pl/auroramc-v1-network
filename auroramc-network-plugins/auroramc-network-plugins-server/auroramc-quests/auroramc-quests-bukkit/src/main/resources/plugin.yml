@@ -3,9 +3,9 @@ name: auroramc-quests
 version: ${project.parent.version}
 authors: [ shitzuu <hello@rafal.moe> ]
 api-version: 1.20
-softdepend:
-  - auroramc-registry
 depend:
+  - auroramc-registry
+softdepend:
   - PlaceholderAPI
 libraries:
   - org.mariadb.jdbc:mariadb-java-client:3.3.3

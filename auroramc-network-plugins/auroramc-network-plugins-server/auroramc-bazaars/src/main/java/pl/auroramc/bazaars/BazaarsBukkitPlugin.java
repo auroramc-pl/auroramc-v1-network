@@ -3,6 +3,7 @@ package pl.auroramc.bazaars;
 import static pl.auroramc.bazaars.BazaarsConfig.BAZAARS_CONFIG_FILE_NAME;
 import static pl.auroramc.bazaars.bazaar.BazaarFacade.getBazaarFacade;
 import static pl.auroramc.bazaars.bazaar.parser.BazaarParser.getBazaarParser;
+import static pl.auroramc.bazaars.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
 import static pl.auroramc.commons.BukkitUtils.registerListeners;
 import static pl.auroramc.commons.BukkitUtils.resolveService;
 
@@ -15,6 +16,7 @@ import pl.auroramc.bazaars.bazaar.listener.BazaarUsageListener;
 import pl.auroramc.bazaars.message.MessageSource;
 import pl.auroramc.commons.config.ConfigFactory;
 import pl.auroramc.commons.config.serdes.SerdesCommons;
+import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
@@ -27,7 +29,7 @@ public class BazaarsBukkitPlugin extends JavaPlugin {
     final ConfigFactory configFactory = new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
 
     final MessageSource messageSource = configFactory.produceConfig(
-        MessageSource.class, MessageSource.MESSAGE_SOURCE_FILE_NAME, new SerdesCommons()
+        MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
     );
     final BazaarsConfig bazaarsConfig = configFactory.produceConfig(
         BazaarsConfig.class, BAZAARS_CONFIG_FILE_NAME, new SerdesCommons()

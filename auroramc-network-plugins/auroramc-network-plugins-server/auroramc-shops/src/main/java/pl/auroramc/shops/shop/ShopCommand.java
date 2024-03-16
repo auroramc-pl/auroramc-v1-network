@@ -2,15 +2,16 @@ package pl.auroramc.shops.shop;
 
 import static pl.auroramc.shops.shop.ShopsViewFactory.produceShopsGui;
 
-import dev.rollczi.litecommands.command.execute.Execute;
-import dev.rollczi.litecommands.command.permission.Permission;
-import dev.rollczi.litecommands.command.route.Route;
+import dev.rollczi.litecommands.annotations.command.Command;
+import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.execute.Execute;
+import dev.rollczi.litecommands.annotations.permission.Permission;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import pl.auroramc.shops.product.ProductFacade;
 
 @Permission("auroramc.shops.shop")
-@Route(name = "shop", aliases = {"shops", "sklep", "sklepy"})
+@Command(name = "shop", aliases = {"shops", "sklep"})
 public class ShopCommand {
 
   private final Plugin plugin;
@@ -26,7 +27,7 @@ public class ShopCommand {
   }
 
   @Execute
-  public void shop(final Player player) {
+  public void shop(final @Context Player player) {
     produceShopsGui(plugin, shopFacade, productFacade)
         .show(player);
   }

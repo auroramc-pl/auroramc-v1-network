@@ -13,9 +13,10 @@ import static pl.auroramc.dailyrewards.message.MessageVariableKey.SESSION_DITCH_
 import static pl.auroramc.dailyrewards.message.MessageVariableKey.SESSION_START_VARIABLE_KEY;
 import static pl.auroramc.dailyrewards.message.MessageVariableKey.TO_VARIABLE_KEY;
 
-import dev.rollczi.litecommands.argument.Arg;
-import dev.rollczi.litecommands.command.execute.Execute;
-import dev.rollczi.litecommands.command.route.Route;
+import dev.rollczi.litecommands.annotations.argument.Arg;
+import dev.rollczi.litecommands.annotations.command.Command;
+import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.execute.Execute;
 import java.time.Instant;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -26,7 +27,7 @@ import pl.auroramc.dailyrewards.message.MessageSource;
 import pl.auroramc.registry.user.User;
 import pl.auroramc.registry.user.UserFacade;
 
-@Route(name = "visit", aliases = {"session", "sessions"})
+@Command(name = "visit", aliases = {"session", "sessions"})
 public class VisitCommand {
 
   private final MessageSource messageSource;
@@ -47,7 +48,7 @@ public class VisitCommand {
   }
 
   @Execute
-  public CompletableFuture<MutableMessage> visit(final Player player) {
+  public CompletableFuture<MutableMessage> visit(final @Context Player player) {
     final Instant now = now();
     return userFacade.getUserByUniqueId(player.getUniqueId())
         .thenApply(User::getId)
@@ -60,9 +61,11 @@ public class VisitCommand {
         .thenApply(visits -> getFormattedVisits(now, visits));
   }
 
-  @Execute(route = "ranged")
+  @Execute(name = "ranged")
   public CompletableFuture<MutableMessage> visitRanged(
-      final Player player, final @Arg Instant from, final @Arg Instant to
+      final @Context Player player,
+      final @Arg Instant from,
+      final @Arg Instant to
   ) {
     return userFacade.getUserByUniqueId(player.getUniqueId())
         .thenApply(User::getId)

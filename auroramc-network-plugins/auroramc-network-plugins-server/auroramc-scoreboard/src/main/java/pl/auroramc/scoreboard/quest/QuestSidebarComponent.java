@@ -1,20 +1,17 @@
 package pl.auroramc.scoreboard.quest;
 
-import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
 import static java.util.Map.Entry.comparingByKey;
-import static net.kyori.adventure.text.Component.empty;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
-import static pl.auroramc.quests.objective.ObjectiveUtils.getQuestObjective;
+import static pl.auroramc.commons.message.MutableMessage.EMPTY_DELIMITER;
+import static pl.auroramc.commons.message.MutableMessage.empty;
+import static pl.auroramc.commons.message.MutableMessage.newline;
+import static pl.auroramc.quests.objective.ObjectiveUtils.getQuestObjectiveTemplate;
 import static pl.auroramc.scoreboard.message.MessageVariableKey.QUEST_VARIABLE_KEY;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
-import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import pl.auroramc.commons.message.MutableMessage;
@@ -55,45 +52,49 @@ public class QuestSidebarComponent implements SidebarComponentKyori<Quest> {
   }
 
   @Override
-  public List<Component> render(final Player viewer, final @Nullable Quest quest) {
+  public MutableMessage render(final Player viewer, final @Nullable Quest quest) {
     if (quest == null) {
-      return emptyList();
+      return empty();
     }
 
-    final List<Component> lines = new ArrayList<>();
-    lines.add(empty());
-    lines.addAll(renderQuestName(quest));
-    lines.addAll(renderQuestObjectiveHeader());
-    lines.addAll(renderQuestObjectives(viewer, quest));
-    return lines;
+    return empty()
+        .append(renderQuestName(quest))
+        .append(renderQuestObjectiveHeader())
+        .append(renderQuestObjectives(viewer, quest));
   }
 
   @Override
-  public List<Component> render(final Player viewer) {
+  public MutableMessage render(final Player viewer) {
     return Optional.ofNullable(questObserverFacade.findQuestObserverByUniqueId(viewer.getUniqueId()))
         .map(QuestObserver::getQuestId)
         .map(questIndex::resolveQuest)
         .map(quest -> render(viewer, quest))
-        .orElse(emptyList());
+        .orElse(empty());
   }
 
-  private List<Component> renderQuestName(final Quest quest) {
-    return Stream.of(
-        messageSource.quest.observedQuest,
-        messageSource.quest.observedQuestName
-            .with(QUEST_VARIABLE_KEY, quest.getKey().getName())
-    )
-        .map(MutableMessage::compile)
-        .toList();
+  private MutableMessage renderQuestName(final Quest quest) {
+    return newline()
+        .append(
+            messageSource.quest.observedQuest,
+            EMPTY_DELIMITER
+        )
+        .append(
+            messageSource.quest.observedQuestName
+                .with(QUEST_VARIABLE_KEY, quest.getKey().getName())
+        );
   }
 
-  private List<Component> renderQuestObjectiveHeader() {
-    return List.of(
-        empty(), messageSource.quest.remainingQuestObjectives.compile()
-    );
+  private MutableMessage renderQuestObjectiveHeader() {
+    return newline()
+        .append(
+            messageSource.quest.remainingQuestObjectives,
+            EMPTY_DELIMITER
+        );
   }
 
-  private List<Component> renderQuestObjectives(final Player viewer, final Quest quest) {
+  private MutableMessage renderQuestObjectives(
+      final Player viewer, final Quest quest
+  ) {
     return userFacade.getUserByUniqueId(viewer.getUniqueId())
         .thenApply(user -> objectiveProgressController.getUncompletedObjectives(user, quest))
         .thenApply(this::aggregateQuestObjectives)
@@ -101,17 +102,19 @@ public class QuestSidebarComponent implements SidebarComponentKyori<Quest> {
         .join();
   }
 
-  private List<Component> aggregateQuestObjectives(
-      final Map<Objective<?>, ObjectiveProgress> objectivesToObjectiveProgresses) {
+  private MutableMessage aggregateQuestObjectives(
+      final Map<Objective<?>, ObjectiveProgress> objectivesToObjectiveProgresses
+  ) {
     return objectivesToObjectiveProgresses.entrySet().stream()
         .sorted(comparingByKey(comparing(objective -> objective.getClass().getSimpleName())))
         .map(objectiveToObjectiveProgress ->
-            getQuestObjective(
-                objectiveToObjectiveProgress.getKey(),
-                objectiveToObjectiveProgress.getValue()
+            MutableMessage.of(
+                getQuestObjectiveTemplate(
+                    objectiveToObjectiveProgress.getKey(),
+                    objectiveToObjectiveProgress.getValue()
+                )
             )
         )
-        .flatMap(List::stream)
-        .toList();
+        .collect(MutableMessage.collector());
   }
 }

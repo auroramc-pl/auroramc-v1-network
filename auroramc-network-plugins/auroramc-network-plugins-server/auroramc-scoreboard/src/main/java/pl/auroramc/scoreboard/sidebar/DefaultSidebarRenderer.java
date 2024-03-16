@@ -1,8 +1,8 @@
 package pl.auroramc.scoreboard.sidebar;
 
+import static java.util.stream.Stream.concat;
+
 import fr.mrmicky.fastboard.adventure.FastBoard;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
@@ -30,20 +30,21 @@ class DefaultSidebarRenderer implements SidebarRenderer {
   @Override
   public void render(final Player viewer) {
     final FastBoard sidebar = sidebarFacade.resolveSidebarByUniqueId(viewer.getUniqueId());
-    sidebar.updateTitle(getCompiledMessageWithPlaceholders(viewer, messageSource.title));
-
-    final List<Component> aggregatedLinesOfSidebar = new ArrayList<>(getDefaultLinesOfSidebar(viewer));
-    for (final SidebarComponentKyori<?> sidebarComponent : sidebarComponents) {
-      aggregatedLinesOfSidebar.addAll(sidebarComponent.render(viewer));
-    }
-
-    sidebar.updateLines(aggregatedLinesOfSidebar);
-  }
-
-  private List<Component> getDefaultLinesOfSidebar(final Player viewer) {
-    return messageSource.lines.stream()
-        .map(line -> getCompiledMessageWithPlaceholders(viewer, line))
-        .toList();
+    sidebar.updateTitle(
+        getCompiledMessageWithPlaceholders(viewer, messageSource.title)
+    );
+    sidebar.updateLines(
+        BukkitMutableMessage.of(
+            concat(
+                messageSource.lines.stream(),
+                sidebarComponents.stream()
+                    .map(sidebarComponent -> sidebarComponent.render(viewer))
+            )
+                .collect(MutableMessage.collector())
+        )
+            .withTargetedPlaceholders(viewer)
+            .compileChildren()
+    );
   }
 
   private Component getCompiledMessageWithPlaceholders(
