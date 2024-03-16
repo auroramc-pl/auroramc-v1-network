@@ -39,7 +39,7 @@ class SqlQuestTrackRepository implements QuestTrackRepository {
   }
 
   @Override
-  public List<QuestTrack> getQuestTracksByUserUniqueId(final UUID uniqueId) {
+  public List<QuestTrack> getQuestTracksByUniqueId(final UUID uniqueId) {
     try (
         final Connection connection = juliet.borrowConnection();
         final PreparedStatement statement = connection.prepareStatement(GET_QUEST_TRACKS_BY_USER_UNIQUE_ID)

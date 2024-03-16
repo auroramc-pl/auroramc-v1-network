@@ -8,7 +8,7 @@ final class SqlUserRepositoryQuery {
         `auroramc_registry_users`
         (
           `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
-          `unique_id` BINARY(36) NOT NULL,
+          `unique_id` UUID NOT NULL,
           `username` VARCHAR(32) NOT NULL,
           UNIQUE INDEX `user_index_on_unique_id` (`unique_id`),
           UNIQUE INDEX `user_index_on_username` (`username`)

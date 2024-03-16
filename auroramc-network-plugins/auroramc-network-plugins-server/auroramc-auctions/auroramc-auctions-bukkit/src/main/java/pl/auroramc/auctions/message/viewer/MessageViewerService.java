@@ -23,11 +23,11 @@ class MessageViewerService implements MessageViewerFacade {
     this.messageViewerRepository = messageViewerRepository;
     this.messageViewerCache = Caffeine.newBuilder()
         .expireAfterWrite(ofSeconds(20))
-        .buildAsync(messageViewerRepository::findMessageViewerByUserUniqueId);
+        .buildAsync(messageViewerRepository::findMessageViewerByUniqueId);
   }
 
   @Override
-  public CompletableFuture<MessageViewer> getMessageViewerByUserUniqueId(final UUID uniqueId) {
+  public CompletableFuture<MessageViewer> getMessageViewerByUniqueId(final UUID uniqueId) {
     return messageViewerCache.get(uniqueId);
   }
 

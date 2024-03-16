@@ -50,7 +50,7 @@ class SqlObjectiveProgressRepository implements ObjectiveProgressRepository {
       final List<ObjectiveProgress> results = new ArrayList<>();
       try (final ResultSet resultSet = statement.executeQuery()) {
         while (resultSet.next()) {
-          results.add(getObjectiveProgressFromResultSet(resultSet));
+          results.add(mapResultSetToObjectiveProgress(resultSet));
         }
       }
 
@@ -74,28 +74,16 @@ class SqlObjectiveProgressRepository implements ObjectiveProgressRepository {
       statement.setLong(3, objectiveProgressKey.objectiveId());
       try (final ResultSet resultSet = statement.executeQuery()) {
         if (resultSet.next()) {
-          return getObjectiveProgressFromResultSet(resultSet);
+          return mapResultSetToObjectiveProgress(resultSet);
         }
-        return null;
       }
+      return null;
     } catch (final SQLException exception) {
       throw new ObjectiveProgressRepositoryException(
           "Could not get objective progress, because of unexpected exception.",
           exception
       );
     }
-  }
-
-  private ObjectiveProgress getObjectiveProgressFromResultSet(
-      final ResultSet resultSet
-  ) throws SQLException {
-    return new ObjectiveProgress(
-        resultSet.getLong("user_id"),
-        resultSet.getLong("quest_id"),
-        resultSet.getLong("objective_id"),
-        resultSet.getInt("data"),
-        resultSet.getInt("goal")
-    );
   }
 
   @Override
@@ -152,5 +140,17 @@ class SqlObjectiveProgressRepository implements ObjectiveProgressRepository {
           exception
       );
     }
+  }
+
+  private ObjectiveProgress mapResultSetToObjectiveProgress(
+      final ResultSet resultSet
+  ) throws SQLException {
+    return new ObjectiveProgress(
+        resultSet.getLong("user_id"),
+        resultSet.getLong("quest_id"),
+        resultSet.getLong("objective_id"),
+        resultSet.getInt("data"),
+        resultSet.getInt("goal")
+    );
   }
 }

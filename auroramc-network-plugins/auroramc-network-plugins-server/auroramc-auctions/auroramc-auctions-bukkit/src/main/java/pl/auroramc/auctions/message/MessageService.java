@@ -16,7 +16,7 @@ class MessageService implements MessageFacade {
   @Override
   public void deliverMessage(final Player target, final MutableMessage message) {
     messageViewerFacade
-        .getMessageViewerByUserUniqueId(target.getUniqueId())
+        .getMessageViewerByUniqueId(target.getUniqueId())
         .thenAccept(messageViewer -> {
           if (messageViewer.isWhetherReceiveMessages()) {
             target.sendMessage(message.compile());

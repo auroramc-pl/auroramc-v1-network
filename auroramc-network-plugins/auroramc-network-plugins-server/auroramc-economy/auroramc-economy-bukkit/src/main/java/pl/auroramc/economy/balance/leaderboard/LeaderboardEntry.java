@@ -1,4 +1,4 @@
-package pl.auroramc.economy.balance.leaderboad;
+package pl.auroramc.economy.balance.leaderboard;
 
 import java.math.BigDecimal;
 import java.util.UUID;

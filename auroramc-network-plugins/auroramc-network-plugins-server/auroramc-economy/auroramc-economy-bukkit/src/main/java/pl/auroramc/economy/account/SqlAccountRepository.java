@@ -50,13 +50,14 @@ class SqlAccountRepository implements AccountRepository {
         final Connection connection = juliet.borrowConnection();
         final PreparedStatement statement = connection.prepareStatement(FIND_ACCOUNT_BY_USER_ID_AND_CURRENCY_ID)
     ) {
-      statement.setString(1, userId.toString());
-      statement.setString(2, currencyId.toString());
-
-      final ResultSet resultSet = statement.executeQuery();
-      if (resultSet.next()) {
-        return mapResultSetToAccount(resultSet);
+      statement.setLong(1, userId);
+      statement.setLong(2, currencyId);
+      try (final ResultSet resultSet = statement.executeQuery()) {
+        if (resultSet.next()) {
+          return mapResultSetToAccount(resultSet);
+        }
       }
+      return null;
     } catch (final SQLException exception) {
       throw new AccountRepositoryException(
           "Could not find account identified by %d for %d currency, because of unexpected exception"
@@ -67,7 +68,6 @@ class SqlAccountRepository implements AccountRepository {
           exception
       );
     }
-    return null;
   }
 
   @Override

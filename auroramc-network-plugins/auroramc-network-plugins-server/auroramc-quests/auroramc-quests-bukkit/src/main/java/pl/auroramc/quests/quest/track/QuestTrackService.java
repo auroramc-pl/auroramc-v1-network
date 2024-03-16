@@ -18,37 +18,37 @@ class QuestTrackService implements QuestTrackFacade {
 
   private final Logger logger;
   private final QuestTrackRepository questTrackRepository;
-  private final LoadingCache<UUID, List<QuestTrack>> userUniqueIdToQuestTracks;
+  private final LoadingCache<UUID, List<QuestTrack>> questTracksByUniqueId;
 
   QuestTrackService(final Logger logger, QuestTrackRepository questTrackRepository) {
     this.logger = logger;
     this.questTrackRepository = questTrackRepository;
-    this.userUniqueIdToQuestTracks = Caffeine.newBuilder()
+    this.questTracksByUniqueId = Caffeine.newBuilder()
         .expireAfterWrite(Duration.ofSeconds(20))
-        .build(questTrackRepository::getQuestTracksByUserUniqueId);
+        .build(questTrackRepository::getQuestTracksByUniqueId);
   }
 
   @Override
-  public Optional<QuestTrack> getQuestTrackByUserUniqueIdAndQuestId(
-      final UUID userUniqueId, final Long questId
+  public Optional<QuestTrack> getQuestTrackByUniqueIdAndQuestId(
+      final UUID uniqueId, final Long questId
   ) {
-    return getQuestTracksByUserUniqueId(userUniqueId).stream()
+    return getQuestTracksByUniqueId(uniqueId).stream()
         .filter(questTrack -> Objects.equals(questTrack.getQuestId(), questId))
         .findFirst();
   }
 
   @Override
-  public List<QuestTrack> getQuestTracksByUserUniqueId(
-      final UUID userUniqueId
+  public List<QuestTrack> getQuestTracksByUniqueId(
+      final UUID uniqueId
   ) {
-    return userUniqueIdToQuestTracks.get(userUniqueId);
+    return questTracksByUniqueId.get(uniqueId);
   }
 
   @Override
-  public List<QuestTrack> getQuestTracksByUserUniqueId(
-      final UUID userUniqueId, final boolean includeCompletedQuests
+  public List<QuestTrack> getQuestTracksByUniqueId(
+      final UUID uniqueId, final boolean includeCompletedQuests
   ) {
-    return getQuestTracksByUserUniqueId(userUniqueId).stream()
+    return getQuestTracksByUniqueId(uniqueId).stream()
         .filter(questTrack -> whetherQuestTrackShouldBeIncluded(questTrack, includeCompletedQuests))
         .toList();
   }
@@ -60,9 +60,9 @@ class QuestTrackService implements QuestTrackFacade {
   }
 
   @Override
-  public void createQuestTrack(final UUID userUniqueId, final QuestTrack questTrack) {
+  public void createQuestTrack(final UUID uniqueId, final QuestTrack questTrack) {
     runAsyncWithExceptionDelegation(() -> questTrackRepository.createQuestTrack(questTrack))
-        .thenAccept(state -> userUniqueIdToQuestTracks.invalidate(userUniqueId));
+        .thenAccept(state -> questTracksByUniqueId.invalidate(uniqueId));
   }
 
   @Override

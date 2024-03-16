@@ -69,7 +69,7 @@ public class QuestsCommand {
       final User user, final Quest quest, final QuestState state
   ) {
     final Optional<QuestState> currentState =
-        questTrackFacade.getQuestTrackByUserUniqueIdAndQuestId(user.getUniqueId(), quest.getKey().getId())
+        questTrackFacade.getQuestTrackByUniqueIdAndQuestId(user.getUniqueId(), quest.getKey().getId())
             .map(QuestTrack::getQuestState);
     if (currentState.isPresent()) {
       return (

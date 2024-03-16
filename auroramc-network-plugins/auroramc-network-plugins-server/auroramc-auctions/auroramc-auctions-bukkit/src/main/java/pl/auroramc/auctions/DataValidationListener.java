@@ -62,7 +62,7 @@ class DataValidationListener implements Listener {
   }
 
   private CompletableFuture<Void> createMessageViewerIfRequired(final User user) {
-    return messageViewerFacade.getMessageViewerByUserUniqueId(user.getUniqueId())
+    return messageViewerFacade.getMessageViewerByUniqueId(user.getUniqueId())
         .thenCompose(messageViewer -> {
           if (messageViewer == null) {
             return messageViewerFacade.createMessageViewer(

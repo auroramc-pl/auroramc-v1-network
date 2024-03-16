@@ -3,7 +3,7 @@ package pl.auroramc.economy;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Exclude;
 import pl.auroramc.economy.balance.BalanceConfig;
-import pl.auroramc.economy.balance.leaderboad.LeaderboardConfig;
+import pl.auroramc.economy.balance.leaderboard.LeaderboardConfig;
 import pl.auroramc.economy.payment.PaymentConfig;
 import pl.auroramc.economy.rest.server.RestServerConfig;
 import pl.auroramc.economy.transfer.TransferConfig;

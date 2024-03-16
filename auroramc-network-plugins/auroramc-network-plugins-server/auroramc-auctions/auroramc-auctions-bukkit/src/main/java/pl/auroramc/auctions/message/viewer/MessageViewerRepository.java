@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public interface MessageViewerRepository {
 
-  MessageViewer findMessageViewerByUserUniqueId(final UUID uniqueId);
+  MessageViewer findMessageViewerByUniqueId(final UUID uniqueId);
 
   void createMessageViewer(final MessageViewer messageViewer);
 

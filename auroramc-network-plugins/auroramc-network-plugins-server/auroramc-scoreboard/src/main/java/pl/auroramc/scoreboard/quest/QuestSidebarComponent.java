@@ -70,7 +70,7 @@ public class QuestSidebarComponent implements SidebarComponentKyori<Quest> {
 
   @Override
   public List<Component> render(final Player viewer) {
-    return Optional.ofNullable(questObserverFacade.findQuestObserverByUserUniqueId(viewer.getUniqueId()))
+    return Optional.ofNullable(questObserverFacade.findQuestObserverByUniqueId(viewer.getUniqueId()))
         .map(QuestObserver::getQuestId)
         .map(questIndex::resolveQuest)
         .map(quest -> render(viewer, quest))

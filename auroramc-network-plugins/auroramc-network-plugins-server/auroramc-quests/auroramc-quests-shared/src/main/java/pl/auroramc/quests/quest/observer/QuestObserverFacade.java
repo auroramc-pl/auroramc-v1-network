@@ -5,9 +5,9 @@ import java.util.concurrent.CompletableFuture;
 
 public interface QuestObserverFacade {
 
-  QuestObserver findQuestObserverByUserUniqueId(final UUID userUniqueId);
+  QuestObserver findQuestObserverByUniqueId(final UUID uniqueId);
 
-  CompletableFuture<QuestObserver> resolveQuestObserverByUserUniqueId(final UUID userUniqueId);
+  CompletableFuture<QuestObserver> resolveQuestObserverByUniqueId(final UUID uniqueId);
 
   void createQuestObserver(final QuestObserver questObserver);
 

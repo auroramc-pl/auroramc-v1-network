@@ -21,7 +21,7 @@ public abstract class ObjectiveHandlerDelegate<T extends Objective<?>, E extends
 
   protected void delegateObjectiveGoal(
       final E event, final UUID uniqueId, final Class<T> objectiveType) {
-    final List<Quest> assignedQuests = questController.getAssignedQuestsByUserUniqueId(uniqueId);
+    final List<Quest> assignedQuests = questController.getAssignedQuestsByUniqueId(uniqueId);
     final Map<Quest, List<T>> questToObjectives = aggregateObjectives(assignedQuests, objectiveType);
     for (final Map.Entry<Quest, List<T>> questToObjective : questToObjectives.entrySet()) {
       final Quest quest = questToObjective.getKey();

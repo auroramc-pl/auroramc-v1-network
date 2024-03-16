@@ -5,7 +5,7 @@ import java.util.concurrent.CompletableFuture;
 
 public interface MessageViewerFacade {
 
-  CompletableFuture<MessageViewer> getMessageViewerByUserUniqueId(final UUID uniqueId);
+  CompletableFuture<MessageViewer> getMessageViewerByUniqueId(final UUID uniqueId);
 
   CompletableFuture<Void> createMessageViewer(final MessageViewer messageViewer);
 

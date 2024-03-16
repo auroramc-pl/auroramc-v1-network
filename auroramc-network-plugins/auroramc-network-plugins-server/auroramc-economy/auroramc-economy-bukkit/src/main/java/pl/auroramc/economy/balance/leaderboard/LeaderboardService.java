@@ -1,11 +1,10 @@
-package pl.auroramc.economy.balance.leaderboad;
+package pl.auroramc.economy.balance.leaderboard;
 
 import static java.time.Duration.ofSeconds;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 class LeaderboardService implements LeaderboardFacade {
@@ -19,9 +18,12 @@ class LeaderboardService implements LeaderboardFacade {
         .build(leaderboardRepository::getLeaderboardEntriesByBalanceAscending);
     this.entryToCurrencyIdAndUniqueIdCache = Caffeine.newBuilder()
         .expireAfterWrite(ofSeconds(90))
-        .build(key -> leaderboardRepository
-            .getLeaderboardEntryByUniqueId(key.currencyId(), key.uniqueId())
-            .orElse(null));
+        .build(key ->
+            leaderboardRepository.getLeaderboardEntryByUniqueId(
+                key.currencyId(),
+                key.uniqueId()
+            )
+        );
   }
 
   @Override
@@ -32,11 +34,12 @@ class LeaderboardService implements LeaderboardFacade {
   }
 
   @Override
-  public Optional<LeaderboardEntry> getLeaderboardEntryByCurrencyIdAndUniqueId(
+  public LeaderboardEntry getLeaderboardEntryByCurrencyIdAndUniqueId(
       final Long currencyId, final UUID uniqueId
   ) {
-    final CurrencyIdToUniqueIdCompositeKey compositeKey = new CurrencyIdToUniqueIdCompositeKey(currencyId, uniqueId);
-    return Optional.ofNullable(entryToCurrencyIdAndUniqueIdCache.get(compositeKey));
+    return entryToCurrencyIdAndUniqueIdCache.get(
+        new CurrencyIdToUniqueIdCompositeKey(currencyId, uniqueId)
+    );
   }
 
   private record CurrencyIdToUniqueIdCompositeKey(Long currencyId, UUID uniqueId) {

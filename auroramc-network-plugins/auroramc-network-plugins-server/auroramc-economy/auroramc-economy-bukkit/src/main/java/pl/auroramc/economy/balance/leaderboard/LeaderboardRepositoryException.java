@@ -1,4 +1,4 @@
-package pl.auroramc.economy.balance.leaderboad;
+package pl.auroramc.economy.balance.leaderboard;
 
 class LeaderboardRepositoryException extends IllegalStateException {
 

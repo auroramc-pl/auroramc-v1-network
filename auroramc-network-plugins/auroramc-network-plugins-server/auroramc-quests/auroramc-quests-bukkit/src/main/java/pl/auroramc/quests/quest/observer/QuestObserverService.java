@@ -18,7 +18,7 @@ class QuestObserverService implements QuestObserverFacade {
   private final Logger logger;
   private final UserFacade userFacade;
   private final QuestObserverRepository questObserverRepository;
-  private final LoadingCache<UUID, QuestObserver> questObserverByUserUniqueId;
+  private final LoadingCache<UUID, QuestObserver> questObserverByUniqueId;
 
   public QuestObserverService(
       final Logger logger,
@@ -28,24 +28,24 @@ class QuestObserverService implements QuestObserverFacade {
     this.logger = logger;
     this.userFacade = userFacade;
     this.questObserverRepository = questObserverRepository;
-    this.questObserverByUserUniqueId = Caffeine.newBuilder()
+    this.questObserverByUniqueId = Caffeine.newBuilder()
         .expireAfterWrite(Duration.ofSeconds(30))
-        .build(questObserverRepository::findQuestObserverByUserUniqueId);
+        .build(questObserverRepository::findQuestObserverByUniqueId);
   }
 
   @Override
-  public QuestObserver findQuestObserverByUserUniqueId(final UUID userUniqueId) {
-    return questObserverByUserUniqueId.get(userUniqueId);
+  public QuestObserver findQuestObserverByUniqueId(final UUID uniqueId) {
+    return questObserverByUniqueId.get(uniqueId);
   }
 
   @Override
-  public CompletableFuture<QuestObserver> resolveQuestObserverByUserUniqueId(final UUID userUniqueId) {
-    final QuestObserver questObserver = findQuestObserverByUserUniqueId(userUniqueId);
+  public CompletableFuture<QuestObserver> resolveQuestObserverByUniqueId(final UUID uniqueId) {
+    final QuestObserver questObserver = findQuestObserverByUniqueId(uniqueId);
     if (questObserver != null) {
       return completedFuture(questObserver);
     }
 
-    return userFacade.getUserByUniqueId(userUniqueId)
+    return userFacade.getUserByUniqueId(uniqueId)
         .thenApply(User::getId)
         .thenApply(userId -> {
           final QuestObserver newQuestObserver = new QuestObserver(userId, null);

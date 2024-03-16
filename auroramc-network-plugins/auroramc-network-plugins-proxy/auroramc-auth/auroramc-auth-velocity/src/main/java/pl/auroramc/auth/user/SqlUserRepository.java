@@ -84,7 +84,7 @@ class SqlUserRepository implements UserRepository {
         final Connection connection = juliet.borrowConnection();
         final PreparedStatement statement = connection.prepareStatement(CREATE_USER, RETURN_GENERATED_KEYS)
     ) {
-      statement.setString(1, user.getUniqueId().toString());
+      statement.setObject(1, user.getUniqueId());
       statement.setString(2, user.getUsername());
       statement.setString(3, user.getPassword());
       statement.setString(4,

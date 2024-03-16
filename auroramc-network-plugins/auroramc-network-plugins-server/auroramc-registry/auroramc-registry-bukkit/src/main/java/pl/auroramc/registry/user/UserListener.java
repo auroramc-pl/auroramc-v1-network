@@ -1,15 +1,14 @@
 package pl.auroramc.registry.user;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
-import static org.bukkit.event.EventPriority.LOWEST;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 
 public class UserListener implements Listener {
 
@@ -22,26 +21,26 @@ public class UserListener implements Listener {
     this.userFacade = userFacade;
   }
 
-  @EventHandler(priority = LOWEST)
-  public void onUserValidation(final PlayerJoinEvent event) {
-    userFacade.getUserByUniqueId(event.getPlayer().getUniqueId())
-        .thenCompose(user -> validateUser(user, event.getPlayer()))
+  @EventHandler
+  public void onUserValidation(final AsyncPlayerPreLoginEvent event) {
+    userFacade.getUserByUniqueId(event.getUniqueId())
+        .thenCompose(user -> validateUser(user, event.getUniqueId(), event.getName()))
         .exceptionally(exception -> delegateCaughtException(logger, exception))
         .join();
   }
 
-  private CompletableFuture<Void> validateUser(final User user, final Player player) {
+  private CompletableFuture<Void> validateUser(
+      final User user, final UUID uniqueId, final String username
+  ) {
     if (user == null) {
-      return userFacade.createUser(new User(null, player.getUniqueId(), player.getName()));
+      return userFacade.createUser(new User(null, uniqueId, username));
     }
 
-    final String currentUsername = player.getName();
-    final String persistUsername = user.getUsername();
-    if (currentUsername.equals(persistUsername)) {
+    if (username.equals(user.getUsername())) {
       return EMPTY_FUTURE;
     }
 
-    user.setUsername(currentUsername);
+    user.setUsername(username);
     return userFacade.updateUser(user);
   }
 }

@@ -8,7 +8,7 @@ import static pl.auroramc.commons.config.serdes.juliet.JulietConfig.JULIET_CONFI
 import static pl.auroramc.economy.EconomyConfig.ECONOMY_CONFIG_FILE_NAME;
 import static pl.auroramc.economy.EconomyFacadeFactory.getEconomyFacade;
 import static pl.auroramc.economy.account.AccountFacadeFactory.getAccountFacade;
-import static pl.auroramc.economy.balance.leaderboad.LeaderboardFacade.getLeaderboardFacade;
+import static pl.auroramc.economy.balance.leaderboard.LeaderboardFacade.getLeaderboardFacade;
 import static pl.auroramc.economy.currency.CurrencyFacadeFactory.produceCurrencyFacade;
 import static pl.auroramc.economy.integration.placeholderapi.PlaceholderApiIntegrationFactory.producePlaceholderApiIntegration;
 import static pl.auroramc.economy.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
@@ -39,8 +39,8 @@ import pl.auroramc.commons.integration.litecommands.v2.MutableMessageResultHandl
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.account.AccountFacade;
 import pl.auroramc.economy.balance.BalanceCommand;
-import pl.auroramc.economy.balance.leaderboad.LeaderboardCommand;
-import pl.auroramc.economy.balance.leaderboad.LeaderboardFacade;
+import pl.auroramc.economy.balance.leaderboard.LeaderboardCommand;
+import pl.auroramc.economy.balance.leaderboard.LeaderboardFacade;
 import pl.auroramc.economy.currency.CurrencyFacade;
 import pl.auroramc.commons.integration.ExternalIntegration;
 import pl.auroramc.commons.integration.ExternalIntegrator;

@@ -37,18 +37,18 @@ class SqlQuestObserverRepository implements QuestObserverRepository {
   }
 
   @Override
-  public QuestObserver findQuestObserverByUserUniqueId(final UUID userUniqueId) {
+  public QuestObserver findQuestObserverByUniqueId(final UUID uniqueId) {
     try (
         final Connection connection = juliet.borrowConnection();
         final PreparedStatement statement = connection.prepareStatement(FIND_QUEST_OBSERVER_BY_USER_UNIQUE_ID)
     ) {
-      statement.setObject(1, userUniqueId);
+      statement.setObject(1, uniqueId);
       try (final ResultSet resultSet = statement.executeQuery()) {
         if (resultSet.next()) {
           return mapResultSetToQuestObserver(resultSet);
         }
-        return null;
       }
+      return null;
     } catch (final SQLException exception) {
       throw new QuestObserverRepositoryException(
           "Could not find quest observer by user id, because of unexpected exception.",

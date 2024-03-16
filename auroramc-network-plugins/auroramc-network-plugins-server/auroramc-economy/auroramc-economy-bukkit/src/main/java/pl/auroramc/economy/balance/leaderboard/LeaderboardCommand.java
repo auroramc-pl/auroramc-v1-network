@@ -1,6 +1,7 @@
-package pl.auroramc.economy.balance.leaderboad;
+package pl.auroramc.economy.balance.leaderboard;
 
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
+import static pl.auroramc.commons.message.MutableMessage.EMPTY_DELIMITER;
 import static pl.auroramc.commons.message.MutableMessage.empty;
 import static pl.auroramc.economy.message.MessageVariableKey.BALANCE_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MessageVariableKey.CURRENCY_ID_VARIABLE_KEY;
@@ -64,7 +65,8 @@ public class LeaderboardCommand {
         .append(
             getLeaderboardLines(
                 currency, leaderboardFacade.getLeaderboardEntriesByCurrencyId(currency.getId())
-            )
+            ),
+            EMPTY_DELIMITER
         )
         .append(
             getLeaderboardFooter(player, currency)
@@ -88,9 +90,14 @@ public class LeaderboardCommand {
   private MutableMessage getLeaderboardFooter(
       final Player player, final Currency currency
   ) {
-    return leaderboardFacade.getLeaderboardEntryByCurrencyIdAndUniqueId(currency.getId(), player.getUniqueId())
-        .map(entry -> getLeaderboardFooter(currency, entry))
-        .orElse(empty());
+    final LeaderboardEntry entry = leaderboardFacade.getLeaderboardEntryByCurrencyIdAndUniqueId(
+        currency.getId(), player.getUniqueId()
+    );
+    if (entry == null) {
+      return empty();
+    }
+
+    return getLeaderboardFooter(currency, entry);
   }
 
   private MutableMessage getLeaderboardLines(

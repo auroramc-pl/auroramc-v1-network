@@ -36,12 +36,12 @@ class SqlMessageViewerRepository implements MessageViewerRepository {
   }
 
   @Override
-  public MessageViewer findMessageViewerByUserUniqueId(final UUID uniqueId) {
+  public MessageViewer findMessageViewerByUniqueId(final UUID uniqueId) {
     try (
         final Connection connection = juliet.borrowConnection();
         final PreparedStatement statement = connection.prepareStatement(FIND_MESSAGE_VIEWER_BY_USER_UNIQUE_ID)
     ) {
-      statement.setString(1, uniqueId.toString());
+      statement.setObject(1, uniqueId.toString());
       try (final ResultSet resultSet = statement.executeQuery()) {
         if (resultSet.next()) {
           return mapResultSetToMessageViewer(resultSet);

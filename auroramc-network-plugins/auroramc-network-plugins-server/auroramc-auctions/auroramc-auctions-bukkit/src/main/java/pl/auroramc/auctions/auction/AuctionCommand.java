@@ -249,7 +249,7 @@ public class AuctionCommand {
   @Permission("auroramc.auctions.auction.notifications")
   @Execute(route = "notifications", aliases = {"notification", "notify"})
   public CompletableFuture<MutableMessage> notifications(final Player player) {
-    return messageViewerFacade.getMessageViewerByUserUniqueId(player.getUniqueId())
+    return messageViewerFacade.getMessageViewerByUniqueId(player.getUniqueId())
         .thenApply(this::toggleNotifications);
   }
 

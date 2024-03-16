@@ -48,12 +48,11 @@ class SqlPaymentRepository implements PaymentRepository {
         final PreparedStatement statement = connection.prepareStatement(FIND_PAYMENT_BY_ID)
     ) {
       statement.setLong(1, paymentId);
-
-      final ResultSet resultSet = statement.executeQuery();
-      if (resultSet.next()) {
-        return mapResultSetToPayment(resultSet);
+      try (final ResultSet resultSet = statement.executeQuery()) {
+        if (resultSet.next()) {
+          return mapResultSetToPayment(resultSet);
+        }
       }
-
       return null;
     } catch (final SQLException exception) {
       throw new PaymentRepositoryException(

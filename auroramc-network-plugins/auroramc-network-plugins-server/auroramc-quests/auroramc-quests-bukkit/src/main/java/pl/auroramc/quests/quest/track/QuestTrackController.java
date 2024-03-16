@@ -47,8 +47,8 @@ public class QuestTrackController {
     this.objectiveProgressFacade = objectiveProgressFacade;
   }
 
-  public Optional<QuestTrack> getQuestByUserIdAndQuestId(final UUID userUniqueId, final long questId) {
-    return questTrackFacade.getQuestTrackByUserUniqueIdAndQuestId(userUniqueId, questId);
+  public Optional<QuestTrack> getQuestByUserIdAndQuestId(final UUID uniqueId, final long questId) {
+    return questTrackFacade.getQuestTrackByUniqueIdAndQuestId(uniqueId, questId);
   }
 
   public CompletableFuture<Void> assignQuest(
@@ -71,7 +71,7 @@ public class QuestTrackController {
   public void completeQuest(final User user, final Quest quest) {
     objectiveProgressFacade.deleteObjectiveProgressByUserIdAndQuestId(user.getId(), quest.getKey().getId());
 
-    final QuestTrack questTrack = questTrackFacade.getQuestTrackByUserUniqueIdAndQuestId(user.getUniqueId(), quest.getKey().getId())
+    final QuestTrack questTrack = questTrackFacade.getQuestTrackByUniqueIdAndQuestId(user.getUniqueId(), quest.getKey().getId())
         .orElseThrow(() ->
             new QuestTrackResolvingException(
                 "Could not get quest track for user %s and quest %d"
@@ -94,7 +94,7 @@ public class QuestTrackController {
       ((QuestReward<Player>) reward).apply(player);
     }
 
-    final QuestObserver questObserver = questObserverFacade.findQuestObserverByUserUniqueId(
+    final QuestObserver questObserver = questObserverFacade.findQuestObserverByUniqueId(
         player.getUniqueId());
     if (questObserver != null && Objects.equals(questObserver.getQuestId(), quest.getKey().getId())) {
       questObserver.setQuestId(null);

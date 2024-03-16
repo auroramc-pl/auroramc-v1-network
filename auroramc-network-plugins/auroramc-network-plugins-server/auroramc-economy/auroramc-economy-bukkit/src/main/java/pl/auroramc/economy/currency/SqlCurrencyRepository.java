@@ -41,23 +41,21 @@ class SqlCurrencyRepository implements CurrencyRepository {
         final Connection connection = juliet.borrowConnection();
         final PreparedStatement statement = connection.prepareStatement(FIND_CURRENCY_BY_ID)
     ) {
-      statement.setString(1, currencyId.toString());
-
-      final ResultSet resultSet = statement.executeQuery();
-      if (resultSet.next()) {
-        return new Currency(
-            resultSet.getLong("id"),
-            resultSet.getString("name"),
-            resultSet.getString("symbol"),
-            resultSet.getString("description"));
+      statement.setLong(1, currencyId);
+      try (final ResultSet resultSet = statement.executeQuery()) {
+        if (resultSet.next()) {
+          return mapResultSetToCurrency(resultSet);
+        }
       }
-
       return null;
     } catch (final SQLException exception) {
       throw new CurrencyRepositoryException(
-          "Could not find currency identified by %d, because of unexpected exception".formatted(
-              currencyId),
-          exception);
+          "Could not find currency identified by %d, because of unexpected exception"
+              .formatted(
+                  currencyId
+              ),
+          exception
+      );
     }
   }
 
@@ -95,9 +93,21 @@ class SqlCurrencyRepository implements CurrencyRepository {
       statement.executeUpdate();
     } catch (final SQLException exception) {
       throw new CurrencyRepositoryException(
-          "Could not delete currency identified by %d, because of unexpected exception".formatted(
-              currency.getId()),
-          exception);
+          "Could not delete currency identified by %d, because of unexpected exception"
+              .formatted(
+                  currency.getId()
+              ),
+          exception
+      );
     }
+  }
+
+  private Currency mapResultSetToCurrency(final ResultSet resultSet) throws SQLException {
+      return new Currency(
+        resultSet.getLong("id"),
+        resultSet.getString("name"),
+        resultSet.getString("symbol"),
+        resultSet.getString("description")
+    );
   }
 }

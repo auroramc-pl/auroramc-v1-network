@@ -4,7 +4,7 @@ import java.util.UUID;
 
 interface QuestObserverRepository {
 
-  QuestObserver findQuestObserverByUserUniqueId(final UUID userUniqueId);
+  QuestObserver findQuestObserverByUniqueId(final UUID uniqueId);
 
   void createQuestObserver(final QuestObserver questObserver);
 

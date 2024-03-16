@@ -47,9 +47,8 @@ class SqlUserRepository implements UserRepository {
         if (resultSet.next()) {
           return mapResultSetToUser(resultSet);
         }
-
-        return null;
       }
+      return null;
     } catch (final SQLException exception) {
       throw new UserRepositoryException(
           "Could not find user by unique id, because of unexpected exception.", exception
@@ -68,9 +67,8 @@ class SqlUserRepository implements UserRepository {
         if (resultSet.next()) {
           return mapResultSetToUser(resultSet);
         }
-
-        return null;
       }
+      return null;
     } catch (final SQLException exception) {
       throw new UserRepositoryException(
           "Could not find user by username, because of unexpected exception.", exception
@@ -84,7 +82,7 @@ class SqlUserRepository implements UserRepository {
         final Connection connection = juliet.borrowConnection();
         final PreparedStatement statement = connection.prepareStatement(CREATE_USER, RETURN_GENERATED_KEYS)
     ) {
-      statement.setString(1, user.getUniqueId().toString());
+      statement.setObject(1, user.getUniqueId());
       statement.setString(2, user.getUsername());
       statement.executeUpdate();
       try (final ResultSet resultSet = statement.getGeneratedKeys()) {

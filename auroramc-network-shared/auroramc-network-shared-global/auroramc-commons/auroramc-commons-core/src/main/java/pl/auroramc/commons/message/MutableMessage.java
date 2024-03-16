@@ -17,6 +17,7 @@ public class MutableMessage {
   private static final char PLACEHOLDER_KEY_INITIATOR = '{';
   private static final char PLACEHOLDER_KEY_TERMINATOR = '}';
   private static final String LINE_SEPARATOR = "<newline>";
+  public static final String EMPTY_DELIMITER = "";
   private final String template;
   private final Lazy<Component> templateCompiled;
 

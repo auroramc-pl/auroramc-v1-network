@@ -39,26 +39,29 @@ public class ObjectiveProgressController {
   }
 
   public void processObjectiveGoal(
-      final UUID userUniqueId, final Quest quest, final Objective<?> objective) {
-    final Player player = checkNotNull(getPlayer(userUniqueId));
+      final UUID uniqueId, final Quest quest, final Objective<?> objective
+  ) {
+    final Player player = checkNotNull(getPlayer(uniqueId));
 
     final List<ObjectiveRequirement> requirements = objective.getRequirements();
     if (requirements.isEmpty() ||
         requirements.stream().allMatch(requirement -> requirement.isValid(player))
     ) {
-      processObjectiveGoal0(userUniqueId, quest, objective);
+      processObjectiveGoal0(uniqueId, quest, objective);
     }
   }
 
   private void processObjectiveGoal0(
-      final UUID userUniqueId, final Quest quest, final Objective<?> objective
+      final UUID uniqueId, final Quest quest, final Objective<?> objective
   ) {
-    userFacade.getUserByUniqueId(userUniqueId)
+    userFacade.getUserByUniqueId(uniqueId)
         .thenAccept(user -> processObjectiveGoal(user, quest, objective))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
-  public void processObjectiveGoal(final User user, final Quest quest, final Objective<?> objective) {
+  public void processObjectiveGoal(
+      final User user, final Quest quest, final Objective<?> objective
+  ) {
     final ObjectiveProgress objectiveProgress = objectiveProgressFacade.resolveObjectiveProgress(
         user.getId(),
         quest.getKey().getId(),
@@ -76,7 +79,9 @@ public class ObjectiveProgressController {
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
-  public Map<Objective<?>, ObjectiveProgress> getUncompletedObjectives(final User user, final Quest quest) {
+  public Map<Objective<?>, ObjectiveProgress> getUncompletedObjectives(
+      final User user, final Quest quest
+  ) {
     return objectiveProgressFacade.getObjectiveProgresses(user.getId(), quest.getKey().getId()).stream()
         .filter(not(this::isObjectiveCompleted))
         .collect(

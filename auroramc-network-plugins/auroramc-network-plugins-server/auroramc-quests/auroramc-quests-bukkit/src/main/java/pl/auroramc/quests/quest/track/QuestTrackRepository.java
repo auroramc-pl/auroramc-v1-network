@@ -5,7 +5,7 @@ import java.util.UUID;
 
 interface QuestTrackRepository {
 
-  List<QuestTrack> getQuestTracksByUserUniqueId(final UUID uniqueId);
+  List<QuestTrack> getQuestTracksByUniqueId(final UUID uniqueId);
 
   void createQuestTrack(final QuestTrack questTrack);
 

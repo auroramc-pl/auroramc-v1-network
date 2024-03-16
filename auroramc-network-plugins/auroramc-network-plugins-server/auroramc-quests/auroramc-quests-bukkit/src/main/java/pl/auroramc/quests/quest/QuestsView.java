@@ -120,7 +120,7 @@ public class QuestsView {
   }
 
   private PaginatedPane getQuestsPane(final HumanEntity viewer) {
-    final List<Quest> assignedQuests = questController.getAssignedQuestsByUserUniqueId(
+    final List<Quest> assignedQuests = questController.getAssignedQuestsByUniqueId(
         viewer.getUniqueId());
 
     final PaginatedPane questsPane = new PaginatedPane(0, 0, 9, 5);
@@ -186,7 +186,7 @@ public class QuestsView {
   }
 
   private void trackQuest(final Player viewer, final Quest quest) {
-    questObserverFacade.resolveQuestObserverByUserUniqueId(viewer.getUniqueId())
+    questObserverFacade.resolveQuestObserverByUniqueId(viewer.getUniqueId())
         .thenAccept(questObserver -> {
           if (questObserver == null || Objects.equals(questObserver.getQuestId(), quest.getKey().getId())) {
             return;

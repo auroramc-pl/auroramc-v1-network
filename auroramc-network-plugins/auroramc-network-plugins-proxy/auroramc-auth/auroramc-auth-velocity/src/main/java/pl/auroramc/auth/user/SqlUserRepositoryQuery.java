@@ -6,10 +6,10 @@ final class SqlUserRepositoryQuery {
       """
       CREATE TABLE IF NOT EXISTS `auroramc_auth_users` (
         `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
-        `unique_id` BINARY(36),
+        `unique_id` UUID,
         `username` VARCHAR(16),
         `password` VARCHAR(72),
-        `premium_unique_id` BINARY(36),
+        `premium_unique_id` UUID,
         `email` VARCHAR(255) DEFAULT NULL
       );
       """;

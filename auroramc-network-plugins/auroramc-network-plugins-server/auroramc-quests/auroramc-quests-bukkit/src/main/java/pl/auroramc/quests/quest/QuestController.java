@@ -15,8 +15,8 @@ public class QuestController {
     this.questTrackFacade = questTrackFacade;
   }
 
-  public List<Quest> getAssignedQuestsByUserUniqueId(final UUID userUniqueId) {
-    return questTrackFacade.getQuestTracksByUserUniqueId(userUniqueId, false).stream()
+  public List<Quest> getAssignedQuestsByUniqueId(final UUID uniqueId) {
+    return questTrackFacade.getQuestTracksByUniqueId(uniqueId, false).stream()
         .map(QuestTrack::getQuestId)
         .map(questIndex::resolveQuest)
         .toList();

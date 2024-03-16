@@ -52,8 +52,8 @@ class SqlPunishmentRepository implements PunishmentRepository {
         if (resultSet.next()) {
           return mapResultSetToPunishment(resultSet);
         }
-        return null;
       }
+      return null;
     } catch (final SQLException exception) {
       throw new PunishmentRepositoryException(
           "Could not find punishment by id, because of unexpected exception.",
@@ -79,8 +79,8 @@ class SqlPunishmentRepository implements PunishmentRepository {
         if (resultSet.next()) {
           return mapResultSetToPunishment(resultSet);
         }
-        return null;
       }
+      return null;
     } catch (final SQLException exception) {
       throw new PunishmentRepositoryException(
           "Could not find punishment by penalized id with scope and state, because of unexpected exception.",

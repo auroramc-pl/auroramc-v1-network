@@ -55,7 +55,7 @@ class QuestsPlaceholderExpansion extends PlaceholderExpansion {
       return null;
     }
 
-    final QuestObserver questObserver = questObserverFacade.resolveQuestObserverByUserUniqueId(player.getUniqueId()).join();
+    final QuestObserver questObserver = questObserverFacade.resolveQuestObserverByUniqueId(player.getUniqueId()).join();
     if (questObserver.getQuestId() == null) {
       return null;
     }

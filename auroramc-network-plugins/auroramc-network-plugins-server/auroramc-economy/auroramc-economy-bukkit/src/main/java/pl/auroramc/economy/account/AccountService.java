@@ -71,7 +71,8 @@ class AccountService implements AccountFacade {
   }
 
   private Account createAccountIfNotExists(
-      final Long userId, final Long currencyId, Account account) {
+      final Long userId, final Long currencyId, Account account
+  ) {
     if (account == null) {
       account = AccountBuilder.newBuilder()
           .withUserId(userId)
