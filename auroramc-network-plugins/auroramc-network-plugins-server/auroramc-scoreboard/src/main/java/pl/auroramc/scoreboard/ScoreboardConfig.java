@@ -7,5 +7,5 @@ public class ScoreboardConfig extends OkaeriConfig {
 
   public static final @Exclude String PLUGIN_CONFIG_FILE_NAME = "config.yml";
 
-  public boolean renderOnce = true;
+  public boolean updatePeriodically = true;
 }

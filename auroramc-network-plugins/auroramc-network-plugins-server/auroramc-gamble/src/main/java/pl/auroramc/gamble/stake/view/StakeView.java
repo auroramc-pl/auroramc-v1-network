@@ -109,7 +109,7 @@ class StakeView implements InventoryHolder {
       }
     }
 
-    navigatorBySlot.forEach((slot, pageNavigator) -> inventory.setItem(slot, pageNavigator.icon()));
+    navigatorBySlot.forEach((slot, navigator) -> inventory.setItem(slot, navigator.icon()));
     return inventory;
   }
 

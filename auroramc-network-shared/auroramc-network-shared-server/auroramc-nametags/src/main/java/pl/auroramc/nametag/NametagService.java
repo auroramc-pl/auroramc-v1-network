@@ -1,7 +1,5 @@
 package pl.auroramc.nametag;
 
-import static net.kyori.adventure.text.serializer.json.JSONComponentSerializer.json;
-import static net.minecraft.network.chat.Component.Serializer.fromJson;
 import static net.minecraft.network.chat.Component.literal;
 import static net.minecraft.world.scores.DisplaySlot.BELOW_NAME;
 import static net.minecraft.world.scores.criteria.ObjectiveCriteria.DUMMY;
@@ -9,6 +7,7 @@ import static net.minecraft.world.scores.criteria.ObjectiveCriteria.RenderType.I
 import static org.bukkit.Bukkit.getOnlinePlayers;
 import static pl.auroramc.nametag.NametagUtils.getOutboundConnection;
 
+import io.papermc.paper.adventure.AdventureComponent;
 import net.kyori.adventure.text.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.numbers.FixedFormat;
@@ -93,7 +92,7 @@ class NametagService implements NametagFacade {
       final Player seenPlayer,
       final NametagContext nametagContext
   ) {
-    final MutableComponent belowName = fromJson(json().serialize(nametagContext.belowName()));
+    final AdventureComponent belowName = new AdventureComponent(nametagContext.belowName());
     final FixedFormat belowNameFormat = new FixedFormat(getAlignedBelowName(belowName));
 
     final ClientboundSetScorePacket setScorePacket = new ClientboundSetScorePacket(
@@ -107,7 +106,7 @@ class NametagService implements NametagFacade {
     outboundConnection.send(setScorePacket);
   }
 
-  private MutableComponent getAlignedBelowName(final MutableComponent belowName) {
+  private MutableComponent getAlignedBelowName(final AdventureComponent belowName) {
     return ALIGNING_COMPONENT
         .copy()
         .append(belowName != null ? belowName : EMPTY);

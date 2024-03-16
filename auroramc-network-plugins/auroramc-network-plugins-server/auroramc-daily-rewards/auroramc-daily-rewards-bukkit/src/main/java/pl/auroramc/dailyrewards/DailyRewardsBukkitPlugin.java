@@ -93,7 +93,7 @@ public class DailyRewardsBukkitPlugin extends JavaPlugin {
         new NametagListener(nametagFacade)
     );
 
-    getServer().getScheduler().runTaskTimer(
+    getServer().getScheduler().runTaskTimerAsynchronously(
         this,
         new NametagUpdateScheduler(
             messageSource,

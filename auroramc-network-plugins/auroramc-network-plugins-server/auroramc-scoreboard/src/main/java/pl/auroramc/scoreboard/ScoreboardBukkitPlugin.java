@@ -52,14 +52,16 @@ public class ScoreboardBukkitPlugin extends JavaPlugin {
 
     registerListeners(this, new ScoreboardListener(sidebarFacade, sidebarRenderer));
     if (hasQuestSupport()) {
-      registerListeners(this, new QuestListener(scoreboardConfig, sidebarRenderer));
+      registerListeners(this, new QuestListener(sidebarRenderer));
     }
 
-    getServer().getScheduler().runTaskTimerAsynchronously(this,
-        new SidebarRenderingTask(sidebarRenderer),
-        getTicksOf(ZERO),
-        getTicksOf(ofSeconds(2))
-    );
+    if (scoreboardConfig.updatePeriodically) {
+      getServer().getScheduler().runTaskTimerAsynchronously(this,
+          new SidebarRenderingTask(sidebarRenderer),
+          getTicksOf(ZERO),
+          getTicksOf(ofSeconds(2))
+      );
+    }
   }
 
   private Set<SidebarComponentKyori<?>> getAvailableComponents(final Logger logger, final MessageSource messageSource) {

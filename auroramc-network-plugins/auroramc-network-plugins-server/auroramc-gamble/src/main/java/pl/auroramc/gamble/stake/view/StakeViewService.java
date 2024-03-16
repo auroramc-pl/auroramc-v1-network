@@ -2,6 +2,7 @@ package pl.auroramc.gamble.stake.view;
 
 import static java.util.List.copyOf;
 import static java.util.stream.Collectors.toMap;
+import static pl.auroramc.commons.BukkitUtils.postToMainThread;
 import static pl.auroramc.gamble.stake.view.StakeViewUtils.partition;
 
 import java.util.Collection;
@@ -10,9 +11,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.plugin.Plugin;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.gamble.message.MessageSource;
 import pl.auroramc.gamble.stake.StakeContext;
@@ -20,18 +23,22 @@ import pl.auroramc.gamble.stake.StakeFacade;
 
 class StakeViewService implements StakeViewFacade {
 
-  static final int INITIAL_STAKE_PAGE_INDEX = 0;
+  private static final int INITIAL_STAKE_PAGE_INDEX = 0;
   private static final int STAKES_PER_PAGE = 4 * 7;
+  private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
   private final Map<Integer, StakeView> stakeViewByPageIndex;
+  private final Plugin plugin;
   private final StakeFacade stakeFacade;
   private final Currency fundsCurrency;
   private final MessageSource messageSource;
 
   StakeViewService(
+      final Plugin plugin,
       final StakeFacade stakeFacade,
       final Currency fundsCurrency,
       final MessageSource messageSource
   ) {
+    this.plugin = plugin;
     this.stakeViewByPageIndex = new ConcurrentHashMap<>();
     this.stakeFacade = stakeFacade;
     this.fundsCurrency = fundsCurrency;
@@ -49,6 +56,17 @@ class StakeViewService implements StakeViewFacade {
                 )
             );
 
+    lock.writeLock().lock();
+    try {
+      recalculateViews();
+    } finally {
+      lock.writeLock().unlock();
+    }
+
+    updateViewsForViewers(pageIndexesToViewers);
+  }
+
+  private void recalculateViews() {
     stakeViewByPageIndex.clear();
 
     final List<List<StakeContext>> partitions = partition(
@@ -61,14 +79,26 @@ class StakeViewService implements StakeViewFacade {
           new StakeView(pageIndex, fundsCurrency, messageSource, partition)
       );
     }
+  }
 
+  private void updateViewsForViewers(
+      final Map<Integer, List<HumanEntity>> pageIndexesToViewers
+  ) {
     for (final Entry<Integer, List<HumanEntity>> pageIndexToViewers : pageIndexesToViewers.entrySet()) {
       final List<HumanEntity> viewers = pageIndexToViewers.getValue();
       getStakeView(pageIndexToViewers.getKey())
-          .or(() -> getStakeView(INITIAL_STAKE_PAGE_INDEX))
+          .or(
+              () -> getStakeView(INITIAL_STAKE_PAGE_INDEX)
+          )
           .ifPresentOrElse(
-              inventory -> viewers.forEach(viewer -> viewer.openInventory(inventory)),
-              () -> viewers.forEach(HumanEntity::closeInventory)
+              inventory -> postToMainThread(
+                  plugin,
+                  () -> viewers.forEach(viewer -> viewer.openInventory(inventory))
+              ),
+              () -> postToMainThread(
+                  plugin,
+                  () -> viewers.forEach(HumanEntity::closeInventory)
+              )
           );
     }
   }
