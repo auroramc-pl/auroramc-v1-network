@@ -1,14 +1,12 @@
 package pl.auroramc.scoreboard.sidebar;
 
-import static me.clip.placeholderapi.PlaceholderAPI.setPlaceholders;
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
-
 import fr.mrmicky.fastboard.adventure.FastBoard;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
+import pl.auroramc.commons.message.BukkitMutableMessage;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.scoreboard.message.MessageSource;
 import pl.auroramc.scoreboard.sidebar.component.SidebarComponentKyori;
@@ -49,8 +47,10 @@ class DefaultSidebarRenderer implements SidebarRenderer {
   }
 
   private Component getCompiledMessageWithPlaceholders(
-      final Player viewer, final MutableMessage template
+      final Player viewer, final MutableMessage message
   ) {
-    return miniMessage().deserialize(setPlaceholders(viewer, template.getTemplate()));
+    return BukkitMutableMessage.of(message)
+        .withTargetedPlaceholders(viewer)
+        .compile();
   }
 }

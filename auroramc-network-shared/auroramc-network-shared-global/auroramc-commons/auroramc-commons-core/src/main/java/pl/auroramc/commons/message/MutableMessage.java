@@ -13,14 +13,14 @@ import pl.auroramc.commons.lazy.Lazy;
 
 public class MutableMessage {
 
-  private static final MutableMessage EMPTY_TRANSLATION_TEMPLATE = of("");
+  private static final MutableMessage EMPTY_MUTABLE_MESSAGE = of("");
   private static final char PLACEHOLDER_KEY_INITIATOR = '{';
   private static final char PLACEHOLDER_KEY_TERMINATOR = '}';
   private static final String LINE_SEPARATOR = "<newline>";
   private final String template;
   private final Lazy<Component> templateCompiled;
 
-  private MutableMessage(final String template) {
+  MutableMessage(final String template) {
     this.template = template;
     this.templateCompiled = lazy(() -> miniMessage().deserialize(template));
   }
@@ -30,7 +30,7 @@ public class MutableMessage {
   }
 
   public static MutableMessage empty() {
-    return EMPTY_TRANSLATION_TEMPLATE;
+    return EMPTY_MUTABLE_MESSAGE;
   }
 
   public static MutableMessageCollector collector() {
