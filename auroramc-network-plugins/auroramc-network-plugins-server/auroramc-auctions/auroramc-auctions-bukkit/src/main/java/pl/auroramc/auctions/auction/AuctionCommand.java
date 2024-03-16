@@ -7,7 +7,7 @@ import static pl.auroramc.auctions.message.MessageVariableKey.MINIMAL_PRICE_PUNC
 import static pl.auroramc.auctions.message.MessageVariableKey.MINIMAL_PRICE_VARIABLE_KEY;
 import static pl.auroramc.auctions.message.MessageVariableKey.OFFER_VARIABLE_KEY;
 import static pl.auroramc.auctions.message.MessageVariableKey.SUBJECT_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.auctions.message.MessageVariableKey.TRADER_VARIABLE_KEY;
 import static pl.auroramc.auctions.message.MessageVariableKey.UNIQUE_ID_VARIABLE_KEY;
 import static pl.auroramc.auctions.message.MessageVariableKey.VENDOR_VARIABLE_KEY;
@@ -207,7 +207,7 @@ public class AuctionCommand {
         )
         .thenApply(state ->
             messageSource.offered
-                .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+                .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
                 .with(OFFER_VARIABLE_KEY, getFormattedDecimal(offer))
         );
   }
@@ -238,7 +238,7 @@ public class AuctionCommand {
             SUBJECT_VARIABLE_KEY, getFormattedItemStack(ItemStack.deserializeBytes(auction.getSubject()))
         )
         .with(VENDOR_VARIABLE_KEY, getDisplayNameByUniqueId(auction.getVendorUniqueId()))
-        .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+        .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
         .with(HIGHEST_BID_VARIABLE_KEY, getHighestBid(auction, fundsCurrency))
         .with(MINIMAL_PRICE_VARIABLE_KEY, getFormattedDecimal(auction.getMinimalPrice()))
         .with(
@@ -267,7 +267,7 @@ public class AuctionCommand {
     }
 
     return messageSource.auctionWinningBid
-        .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+        .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
         .with(OFFER_VARIABLE_KEY, getFormattedDecimal(auction.getCurrentOffer()))
         .with(TRADER_VARIABLE_KEY, getDisplayNameByUniqueId(auction.getTraderUniqueId()));
   }

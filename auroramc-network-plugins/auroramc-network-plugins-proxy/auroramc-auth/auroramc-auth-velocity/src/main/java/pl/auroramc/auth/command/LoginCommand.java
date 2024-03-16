@@ -6,10 +6,11 @@ import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.velocitypowered.api.proxy.Player;
-import dev.rollczi.litecommands.argument.Arg;
-import dev.rollczi.litecommands.command.execute.Execute;
-import dev.rollczi.litecommands.command.permission.Permission;
-import dev.rollczi.litecommands.command.route.Route;
+import dev.rollczi.litecommands.annotations.argument.Arg;
+import dev.rollczi.litecommands.annotations.command.Command;
+import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.execute.Execute;
+import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
@@ -22,7 +23,7 @@ import pl.auroramc.auth.user.UserFacade;
 import pl.auroramc.commons.message.MutableMessage;
 
 @Permission("auroramc.auth.login")
-@Route(name = "login", aliases = {"l", "zaloguj"})
+@Command(name = "login", aliases = {"l", "zaloguj"})
 public class LoginCommand {
 
   private static final int MAXIMUM_LOGIN_ATTEMPTS = 3;
@@ -56,7 +57,7 @@ public class LoginCommand {
 
   @Execute
   public CompletableFuture<MutableMessage> login(
-      final Player player, final @Arg String password
+      final @Context Player player, final @Arg String password
   ) {
     return userFacade.getUserByUniqueId(player.getUniqueId())
         .thenApply(user -> handleUserLogin(player, user, password))

@@ -25,7 +25,7 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage chequeIssued = MutableMessage.of(
-      "<gray>Wystawiłeś czek o wartości <white>{symbol}{amount}<gray>."
+      "<gray>Wystawiłeś czek o wartości <white>{currency}{amount}<gray>."
   );
 
   public MutableMessage chequeCouldNotBeCreatedBecauseOfDigits = MutableMessage.of(
@@ -33,7 +33,7 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage chequeCouldNotBeCreatedBecauseOfAmount = MutableMessage.of(
-      "<red>Wprowadzona przez ciebie kwota czeku jest niepoprawna, gdyż musi ona wynosić co najmniej {symbol}{minimumChequeWorth} oraz co najwyżej {symbol}{maximumChequeWorth}."
+      "<red>Wprowadzona przez ciebie kwota czeku jest niepoprawna, gdyż musi ona wynosić co najmniej {currency}{minimumChequeWorth} oraz co najwyżej {currency}{maximumChequeWorth}."
   );
 
   public MutableMessage chequeCouldNotBeCreatedBecauseOfMoney = MutableMessage.of(
@@ -41,11 +41,11 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage chequeFinalized = MutableMessage.of(
-      "<gray>Sfinalizowałeś czek na kwotę <white>{symbol}{amount} <gray>wystawiony przez <white>{issuer}<gray>."
+      "<gray>Sfinalizowałeś czek na kwotę <white>{currency}{amount} <gray>wystawiony przez <white>{issuer}<gray>."
   );
 
   public MutableMessage titleOfCheque = MutableMessage.of(
-      "<gray>Czek <dark_gray>(<white>{symbol}{amount}<dark_gray>)"
+      "<gray>Czek <dark_gray>(<white>{currency}{amount}<dark_gray>)"
   );
 
   public MutableMessage linesOfCheque = MutableMessage.of(

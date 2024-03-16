@@ -5,7 +5,7 @@ import static pl.auroramc.cheque.message.MessageVariableKey.MAXIMUM_CHEQUE_WORTH
 import static pl.auroramc.cheque.message.MessageVariableKey.MAXIMUM_FRACTION_LENGTH_VARIABLE_KEY;
 import static pl.auroramc.cheque.message.MessageVariableKey.MAXIMUM_INTEGRAL_LENGTH_VARIABLE_KEY;
 import static pl.auroramc.cheque.message.MessageVariableKey.MINIMUM_CHEQUE_WORTH_VARIABLE_KEY;
-import static pl.auroramc.cheque.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
+import static pl.auroramc.cheque.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.decimal.DecimalUtils.getLengthOfFractionalPart;
@@ -55,7 +55,7 @@ class ChequeCommand {
 
   @Execute
   public CompletableFuture<MutableMessage> cheque(
-      final Player invoker, final @Arg BigDecimal amount
+      final Player player, final @Arg BigDecimal amount
   ) {
     if (getLengthOfIntegralPart(amount) > 9 || getLengthOfFractionalPart(amount) > 2) {
       return messageSource.chequeCouldNotBeCreatedBecauseOfDigits
@@ -66,15 +66,15 @@ class ChequeCommand {
 
     if (amount.compareTo(MINIMUM_CHEQUE_WORTH) < 0 || amount.compareTo(MAXIMUM_CHEQUE_WORTH) > 0) {
       return messageSource.chequeCouldNotBeCreatedBecauseOfAmount
-          .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+          .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
           .with(MINIMUM_CHEQUE_WORTH_VARIABLE_KEY, getFormattedDecimal(MINIMUM_CHEQUE_WORTH))
           .with(MAXIMUM_CHEQUE_WORTH_VARIABLE_KEY, getFormattedDecimal(MAXIMUM_CHEQUE_WORTH))
           .asCompletedFuture();
     }
 
-    return economyFacade.has(invoker.getUniqueId(), fundsCurrency, amount)
+    return economyFacade.has(player.getUniqueId(), fundsCurrency, amount)
         .thenCompose(whetherPlayerHasEnoughFunds ->
-            completeChequeCreation(invoker, amount, whetherPlayerHasEnoughFunds)
+            completeChequeCreation(player, amount, whetherPlayerHasEnoughFunds)
         )
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
@@ -91,7 +91,7 @@ class ChequeCommand {
         .thenApply(chequeFacade::createCheque)
         .thenAccept(chequeItem -> giveItemOrThrowIfFull(player, chequeItem))
         .thenApply(state -> messageSource.chequeIssued
-            .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+            .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
             .with(AMOUNT_VARIABLE_KEY, getFormattedDecimal(amount))
         )
         .exceptionally(exception -> delegateCaughtException(logger, exception));

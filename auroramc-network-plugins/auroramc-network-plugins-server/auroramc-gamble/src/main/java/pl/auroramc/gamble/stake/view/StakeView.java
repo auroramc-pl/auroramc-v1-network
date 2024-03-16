@@ -1,10 +1,6 @@
 package pl.auroramc.gamble.stake.view;
 
 import static java.util.Locale.ROOT;
-import static net.kyori.adventure.text.format.TextDecoration.ITALIC;
-import static net.kyori.adventure.text.format.TextDecoration.State.FALSE;
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
-import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.unparsed;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 import static org.bukkit.Bukkit.createInventory;
 import static org.bukkit.Material.ARROW;
@@ -13,6 +9,11 @@ import static org.bukkit.Material.PAPER;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.BACKWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.FORWARD;
+import static pl.auroramc.gamble.message.MessageVariableKey.GAMBLE_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MessageVariableKey.INITIATOR_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MessageVariableKey.PREDICTION_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MessageVariableKey.STAKE_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.gamble.stake.view.StakeViewUtils.getSlotIndexOf;
 import static pl.auroramc.gamble.stake.view.StakeViewUtils.setItemAsFrame;
 
@@ -28,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import pl.auroramc.commons.item.ItemStackBuilder;
 import pl.auroramc.commons.page.navigation.PageNavigator;
 import pl.auroramc.economy.currency.Currency;
+import pl.auroramc.gamble.message.MessageSource;
 import pl.auroramc.gamble.stake.StakeContext;
 
 class StakeView implements InventoryHolder {
@@ -39,24 +41,28 @@ class StakeView implements InventoryHolder {
 
   private static final int STAKE_ROW_COUNT = 6;
   private static final int ELEMENTS_PER_ROW = 9;
-  private final Map<Integer, PageNavigator> navigatorBySlot =
-      Map.of(
-          48, new PageNavigator(BACKWARD, getNavigatorIconPointingBackward()),
-          50, new PageNavigator(FORWARD, getNavigatorIconPointingForward())
-      );
-  private final Map<Integer, StakeContext> stakeContextBySlot = new HashMap<>();
+  private final Map<Integer, StakeContext> stakeContextBySlot;
+  private final Map<Integer, PageNavigator> navigatorBySlot;
   private final int pageIndex;
   private final Currency fundsCurrency;
+  private final MessageSource messageSource;
   private final List<StakeContext> stakes;
   private final Inventory stakeInventory;
 
   StakeView(
       final int pageIndex,
       final Currency fundsCurrency,
+      final MessageSource messageSource,
       final List<StakeContext> stakes
   ) {
     this.pageIndex = pageIndex;
     this.fundsCurrency = fundsCurrency;
+    this.messageSource = messageSource;
+    this.navigatorBySlot = Map.of(
+        48, new PageNavigator(BACKWARD, getNavigatorIconPointingBackward()),
+        50, new PageNavigator(FORWARD, getNavigatorIconPointingForward())
+    );
+    this.stakeContextBySlot = new HashMap<>();
     this.stakes = stakes;
     this.stakeInventory = createStakeInventory();
   }
@@ -74,7 +80,7 @@ class StakeView implements InventoryHolder {
     final Inventory inventory = createInventory(
         this,
         STAKE_ROW_COUNT * ELEMENTS_PER_ROW,
-        Component.text("Oczekujące zakłady")
+        messageSource.stakesTitle.compile()
     );
 
     setItemAsFrame(
@@ -111,18 +117,12 @@ class StakeView implements InventoryHolder {
   private ItemStack getNavigatorIconPointingForward() {
     return ItemStackBuilder.newBuilder(ARROW)
         .displayName(
-            miniMessage()
-                .deserialize(
-                    "<gray>Następna strona"
-                )
-                .decoration(ITALIC, FALSE)
+            messageSource.navigateForward
+                .compile()
         )
         .lore(
-            miniMessage()
-                .deserialize(
-                    "<gray>Naciśnij aby przejść do następnej strony."
-                )
-                .decoration(ITALIC, FALSE)
+            messageSource.navigateForwardSuggestion
+                .compile()
         )
         .build();
   }
@@ -130,18 +130,12 @@ class StakeView implements InventoryHolder {
   private ItemStack getNavigatorIconPointingBackward() {
     return ItemStackBuilder.newBuilder(ARROW)
         .displayName(
-            miniMessage()
-                .deserialize(
-                    "<gray>Poprzednia strona"
-                )
-                .decoration(ITALIC, FALSE)
+            messageSource.navigateBackward
+                .compile()
         )
         .lore(
-            miniMessage()
-                .deserialize(
-                    "<gray>Naciśnij aby przejść do poprzedniej strony."
-                )
-                .decoration(ITALIC, FALSE)
+            messageSource.navigateBackwardSuggestion
+                .compile()
         )
         .build();
   }
@@ -149,47 +143,29 @@ class StakeView implements InventoryHolder {
   private ItemStack getStakeItemOfStakeContext(final StakeContext stakeContext) {
     return ItemStackBuilder.newBuilder(new ItemStack(PAPER))
         .displayName(
-            getDisplayNameOfStakeItem(stakeContext)
+            messageSource.stakeName
+                .with(
+                    GAMBLE_VARIABLE_KEY,
+                    capitalize(
+                        stakeContext.gambleKey().id().toLowerCase(ROOT)
+                    )
+                )
+                .compile()
         )
         .lore(
-            getLoreOfStakeItem(stakeContext).stream()
-                .map(line -> line.decoration(ITALIC, FALSE))
-                .toArray(Component[]::new)
+            messageSource.stakeBrief
+                .with(INITIATOR_VARIABLE_KEY, stakeContext.initiator().username())
+                .with(
+                    PREDICTION_VARIABLE_KEY,
+                    capitalize(
+                        stakeContext.initiator().prediction().toString().toLowerCase(ROOT)
+                    )
+                )
+                .with(STAKE_VARIABLE_KEY, getFormattedDecimal(stakeContext.stake()))
+                .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
+                .compileChildren()
         )
         .build();
-  }
-
-  private Component getDisplayNameOfStakeItem(final StakeContext stakeContext) {
-    return miniMessage().deserialize(
-        "<gray>Zakład <dark_gray>(<white><gamble><dark_gray>)",
-            unparsed("gamble", capitalize(stakeContext.gambleKey().id().toLowerCase(ROOT)))
-        )
-        .decoration(ITALIC, FALSE);
-  }
-
-  private List<Component> getLoreOfStakeItem(final StakeContext stakeContext) {
-    return List.of(
-        miniMessage().deserialize(
-            "<gray>Gracz: <white><initiator>",
-            unparsed("initiator", stakeContext.initiator().username())
-        ),
-        miniMessage().deserialize(
-            "<gray>Wybór: <white><prediction>",
-            unparsed(
-                "prediction",
-                capitalize(
-                    stakeContext.initiator().prediction().toString().toLowerCase(ROOT)
-                )
-            )
-        ),
-        miniMessage().deserialize(
-            "<gray>Stawka: <white><stake_symbol><stake>",
-            unparsed("stake", getFormattedDecimal(stakeContext.stake())),
-            unparsed("stake_symbol", fundsCurrency.getSymbol())
-        ),
-        miniMessage().deserialize(
-            "<gray>Naciśnij aby dołączyć do zakładu."
-        ));
   }
 
   Optional<StakeContext> getStakeContextBySlot(final int slot) {

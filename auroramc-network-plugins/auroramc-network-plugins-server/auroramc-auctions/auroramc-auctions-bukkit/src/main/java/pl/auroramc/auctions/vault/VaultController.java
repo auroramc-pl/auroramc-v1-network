@@ -1,7 +1,6 @@
 package pl.auroramc.auctions.vault;
 
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
-import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.component;
+import static pl.auroramc.auctions.message.MessageVariableKey.SUBJECT_VARIABLE_KEY;
 import static pl.auroramc.commons.BukkitUtils.postToMainThread;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.item.ItemStackFormatter.getFormattedItemStack;
@@ -15,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Blocking;
+import pl.auroramc.auctions.message.MessageSource;
 import pl.auroramc.auctions.vault.item.VaultItem;
 import pl.auroramc.auctions.vault.item.VaultItemFacade;
 import pl.auroramc.registry.user.User;
@@ -24,6 +24,7 @@ public class VaultController {
 
   private final Plugin plugin;
   private final Logger logger;
+  private final MessageSource messageSource;
   private final UserFacade userFacade;
   private final VaultFacade vaultFacade;
   private final VaultItemFacade vaultItemFacade;
@@ -31,12 +32,14 @@ public class VaultController {
   public VaultController(
       final Plugin plugin,
       final Logger logger,
+      final MessageSource messageSource,
       final UserFacade userFacade,
       final VaultFacade vaultFacade,
       final VaultItemFacade vaultItemFacade
   ) {
     this.plugin = plugin;
     this.logger = logger;
+    this.messageSource = messageSource;
     this.userFacade = userFacade;
     this.vaultFacade = vaultFacade;
     this.vaultItemFacade = vaultItemFacade;
@@ -55,10 +58,9 @@ public class VaultController {
     final Player player = Bukkit.getPlayer(uniqueId);
     if (player != null) {
       player.sendMessage(
-          miniMessage().deserialize(
-              "<gray>Do twojego schowka został dodany <white><subject><gray>, możesz odebrać go używając <white><click:run_command:/vault>/vault</click><gray>.",
-              component("subject", getFormattedItemStack(subject))
-          )
+          messageSource.vaultItemReceived
+              .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(subject))
+              .compile()
       );
     }
 
@@ -80,10 +82,9 @@ public class VaultController {
     }
 
     player.sendMessage(
-        miniMessage().deserialize(
-            "<gray>Odebrałeś <white><subject> <gray>ze swojego schowka.",
-            component("subject", getFormattedItemStack(vaultItem.getSubject()))
-        )
+        messageSource.vaultItemRedeemed
+            .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(vaultItem.getSubject()))
+            .compile()
     );
 
     return vaultItemFacade.deleteVaultItem(vaultItem)

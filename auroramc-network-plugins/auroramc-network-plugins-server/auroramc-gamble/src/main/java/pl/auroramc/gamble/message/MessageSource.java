@@ -45,14 +45,68 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage stakeCreated = MutableMessage.of(
-      "<gray>Zakład o stawce <white>{symbol}{stake} <gray>na <white>{prediction} <gray>został utworzony i oczekuje na przeciwnika."
+      "<gray>Zakład o stawce <white>{currency}{stake} <gray>na <white>{prediction} <gray>został utworzony i oczekuje na przeciwnika."
   );
 
   public MutableMessage stakeWon = MutableMessage.of(
-      "<gray>Wygrałeś <hover:show_text:'<gray>Unikalny identyfikator: <white>{uniqueId}'>zakład</hover> <gray>o stawce <white>{symbol}{stake} <gray>mierząc się z <white>{competitor}<gray>."
+      "<gray>Wygrałeś <hover:show_text:'<gray>Unikalny identyfikator: <white>{uniqueId}'>zakład</hover> <gray>o stawce <white>{currency}{stake} <gray>mierząc się z <white>{competitor}<gray>."
   );
 
   public MutableMessage stakeLost = MutableMessage.of(
-      "<gray>Przegrałeś <hover:show_text:'<gray>Unikalny identyfikator: <white>{uniqueId}'>zakład</hover> <gray>o stawce <white>{symbol}{stake} <gray>mierząc się z <white>{competitor}<gray>."
+      "<gray>Przegrałeś <hover:show_text:'<gray>Unikalny identyfikator: <white>{uniqueId}'>zakład</hover> <gray>o stawce <white>{currency}{stake} <gray>mierząc się z <white>{competitor}<gray>."
+  );
+
+  public MutableMessage stakeFinalizationSelf = MutableMessage.of(
+      "<red>Nie możesz dołączyć do własnego zakładu."
+  );
+
+  public MutableMessage stakeFinalizationMissingBalance = MutableMessage.of(
+      "<red>Nie posiadasz wystarczających środków aby dołączyć do tego zakładu."
+  );
+
+  public MutableMessage stakesTitle = MutableMessage.of(
+      "Oczekujące zakłady"
+  );
+
+  public MutableMessage stakeName = MutableMessage.of(
+      "<gray>Zakład <dark_gray>(<white>{gamble}<dark_gray>)"
+  );
+
+  public MutableMessage stakeBrief = MutableMessage.empty()
+      .append(
+          MutableMessage.of(
+              "<gray>Gracz: <white>{initiator}"
+          )
+      )
+      .append(
+          MutableMessage.of(
+              "<gray>Wybór: <white>{prediction}"
+          )
+      )
+      .append(
+          MutableMessage.of(
+              "<gray>Stawka: <white>{currency}{stake}"
+          )
+      )
+      .append(
+          MutableMessage.of(
+              "<gray>Naciśnij aby dołączyć do zakładu."
+          )
+      );
+
+  public MutableMessage navigateForward = MutableMessage.of(
+      "<gray>Następna strona"
+  );
+
+  public MutableMessage navigateForwardSuggestion = MutableMessage.of(
+      "<gray>Naciśnij aby przejść do następnej strony."
+  );
+
+  public MutableMessage navigateBackward = MutableMessage.of(
+      "<gray>Poprzednia strona"
+  );
+
+  public MutableMessage navigateBackwardSuggestion = MutableMessage.of(
+      "<gray>Naciśnij aby przejść do poprzedniej strony."
   );
 }

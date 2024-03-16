@@ -86,7 +86,8 @@ public class UserListener {
 
   @Subscribe
   public void onUserServerConnection(
-      final PlayerChooseInitialServerEvent event, final Continuation continuation) {
+      final PlayerChooseInitialServerEvent event, final Continuation continuation
+  ) {
     resumeWhenComplete(
         userFacade.getUserByUniqueId(event.getPlayer().getUniqueId())
             .thenAccept(user -> userController.redirectUser(event, user))
@@ -101,7 +102,8 @@ public class UserListener {
 
   @Subscribe
   public void onUserGameProfileRequest(
-      final GameProfileRequestEvent event, final Continuation continuation) {
+      final GameProfileRequestEvent event, final Continuation continuation
+  ) {
     resumeWhenComplete(
         userFacade.getUserByUsername(event.getUsername())
             .thenCompose(user -> getUniqueIdOrGenerate(user, event.getUsername()))

@@ -104,7 +104,7 @@ public class AuctionsBukkitPlugin extends JavaPlugin {
     final VaultFacade vaultFacade = getVaultFacade(logger, juliet);
     final VaultItemFacade vaultItemFacade = getVaultItemFacade(logger, juliet);
     final VaultController vaultController = new VaultController(
-        this, logger, userFacade, vaultFacade, vaultItemFacade
+        this, logger, messageSource, userFacade, vaultFacade, vaultItemFacade
     );
 
     final MessageViewerFacade messageViewerFacade = getMessageViewerFacade(logger, juliet);
@@ -143,7 +143,7 @@ public class AuctionsBukkitPlugin extends JavaPlugin {
                 messageSource.executionFromConsoleIsUnsupported
             )
         )
-        .commandInstance(new VaultCommand(this, vaultController))
+        .commandInstance(new VaultCommand(this, messageSource, vaultController))
         .commandInstance(
             new AuctionCommand(
                 logger,

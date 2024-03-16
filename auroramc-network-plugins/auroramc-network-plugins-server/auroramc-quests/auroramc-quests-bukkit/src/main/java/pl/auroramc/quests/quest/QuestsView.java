@@ -7,7 +7,6 @@ import static java.util.stream.Collectors.toMap;
 import static net.kyori.adventure.text.Component.empty;
 import static net.kyori.adventure.text.format.TextDecoration.ITALIC;
 import static net.kyori.adventure.text.format.TextDecoration.State.FALSE;
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static org.bukkit.Material.BLACK_STAINED_GLASS_PANE;
 import static org.bukkit.Material.PAPER;
 import static org.bukkit.enchantments.Enchantment.DURABILITY;
@@ -203,7 +202,7 @@ public class QuestsView {
 
           viewer.sendMessage(
               messageSource.observingQuest
-                  .with(QUEST_VARIABLE_KEY, miniMessage().serialize(quest.getIcon().displayName()))
+                  .with(QUEST_VARIABLE_KEY, quest.getKey().getId())
                   .compile()
           );
         })

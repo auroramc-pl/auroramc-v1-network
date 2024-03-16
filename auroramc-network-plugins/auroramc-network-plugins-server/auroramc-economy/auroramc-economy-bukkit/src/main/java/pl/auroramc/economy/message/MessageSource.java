@@ -8,6 +8,22 @@ public class MessageSource extends OkaeriConfig {
 
   public static final @Exclude String MESSAGE_SOURCE_FILE_NAME = "messages.yml";
 
+  public MutableMessage availableSchematicsSuggestion = MutableMessage.of(
+      "<red>Poprawne użycie: <yellow><newline>{schematics}"
+  );
+
+  public MutableMessage executionOfCommandIsNotPermitted = MutableMessage.of(
+      "<red>Nie posiadasz wystarczających uprawnień aby użyć tej komendy."
+  );
+
+  public MutableMessage executionFromConsoleIsUnsupported = MutableMessage.of(
+      "<red>Nie możesz użyć tej konsoli z poziomu konsoli."
+  );
+
+  public MutableMessage specifiedPlayerIsUnknown = MutableMessage.of(
+      "<red>Wskazany przez ciebie gracz nie istnieje, lub jest Offline."
+  );
+
   public MutableMessage missingCurrency = MutableMessage.of(
       "<red>Wprowadzona przez ciebie waluta <dark_gray>(<yellow>{currencyId}<dark_gray>) <red>nie została odnaleziona, upewnij się, czy jest ona poprawna."
   );
@@ -17,11 +33,11 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage leaderboardFooter = MutableMessage.of(
-      "<gray>Twoja pozycja:<newline><yellow>{position}) <gray>{username} <dark_gray>- <white>{symbol}{balance}"
+      "<gray>Twoja pozycja:<newline><yellow>{position}) <gray>{username} <dark_gray>- <white>{currency}{balance}"
   );
 
   public MutableMessage leaderboardEntry = MutableMessage.of(
-      "<dark_gray>{position}) <gray>{username} <dark_gray>- <white>{symbol}{balance}"
+      "<dark_gray>{position}) <gray>{username} <dark_gray>- <white>{currency}{balance}"
   );
 
   public MutableMessage balanceSummaryHeader = MutableMessage.of(
@@ -33,7 +49,7 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage balanceSummaryEntry = MutableMessage.of(
-      "<dark_gray>► <gray>{name} <dark_gray>- <white>{symbol}{balance}"
+      "<dark_gray>► <gray>{name} <dark_gray>- <white>{currency}{balance}"
   );
 
   public MutableMessage noIncomingPayments = MutableMessage.of(
@@ -53,7 +69,7 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage paymentEntry = MutableMessage.of(
-      "<gray>• <dark_gray>{transactionTime} <dark_gray>(<white>{transactionId}<dark_gray>) <dark_gray>(<white>{initiator} <dark_gray>→ <white>{receiver}<dark_gray>) <dark_gray>- <white>{symbol}{amount}"
+      "<gray>• <dark_gray>{transactionTime} <dark_gray>(<white>{transactionId}<dark_gray>) <dark_gray>(<white>{initiator} <dark_gray>→ <white>{receiver}<dark_gray>) <dark_gray>- <white>{currency}{amount}"
   );
 
   public MutableMessage transferAmountHasToBeGreaterThanZero = MutableMessage.of(
@@ -69,11 +85,11 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage transferSent = MutableMessage.of(
-      "<gray>Wysłałeś przelew do <white>{target}<gray>, <gray>z twojego konta zostało odebrane <white>{symbol}{amount}<gray>."
+      "<gray>Wysłałeś przelew do <white>{target}<gray>, <gray>z twojego konta zostało odebrane <white>{currency}{amount}<gray>."
   );
 
   public MutableMessage transferReceived = MutableMessage.of(
-      "<gray>Otrzymałeś przelew od <white>{source}<gray>, do twojego konta zostało dodane <white>{symbol}{amount}<gray>."
+      "<gray>Otrzymałeś przelew od <white>{source}<gray>, do twojego konta zostało dodane <white>{currency}{amount}<gray>."
   );
 
   public MutableMessage transferFailed = MutableMessage.of(
@@ -81,15 +97,15 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage balanceSet = MutableMessage.of(
-      "<gray>Saldo gracza <white>{username}<gray> zostało ustawione na <white>{symbol}{amount}<gray>."
+      "<gray>Saldo gracza <white>{username}<gray> zostało ustawione na <white>{currency}{amount}<gray>."
   );
 
   public MutableMessage balanceDeposited = MutableMessage.of(
-      "<gray>Do konta gracza <white>{username}<gray> zostało dodane <white>{symbol}{amount}<gray>."
+      "<gray>Do konta gracza <white>{username}<gray> zostało dodane <white>{currency}{amount}<gray>."
   );
 
   public MutableMessage balanceWithdrawn = MutableMessage.of(
-      "<gray>Z konta gracza <white>{username}<gray> zostało odebrane <white>{symbol}{amount}<gray>."
+      "<gray>Z konta gracza <white>{username}<gray> zostało odebrane <white>{currency}{amount}<gray>."
   );
 
   public MutableMessage modificationAmountHasToBeGreaterThanZero = MutableMessage.of(

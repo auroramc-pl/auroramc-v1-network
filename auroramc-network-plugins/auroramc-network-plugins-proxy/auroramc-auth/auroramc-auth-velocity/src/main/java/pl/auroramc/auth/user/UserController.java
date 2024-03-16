@@ -22,7 +22,12 @@ public class UserController {
   private final AccountFacade accountFacade;
 
   public UserController(
-      final Logger logger, final ProxyServer server, final AuthConfig authConfig, final UserFacade userFacade, final AccountFacade accountFacade) {
+      final Logger logger,
+      final ProxyServer server,
+      final AuthConfig authConfig,
+      final UserFacade userFacade,
+      final AccountFacade accountFacade
+  ) {
     this.logger = logger;
     this.server = server;
     this.authConfig = authConfig;
@@ -49,7 +54,16 @@ public class UserController {
   private CompletableFuture<User> createUser(final Player player) {
     return accountFacade.getPremiumUniqueIdByUsername(player.getUsername())
         .thenApply(premiumUniqueId ->
-            new User(null, player.getUniqueId(), player.getUsername(), null, null, premiumUniqueId, player.isOnlineMode()))
+            new User(
+                null,
+                player.getUniqueId(),
+                player.getUsername(),
+                null,
+                null,
+                premiumUniqueId,
+                player.isOnlineMode()
+            )
+        )
         .thenCompose(userFacade::createUser)
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
@@ -59,7 +73,8 @@ public class UserController {
       final User user,
       final RegisteredServer originalServer,
       final RegisteredServer previousServer,
-      final BiConsumer<T, RegisteredServer> redirectingFunction) {
+      final BiConsumer<T, RegisteredServer> redirectingFunction
+  ) {
     if (user.isAuthenticated() && previousServer != null) {
       return;
     }
@@ -81,7 +96,10 @@ public class UserController {
         redirectUser(player, user,
             connection.getServer(),
             connection.getPreviousServer().orElse(null),
-            (source, destinedServer) -> player.createConnectionRequest(destinedServer).fireAndForget()
+            (source, destinedServer) ->
+                player
+                    .createConnectionRequest(destinedServer)
+                    .fireAndForget()
         )
     );
   }

@@ -5,7 +5,7 @@ import static pl.auroramc.commons.message.MutableMessage.empty;
 import static pl.auroramc.economy.message.MessageVariableKey.BALANCE_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MessageVariableKey.CURRENCY_ID_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MessageVariableKey.POSITION_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MessageVariableKey.USERNAME_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.argument.option.Opt;
@@ -79,7 +79,7 @@ public class LeaderboardCommand {
       final Currency currency, final LeaderboardEntry entry
   ) {
     return messageSource.leaderboardFooter
-        .with(SYMBOL_VARIABLE_KEY, currency.getSymbol())
+        .with(CURRENCY_VARIABLE_KEY, currency.getSymbol())
         .with(POSITION_VARIABLE_KEY, entry.position())
         .with(USERNAME_VARIABLE_KEY, entry.username())
         .with(BALANCE_VARIABLE_KEY, getFormattedDecimal(entry.balance()));
@@ -105,7 +105,7 @@ public class LeaderboardCommand {
       final Currency currency, final LeaderboardEntry entry
   ) {
     return messageSource.leaderboardEntry
-        .with(SYMBOL_VARIABLE_KEY, currency.getSymbol())
+        .with(CURRENCY_VARIABLE_KEY, currency.getSymbol())
         .with(POSITION_VARIABLE_KEY, entry.position())
         .with(USERNAME_VARIABLE_KEY, entry.username())
         .with(BALANCE_VARIABLE_KEY, getFormattedDecimal(entry.balance()));

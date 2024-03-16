@@ -44,29 +44,32 @@ class SqlUserRepository implements UserRepository {
   }
 
   @Override
-  public Optional<User> findUserByUniqueId(final UUID uniqueId) {
+  public User findUserByUniqueId(final UUID uniqueId) {
     return findUserWithQuery(FIND_USER_BY_UNIQUE_ID, uniqueId.toString());
   }
 
   @Override
-  public Optional<User> findUserByUsername(final String username) {
+  public User findUserByUsername(final String username) {
     return findUserWithQuery(FIND_USER_BY_USERNAME, username);
   }
 
   @Override
-  public Optional<User> findUserByEmail(final String email) {
+  public User findUserByEmail(final String email) {
     return findUserWithQuery(FIND_USER_BY_EMAIL, email);
   }
 
-  private Optional<User> findUserWithQuery(final String query, final String parameter) {
+  private User findUserWithQuery(final String query, final String parameter) {
     try (
         final Connection connection = juliet.borrowConnection();
         final PreparedStatement statement = connection.prepareStatement(query)
     ) {
       statement.setString(1, parameter);
       try (final ResultSet resultSet = statement.executeQuery()) {
-        return mapResultSetToUser(resultSet);
+        if (resultSet.next()) {
+          return mapResultSetToUser(resultSet);
+        }
       }
+      return null;
     } catch (final SQLException exception) {
       throw new UserRepositoryException(
           "Could not find user, because of unexpected exception.",
@@ -84,7 +87,11 @@ class SqlUserRepository implements UserRepository {
       statement.setString(1, user.getUniqueId().toString());
       statement.setString(2, user.getUsername());
       statement.setString(3, user.getPassword());
-      statement.setString(4, Optional.ofNullable(user.getPremiumUniqueId()).map(UUID::toString).orElse(null));
+      statement.setString(4,
+          Optional.ofNullable(user.getPremiumUniqueId())
+              .map(UUID::toString)
+              .orElse(null)
+      );
       statement.setString(5, user.getEmail());
       statement.executeUpdate();
       try (final ResultSet generatedKeys = statement.getGeneratedKeys()) {
@@ -108,7 +115,11 @@ class SqlUserRepository implements UserRepository {
     ) {
       statement.setString(1, user.getUsername());
       statement.setString(2, user.getPassword());
-      statement.setString(3, Optional.ofNullable(user.getPremiumUniqueId()).map(UUID::toString).orElse(null));
+      statement.setString(3,
+          Optional.ofNullable(user.getPremiumUniqueId())
+              .map(UUID::toString)
+              .orElse(null)
+      );
       statement.setString(4, user.getEmail());
       statement.setLong(5, user.getId());
       statement.executeUpdate();
@@ -136,21 +147,15 @@ class SqlUserRepository implements UserRepository {
     }
   }
 
-  private Optional<User> mapResultSetToUser(final ResultSet resultSet) throws SQLException {
-    if (resultSet.next()) {
-      return Optional.of(
-          new User(
-              resultSet.getLong("id"),
-              UUID.fromString(resultSet.getString("unique_id")),
-              resultSet.getString("username"),
-              resultSet.getString("password"),
-              resultSet.getString("email"),
-              Optional.ofNullable(resultSet.getString("premium_unique_id")).map(UUID::fromString).orElse(null),
-              false
-          )
-      );
-    }
-
-    return Optional.empty();
+  private User mapResultSetToUser(final ResultSet resultSet) throws SQLException {
+    return new User(
+        resultSet.getLong("id"),
+        UUID.fromString(resultSet.getString("unique_id")),
+        resultSet.getString("username"),
+        resultSet.getString("password"),
+        resultSet.getString("email"),
+        Optional.ofNullable(resultSet.getString("premium_unique_id")).map(UUID::fromString).orElse(null),
+        false
+    );
   }
 }

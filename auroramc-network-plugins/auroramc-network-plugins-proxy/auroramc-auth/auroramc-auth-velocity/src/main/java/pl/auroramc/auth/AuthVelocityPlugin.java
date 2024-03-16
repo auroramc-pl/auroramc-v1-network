@@ -1,6 +1,7 @@
 package pl.auroramc.auth;
 
-import static java.lang.String.join;
+import static dev.rollczi.litecommands.message.LiteMessages.INVALID_USAGE;
+import static dev.rollczi.litecommands.message.LiteMessages.MISSING_PERMISSIONS;
 import static java.time.Duration.ZERO;
 import static java.time.Duration.ofSeconds;
 import static moe.rafal.juliet.datasource.HikariPooledDataSourceFactory.produceHikariDataSource;
@@ -32,8 +33,8 @@ import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import dev.rollczi.litecommands.LiteCommands;
-import dev.rollczi.litecommands.command.permission.RequiredPermissions;
-import dev.rollczi.litecommands.schematic.Schematic;
+import dev.rollczi.litecommands.adventure.LiteAdventureExtension;
+import dev.rollczi.litecommands.annotations.LiteCommandsAnnotations;
 import dev.rollczi.litecommands.velocity.LiteVelocityFactory;
 import dev.rollczi.litecommands.velocity.tools.VelocityOnlyPlayerContextual;
 import eu.okaeri.configs.yaml.snakeyaml.YamlSnakeYamlConfigurer;
@@ -71,7 +72,7 @@ import pl.auroramc.commons.config.serdes.juliet.JulietConfig;
 import pl.auroramc.commons.config.serdes.juliet.SerdesJuliet;
 import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
 import pl.auroramc.commons.duration.DurationFormatter;
-import pl.auroramc.commons.integration.litecommands.v2.MutableMessageResultHandler;
+import pl.auroramc.commons.integration.litecommands.v3.MutableMessageResultHandler;
 import pl.auroramc.commons.message.MutableMessage;
 
 @Plugin(id = PROJECT_ARTIFACT_ID, version = PROJECT_VERSION, authors = "shitzuu <hello@rafal.moe>")
@@ -152,40 +153,45 @@ public class AuthVelocityPlugin {
         .schedule();
 
     commands = LiteVelocityFactory.builder(server)
-        .contextualBind(Player.class,
-            new VelocityOnlyPlayerContextual<>(messageSource.executionFromConsoleIsUnsupported)
+        .extension(new LiteAdventureExtension<>(),
+            configurer -> configurer.miniMessage(true)
         )
-        .commandInstance(
-            new MailCommand(logger, messageSource, userFacade, authConfig.emailPattern)
+        .context(Player.class,
+            new VelocityOnlyPlayerContextual<>(
+                messageSource.executionFromConsoleIsUnsupported
+            )
         )
-        .commandInstance(
-            new LoginCommand(logger, messageSource, userFacade, userController, hashingStrategy, timeoutFacade)
-        )
-        .commandInstance(
-            new PasswordChangeCommand(logger, messageSource, hashingStrategy, passwordController)
-        )
-        .commandInstance(
-            new RecoveryCommand(logger, mailer, mailFacade, userFacade)
-        )
-        .commandInstance(
-            new RegisterCommand(logger, messageSource, timeoutFacade, passwordController)
-        )
-        .commandInstance(
-            new UnregisterCommand(logger, messageSource, userFacade, hashingStrategy)
-        )
-        .redirectResult(RequiredPermissions.class, MutableMessage.class,
-            context -> messageSource.executionOfCommandIsNotPermitted
-        )
-        .redirectResult(Schematic.class, MutableMessage.class,
+        .message(INVALID_USAGE,
             context -> messageSource.availableSchematicsSuggestion
-                .with(SCHEMATICS_VARIABLE_KEY, join("<newline>", context.getSchematics()))
+                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join("<newline>"))
         )
-        .resultHandler(MutableMessage.class, new MutableMessageResultHandler())
-        .register();
+        .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
+        .commands(LiteCommandsAnnotations.of(
+            new MailCommand(
+                logger, messageSource, userFacade, authConfig.emailPattern
+            ),
+            new LoginCommand(
+                logger, messageSource, userFacade, userController, hashingStrategy, timeoutFacade
+            ),
+            new PasswordChangeCommand(
+                logger, messageSource, hashingStrategy, passwordController
+            ),
+            new RecoveryCommand(
+                logger, mailer, mailFacade, userFacade
+            ),
+            new RegisterCommand(
+                logger, messageSource, timeoutFacade, passwordController
+            ),
+            new UnregisterCommand(
+                logger, messageSource, userFacade, hashingStrategy
+            )
+        ))
+        .result(MutableMessage.class, new MutableMessageResultHandler<>())
+        .build();
   }
 
   @Subscribe
   public void onProxyShutdown(final ProxyShutdownEvent event) {
-    commands.getPlatform().unregisterAll();
+    commands.unregister();
   }
 }

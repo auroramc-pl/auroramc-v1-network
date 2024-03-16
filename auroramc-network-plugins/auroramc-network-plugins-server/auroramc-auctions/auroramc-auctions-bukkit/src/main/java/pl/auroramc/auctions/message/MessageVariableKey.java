@@ -4,7 +4,7 @@ public final class MessageVariableKey {
 
   public static final String SCHEMATICS_VARIABLE_KEY = "schematics";
   public static final String OFFER_VARIABLE_KEY = "offer";
-  public static final String SYMBOL_VARIABLE_KEY = "symbol";
+  public static final String CURRENCY_VARIABLE_KEY = "currency";
   public static final String TRADER_VARIABLE_KEY = "trader";
   public static final String VENDOR_VARIABLE_KEY = "vendor";
   public static final String PERIOD_VARIABLE_KEY = "period";

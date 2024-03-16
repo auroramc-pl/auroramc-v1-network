@@ -4,10 +4,11 @@ import static pl.auroramc.auth.message.MessageVariableKey.EMAIL_VARIABLE_KEY;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 
 import com.velocitypowered.api.proxy.Player;
-import dev.rollczi.litecommands.argument.Arg;
-import dev.rollczi.litecommands.command.execute.Execute;
-import dev.rollczi.litecommands.command.permission.Permission;
-import dev.rollczi.litecommands.command.route.Route;
+import dev.rollczi.litecommands.annotations.argument.Arg;
+import dev.rollczi.litecommands.annotations.command.Command;
+import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.execute.Execute;
+import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
@@ -18,7 +19,7 @@ import pl.auroramc.auth.user.UserFacade;
 import pl.auroramc.commons.message.MutableMessage;
 
 @Permission("auroramc.auth.mail")
-@Route(name = "mail", aliases = "email")
+@Command(name = "mail", aliases = "email")
 public class MailCommand {
 
   private final Logger logger;
@@ -40,7 +41,7 @@ public class MailCommand {
 
   @Execute
   public CompletableFuture<MutableMessage> mail(
-      final Player player, final @Arg String email
+      final @Context Player player, final @Arg String email
   ) {
     if (!emailPattern.matcher(email).matches()) {
       return messageSource.specifiedEmailIsInvalid

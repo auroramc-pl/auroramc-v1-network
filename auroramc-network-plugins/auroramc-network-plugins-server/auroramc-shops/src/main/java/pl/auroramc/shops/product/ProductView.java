@@ -4,7 +4,7 @@ import static pl.auroramc.commons.page.navigation.PageNavigationDirection.BACKWA
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.FORWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationUtils.navigate;
 import static pl.auroramc.shops.message.MessageVariableKey.PRICE_VARIABLE_KEY;
-import static pl.auroramc.shops.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
+import static pl.auroramc.shops.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.shops.product.ProductViewUtils.mergeLoreOnItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
@@ -97,10 +97,10 @@ class ProductView {
     return List.of(
         messageSource.sellTag
             .with(PRICE_VARIABLE_KEY, priceFormat.format(product.priceForSale()))
-            .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol()),
+            .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol()),
         messageSource.purchaseTag
             .with(PRICE_VARIABLE_KEY, priceFormat.format(product.priceForPurchase()))
-            .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol()),
+            .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol()),
         messageSource.sellSuggestion,
         messageSource.purchaseSuggestion
     );

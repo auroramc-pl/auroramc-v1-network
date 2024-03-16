@@ -6,7 +6,7 @@ import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.economy.message.MessageVariableKey.AMOUNT_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MessageVariableKey.CURRENCY_ID_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MessageVariableKey.USERNAME_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.argument.Arg;
@@ -14,7 +14,6 @@ import dev.rollczi.litecommands.command.execute.Execute;
 import dev.rollczi.litecommands.command.permission.Permission;
 import dev.rollczi.litecommands.command.route.Route;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
 import java.util.logging.Logger;
@@ -23,7 +22,6 @@ import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
 import pl.auroramc.economy.message.MessageSource;
-import pl.auroramc.economy.message.MessageVariableKey;
 
 @Permission("auroramc.economy.economy")
 @Route(name = "economy", aliases = "eco")
@@ -83,7 +81,7 @@ public class EconomyCommand {
         .thenApply(state ->
             messageSource.balanceSet
                 .with(USERNAME_VARIABLE_KEY, player.name())
-                .with(SYMBOL_VARIABLE_KEY, currency.getSymbol())
+                .with(CURRENCY_VARIABLE_KEY, currency.getSymbol())
                 .with(AMOUNT_VARIABLE_KEY, getFormattedDecimal(amount))
         ).exceptionally(exception -> {
           throw new EconomyException(
@@ -105,7 +103,7 @@ public class EconomyCommand {
         .thenApply(state ->
             messageSource.balanceDeposited
                 .with(USERNAME_VARIABLE_KEY, player.name())
-                .with(SYMBOL_VARIABLE_KEY, currency.getSymbol())
+                .with(CURRENCY_VARIABLE_KEY, currency.getSymbol())
                 .with(AMOUNT_VARIABLE_KEY, getFormattedDecimal(amount))
         )
         .exceptionally(exception -> {
@@ -128,7 +126,7 @@ public class EconomyCommand {
         .thenApply(state ->
             messageSource.balanceWithdrawn
                 .with(USERNAME_VARIABLE_KEY, player.name())
-                .with(SYMBOL_VARIABLE_KEY, currency.getSymbol())
+                .with(CURRENCY_VARIABLE_KEY, currency.getSymbol())
                 .with(AMOUNT_VARIABLE_KEY, getFormattedDecimal(amount))
         )
         .exceptionally(exception -> {

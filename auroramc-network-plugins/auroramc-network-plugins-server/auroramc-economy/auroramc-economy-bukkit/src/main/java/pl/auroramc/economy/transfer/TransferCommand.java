@@ -8,7 +8,7 @@ import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.lazy.Lazy.lazy;
 import static pl.auroramc.economy.message.MessageVariableKey.AMOUNT_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MessageVariableKey.SOURCE_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MessageVariableKey.TARGET_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.argument.Arg;
@@ -100,14 +100,14 @@ public class TransferCommand {
           source.sendMessage(
               messageSource.transferSent
                   .with(TARGET_VARIABLE_KEY, target.getName())
-                  .with(SYMBOL_VARIABLE_KEY, resolvedCurrency.getSymbol())
+                  .with(CURRENCY_VARIABLE_KEY, resolvedCurrency.getSymbol())
                   .with(AMOUNT_VARIABLE_KEY, preformattedAmount)
                   .compile()
           );
           target.sendMessage(
               messageSource.transferReceived
                   .with(SOURCE_VARIABLE_KEY, source.getName())
-                  .with(SYMBOL_VARIABLE_KEY, resolvedCurrency.getSymbol())
+                  .with(CURRENCY_VARIABLE_KEY, resolvedCurrency.getSymbol())
                   .with(AMOUNT_VARIABLE_KEY, preformattedAmount)
                   .compile()
           );

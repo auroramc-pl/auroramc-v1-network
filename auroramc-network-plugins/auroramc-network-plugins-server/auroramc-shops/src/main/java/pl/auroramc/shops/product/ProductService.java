@@ -1,12 +1,11 @@
 package pl.auroramc.shops.product;
 
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static pl.auroramc.commons.BukkitUtils.postToMainThread;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.shops.message.MessageVariableKey.AMOUNT_VARIABLE_KEY;
 import static pl.auroramc.shops.message.MessageVariableKey.MATERIAL_VARIABLE_KEY;
 import static pl.auroramc.shops.message.MessageVariableKey.QUANTITY_VARIABLE_KEY;
-import static pl.auroramc.shops.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
+import static pl.auroramc.shops.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.shops.product.ProductUtils.getEmptySlotsCount;
 import static pl.auroramc.shops.product.ProductUtils.getQuantityInSlots;
 import static pl.auroramc.shops.product.ProductViewFactory.produceProductGui;
@@ -138,9 +137,9 @@ class ProductService implements ProductFacade {
       final MutableMessage template, final Product product, final BigDecimal merchandiseValue
   ) {
     return template
-        .with(MATERIAL_VARIABLE_KEY, miniMessage().serialize(product.subject().displayName()))
+        .with(MATERIAL_VARIABLE_KEY, product.subject().displayName())
         .with(QUANTITY_VARIABLE_KEY, product.quantity())
-        .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+        .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
         .with(AMOUNT_VARIABLE_KEY, priceFormat.format(merchandiseValue));
   }
 

@@ -5,7 +5,7 @@ import static pl.auroramc.commons.period.PeriodFormatter.getFormattedPeriod;
 import static pl.auroramc.economy.message.MessageVariableKey.AMOUNT_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MessageVariableKey.INITIATOR_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MessageVariableKey.RECEIVER_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MessageVariableKey.TRANSACTION_ID_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MessageVariableKey.TRANSACTION_TIME_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MessageVariableKey.USERNAME_VARIABLE_KEY;
@@ -83,7 +83,7 @@ public class PaymentCommand {
         .with(TRANSACTION_TIME_VARIABLE_KEY, getFormattedPeriod(paymentSummary.transactionTime()))
         .with(INITIATOR_VARIABLE_KEY, paymentSummary.initiatorUsername())
         .with(RECEIVER_VARIABLE_KEY, paymentSummary.receiverUsername())
-        .with(SYMBOL_VARIABLE_KEY, paymentSummary.currencySymbol())
+        .with(CURRENCY_VARIABLE_KEY, paymentSummary.currencySymbol())
         .with(AMOUNT_VARIABLE_KEY, getFormattedDecimal(paymentSummary.amount()));
   }
 

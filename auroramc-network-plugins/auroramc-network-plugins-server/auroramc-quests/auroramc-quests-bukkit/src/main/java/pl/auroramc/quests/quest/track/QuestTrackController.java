@@ -1,7 +1,6 @@
 package pl.auroramc.quests.quest.track;
 
 import static java.util.concurrent.CompletableFuture.runAsync;
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static pl.auroramc.commons.BukkitUtils.postToMainThread;
 import static pl.auroramc.quests.message.MessageVariableKey.QUEST_VARIABLE_KEY;
 import static pl.auroramc.quests.quest.QuestState.COMPLETED;
@@ -104,7 +103,7 @@ public class QuestTrackController {
 
     player.sendMessage(
         messageSource.questHasBeenCompleted
-            .with(QUEST_VARIABLE_KEY, miniMessage().serialize(quest.getIcon().displayName()))
+            .with(QUEST_VARIABLE_KEY, quest.getKey().getId())
             .compile()
     );
   }

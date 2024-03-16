@@ -14,6 +14,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import pl.auroramc.economy.currency.Currency;
+import pl.auroramc.gamble.message.MessageSource;
 import pl.auroramc.gamble.stake.StakeContext;
 import pl.auroramc.gamble.stake.StakeFacade;
 
@@ -21,16 +22,20 @@ class StakeViewService implements StakeViewFacade {
 
   static final int INITIAL_STAKE_PAGE_INDEX = 0;
   private static final int STAKES_PER_PAGE = 4 * 7;
-  private final StakeFacade stakeFacade;
   private final Map<Integer, StakeView> stakeViewByPageIndex;
+  private final StakeFacade stakeFacade;
   private final Currency fundsCurrency;
+  private final MessageSource messageSource;
 
   StakeViewService(
-      final StakeFacade stakeFacade, final Currency fundsCurrency
+      final StakeFacade stakeFacade,
+      final Currency fundsCurrency,
+      final MessageSource messageSource
   ) {
-    this.stakeFacade = stakeFacade;
     this.stakeViewByPageIndex = new ConcurrentHashMap<>();
+    this.stakeFacade = stakeFacade;
     this.fundsCurrency = fundsCurrency;
+    this.messageSource = messageSource;
   }
 
   @Override
@@ -51,7 +56,10 @@ class StakeViewService implements StakeViewFacade {
     );
     for (final List<StakeContext> partition : partitions) {
       final int pageIndex = partitions.indexOf(partition);
-      stakeViewByPageIndex.put(pageIndex, new StakeView(pageIndex, fundsCurrency, partition));
+      stakeViewByPageIndex.put(
+          pageIndex,
+          new StakeView(pageIndex, fundsCurrency, messageSource, partition)
+      );
     }
 
     for (final Entry<Integer, List<HumanEntity>> pageIndexToViewers : pageIndexesToViewers.entrySet()) {

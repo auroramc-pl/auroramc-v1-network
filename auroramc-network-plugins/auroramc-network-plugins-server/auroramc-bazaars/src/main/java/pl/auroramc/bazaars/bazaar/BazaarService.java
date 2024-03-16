@@ -7,7 +7,7 @@ import static pl.auroramc.bazaars.message.MessageVariableKey.MATERIAL_VARIABLE_K
 import static pl.auroramc.bazaars.message.MessageVariableKey.MERCHANT_VARIABLE_KEY;
 import static pl.auroramc.bazaars.message.MessageVariableKey.PRICE_VARIABLE_KEY;
 import static pl.auroramc.bazaars.message.MessageVariableKey.QUANTITY_VARIABLE_KEY;
-import static pl.auroramc.bazaars.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
+import static pl.auroramc.bazaars.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.commons.BukkitUtils.postToMainThread;
 
 import java.text.DecimalFormat;
@@ -114,7 +114,7 @@ class BazaarService implements BazaarFacade {
         )
         .thenApply(state ->
             messageSource.productBought
-                .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+                .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
                 .with(QUANTITY_VARIABLE_KEY, parsingContext.quantity())
                 .with(MATERIAL_VARIABLE_KEY, capitalize(parsingContext.material().name().toLowerCase(Locale.ROOT)))
                 .with(MERCHANT_VARIABLE_KEY, parsingContext.merchant())
@@ -168,7 +168,7 @@ class BazaarService implements BazaarFacade {
         )
         .thenApply(state ->
             messageSource.productSold
-                .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+                .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
                 .with(QUANTITY_VARIABLE_KEY, parsingContext.quantity())
                 .with(MATERIAL_VARIABLE_KEY, capitalize(parsingContext.material().name().toLowerCase(Locale.ROOT)))
                 .with(MERCHANT_VARIABLE_KEY, parsingContext.merchant())

@@ -10,7 +10,7 @@ import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.gamble.gamble.GambleKey.COINFLIP;
 import static pl.auroramc.gamble.message.MessageVariableKey.PREDICTION_VARIABLE_KEY;
 import static pl.auroramc.gamble.message.MessageVariableKey.STAKE_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.argument.Arg;
 import dev.rollczi.litecommands.command.execute.Execute;
@@ -107,7 +107,7 @@ public class CoinflipCommand {
           );
           stakeViewFacade.recalculate();
           return messageSource.stakeCreated
-              .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+              .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
               .with(STAKE_VARIABLE_KEY, getFormattedDecimal(stake))
               .with(PREDICTION_VARIABLE_KEY, capitalize(prediction.name().toLowerCase(ROOT)));
         })

@@ -2,8 +2,6 @@ package pl.auroramc.economy;
 
 import static java.lang.String.join;
 import static moe.rafal.juliet.datasource.HikariPooledDataSourceFactory.produceHikariDataSource;
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
-import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.parsed;
 import static pl.auroramc.commons.BukkitUtils.registerServices;
 import static pl.auroramc.commons.BukkitUtils.resolveService;
 import static pl.auroramc.commons.config.serdes.juliet.JulietConfig.JULIET_CONFIG_FILE_NAME;
@@ -14,6 +12,7 @@ import static pl.auroramc.economy.balance.leaderboad.LeaderboardFacade.getLeader
 import static pl.auroramc.economy.currency.CurrencyFacadeFactory.produceCurrencyFacade;
 import static pl.auroramc.economy.integration.placeholderapi.PlaceholderApiIntegrationFactory.producePlaceholderApiIntegration;
 import static pl.auroramc.economy.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
+import static pl.auroramc.economy.message.MessageVariableKey.SCHEMATICS_VARIABLE_KEY;
 import static pl.auroramc.economy.payment.PaymentFacadeFactory.producePaymentFacade;
 
 import dev.rollczi.litecommands.LiteCommands;
@@ -28,7 +27,6 @@ import java.util.Set;
 import java.util.logging.Logger;
 import moe.rafal.juliet.Juliet;
 import moe.rafal.juliet.JulietBuilder;
-import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,6 +35,8 @@ import pl.auroramc.commons.config.serdes.SerdesCommons;
 import pl.auroramc.commons.config.serdes.juliet.JulietConfig;
 import pl.auroramc.commons.config.serdes.juliet.SerdesJuliet;
 import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
+import pl.auroramc.commons.integration.litecommands.v2.MutableMessageResultHandler;
+import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.account.AccountFacade;
 import pl.auroramc.economy.balance.BalanceCommand;
 import pl.auroramc.economy.balance.leaderboad.LeaderboardCommand;
@@ -99,8 +99,11 @@ public class EconomyBukkitPlugin extends JavaPlugin {
     final LeaderboardFacade leaderboardFacade = getLeaderboardFacade(juliet);
 
     commands = LitePaperAdventureFactory.builder(getServer(), getName())
-        .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(
-            miniMessage().deserialize("<red>Nie możesz użyć tej komendy z poziomu konsoli!")))
+        .contextualBind(Player.class,
+            new BukkitOnlyPlayerContextual<>(
+                messageSource.executionFromConsoleIsUnsupported
+            )
+        )
         .commandInstance(
             new BalanceCommand(
                 logger, economyFacade, economyConfig.balance, messageSource, currencyFacade
@@ -122,13 +125,19 @@ public class EconomyBukkitPlugin extends JavaPlugin {
                 messageSource, currencyFacade, leaderboardFacade, economyConfig.leaderboard
             )
         )
-        .argument(Player.class, new BukkitPlayerArgument<>(getServer(),
-            miniMessage().deserialize("<red>Gracz o wskazanej przez ciebie nazwie jest Offline.")))
-        .redirectResult(RequiredPermissions.class, Component.class, permissions ->
-            miniMessage().deserialize("<red>Nie posiadasz wystarczających uprawnień aby użyć tej komendy."))
-        .redirectResult(Schematic.class, Component.class, schematic ->
-            miniMessage().deserialize("<red>Poprawne użycie: <yellow><newline><schematics>",
-                parsed("schematics", join("<newline>", schematic.getSchematics()))))
+        .argument(Player.class,
+            new BukkitPlayerArgument<>(
+                getServer(), messageSource.specifiedPlayerIsUnknown
+            )
+        )
+        .redirectResult(RequiredPermissions.class, MutableMessage.class,
+            context -> messageSource.executionOfCommandIsNotPermitted
+        )
+        .redirectResult(Schematic.class, MutableMessage.class,
+            context -> messageSource.availableSchematicsSuggestion
+                .with(SCHEMATICS_VARIABLE_KEY, join("<newline>", context.getSchematics()))
+        )
+        .resultHandler(MutableMessage.class, new MutableMessageResultHandler())
         .register();
 
     restServerExtension = new RestServerExtension(economyConfig, economyFacade, currencyFacade);
@@ -138,6 +147,7 @@ public class EconomyBukkitPlugin extends JavaPlugin {
   @Override
   public void onDisable() {
     commands.getPlatform().unregisterAll();
+
     restServerExtension.disableRestServerIfRunning();
   }
 }

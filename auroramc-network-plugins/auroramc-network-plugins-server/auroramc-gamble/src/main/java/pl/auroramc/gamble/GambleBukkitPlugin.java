@@ -72,11 +72,20 @@ public class GambleBukkitPlugin extends JavaPlugin {
     );
 
     final StakeFacade stakeFacade = getStakeFacade();
-    final StakeViewFacade stakeViewFacade = getStakeViewFacade(stakeFacade, fundsCurrency);
+    final StakeViewFacade stakeViewFacade = getStakeViewFacade(
+        stakeFacade, fundsCurrency, messageSource
+    );
 
     registerListeners(this,
         new StakeViewListener(
-            this, logger, fundsCurrency, economyFacade, gambleFacade, stakeFacade, stakeViewFacade
+            this,
+            logger,
+            fundsCurrency,
+            messageSource,
+            economyFacade,
+            gambleFacade,
+            stakeFacade,
+            stakeViewFacade
         )
     );
 

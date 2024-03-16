@@ -4,7 +4,7 @@ import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.gamble.message.MessageVariableKey.COMPETITOR_VARIABLE_KEY;
 import static pl.auroramc.gamble.message.MessageVariableKey.STAKE_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.gamble.message.MessageVariableKey.UNIQUE_ID_VARIABLE_KEY;
 
 import java.util.logging.Logger;
@@ -49,7 +49,7 @@ class GambleService implements GambleFacade {
           winnerParticipant.sendMessage(
               messageSource.stakeWon
                   .with(UNIQUE_ID_VARIABLE_KEY, gamble.getGambleContext().gambleUniqueId().toString())
-                  .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+                  .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
                   .with(STAKE_VARIABLE_KEY, getFormattedDecimal(gamble.getGambleContext().stake()))
                   .with(COMPETITOR_VARIABLE_KEY, losingParticipant.username())
                   .compile()
@@ -57,7 +57,7 @@ class GambleService implements GambleFacade {
           losingParticipant.sendMessage(
               messageSource.stakeLost
                   .with(UNIQUE_ID_VARIABLE_KEY, gamble.getGambleContext().gambleUniqueId().toString())
-                  .with(SYMBOL_VARIABLE_KEY, fundsCurrency.getSymbol())
+                  .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
                   .with(STAKE_VARIABLE_KEY, getFormattedDecimal(gamble.getGambleContext().stake()))
                   .with(COMPETITOR_VARIABLE_KEY, winnerParticipant.username())
                   .compile()

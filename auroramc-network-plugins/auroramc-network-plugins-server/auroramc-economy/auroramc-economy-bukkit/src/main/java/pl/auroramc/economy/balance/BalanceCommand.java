@@ -4,7 +4,7 @@ import static com.spotify.futures.CompletableFutures.joinList;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.economy.message.MessageVariableKey.BALANCE_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MessageVariableKey.NAME_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.SYMBOL_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MessageVariableKey.USERNAME_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.argument.Arg;
@@ -93,7 +93,7 @@ public class BalanceCommand {
         .thenApply(balance ->
             messageSource.balanceSummaryEntry
                 .with(NAME_VARIABLE_KEY, currency.getName())
-                .with(SYMBOL_VARIABLE_KEY, currency.getSymbol())
+                .with(CURRENCY_VARIABLE_KEY, currency.getSymbol())
                 .with(BALANCE_VARIABLE_KEY, balance)
         )
         .exceptionally(exception -> delegateCaughtException(logger, exception));

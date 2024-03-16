@@ -31,7 +31,7 @@ class UserService implements UserFacade {
       return completedFuture(uniqueIdToUser.get(uniqueId));
     }
 
-    return supplyAsync(() -> findUserByUniqueIdOrNull(uniqueId))
+    return supplyAsync(() -> userRepository.findUserByUniqueId(uniqueId))
         .thenApply(this::createUserInCache)
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
@@ -42,7 +42,7 @@ class UserService implements UserFacade {
       return completedFuture(usernameToUser.get(username));
     }
 
-    return supplyAsync(() -> findUserByUsernameOrNull(username))
+    return supplyAsync(() -> userRepository.findUserByUsername(username))
         .thenApply(this::createUserInCache)
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
@@ -53,21 +53,9 @@ class UserService implements UserFacade {
       return completedFuture(emailToUser.get(email));
     }
 
-    return supplyAsync(() -> findUserByEmailOrNull(email))
+    return supplyAsync(() -> userRepository.findUserByEmail(email))
         .thenApply(this::createUserInCache)
         .exceptionally(exception -> delegateCaughtException(logger, exception));
-  }
-
-  private User findUserByUniqueIdOrNull(final UUID uniqueId) {
-    return userRepository.findUserByUniqueId(uniqueId).orElse(null);
-  }
-
-  private User findUserByUsernameOrNull(final String username) {
-    return userRepository.findUserByUsername(username).orElse(null);
-  }
-
-  private User findUserByEmailOrNull(final String email) {
-    return userRepository.findUserByEmail(email).orElse(null);
   }
 
   @Override
@@ -85,11 +73,6 @@ class UserService implements UserFacade {
   public CompletableFuture<Void> deleteUser(final User user) {
     return runAsyncWithExceptionDelegation(() -> userRepository.deleteUser(user))
         .thenAccept(state -> deleteUserOfCacheByUniqueId(user.getUniqueId()));
-  }
-
-  private CompletableFuture<Void> runAsyncWithExceptionDelegation(final Runnable runnable) {
-    return runAsync(runnable)
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
   @Override
@@ -110,5 +93,10 @@ class UserService implements UserFacade {
       usernameToUser.remove(user.getUsername());
       Optional.ofNullable(user.getEmail()).ifPresent(email -> emailToUser.remove(user.getEmail()));
     }
+  }
+
+  private CompletableFuture<Void> runAsyncWithExceptionDelegation(final Runnable runnable) {
+    return runAsync(runnable)
+        .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 }

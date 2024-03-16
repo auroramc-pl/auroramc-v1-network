@@ -5,7 +5,9 @@ import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static pl.auroramc.commons.lazy.Lazy.lazy;
 import static pl.auroramc.commons.message.MutableMessageVariableResolver.getResolvedMessageVariable;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
 import net.kyori.adventure.text.Component;
 import pl.auroramc.commons.lazy.Lazy;
 
@@ -42,7 +44,7 @@ public class MutableMessage {
   public MutableMessage with(final String key, final Object value) {
     return new MutableMessage(
         template.replace(
-            getKeyWithMarkers(key),
+            PLACEHOLDER_KEY_INITIATOR + key + PLACEHOLDER_KEY_TERMINATOR,
             getResolvedMessageVariable(value)
         )
     );
@@ -64,16 +66,32 @@ public class MutableMessage {
     return append(message, LINE_SEPARATOR);
   }
 
+  public List<MutableMessage> children(final String delimiter) {
+    return Stream.of(template.split(delimiter))
+        .map(MutableMessage::of)
+        .toList();
+  }
+
+  public List<MutableMessage> children() {
+    return children(LINE_SEPARATOR);
+  }
+
   public Component compile() {
     return templateCompiled.get();
   }
 
-  public String getTemplate() {
-    return template;
+  public Component[] compileChildren(final String delimiter) {
+    return children(delimiter).stream()
+        .map(MutableMessage::compile)
+        .toArray(Component[]::new);
   }
 
-  private String getKeyWithMarkers(final String rawKey) {
-    return PLACEHOLDER_KEY_INITIATOR + rawKey + PLACEHOLDER_KEY_TERMINATOR;
+  public Component[] compileChildren() {
+    return compileChildren(LINE_SEPARATOR);
+  }
+
+  public String getTemplate() {
+    return template;
   }
 
   public CompletableFuture<MutableMessage> asCompletedFuture() {

@@ -2,9 +2,10 @@ package pl.auroramc.economy.message;
 
 public final class MessageVariableKey {
 
+  public static final String SCHEMATICS_VARIABLE_KEY = "schematics";
   public static final String NAME_VARIABLE_KEY = "name";
   public static final String AMOUNT_VARIABLE_KEY = "amount";
-  public static final String SYMBOL_VARIABLE_KEY = "symbol";
+  public static final String CURRENCY_VARIABLE_KEY = "currency";
   public static final String SOURCE_VARIABLE_KEY = "source";
   public static final String TARGET_VARIABLE_KEY = "target";
   public static final String POSITION_VARIABLE_KEY = "position";

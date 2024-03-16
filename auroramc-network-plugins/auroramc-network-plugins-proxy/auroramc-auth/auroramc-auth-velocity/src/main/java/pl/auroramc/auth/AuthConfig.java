@@ -20,7 +20,10 @@ public class AuthConfig extends OkaeriConfig {
   public String emailPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 
   public List<String> defaultCommands = List.of(
-      "login", "l", "zaloguj", "register", "reg", "rejestracja", "zarejestruj", "recovery", "recover", "odzyskaj");
+      "login", "l", "zaloguj",
+      "register", "reg", "rejestracja", "zarejestruj",
+      "recovery", "recover", "odzyskaj"
+  );
 
   public MailConfig mailConfig = new MailConfig();
 }
