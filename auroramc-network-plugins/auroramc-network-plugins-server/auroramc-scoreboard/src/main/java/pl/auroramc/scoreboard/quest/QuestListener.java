@@ -6,12 +6,12 @@ import pl.auroramc.quests.quest.observer.QuestObservedEvent;
 import pl.auroramc.scoreboard.ScoreboardConfig;
 import pl.auroramc.scoreboard.sidebar.SidebarRenderer;
 
-public class QuestListeners implements Listener {
+public class QuestListener implements Listener {
 
   private final ScoreboardConfig scoreboardConfig;
   private final SidebarRenderer sidebarRenderer;
 
-  public QuestListeners(
+  public QuestListener(
       final ScoreboardConfig scoreboardConfig,
       final SidebarRenderer sidebarRenderer
   ) {

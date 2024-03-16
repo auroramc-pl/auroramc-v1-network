@@ -21,7 +21,7 @@ import pl.auroramc.quests.quest.QuestIndex;
 import pl.auroramc.quests.quest.observer.QuestObserverFacade;
 import pl.auroramc.registry.user.UserFacade;
 import pl.auroramc.scoreboard.message.MessageSource;
-import pl.auroramc.scoreboard.quest.QuestListeners;
+import pl.auroramc.scoreboard.quest.QuestListener;
 import pl.auroramc.scoreboard.sidebar.SidebarFacade;
 import pl.auroramc.scoreboard.sidebar.SidebarRenderer;
 import pl.auroramc.scoreboard.sidebar.SidebarRenderingTask;
@@ -52,7 +52,7 @@ public class ScoreboardBukkitPlugin extends JavaPlugin {
 
     registerListeners(this, new ScoreboardListener(sidebarFacade, sidebarRenderer));
     if (hasQuestSupport()) {
-      registerListeners(this, new QuestListeners(scoreboardConfig, sidebarRenderer));
+      registerListeners(this, new QuestListener(scoreboardConfig, sidebarRenderer));
     }
 
     getServer().getScheduler().runTaskTimerAsynchronously(this,
