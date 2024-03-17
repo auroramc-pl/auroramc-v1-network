@@ -9,7 +9,7 @@ import static org.bukkit.event.EventPriority.HIGHEST;
 import static pl.auroramc.bazaars.bazaar.BazaarUtils.resolveSignProp;
 import static pl.auroramc.bazaars.bazaar.BazaarUtils.whetherSignHasInvalidProp;
 import static pl.auroramc.bazaars.bazaar.parser.BazaarParserToken.MERCHANT;
-import static pl.auroramc.bazaars.bazaar.parser.BazaarParserToken.QUANTITY;
+import static pl.auroramc.bazaars.bazaar.parser.BazaarParserToken.PRICE;
 import static pl.auroramc.bazaars.sign.SignDelegateFactory.produceSignDelegate;
 
 import java.text.DecimalFormat;
@@ -93,7 +93,7 @@ public class BazaarCreateListener implements Listener {
               .decorate(BOLD)
       );
       event.line(
-          QUANTITY.getLineIndex(),
+          PRICE.getLineIndex(),
           empty()
               .append(text(parsingContext.type().getShortcut()))
               .append(text(" "))

@@ -37,7 +37,13 @@ final class ProductViewFactory {
 
       return load(
           new ProductView(
-              fundsCurrency, messageSource, priceFormat, productFacade, shop, shopsGui
+              plugin,
+              fundsCurrency,
+              messageSource,
+              priceFormat,
+              productFacade,
+              shop,
+              shopsGui
           ),
           inputStream,
           plugin

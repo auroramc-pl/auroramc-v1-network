@@ -45,10 +45,10 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage productBought = MutableMessage.of(
-      "<gray>Zakupiłeś <white>x{quantity} {material}</white> od <white>{merchant}</white> za <white>{currency}{price}</white>."
+      "<gray>Zakupiłeś <white>{product} <gray>od <white>{merchant} <gray>za <white>{currency}{price}<gray>, które zostały pobrane z twojego konta."
   );
 
   public MutableMessage productSold = MutableMessage.of(
-      "<gray>Sprzedałeś <white>x{quantity} {material}</white> od <white>{merchant}</white> za <white>{currency}{price}</white>."
+      "<gray>Sprzedałeś <white>{product} <gray>od <white>{merchant} <gray>za <white>{currency}{price}<gray>, które zostały dodane do twojego konta."
   );
 }
