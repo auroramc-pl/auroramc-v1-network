@@ -3,11 +3,13 @@ package pl.auroramc.auctions.vault.item;
 public class VaultItem {
 
   private Long id;
+  private Long userId;
   private Long vaultId;
   private byte[] subject;
 
-  public VaultItem(final Long id, final Long vaultId, final byte[] subject) {
+  public VaultItem(final Long id, final Long userId, final Long vaultId, final byte[] subject) {
     this.id = id;
+    this.userId = userId;
     this.vaultId = vaultId;
     this.subject = subject;
   }
@@ -18,6 +20,14 @@ public class VaultItem {
 
   public void setId(final Long id) {
     this.id = id;
+  }
+
+  public Long getUserId() {
+    return userId;
+  }
+
+  public void setUserId(final Long userId) {
+    this.userId = userId;
   }
 
   public Long getVaultId() {

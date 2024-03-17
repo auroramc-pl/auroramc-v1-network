@@ -1,36 +1,46 @@
 package pl.auroramc.auctions.auction;
 
+import static pl.auroramc.commons.mutex.Mutex.mutex;
+
 import java.util.LinkedList;
 import java.util.Queue;
+import pl.auroramc.commons.mutex.Mutex;
 
 class AuctionService implements AuctionFacade {
 
-  private static final Object SCHEDULE_LOCK = new Object();
-  private static final Object COUNTING_LOCK = new Object();
-  private final Queue<Auction> auctionQueue;
+  private final Mutex<Queue<Auction>> auctionQueue;
+  private final Mutex<Auction> activeAuction;
 
   AuctionService() {
-    this.auctionQueue = new LinkedList<>();
+    this.auctionQueue = mutex(new LinkedList<>());
+    this.activeAuction = mutex();
   }
 
   @Override
-  public Auction getNextAuction() {
-    synchronized (SCHEDULE_LOCK) {
-      return auctionQueue.poll();
-    }
+  public void addAuction(final Auction auction) {
+    auctionQueue.mutate(queue -> {
+      queue.add(auction);
+      return queue;
+    });
   }
 
   @Override
-  public void queueAuction(final Auction auction) {
-    synchronized (SCHEDULE_LOCK) {
-      auctionQueue.add(auction);
-    }
+  public int getAuctionCount() {
+    return auctionQueue.read(Queue::size);
   }
 
   @Override
-  public int getAwaitingActionCount() {
-    synchronized (COUNTING_LOCK) {
-      return auctionQueue.size();
-    }
+  public Auction getPooledAuction() {
+    return auctionQueue.read(Queue::poll);
+  }
+
+  @Override
+  public Auction getActiveAuction() {
+    return activeAuction.read();
+  }
+
+  @Override
+  public void setActiveAuction(final Auction activeAuction) {
+    this.activeAuction.mutate(activeAuction);
   }
 }

@@ -9,8 +9,8 @@ import java.util.logging.Logger;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import pl.auroramc.auctions.message.viewer.MessageViewer;
-import pl.auroramc.auctions.message.viewer.MessageViewerFacade;
+import pl.auroramc.auctions.audience.Audience;
+import pl.auroramc.auctions.audience.AudienceFacade;
 import pl.auroramc.auctions.vault.Vault;
 import pl.auroramc.auctions.vault.VaultFacade;
 import pl.auroramc.registry.user.User;
@@ -22,18 +22,18 @@ class DataValidationListener implements Listener {
   private final Logger logger;
   private final UserFacade userFacade;
   private final VaultFacade vaultFacade;
-  private final MessageViewerFacade messageViewerFacade;
+  private final AudienceFacade audienceFacade;
 
   public DataValidationListener(
       final Logger logger,
       final UserFacade userFacade,
       final VaultFacade vaultFacade,
-      final MessageViewerFacade messageViewerFacade
+      final AudienceFacade audienceFacade
   ) {
     this.logger = logger;
     this.userFacade = userFacade;
     this.vaultFacade = vaultFacade;
-    this.messageViewerFacade = messageViewerFacade;
+    this.audienceFacade = audienceFacade;
   }
 
   @EventHandler
@@ -62,11 +62,11 @@ class DataValidationListener implements Listener {
   }
 
   private CompletableFuture<Void> createMessageViewerIfRequired(final User user) {
-    return messageViewerFacade.getMessageViewerByUniqueId(user.getUniqueId())
+    return audienceFacade.getAudienceByUniqueId(user.getUniqueId())
         .thenCompose(messageViewer -> {
           if (messageViewer == null) {
-            return messageViewerFacade.createMessageViewer(
-                new MessageViewer(user.getId(), true)
+            return audienceFacade.createAudience(
+                new Audience(user.getId(), true)
             );
           }
 

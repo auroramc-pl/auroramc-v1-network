@@ -4,6 +4,7 @@ import static com.spotify.futures.CompletableFutures.combineFutures;
 import static java.util.Objects.requireNonNull;
 import static net.kyori.adventure.text.format.TextDecoration.ITALIC;
 import static net.kyori.adventure.text.format.TextDecoration.State.FALSE;
+import static org.bukkit.Bukkit.getPlayer;
 import static org.bukkit.Material.PAPER;
 import static org.bukkit.persistence.PersistentDataType.STRING;
 import static pl.auroramc.cheque.message.MessageVariableKey.AMOUNT_VARIABLE_KEY;
@@ -17,7 +18,6 @@ import java.math.BigDecimal;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
-import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -122,7 +122,7 @@ class ChequeService implements ChequeFacade {
   public CompletableFuture<MutableMessage> finalizeCheque(
       final UUID retrieverUniqueId, ItemStack itemStack
   ) {
-    final Player retriever = Bukkit.getPlayer(retrieverUniqueId);
+    final Player retriever = getPlayer(retrieverUniqueId);
     if (retriever == null) {
       throw new ChequeFinalizationException(
           "Could not finalize cheque, because retriever seems to be Offline."

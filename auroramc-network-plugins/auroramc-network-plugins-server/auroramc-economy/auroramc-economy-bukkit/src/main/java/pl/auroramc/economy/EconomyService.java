@@ -182,12 +182,12 @@ class EconomyService implements EconomyFacade {
   ) {
     checkNotNull(account);
 
-    account.getLockForWrite().lock();
+    account.getLock().writeLock().lock();
     try {
       account.setBalance(balanceMutator.apply(account.getBalance(), amount));
       return accountFacade.updateAccount(account);
     } finally {
-      account.getLockForWrite().unlock();
+      account.getLock().writeLock().unlock();
     }
   }
 

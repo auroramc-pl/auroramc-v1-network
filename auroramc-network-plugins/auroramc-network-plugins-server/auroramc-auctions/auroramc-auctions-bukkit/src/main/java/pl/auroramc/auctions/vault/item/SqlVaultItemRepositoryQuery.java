@@ -7,6 +7,7 @@ final class SqlVaultItemRepositoryQuery {
       CREATE TABLE IF NOT EXISTS `auroramc_auctions_vault_items`
       (
         `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
+        `user_id` BIGINT REFERENCES `auroramc_registry_users`(`id`),
         `vault_id` BIGINT REFERENCES `auroramc_auctions_vaults`(`id`),
         `subject` BLOB
       );
@@ -16,6 +17,7 @@ final class SqlVaultItemRepositoryQuery {
       """
       SELECT
         `auroramc_auctions_vault_items`.`id`,
+        `auroramc_auctions_vault_items`.`user_id`,
         `auroramc_auctions_vault_items`.`vault_id`,
         `auroramc_auctions_vault_items`.`subject`
       FROM
@@ -35,9 +37,9 @@ final class SqlVaultItemRepositoryQuery {
       """
       INSERT INTO
         `auroramc_auctions_vault_items`
-        (`vault_id`, `subject`)
+        (`user_id`, `vault_id`, `subject`)
       VALUES
-        (?, ?);
+        (?, ?, ?);
       """;
 
   static final String DELETE_VAULT_ITEM =
