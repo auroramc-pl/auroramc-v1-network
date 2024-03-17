@@ -1,10 +1,11 @@
 package pl.auroramc.gamble.gamble;
 
+import static org.bukkit.Bukkit.getPlayer;
+
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 
 public record Participant(UUID uniqueId, String username, Object prediction) {
 
@@ -13,7 +14,7 @@ public record Participant(UUID uniqueId, String username, Object prediction) {
   }
 
   public void sendMessage(final Component message) {
-    Optional.ofNullable(Bukkit.getPlayer(uniqueId)).ifPresent(player -> player.sendMessage(message));
+    Optional.ofNullable(getPlayer(uniqueId)).ifPresent(player -> player.sendMessage(message));
   }
 
   @Override

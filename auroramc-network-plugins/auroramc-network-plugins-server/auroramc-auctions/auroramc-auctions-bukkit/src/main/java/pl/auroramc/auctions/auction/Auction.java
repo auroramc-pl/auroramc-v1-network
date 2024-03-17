@@ -1,56 +1,42 @@
 package pl.auroramc.auctions.auction;
 
 import static java.time.Instant.now;
+import static pl.auroramc.commons.mutex.Mutex.mutex;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
+import pl.auroramc.commons.mutex.Mutex;
 
 public class Auction {
 
   private final UUID auctionUniqueId;
   private final UUID vendorUniqueId;
-  private UUID traderUniqueId;
   private final byte[] subject;
-  private BigDecimal currentOffer;
+  private final Mutex<UUID> currentTraderUniqueId;
+  private final Mutex<BigDecimal> currentOffer;
   private BigDecimal minimalPrice;
   private BigDecimal minimalPricePuncture;
   private Instant availableSince;
-  private Instant availableUntil;
+  private final Mutex<Instant> availableUntil;
 
   Auction(
       final UUID actionUniqueId,
       final UUID vendorUniqueId,
-      final UUID traderUniqueId,
       final byte[] subject,
-      final BigDecimal currentOffer,
       final BigDecimal minimalPrice,
-      final BigDecimal minimalPricePuncture
+      final BigDecimal minimalPricePuncture,
+      final Mutex<BigDecimal> currentOffer,
+      final Mutex<UUID> currentTraderUniqueId
   ) {
     this.auctionUniqueId = actionUniqueId;
     this.vendorUniqueId = vendorUniqueId;
-    this.traderUniqueId = traderUniqueId;
     this.subject = subject;
-    this.currentOffer = currentOffer;
     this.minimalPrice = minimalPrice;
     this.minimalPricePuncture = minimalPricePuncture;
-  }
-
-  Auction(
-      final UUID vendorUniqueId,
-      final byte[] subject,
-      final BigDecimal minimalPrice,
-      final BigDecimal minimalPricePuncture
-  ) {
-    this(
-        UUID.randomUUID(),
-        vendorUniqueId,
-        null,
-        subject,
-        null,
-        minimalPrice,
-        minimalPricePuncture
-    );
+    this.currentOffer = currentOffer;
+    this.currentTraderUniqueId = currentTraderUniqueId;
+    this.availableUntil = mutex();
   }
 
   public UUID getAuctionUniqueId() {
@@ -65,20 +51,20 @@ public class Auction {
     return vendorUniqueId;
   }
 
-  public UUID getTraderUniqueId() {
-    return traderUniqueId;
+  public UUID getCurrentTraderUniqueId() {
+    return currentTraderUniqueId.read();
   }
 
-  public void setTraderUniqueId(final UUID traderUniqueId) {
-    this.traderUniqueId = traderUniqueId;
+  public void setCurrentTraderUniqueId(final UUID currentTraderUniqueId) {
+    this.currentTraderUniqueId.mutate(currentTraderUniqueId);
   }
 
   public BigDecimal getCurrentOffer() {
-    return currentOffer;
+    return currentOffer.read();
   }
 
   public void setCurrentOffer(final BigDecimal currentOffer) {
-    this.currentOffer = currentOffer;
+    this.currentOffer.mutate(currentOffer);
   }
 
   public BigDecimal getMinimalPrice() {
@@ -106,11 +92,11 @@ public class Auction {
   }
 
   public Instant getAvailableUntil() {
-    return availableUntil;
+    return availableUntil.read();
   }
 
   public void setAvailableUntil(final Instant availableUntil) {
-    this.availableUntil = availableUntil;
+    this.availableUntil.mutate(availableUntil);
   }
 
   public boolean whetherAuctionIsAvailable() {
@@ -118,7 +104,7 @@ public class Auction {
         availableSince != null &&
             (
                 availableUntil != null &&
-                availableUntil.isAfter(now())
+                availableUntil.read().isAfter(now())
             )
     );
   }

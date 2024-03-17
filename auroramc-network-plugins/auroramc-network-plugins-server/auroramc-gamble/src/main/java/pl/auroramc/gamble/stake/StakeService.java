@@ -1,16 +1,17 @@
 package pl.auroramc.gamble.stake;
 
+import static pl.auroramc.commons.mutex.Mutex.mutex;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import pl.auroramc.commons.mutex.Mutex;
 
 class StakeService implements StakeFacade {
 
-  private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-  private final List<StakeContext> bunchOfStakeContexts;
+  private final Mutex<List<StakeContext>> bunchOfStakeContexts;
 
   StakeService(final List<StakeContext> bunchOfStakeContexts) {
-    this.bunchOfStakeContexts = bunchOfStakeContexts;
+    this.bunchOfStakeContexts = mutex(bunchOfStakeContexts);
   }
 
   StakeService() {
@@ -19,31 +20,22 @@ class StakeService implements StakeFacade {
 
   @Override
   public void createStakeContext(final StakeContext stakeContext) {
-    lock.writeLock().lock();
-    try {
-      bunchOfStakeContexts.add(stakeContext);
-    } finally {
-      lock.writeLock().unlock();
-    }
+    bunchOfStakeContexts.mutate(bunch -> {
+      bunch.add(stakeContext);
+      return bunch;
+    });
   }
 
   @Override
   public void deleteStakeContext(final StakeContext stakeContext) {
-    lock.writeLock().lock();
-    try {
-      bunchOfStakeContexts.remove(stakeContext);
-    } finally {
-      lock.writeLock().unlock();
-    }
+    bunchOfStakeContexts.mutate(bunch -> {
+      bunch.remove(stakeContext);
+      return bunch;
+    });
   }
 
   @Override
   public List<StakeContext> getBunchOfStakeContexts() {
-    lock.readLock().lock();
-    try {
-      return List.copyOf(bunchOfStakeContexts);
-    } finally {
-      lock.readLock().unlock();
-    }
+    return bunchOfStakeContexts.read();
   }
 }

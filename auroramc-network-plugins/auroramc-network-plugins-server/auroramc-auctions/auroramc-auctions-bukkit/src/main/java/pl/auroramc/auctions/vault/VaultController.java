@@ -1,7 +1,9 @@
 package pl.auroramc.auctions.vault;
 
+import static org.bukkit.Bukkit.getPlayer;
 import static pl.auroramc.auctions.message.MessageVariableKey.SUBJECT_VARIABLE_KEY;
-import static pl.auroramc.commons.BukkitUtils.postToMainThread;
+import static pl.auroramc.commons.BukkitUtils.appendItemStackOrDropBelow;
+import static pl.auroramc.commons.BukkitUtils.postToMainThreadAndNextTick;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.item.ItemStackFormatter.getFormattedItemStack;
 
@@ -9,7 +11,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -55,7 +56,7 @@ public class VaultController {
   }
 
   public void createVaultItem(final UUID uniqueId, final byte[] subject) {
-    final Player player = Bukkit.getPlayer(uniqueId);
+    final Player player = getPlayer(uniqueId);
     if (player != null) {
       player.sendMessage(
           messageSource.vaultItemReceived
@@ -67,36 +68,32 @@ public class VaultController {
     userFacade.getUserByUniqueId(uniqueId)
         .thenApply(User::getId)
         .thenCompose(vaultFacade::getVaultByUserId)
-        .thenApply(Vault::getId)
-        .thenApply(vaultId -> new VaultItem(null, vaultId, subject))
-        .thenCompose(vaultItemFacade::createVaultItem)
+        .thenApply(vault -> new VaultItem(null, vault.getUserId(), vault.getId(), subject))
+        .thenAccept(vaultItemFacade::createVaultItem)
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
   CompletableFuture<Void> redeemVaultItem(final UUID uniqueId, final VaultItem vaultItem) {
-    final Player player = Bukkit.getPlayer(uniqueId);
+    final Player player = getPlayer(uniqueId);
     if (player == null) {
       throw new VaultItemRedeemException(
           "Vault item could not be redeemed, because player is Offline."
       );
     }
 
-    player.sendMessage(
-        messageSource.vaultItemRedeemed
-            .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(vaultItem.getSubject()))
-            .compile()
-    );
-
     return vaultItemFacade.deleteVaultItem(vaultItem)
         .thenAccept(state ->
-            player.getInventory()
-                .addItem(ItemStack.deserializeBytes(vaultItem.getSubject()))
-                .forEach((index, itemStack) ->
-                    postToMainThread(plugin,
-                        () -> player.getWorld().dropItemNaturally(player.getLocation(), itemStack)
-                    )
-                )
+            player.sendMessage(
+                messageSource.vaultItemRedeemed
+                    .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(vaultItem.getSubject()))
+                    .compile()
+            )
         )
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+        .thenAccept(state ->
+            postToMainThreadAndNextTick(
+                plugin,
+                () -> appendItemStackOrDropBelow(player, ItemStack.deserializeBytes(vaultItem.getSubject()))
+            )
+        );
   }
 }

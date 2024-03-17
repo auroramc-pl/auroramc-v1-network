@@ -2,27 +2,24 @@ package pl.auroramc.economy.account;
 
 import java.math.BigDecimal;
 import java.util.Objects;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Account {
 
-  private final Lock lockForWrite;
+  private final ReadWriteLock lock = new ReentrantReadWriteLock();
   private Long userId;
   private Long currencyId;
   private BigDecimal balance;
 
   Account(final Long userId, final Long currencyId, final BigDecimal balance) {
-    final ReadWriteLock lock = new ReentrantReadWriteLock();
-    this.lockForWrite = lock.writeLock();
     this.userId = userId;
     this.currencyId = currencyId;
     this.balance = balance;
   }
 
-  public Lock getLockForWrite() {
-    return lockForWrite;
+  public ReadWriteLock getLock() {
+    return lock;
   }
 
   public Long getUserId() {

@@ -67,8 +67,9 @@ class SqlVaultItemRepository implements VaultItemRepository {
         final Connection connection = juliet.borrowConnection();
         final PreparedStatement statement = connection.prepareStatement(CREATE_VAULT_ITEM, RETURN_GENERATED_KEYS)
     ) {
-      statement.setLong(1, vaultItem.getVaultId());
-      statement.setBytes(2, vaultItem.getSubject());
+      statement.setLong(1, vaultItem.getUserId());
+      statement.setLong(2, vaultItem.getVaultId());
+      statement.setBytes(3, vaultItem.getSubject());
       statement.executeUpdate();
       try (final ResultSet generatedKeys = statement.getGeneratedKeys()) {
         if (generatedKeys.next()) {
@@ -102,6 +103,7 @@ class SqlVaultItemRepository implements VaultItemRepository {
   private VaultItem mapResultSetToVaultItem(final ResultSet resultSet) throws SQLException {
     return new VaultItem(
         resultSet.getLong("id"),
+        resultSet.getLong("user_id"),
         resultSet.getLong("vault_id"),
         resultSet.getBytes("subject")
     );

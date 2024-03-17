@@ -2,6 +2,8 @@ package pl.auroramc.auctions.auction;
 
 import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_DOWN;
+import static java.util.UUID.randomUUID;
+import static pl.auroramc.auctions.auction.AuctionUtils.getPotentialOffer;
 import static pl.auroramc.auctions.message.MessageVariableKey.HIGHEST_BID_VARIABLE_KEY;
 import static pl.auroramc.auctions.message.MessageVariableKey.MINIMAL_PRICE_PUNCTURE_VARIABLE_KEY;
 import static pl.auroramc.auctions.message.MessageVariableKey.MINIMAL_PRICE_VARIABLE_KEY;
@@ -14,6 +16,7 @@ import static pl.auroramc.auctions.message.MessageVariableKey.VENDOR_VARIABLE_KE
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.item.ItemStackFormatter.getFormattedItemStack;
+import static pl.auroramc.commons.mutex.Mutex.mutex;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -31,11 +34,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import pl.auroramc.auctions.auction.event.AuctionBidEvent;
+import pl.auroramc.auctions.AuctionsConfig;
 import pl.auroramc.auctions.message.MessageSource;
-import pl.auroramc.auctions.message.viewer.MessageViewer;
-import pl.auroramc.auctions.message.viewer.MessageViewerFacade;
-import pl.auroramc.commons.event.publisher.EventPublisher;
+import pl.auroramc.auctions.audience.Audience;
+import pl.auroramc.auctions.audience.AudienceFacade;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
@@ -45,29 +47,32 @@ import pl.auroramc.economy.currency.Currency;
 public class AuctionCommand {
 
   private final Logger logger;
-  private final MessageViewerFacade messageViewerFacade;
+  private final AudienceFacade audienceFacade;
   private final MessageSource messageSource;
   private final EconomyFacade economyFacade;
   private final Currency fundsCurrency;
+  private final AuctionsConfig auctionsConfig;
+  private final AuctionFacade auctionFacade;
   private final AuctionController auctionController;
-  private final EventPublisher eventPublisher;
 
   public AuctionCommand(
       final Logger logger,
-      final MessageViewerFacade messageViewerFacade,
+      final AudienceFacade audienceFacade,
       final MessageSource messageSource,
       final EconomyFacade economyFacade,
       final Currency fundsCurrency,
-      final AuctionController auctionController,
-      final EventPublisher eventPublisher
+      final AuctionsConfig auctionsConfig,
+      final AuctionFacade auctionFacade,
+      final AuctionController auctionController
   ) {
     this.logger = logger;
-    this.messageViewerFacade = messageViewerFacade;
+    this.audienceFacade = audienceFacade;
     this.messageSource = messageSource;
     this.economyFacade = economyFacade;
     this.fundsCurrency = fundsCurrency;
+    this.auctionsConfig = auctionsConfig;
+    this.auctionFacade = auctionFacade;
     this.auctionController = auctionController;
-    this.eventPublisher = eventPublisher;
   }
 
   @Permission("auroramc.auctions.auction.schedule")
@@ -78,25 +83,23 @@ public class AuctionCommand {
       final @Arg BigDecimal minimalPricePuncture,
       final @OptionalArg Integer stock
   ) {
-    if (!auctionController.whetherAuctionCouldBeScheduled()) {
+    if (auctionFacade.getAuctionCount() > auctionsConfig.auctionQueueLimit) {
       return messageSource.auctionQueueIsFull;
     }
 
-    if (!whetherHeldItemIsSupported(player)) {
+    final ItemStack heldItem = player.getInventory().getItemInMainHand();
+    if (heldItem.getType() == Material.AIR) {
       return messageSource.requiresHoldingItem;
     }
 
     final int stockOrHeldAmount = stock == null
-        ? player.getInventory().getItemInMainHand().getAmount()
+        ? heldItem.getAmount()
         : stock;
     if (stockOrHeldAmount <= 0) {
       return messageSource.invalidStock;
     }
 
-    if (!whetherPlayerContainsStock(
-        player,
-        player.getInventory().getItemInMainHand(), stockOrHeldAmount)
-    ) {
+    if (!player.getInventory().containsAtLeast(heldItem, stockOrHeldAmount)) {
       return messageSource.invalidStockBecauseOfMissingItems;
     }
 
@@ -110,167 +113,123 @@ public class AuctionCommand {
       return messageSource.invalidMinimalPricePuncture;
     }
 
-    final ItemStack itemStack = player.getInventory().getItemInMainHand().clone();
+    final ItemStack itemStack = heldItem.clone();
     itemStack.setAmount(stockOrHeldAmount);
 
     player.getInventory().removeItemAnySlot(itemStack);
-
-    auctionController.scheduleAuction(
+    auctionFacade.addAuction(
         new Auction(
+            randomUUID(),
             player.getUniqueId(),
             itemStack.serializeAsBytes(),
             minimalPrice,
-            minimalPricePuncture
+            minimalPricePuncture,
+            mutex(),
+            mutex()
         )
     );
+
     return messageSource.auctionSchedule;
-  }
-
-  private boolean whetherHeldItemIsSupported(final Player player) {
-    return player.getInventory().getItemInMainHand().getType() != Material.AIR;
-  }
-
-  private boolean whetherPlayerContainsStock(
-      final Player player, final ItemStack subject, final int stock
-  ) {
-    return player.getInventory().containsAtLeast(subject, stock);
   }
 
   @Permission("auroramc.auctions.auction.bid")
   @Execute(name = "bid")
-  public CompletableFuture<MutableMessage> bid(
+  public MutableMessage bid(
       final @Context Player player,
       final @OptionalArg BigDecimal offer
   ) {
-    final Auction auction = auctionController.getOngoingAuction();
+    final Auction auction = auctionFacade.getActiveAuction();
     if (auction == null) {
-      return messageSource.offerMissingAuction
-          .asCompletedFuture();
+      return messageSource.offerMissingAuction;
     }
 
     if (auction.getVendorUniqueId().equals(player.getUniqueId())) {
-      return messageSource.offerSelfAuction
-          .asCompletedFuture();
+      return messageSource.offerSelfAuction;
     }
 
     if (
-        auction.getTraderUniqueId() != null &&
-        auction.getTraderUniqueId().equals(player.getUniqueId())
+        auction.getCurrentTraderUniqueId() != null &&
+        auction.getCurrentTraderUniqueId().equals(player.getUniqueId())
     ) {
-      return messageSource.offerIsAlreadyHighest
-          .asCompletedFuture();
+      return messageSource.offerIsAlreadyHighest;
     }
 
-    final BigDecimal resolvedOffer = resolveAuctionOffer(auction, offer);
+    final BigDecimal resolvedOffer = getPotentialOffer(auction, offer);
     if (resolvedOffer.compareTo(auction.getMinimalPrice()) < 0) {
-      return messageSource.offerIsAlreadyHighest
-          .asCompletedFuture();
+      return messageSource.offerIsAlreadyHighest;
     }
 
-    if (
-        auction.getCurrentOffer() != null &&
-        resolvedOffer.compareTo(auction.getCurrentOffer()) <= 0
-    ) {
-      return messageSource.offerIsSmallerThanHighestOffer
-          .asCompletedFuture();
+    if (auction.getCurrentOffer() != null && resolvedOffer.compareTo(auction.getCurrentOffer()) <= 0) {
+      return messageSource.offerIsSmallerThanHighestOffer;
     }
 
     return economyFacade.has(player.getUniqueId(), fundsCurrency, resolvedOffer)
-        .thenCompose(whetherTraderHasEnoughMoney ->
+        .thenApply(whetherTraderHasEnoughMoney ->
             completeBidOfAuction(player, resolvedOffer, whetherTraderHasEnoughMoney)
         )
         .exceptionally(exception -> {
           delegateCaughtException(logger, exception);
           return messageSource.offeringFailed;
-        });
+        })
+        .join();
   }
 
-  private CompletableFuture<MutableMessage> completeBidOfAuction(
+  private MutableMessage completeBidOfAuction(
       final Player trader, final BigDecimal offer, final boolean whetherTraderHasEnoughMoney
   ) {
     if (!whetherTraderHasEnoughMoney) {
-      return messageSource.offerNotEnoughBalance
-          .asCompletedFuture();
+      return messageSource.offerNotEnoughBalance;
     }
 
-    final Auction auction = auctionController.getOngoingAuction();
-    if (auction.getTraderUniqueId() != null && auction.getCurrentOffer() != null) {
-      economyFacade.deposit(
-          auction.getTraderUniqueId(), fundsCurrency, auction.getCurrentOffer()
-      );
-    }
-
-    auction.setTraderUniqueId(trader.getUniqueId());
-    auction.setCurrentOffer(offer);
-    return economyFacade.withdraw(trader.getUniqueId(), fundsCurrency, offer)
-        .thenAccept(state ->
-            eventPublisher.publish(new AuctionBidEvent(auction))
-        )
-        .thenApply(state ->
-            messageSource.offered
-                .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
-                .with(OFFER_VARIABLE_KEY, getFormattedDecimal(offer))
-        );
-  }
-
-  private BigDecimal resolveAuctionOffer(final Auction auction, final BigDecimal offer) {
-    if (offer == null) {
-      return (
-          auction.getCurrentOffer() == null
-              ? auction.getMinimalPrice()
-              : auction.getCurrentOffer().add(auction.getMinimalPricePuncture())
-      ).setScale(2, HALF_DOWN);
-    }
-
-    return offer.setScale(2, HALF_DOWN);
+    final Auction auction = auctionFacade.getActiveAuction();
+    auctionController.setAuctionOffer(auction, trader.getUniqueId(), offer);
+    return messageSource.offered
+        .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
+        .with(OFFER_VARIABLE_KEY, getFormattedDecimal(offer));
   }
 
   @Permission("auroramc.auctions.auction.summary")
   @Execute(name = "summary")
   public MutableMessage summary() {
-    final Auction auction = auctionController.getOngoingAuction();
+    final Auction auction = auctionFacade.getActiveAuction();
     if (auction == null) {
       return messageSource.auctionIsMissing;
     }
 
     return messageSource.auctionSummary
         .with(UNIQUE_ID_VARIABLE_KEY, auction.getAuctionUniqueId())
-        .with(
-            SUBJECT_VARIABLE_KEY, getFormattedItemStack(ItemStack.deserializeBytes(auction.getSubject()))
-        )
+        .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(ItemStack.deserializeBytes(auction.getSubject())))
         .with(VENDOR_VARIABLE_KEY, getDisplayNameByUniqueId(auction.getVendorUniqueId()))
         .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
         .with(HIGHEST_BID_VARIABLE_KEY, getHighestBid(auction, fundsCurrency))
         .with(MINIMAL_PRICE_VARIABLE_KEY, getFormattedDecimal(auction.getMinimalPrice()))
-        .with(
-            MINIMAL_PRICE_PUNCTURE_VARIABLE_KEY, getFormattedDecimal(auction.getMinimalPricePuncture())
-        );
+        .with(MINIMAL_PRICE_PUNCTURE_VARIABLE_KEY, getFormattedDecimal(auction.getMinimalPricePuncture()));
   }
 
   @Permission("auroramc.auctions.auction.notifications")
   @Execute(name = "notifications")
   public CompletableFuture<MutableMessage> notifications(final @Context Player player) {
-    return messageViewerFacade.getMessageViewerByUniqueId(player.getUniqueId())
+    return audienceFacade.getAudienceByUniqueId(player.getUniqueId())
         .thenApply(this::toggleNotifications);
   }
 
-  private MutableMessage toggleNotifications(final MessageViewer messageViewer) {
-    messageViewer.setWhetherReceiveMessages(!messageViewer.isWhetherReceiveMessages());
-    messageViewerFacade.updateMessageViewer(messageViewer);
-    return messageViewer.isWhetherReceiveMessages()
+  private MutableMessage toggleNotifications(final Audience audience) {
+    audience.setAllowsMessages(!audience.isAllowsMessages());
+    audienceFacade.updateAudience(audience);
+    return audience.isAllowsMessages()
         ? messageSource.notificationsEnabled
         : messageSource.notificationsDisabled;
   }
 
   private MutableMessage getHighestBid(final Auction auction, final Currency fundsCurrency) {
-    if (auction.getTraderUniqueId() == null) {
+    if (auction.getCurrentTraderUniqueId() == null) {
       return messageSource.unknownOffer;
     }
 
     return messageSource.auctionWinningBid
         .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
         .with(OFFER_VARIABLE_KEY, getFormattedDecimal(auction.getCurrentOffer()))
-        .with(TRADER_VARIABLE_KEY, getDisplayNameByUniqueId(auction.getTraderUniqueId()));
+        .with(TRADER_VARIABLE_KEY, getDisplayNameByUniqueId(auction.getCurrentTraderUniqueId()));
   }
 
   private Component getDisplayNameByUniqueId(final UUID playerUniqueId) {

@@ -7,12 +7,12 @@ import static java.time.Duration.ofSeconds;
 import static moe.rafal.juliet.datasource.HikariPooledDataSourceFactory.produceHikariDataSource;
 import static pl.auroramc.auctions.AuctionsConfig.PLUGIN_CONFIG_FILE_NAME;
 import static pl.auroramc.auctions.auction.AuctionFacadeFactory.getAuctionFacade;
+import static pl.auroramc.auctions.audience.AudienceFacade.getAudienceFacade;
 import static pl.auroramc.auctions.message.MessageFacade.getMessageFacade;
 import static pl.auroramc.auctions.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
 import static pl.auroramc.auctions.message.MessageVariableKey.SCHEMATICS_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.viewer.MessageViewerFacadeFactory.getMessageViewerFacade;
-import static pl.auroramc.auctions.vault.VaultFacadeFactory.getVaultFacade;
-import static pl.auroramc.auctions.vault.item.VaultItemFacadeFactory.getVaultItemFacade;
+import static pl.auroramc.auctions.vault.VaultFacade.getVaultFacade;
+import static pl.auroramc.auctions.vault.item.VaultItemFacade.getVaultItemFacade;
 import static pl.auroramc.commons.BukkitUtils.getTicksOf;
 import static pl.auroramc.commons.BukkitUtils.registerListeners;
 import static pl.auroramc.commons.BukkitUtils.resolveService;
@@ -30,13 +30,13 @@ import moe.rafal.juliet.JulietBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.auroramc.auctions.auction.AuctionCommand;
-import pl.auroramc.auctions.auction.AuctionCompletionScheduler;
+import pl.auroramc.auctions.auction.AuctionCompletionTask;
 import pl.auroramc.auctions.auction.AuctionController;
 import pl.auroramc.auctions.auction.AuctionFacade;
-import pl.auroramc.auctions.auction.AuctionListener;
+import pl.auroramc.auctions.auction.AuctionSchedulingTask;
 import pl.auroramc.auctions.message.MessageFacade;
 import pl.auroramc.auctions.message.MessageSource;
-import pl.auroramc.auctions.message.viewer.MessageViewerFacade;
+import pl.auroramc.auctions.audience.AudienceFacade;
 import pl.auroramc.auctions.vault.VaultCommand;
 import pl.auroramc.auctions.vault.VaultController;
 import pl.auroramc.auctions.vault.VaultFacade;
@@ -46,7 +46,6 @@ import pl.auroramc.commons.config.serdes.SerdesCommons;
 import pl.auroramc.commons.config.serdes.juliet.JulietConfig;
 import pl.auroramc.commons.config.serdes.juliet.SerdesJuliet;
 import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
-import pl.auroramc.commons.event.publisher.EventPublisher;
 import pl.auroramc.commons.integration.litecommands.MutableMessageResultHandler;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.EconomyFacade;
@@ -60,8 +59,6 @@ public class AuctionsBukkitPlugin extends JavaPlugin {
 
   @Override
   public void onEnable() {
-    final EventPublisher eventPublisher = new EventPublisher(this);
-
     final ConfigFactory configFactory = new ConfigFactory(
         getDataFolder().toPath(),
         YamlBukkitConfigurer::new
@@ -82,12 +79,10 @@ public class AuctionsBukkitPlugin extends JavaPlugin {
         AuctionsConfig.class, PLUGIN_CONFIG_FILE_NAME, new SerdesCommons()
     );
     final AuctionFacade auctionFacade = getAuctionFacade();
-    final AuctionController auctionController = new AuctionController(
-        auctionsConfig, auctionFacade, eventPublisher
-    );
 
     final Logger logger = getLogger();
 
+    final AudienceFacade audienceFacade = getAudienceFacade(logger, juliet);
     final CurrencyFacade currencyFacade = resolveService(getServer(), CurrencyFacade.class);
     final Currency fundsCurrency =
         Optional.ofNullable(currencyFacade.getCurrencyById(auctionsConfig.fundsCurrencyId))
@@ -99,43 +94,61 @@ public class AuctionsBukkitPlugin extends JavaPlugin {
                         )
                 )
             );
+
     final EconomyFacade economyFacade = resolveService(getServer(), EconomyFacade.class);
 
     final UserFacade userFacade = resolveService(getServer(), UserFacade.class);
     final VaultFacade vaultFacade = getVaultFacade(logger, juliet);
     final VaultItemFacade vaultItemFacade = getVaultItemFacade(logger, juliet);
     final VaultController vaultController = new VaultController(
-        this, logger, messageSource, userFacade, vaultFacade, vaultItemFacade
+        this,
+        logger,
+        messageSource,
+        userFacade,
+        vaultFacade,
+        vaultItemFacade
     );
 
-    final MessageViewerFacade messageViewerFacade = getMessageViewerFacade(logger, juliet);
-    final MessageFacade messageFacade = getMessageFacade(messageViewerFacade);
+    final MessageFacade messageFacade = getMessageFacade(audienceFacade);
 
     registerListeners(this,
         new DataValidationListener(
             logger,
             userFacade,
             vaultFacade,
-            messageViewerFacade
-        ),
-        new AuctionListener(
-            logger,
-            userFacade,
-            messageSource,
-            messageFacade,
-            economyFacade,
-            fundsCurrency,
-            vaultController,
-            auctionController
+            audienceFacade
         )
     );
 
+    final AuctionController auctionController = new AuctionController(
+        logger,
+        auctionsConfig,
+        auctionFacade,
+        messageSource,
+        messageFacade,
+        economyFacade,
+        fundsCurrency,
+        vaultController,
+        userFacade
+    );
+
     getServer().getScheduler().runTaskTimer(this,
-        new AuctionCompletionScheduler(
-            messageSource, messageFacade, auctionController
+        new AuctionCompletionTask(
+            messageSource,
+            messageFacade,
+            auctionFacade,
+            auctionController
         ),
         getTicksOf(ofSeconds(1)),
         getTicksOf(ofSeconds(1))
+    );
+    getServer().getScheduler().runTaskTimer(this,
+        new AuctionSchedulingTask(
+            auctionFacade,
+            auctionController
+        ),
+        getTicksOf(ofSeconds(5)),
+        getTicksOf(ofSeconds(5))
     );
 
     commands = LiteBukkitFactory.builder(getName(), this)
@@ -155,12 +168,13 @@ public class AuctionsBukkitPlugin extends JavaPlugin {
                 ),
                 new AuctionCommand(
                     logger,
-                    messageViewerFacade,
+                    audienceFacade,
                     messageSource,
                     economyFacade,
                     fundsCurrency,
-                    auctionController,
-                    eventPublisher
+                    auctionsConfig,
+                    auctionFacade,
+                    auctionController
                 )
             )
         )

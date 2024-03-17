@@ -128,11 +128,11 @@ public class MessageSource extends OkaeriConfig {
   );
 
   public MutableMessage auctionReceivedOffer = MutableMessage.of(
-      "<gray>Gracz <white>{currentTrader}</white> złożył ofertę <white>{currency}{currentOffer}</white> na <hover:show_text:'<gray>Unikalny identyfikator: <white>{unique_id}'>aukcję</hover> o przedmiot <white>{subject}</hover></white>."
+      "<gray>Gracz <white>{currentTrader}</white> złożył ofertę <white>{currency}{currentOffer}</white> na <hover:show_text:'<gray>Unikalny identyfikator: <white>{uniqueId}'>aukcję</hover> o przedmiot <white>{subject}</hover></white>."
   );
 
   public MutableMessage auctionHasBeenExtended = MutableMessage.of(
-      "<gray>Czas trwania <hover:show_text:'<gray>Unikalny identyfikator: <white>{unique_id}'>aukcji</hover> został przedłużony o <white>{offset}</white>."
+      "<gray>Czas trwania <hover:show_text:'<gray>Unikalny identyfikator: <white>{uniqueId}'>aukcji</hover> został przedłużony o <white>{offset}</white>."
   );
 
   public MutableMessage vaultItemReceived = MutableMessage.of(

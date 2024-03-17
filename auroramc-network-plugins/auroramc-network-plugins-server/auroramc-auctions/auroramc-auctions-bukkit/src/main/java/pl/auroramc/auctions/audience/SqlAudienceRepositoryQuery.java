@@ -1,12 +1,12 @@
-package pl.auroramc.auctions.message.viewer;
+package pl.auroramc.auctions.audience;
 
-final class SqlMessageViewerRepositoryQuery {
+final class SqlAudienceRepositoryQuery {
 
   static final String CREATE_MESSAGE_VIEWER_SCHEMA =
       """
-      CREATE TABLE IF NOT EXISTS `auroramc_auctions_message_viewers` (
+      CREATE TABLE IF NOT EXISTS `auroramc_auctions_audiences` (
         `user_id` BIGINT REFERENCES `auroramc_registry_users`(`id`),
-        `receive_messages` TINYINT(1) DEFAULT 1
+        `allows_messages` BOOLEAN DEFAULT TRUE
       );
       """;
 
@@ -14,13 +14,13 @@ final class SqlMessageViewerRepositoryQuery {
       """
       SELECT
         `user_id`,
-        `receive_messages`
+        `allows_messages`
       FROM
-        `auroramc_auctions_message_viewers`
+        `auroramc_auctions_audiences`
       LEFT JOIN
         `auroramc_registry_users`
       ON
-        `auroramc_registry_users`.`id` = `auroramc_auctions_message_viewers`.`user_id`
+        `auroramc_registry_users`.`id` = `auroramc_auctions_audiences`.`user_id`
       WHERE
         `unique_id` = ?;
       """;
@@ -28,8 +28,8 @@ final class SqlMessageViewerRepositoryQuery {
   static final String CREATE_MESSAGE_VIEWER =
       """
       INSERT INTO
-        `auroramc_auctions_message_viewers`
-        (`user_id`, `receive_messages`)
+        `auroramc_auctions_audiences`
+        (`user_id`, `allows_messages`)
       VALUES
         (?, ?);
       """;
@@ -37,14 +37,14 @@ final class SqlMessageViewerRepositoryQuery {
   static final String UPDATE_MESSAGE_VIEWER =
       """
       UPDATE
-        `auroramc_auctions_message_viewers`
+        `auroramc_auctions_audiences`
       SET
-        `receive_messages` = ?
+        `allows_messages` = ?
       WHERE
         `user_id` = ?;
       """;
 
-  private SqlMessageViewerRepositoryQuery() {
+  private SqlAudienceRepositoryQuery() {
 
   }
 }

@@ -2,30 +2,34 @@ package pl.auroramc.auctions.message;
 
 import java.util.Collection;
 import org.bukkit.entity.Player;
-import pl.auroramc.auctions.message.viewer.MessageViewerFacade;
+import pl.auroramc.auctions.audience.AudienceFacade;
 import pl.auroramc.commons.message.MutableMessage;
 
 class MessageService implements MessageFacade {
 
-  private final MessageViewerFacade messageViewerFacade;
+  private final AudienceFacade audienceFacade;
 
-  MessageService(final MessageViewerFacade messageViewerFacade) {
-    this.messageViewerFacade = messageViewerFacade;
+  MessageService(final AudienceFacade audienceFacade) {
+    this.audienceFacade = audienceFacade;
   }
 
   @Override
-  public void deliverMessage(final Player target, final MutableMessage message) {
-    messageViewerFacade
-        .getMessageViewerByUniqueId(target.getUniqueId())
+  public void deliverMessage(
+      final Player target, final MutableMessage message
+  ) {
+    audienceFacade
+        .getAudienceByUniqueId(target.getUniqueId())
         .thenAccept(messageViewer -> {
-          if (messageViewer.isWhetherReceiveMessages()) {
+          if (messageViewer.isAllowsMessages()) {
             target.sendMessage(message.compile());
           }
         });
   }
 
   @Override
-  public void deliverMessage(final Collection<? extends Player> targets, final MutableMessage message) {
+  public void deliverMessage(
+      final Collection<? extends Player> targets, final MutableMessage message
+  ) {
     targets.forEach(target -> deliverMessage(target, message));
   }
 }

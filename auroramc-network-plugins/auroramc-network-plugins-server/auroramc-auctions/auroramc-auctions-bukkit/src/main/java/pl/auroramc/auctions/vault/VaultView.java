@@ -4,6 +4,7 @@ import static java.util.Collections.emptyList;
 import static net.kyori.adventure.text.format.TextDecoration.ITALIC;
 import static net.kyori.adventure.text.format.TextDecoration.State.FALSE;
 import static pl.auroramc.commons.BukkitUtils.postToMainThread;
+import static pl.auroramc.commons.BukkitUtils.postToMainThreadAndNextTick;
 import static pl.auroramc.commons.collection.CollectionUtils.merge;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.BACKWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.FORWARD;
@@ -59,7 +60,12 @@ class VaultView {
 
   public void requestVaultItemRedeem(final InventoryClickEvent event, final VaultItem vaultItem) {
     vaultController.redeemVaultItem(event.getWhoClicked().getUniqueId(), vaultItem)
-        .thenAccept(state -> populateVaultItems(vaultItemsPane));
+        .thenAccept(state ->
+                postToMainThreadAndNextTick(
+                    plugin,
+                    () -> populateVaultItems(vaultItemsPane)
+                )
+        );
   }
 
   @Internal
