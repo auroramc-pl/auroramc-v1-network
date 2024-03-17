@@ -10,17 +10,22 @@ import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import java.util.List;
 import java.util.Set;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import pl.auroramc.shops.product.ProductFacade;
 
 class ShopsView {
 
+  private final Plugin plugin;
   private final ShopFacade shopFacade;
   private final ProductFacade productFacade;
   public ChestGui shopsGui;
   public PaginatedPane shopItemsPane;
 
-  ShopsView(final ShopFacade shopFacade, final ProductFacade productFacade) {
+  ShopsView(
+      final Plugin plugin, final ShopFacade shopFacade, final ProductFacade productFacade
+  ) {
+    this.plugin = plugin;
     this.shopFacade = shopFacade;
     this.productFacade = productFacade;
   }
@@ -52,7 +57,11 @@ class ShopsView {
   }
 
   private GuiItem getShopItem(final Shop shop) {
-    return new GuiItem(shop.icon(), event -> navigateToShop(event, shop));
+    return new GuiItem(
+        shop.icon(),
+        event -> navigateToShop(event, shop),
+        plugin
+    );
   }
 
   private List<GuiItem> getShopItems(final Set<Shop> shops) {

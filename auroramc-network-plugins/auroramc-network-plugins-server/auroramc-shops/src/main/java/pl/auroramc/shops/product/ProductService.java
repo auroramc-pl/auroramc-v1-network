@@ -2,9 +2,9 @@ package pl.auroramc.shops.product;
 
 import static pl.auroramc.commons.BukkitUtils.postToMainThread;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
+import static pl.auroramc.commons.item.ItemStackFormatter.getFormattedItemStack;
 import static pl.auroramc.shops.message.MessageVariableKey.AMOUNT_VARIABLE_KEY;
-import static pl.auroramc.shops.message.MessageVariableKey.MATERIAL_VARIABLE_KEY;
-import static pl.auroramc.shops.message.MessageVariableKey.QUANTITY_VARIABLE_KEY;
+import static pl.auroramc.shops.message.MessageVariableKey.PRODUCT_VARIABLE_KEY;
 import static pl.auroramc.shops.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.shops.product.ProductUtils.getEmptySlotsCount;
 import static pl.auroramc.shops.product.ProductUtils.getQuantityInSlots;
@@ -134,11 +134,16 @@ class ProductService implements ProductFacade {
   }
 
   private MutableMessage getProductMessage(
-      final MutableMessage template, final Product product, final BigDecimal merchandiseValue
+      final MutableMessage message, final Product product, final BigDecimal merchandiseValue
   ) {
-    return template
-        .with(MATERIAL_VARIABLE_KEY, product.subject().displayName())
-        .with(QUANTITY_VARIABLE_KEY, product.quantity())
+    return message
+        .with(
+            PRODUCT_VARIABLE_KEY,
+            getFormattedItemStack(
+                product.subject(),
+                product.quantity()
+            )
+        )
         .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
         .with(AMOUNT_VARIABLE_KEY, priceFormat.format(merchandiseValue));
   }

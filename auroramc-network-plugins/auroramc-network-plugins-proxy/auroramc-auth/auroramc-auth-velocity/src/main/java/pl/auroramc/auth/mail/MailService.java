@@ -13,12 +13,12 @@ class MailService implements MailFacade {
 
   private final MailConfig mailConfig;
   private final MessageSource messageSource;
-  private final MutableMessage recoveryEmailTemplate;
+  private final MutableMessage recoveryEmailMessage;
 
   MailService(final MailConfig mailConfig, final MessageSource messageSource) {
     this.mailConfig = mailConfig;
     this.messageSource = messageSource;
-    this.recoveryEmailTemplate = getRecoveryEmailTemplate();
+    this.recoveryEmailMessage = getRecoveryEmailMessage();
   }
 
   @Override
@@ -31,14 +31,14 @@ class MailService implements MailFacade {
         .from(mailConfig.name, mailConfig.address)
         .to(user.getUsername(), user.getEmail())
         .withSubject(messageSource.recoveryEmailSubject.getTemplate())
-        .withHTMLText(recoveryEmailTemplate
+        .withHTMLText(recoveryEmailMessage
             .with("username", user.getUsername())
             .with("recoveryCode", recoveryCode)
             .getTemplate())
         .buildEmail();
   }
 
-  private MutableMessage getRecoveryEmailTemplate() {
+  private MutableMessage getRecoveryEmailMessage() {
     try (final InputStream inputStream = getClass().getResourceAsStream("/recovery.html")) {
       if (inputStream == null) {
         throw new MailRetrieveException(

@@ -16,9 +16,13 @@ public final class ItemStackFormatter {
   }
 
   public static Component getFormattedItemStack(final ItemStack itemStack) {
+    return getFormattedItemStack(itemStack, itemStack.getAmount());
+  }
+
+  public static Component getFormattedItemStack(final ItemStack itemStack, final int amount) {
     return MutableMessage.of("<dark_gray>x{amount} <white>{name}")
         .with("name", getDisplayName(itemStack))
-        .with("amount", itemStack.getAmount())
+        .with("amount", amount)
         .compile()
         .hoverEvent(itemStack.asHoverEvent());
   }

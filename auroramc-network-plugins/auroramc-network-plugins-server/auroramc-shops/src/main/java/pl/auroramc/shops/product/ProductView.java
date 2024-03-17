@@ -14,6 +14,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.currency.Currency;
@@ -22,6 +23,7 @@ import pl.auroramc.shops.shop.Shop;
 
 class ProductView {
 
+  private final Plugin plugin;
   private final Currency fundsCurrency;
   private final MessageSource messageSource;
   private final DecimalFormat priceFormat;
@@ -32,6 +34,7 @@ class ProductView {
   public PaginatedPane productItemsPane;
 
   ProductView(
+      final Plugin plugin,
       final Currency fundsCurrency,
       final MessageSource messageSource,
       final DecimalFormat priceFormat,
@@ -39,6 +42,7 @@ class ProductView {
       final Shop shop,
       final ChestGui shopsGui
   ) {
+    this.plugin = plugin;
     this.fundsCurrency = fundsCurrency;
     this.messageSource = messageSource;
     this.priceFormat = priceFormat;
@@ -86,10 +90,13 @@ class ProductView {
   private GuiItem getProductItem(final Product product) {
     final ItemStack originItemStack = product.icon();
     final ItemStack renderItemStack = mergeLoreOnItemStack(
-        originItemStack, getAdditionalLoreForProductItem(product)
+        originItemStack,
+        getAdditionalLoreForProductItem(product)
     );
-    return new GuiItem(renderItemStack,
-        event -> requestTransactionFinalization(event, product)
+    return new GuiItem(
+        renderItemStack,
+        event -> requestTransactionFinalization(event, product),
+        plugin
     );
   }
 

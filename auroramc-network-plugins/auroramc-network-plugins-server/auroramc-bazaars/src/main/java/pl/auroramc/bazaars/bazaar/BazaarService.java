@@ -1,17 +1,15 @@
 package pl.auroramc.bazaars.bazaar;
 
-import static org.apache.commons.lang3.StringUtils.capitalize;
 import static pl.auroramc.bazaars.bazaar.BazaarUtils.getEmptySlotsCount;
 import static pl.auroramc.bazaars.bazaar.BazaarUtils.getQuantityInSlots;
-import static pl.auroramc.bazaars.message.MessageVariableKey.MATERIAL_VARIABLE_KEY;
 import static pl.auroramc.bazaars.message.MessageVariableKey.MERCHANT_VARIABLE_KEY;
 import static pl.auroramc.bazaars.message.MessageVariableKey.PRICE_VARIABLE_KEY;
-import static pl.auroramc.bazaars.message.MessageVariableKey.QUANTITY_VARIABLE_KEY;
+import static pl.auroramc.bazaars.message.MessageVariableKey.PRODUCT_VARIABLE_KEY;
 import static pl.auroramc.bazaars.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.commons.BukkitUtils.postToMainThread;
+import static pl.auroramc.commons.item.ItemStackFormatter.getFormattedItemStack;
 
 import java.text.DecimalFormat;
-import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -114,9 +112,16 @@ class BazaarService implements BazaarFacade {
         )
         .thenApply(state ->
             messageSource.productBought
+                .with(
+                    PRODUCT_VARIABLE_KEY,
+                    getFormattedItemStack(
+                        new ItemStack(
+                            parsingContext.material(),
+                            parsingContext.quantity()
+                        )
+                    )
+                )
                 .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
-                .with(QUANTITY_VARIABLE_KEY, parsingContext.quantity())
-                .with(MATERIAL_VARIABLE_KEY, capitalize(parsingContext.material().name().toLowerCase(Locale.ROOT)))
                 .with(MERCHANT_VARIABLE_KEY, parsingContext.merchant())
                 .with(PRICE_VARIABLE_KEY, priceFormat.format(parsingContext.price()))
         );
@@ -168,9 +173,16 @@ class BazaarService implements BazaarFacade {
         )
         .thenApply(state ->
             messageSource.productSold
+                .with(
+                    PRODUCT_VARIABLE_KEY,
+                    getFormattedItemStack(
+                        new ItemStack(
+                            parsingContext.material(),
+                            parsingContext.quantity()
+                        )
+                    )
+                )
                 .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
-                .with(QUANTITY_VARIABLE_KEY, parsingContext.quantity())
-                .with(MATERIAL_VARIABLE_KEY, capitalize(parsingContext.material().name().toLowerCase(Locale.ROOT)))
                 .with(MERCHANT_VARIABLE_KEY, parsingContext.merchant())
                 .with(PRICE_VARIABLE_KEY, priceFormat.format(parsingContext.price()))
         );

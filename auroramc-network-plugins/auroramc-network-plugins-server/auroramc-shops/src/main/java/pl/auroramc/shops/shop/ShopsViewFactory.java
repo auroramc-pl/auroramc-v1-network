@@ -26,7 +26,11 @@ final class ShopsViewFactory {
         );
       }
 
-      return load(new ShopsView(shopFacade, productFacade), inputStream, plugin);
+      return load(
+          new ShopsView(plugin, shopFacade, productFacade),
+          inputStream,
+          plugin
+      );
     } catch (final IOException exception) {
       throw new ShopsViewInstantiationException(
           "Could not load shops gui from resources, because of unexpected exception.",
