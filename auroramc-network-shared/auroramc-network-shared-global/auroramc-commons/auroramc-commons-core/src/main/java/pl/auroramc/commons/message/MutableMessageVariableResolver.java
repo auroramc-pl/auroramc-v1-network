@@ -6,17 +6,24 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.TranslatableComponent;
 
 record MutableMessageVariableResolver<T>(Function<T, String> resolver) {
 
+  private static final MutableMessageVariableResolver<Object> MESSAGE_DEFAULT_VARIABLE_RESOLVER;
   private static final Map<Class<?>, MutableMessageVariableResolver<?>> MESSAGE_VARIABLE_RESOLVERS;
-  private static final MutableMessageVariableResolver<Object> MESSAGE_DEFAULT_VARIABLE_RESOLVER =
-      new MutableMessageVariableResolver<>(String::valueOf);
 
   static {
+    MESSAGE_DEFAULT_VARIABLE_RESOLVER = new MutableMessageVariableResolver<>(String::valueOf);
     MESSAGE_VARIABLE_RESOLVERS = new HashMap<>();
     MESSAGE_VARIABLE_RESOLVERS.put(
         TextComponent.class,
+        new MutableMessageVariableResolver<>(
+            miniMessage()::serialize
+        )
+    );
+    MESSAGE_VARIABLE_RESOLVERS.put(
+        TranslatableComponent.class,
         new MutableMessageVariableResolver<>(
             miniMessage()::serialize
         )
