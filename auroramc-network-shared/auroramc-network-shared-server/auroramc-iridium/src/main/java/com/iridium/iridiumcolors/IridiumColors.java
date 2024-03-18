@@ -18,9 +18,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-import javax.annotation.Nonnull;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
 
 public class IridiumColors {
 
@@ -105,7 +105,7 @@ public class IridiumColors {
    * @param string The string we want to process
    * @since 1.0.0
    */
-  public static @Nonnull String process(@Nonnull String string) {
+  public static @NotNull String process(@NotNull String string) {
     for (final TagResolver tagResolver : TAG_RESOLVERS) {
       string = tagResolver.resolve(string);
     }
@@ -120,7 +120,7 @@ public class IridiumColors {
    * @return The list of processed strings
    * @since 1.0.3
    */
-  public static @Nonnull List<String> process(final @Nonnull Collection<String> strings) {
+  public static @NotNull List<String> process(final @NotNull Collection<String> strings) {
     return strings.stream()
         .map(IridiumColors::process)
         .toList();
@@ -133,7 +133,7 @@ public class IridiumColors {
    * @param color  The color we want to set it to
    * @since 1.0.0
    */
-  public static @Nonnull String color(final @Nonnull String string, final @Nonnull Color color) {
+  public static @NotNull String color(final @NotNull String string, final @NotNull Color color) {
     return (
         SUPPORTS_RGB
             ? ChatColor.of(color)
@@ -149,10 +149,10 @@ public class IridiumColors {
    * @param end    The ending gradiant
    * @since 1.0.0
    */
-  public static @Nonnull String color(
-      final @Nonnull String string,
-      final @Nonnull Color start,
-      final @Nonnull Color end
+  public static @NotNull String color(
+      final @NotNull String string,
+      final @NotNull Color start,
+      final @NotNull Color end
   ) {
     final ChatColor[] colors = createGradient(start, end, withoutSpecialChar(string).length());
     return apply(string, colors);
@@ -165,7 +165,7 @@ public class IridiumColors {
    * @param saturation The saturation of the rainbow colors
    * @since 1.0.3
    */
-  public static @Nonnull String rainbow(final @Nonnull String string, @Nonnull float saturation) {
+  public static @NotNull String rainbow(final @NotNull String string, float saturation) {
     final ChatColor[] colors = createRainbow(withoutSpecialChar(string).length(), saturation);
     return apply(string, colors);
   }
@@ -176,7 +176,7 @@ public class IridiumColors {
    * @param string The hex code of the color
    * @since 1.0.0
    */
-  public static @Nonnull ChatColor getColor(final @Nonnull String string) {
+  public static @NotNull ChatColor getColor(final @NotNull String string) {
     return SUPPORTS_RGB
         ? ChatColor.of(new Color(parseInt(string, 16)))
         : getClosestColor(new Color(parseInt(string, 16)));
@@ -189,11 +189,11 @@ public class IridiumColors {
    * @return The stripped string without color codes
    * @since 1.0.5
    */
-  public static @Nonnull String stripColorFormatting(final @Nonnull String string) {
+  public static @NotNull String stripColorFormatting(final @NotNull String string) {
     return STRIP_COLOR_PATTERN.matcher(string).replaceAll("");
   }
 
-  private static @Nonnull String apply(final @Nonnull String source, final ChatColor[] colors) {
+  private static @NotNull String apply(final @NotNull String source, final @NotNull ChatColor[] colors) {
     final StringBuilder specialColors = new StringBuilder();
     final StringBuilder stringBuilder = new StringBuilder();
     int outIndex = 0;
@@ -217,7 +217,7 @@ public class IridiumColors {
     return stringBuilder.toString();
   }
 
-  private static @Nonnull String withoutSpecialChar(final @Nonnull String source) {
+  private static @NotNull String withoutSpecialChar(final @NotNull String source) {
     String workingString = source;
     for (final String color : SPECIAL_COLORS) {
       if (workingString.contains(color)) {
@@ -235,7 +235,7 @@ public class IridiumColors {
    * @return The array of colors
    * @since 1.0.3
    */
-  private static @Nonnull ChatColor[] createRainbow(final int step, final float saturation) {
+  private static @NotNull ChatColor[] createRainbow(final int step, final float saturation) {
     final ChatColor[] colors = new ChatColor[step];
     final double colorStep = (1.00 / step);
     for (int index = 0; index < step; index++) {
@@ -258,9 +258,9 @@ public class IridiumColors {
    * @author TheViperShow
    * @since 1.0.0
    */
-  private static @Nonnull ChatColor[] createGradient(
-      final @Nonnull Color start,
-      final @Nonnull Color end,
+  private static @NotNull ChatColor[] createGradient(
+      final @NotNull Color start,
+      final @NotNull Color end,
       int step
   ) {
     step = max(step, 2);
@@ -297,7 +297,7 @@ public class IridiumColors {
    * @param color The color we want to transform
    * @since 1.0.0
    */
-  private static @Nonnull ChatColor getClosestColor(Color color) {
+  private static @NotNull ChatColor getClosestColor(final @NotNull Color color) {
     Color nearestColor = null;
     double nearestDistance = Integer.MAX_VALUE;
 
@@ -321,8 +321,10 @@ public class IridiumColors {
    * @since 1.0.0
    */
   private static int getVersion() {
-    if (!isClassAvailableInClasspath("org.bukkit.Bukkit") && isClassAvailableInClasspath(
-        "net.md_5.bungee.api.ChatColor")) {
+    if (
+        !isClassAvailableInClasspath("org.bukkit.Bukkit") &&
+         isClassAvailableInClasspath("net.md_5.bungee.api.ChatColor")
+    ) {
       return -1;
     }
 
@@ -332,17 +334,14 @@ public class IridiumColors {
         "Cannot get major Minecraft version from null or empty string"
     );
 
-    // getVersion()
     int index = version.lastIndexOf("MC:");
     if (index != -1) {
       version = version.substring(index + 4, version.length() - 1);
     } else if (version.endsWith("SNAPSHOT")) {
-      // getBukkitVersion()
       index = version.indexOf('-');
       version = version.substring(0, index);
     }
 
-    // 1.13.2, 1.14.4, etc...
     final int lastDot = version.lastIndexOf('.');
     if (version.indexOf('.') != lastDot) {
       version = version.substring(0, lastDot);
