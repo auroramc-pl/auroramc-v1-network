@@ -1,6 +1,7 @@
 package pl.auroramc.punishments.punishment;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
+import static java.time.Duration.ofSeconds;
 import static pl.auroramc.punishments.punishment.SqlPunishmentRepositoryQuery.CREATE_PUNISHMENT;
 import static pl.auroramc.punishments.punishment.SqlPunishmentRepositoryQuery.CREATE_PUNISHMENT_SCHEMA_IF_REQUIRED;
 import static pl.auroramc.punishments.punishment.SqlPunishmentRepositoryQuery.FIND_PUNISHMENTS_BY_PENALIZED_ID;
@@ -14,7 +15,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import moe.rafal.juliet.Juliet;
@@ -177,7 +177,7 @@ class SqlPunishmentRepository implements PunishmentRepository {
         resultSet.getLong("penalized_id"),
         resultSet.getLong("performer_id"),
         resultSet.getString("reason"),
-        Duration.ofSeconds(resultSet.getLong("period")),
+        ofSeconds(resultSet.getLong("period")),
         PunishmentScope.valueOf(resultSet.getString("scope")),
         PunishmentState.valueOf(resultSet.getString("state")),
         resultSet.getTimestamp("issued_at").toInstant(),

@@ -1,12 +1,12 @@
 package pl.auroramc.quests.quest.observer;
 
+import static java.time.Duration.ofSeconds;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.concurrent.CompletableFuture.runAsync;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
-import java.time.Duration;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
@@ -29,7 +29,7 @@ class QuestObserverService implements QuestObserverFacade {
     this.userFacade = userFacade;
     this.questObserverRepository = questObserverRepository;
     this.questObserverByUniqueId = Caffeine.newBuilder()
-        .expireAfterWrite(Duration.ofSeconds(30))
+        .expireAfterAccess(ofSeconds(20))
         .build(questObserverRepository::findQuestObserverByUniqueId);
   }
 

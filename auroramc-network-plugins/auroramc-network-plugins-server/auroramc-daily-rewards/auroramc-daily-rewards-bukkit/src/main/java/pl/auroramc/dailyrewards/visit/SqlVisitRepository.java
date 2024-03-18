@@ -1,5 +1,6 @@
 package pl.auroramc.dailyrewards.visit;
 
+import static java.time.Duration.ofSeconds;
 import static pl.auroramc.dailyrewards.visit.SqlVisitRepositoryQuery.CREATE_VISIT;
 import static pl.auroramc.dailyrewards.visit.SqlVisitRepositoryQuery.CREATE_VISIT_SCHEMA;
 import static pl.auroramc.dailyrewards.visit.SqlVisitRepositoryQuery.FIND_VISITS_BY_USER_ID;
@@ -11,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
@@ -107,7 +107,7 @@ class SqlVisitRepository implements VisitRepository {
   private Visit mapResultSetToVisit(final ResultSet resultSet) throws SQLException {
     return new Visit(
         resultSet.getLong("user_id"),
-        Duration.ofSeconds(resultSet.getLong("session_duration")),
+        ofSeconds(resultSet.getLong("session_duration")),
         resultSet.getTimestamp("session_start_time").toInstant(),
         resultSet.getTimestamp("session_ditch_time").toInstant()
     );

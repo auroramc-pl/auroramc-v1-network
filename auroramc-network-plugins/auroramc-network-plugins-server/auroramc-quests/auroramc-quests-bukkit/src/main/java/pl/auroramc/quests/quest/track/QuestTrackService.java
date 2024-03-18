@@ -1,12 +1,12 @@
 package pl.auroramc.quests.quest.track;
 
+import static java.time.Duration.ofSeconds;
 import static java.util.concurrent.CompletableFuture.runAsync;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.quests.quest.QuestState.COMPLETED;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
-import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -24,7 +24,7 @@ class QuestTrackService implements QuestTrackFacade {
     this.logger = logger;
     this.questTrackRepository = questTrackRepository;
     this.questTracksByUniqueId = Caffeine.newBuilder()
-        .expireAfterWrite(Duration.ofSeconds(20))
+        .expireAfterWrite(ofSeconds(20))
         .build(questTrackRepository::getQuestTracksByUniqueId);
   }
 
