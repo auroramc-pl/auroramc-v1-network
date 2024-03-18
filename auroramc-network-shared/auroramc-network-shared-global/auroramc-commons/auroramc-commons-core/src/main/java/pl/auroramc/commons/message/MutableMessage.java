@@ -7,7 +7,6 @@ import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static pl.auroramc.commons.lazy.Lazy.lazy;
 import static pl.auroramc.commons.message.MutableMessageVariableResolver.getResolvedMessageVariable;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 import net.kyori.adventure.text.Component;
@@ -74,13 +73,13 @@ public class MutableMessage {
     return append(message, LINE_SEPARATOR);
   }
 
-  public List<MutableMessage> children(final String delimiter) {
+  public MutableMessage[] children(final String delimiter) {
     return Stream.of(template.split(delimiter))
         .map(MutableMessage::of)
-        .toList();
+        .toArray(MutableMessage[]::new);
   }
 
-  public List<MutableMessage> children() {
+  public MutableMessage[] children() {
     return children(LINE_SEPARATOR);
   }
 
@@ -100,7 +99,7 @@ public class MutableMessage {
   public Component[] compileChildren(
       final String delimiter, final MutableMessageDecoration... decorations
   ) {
-    return children(delimiter).stream()
+    return Stream.of(children(delimiter))
         .map(message -> message.compile(decorations))
         .toArray(Component[]::new);
   }
