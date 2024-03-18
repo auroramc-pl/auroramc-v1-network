@@ -1,13 +1,12 @@
 package pl.auroramc.commons.mutex;
 
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.StampedLock;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 public class Mutex<T> {
 
-  private final ReadWriteLock lock = new ReentrantReadWriteLock();
+  private final StampedLock lock = new StampedLock();
   private T value;
 
   private Mutex(final T value) {
@@ -23,42 +22,42 @@ public class Mutex<T> {
   }
 
   public T read() {
-    lock.readLock().lock();
+    final long stamp = lock.readLock();
     try {
       return value;
     } finally {
-      lock.readLock().unlock();
+      lock.unlockRead(stamp);
     }
   }
 
   public <R> R read(final Function<T, R> reader) {
-    lock.readLock().lock();
+    final long stamp = lock.readLock();
     try {
       return reader.apply(value);
     } finally {
-      lock.readLock().unlock();
+      lock.unlockRead(stamp);
     }
   }
 
   public void mutate(final UnaryOperator<T> modifier) {
-    lock.writeLock().lock();
+    final long stamp = lock.writeLock();
     try {
       value = modifier.apply(value);
     } finally {
-      lock.writeLock().unlock();
+      lock.unlockWrite(stamp);
     }
   }
 
   public void mutate(final T value) {
-    lock.writeLock().lock();
+    final long stamp = lock.writeLock();
     try {
       this.value = value;
     } finally {
-      lock.writeLock().unlock();
+      lock.unlockWrite(stamp);
     }
   }
 
-  public ReadWriteLock getLock() {
+  public StampedLock getLock() {
     return lock;
   }
 }

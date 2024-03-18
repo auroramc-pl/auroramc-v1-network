@@ -183,8 +183,8 @@ class SqlAccountRepository implements AccountRepository {
     ) {
       connection.setAutoCommit(false);
 
-      initiatorAccount.getLock().writeLock().lock();
-      receivingAccount.getLock().writeLock().lock();
+      final long initiatorStamp = initiatorAccount.getLock().writeLock();
+      final long receivingStamp = receivingAccount.getLock().writeLock();
 
       final BigDecimal newBalanceForInitiatorAccount = initiatorAccount.getBalance().subtract(amount);
       final BigDecimal newBalanceForReceivingAccount = receivingAccount.getBalance().add(amount);
@@ -206,8 +206,8 @@ class SqlAccountRepository implements AccountRepository {
         initiatorAccount.setBalance(newBalanceForInitiatorAccount);
         receivingAccount.setBalance(newBalanceForReceivingAccount);
       } finally {
-        receivingAccount.getLock().writeLock().unlock();
-        initiatorAccount.getLock().writeLock().unlock();
+        receivingAccount.getLock().unlockWrite(receivingStamp);
+        initiatorAccount.getLock().unlockWrite(initiatorStamp);
       }
     } catch (final SQLException exception) {
       delegateCaughtException(logger, exception);

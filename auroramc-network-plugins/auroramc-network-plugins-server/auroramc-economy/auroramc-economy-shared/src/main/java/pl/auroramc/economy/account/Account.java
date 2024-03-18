@@ -2,12 +2,11 @@ package pl.auroramc.economy.account;
 
 import java.math.BigDecimal;
 import java.util.Objects;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.StampedLock;
 
 public class Account {
 
-  private final ReadWriteLock lock = new ReentrantReadWriteLock();
+  private final StampedLock lock = new StampedLock();
   private Long userId;
   private Long currencyId;
   private BigDecimal balance;
@@ -18,7 +17,7 @@ public class Account {
     this.balance = balance;
   }
 
-  public ReadWriteLock getLock() {
+  public StampedLock getLock() {
     return lock;
   }
 

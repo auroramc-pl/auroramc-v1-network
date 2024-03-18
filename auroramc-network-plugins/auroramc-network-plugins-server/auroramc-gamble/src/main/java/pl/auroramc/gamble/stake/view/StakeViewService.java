@@ -11,8 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.StampedLock;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -26,7 +25,7 @@ class StakeViewService implements StakeViewFacade {
 
   private static final int INITIAL_STAKE_PAGE_INDEX = 0;
   private static final int STAKES_PER_PAGE = 4 * 7;
-  private final ReadWriteLock lock = new ReentrantReadWriteLock();
+  private final StampedLock lock = new StampedLock();
   private final Map<Integer, StakeView> stakeViewByPageIndex;
   private final Plugin plugin;
   private final StakeFacade stakeFacade;
@@ -57,11 +56,11 @@ class StakeViewService implements StakeViewFacade {
                 )
             );
 
-    lock.writeLock().lock();
+    final long stamp = lock.writeLock();
     try {
       recalculateViews();
     } finally {
-      lock.writeLock().unlock();
+      lock.unlockWrite(stamp);
     }
 
     updateViewsForViewers(pageIndexesToViewers);
