@@ -5,10 +5,10 @@ import static java.util.Locale.ROOT;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Stream.concat;
-import static pl.auroramc.quests.message.MessageVariableKey.DATA_VARIABLE_KEY;
-import static pl.auroramc.quests.message.MessageVariableKey.GOAL_VARIABLE_KEY;
-import static pl.auroramc.quests.message.MessageVariableKey.ITEM_VARIABLE_KEY;
-import static pl.auroramc.quests.message.MessageVariableKey.TYPE_VARIABLE_KEY;
+import static pl.auroramc.quests.message.MutableMessageVariableKey.DATA_VARIABLE_KEY;
+import static pl.auroramc.quests.message.MutableMessageVariableKey.GOAL_VARIABLE_KEY;
+import static pl.auroramc.quests.message.MutableMessageVariableKey.ITEM_VARIABLE_KEY;
+import static pl.auroramc.quests.message.MutableMessageVariableKey.TYPE_VARIABLE_KEY;
 
 import java.util.List;
 import java.util.Map;

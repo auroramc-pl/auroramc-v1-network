@@ -7,9 +7,9 @@ import static net.kyori.adventure.text.format.TextDecoration.State.FALSE;
 import static org.bukkit.Bukkit.getPlayer;
 import static org.bukkit.Material.PAPER;
 import static org.bukkit.persistence.PersistentDataType.STRING;
-import static pl.auroramc.cheque.message.MessageVariableKey.AMOUNT_VARIABLE_KEY;
-import static pl.auroramc.cheque.message.MessageVariableKey.ISSUER_VARIABLE_KEY;
-import static pl.auroramc.cheque.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
+import static pl.auroramc.cheque.message.MutableMessageVariableKey.AMOUNT_VARIABLE_KEY;
+import static pl.auroramc.cheque.message.MutableMessageVariableKey.ISSUER_VARIABLE_KEY;
+import static pl.auroramc.cheque.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 
@@ -24,7 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.plugin.Plugin;
-import pl.auroramc.cheque.message.MessageSource;
+import pl.auroramc.cheque.message.MutableMessageSource;
 import pl.auroramc.cheque.payment.Payment;
 import pl.auroramc.cheque.payment.PaymentFacade;
 import pl.auroramc.commons.item.ItemStackBuilder;
@@ -40,7 +40,7 @@ class ChequeService implements ChequeFacade {
   private static final String ISSUER_UNIQUE_ID_KEY_ID = "cheque_issuer_unique_id";
   private static final String ISSUER_USERNAME_KEY_ID = "cheque_issuer_username";
   private final Logger logger;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final Currency fundsCurrency;
   private final UserFacade userFacade;
   private final EconomyFacade economyFacade;
@@ -52,7 +52,7 @@ class ChequeService implements ChequeFacade {
   ChequeService(
       final Plugin plugin,
       final Logger logger,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final Currency fundsCurrency,
       final UserFacade userFacade,
       final EconomyFacade economyFacade,

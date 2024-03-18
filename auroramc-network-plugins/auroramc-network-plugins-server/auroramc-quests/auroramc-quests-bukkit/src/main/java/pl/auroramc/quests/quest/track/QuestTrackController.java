@@ -2,7 +2,7 @@ package pl.auroramc.quests.quest.track;
 
 import static java.util.concurrent.CompletableFuture.runAsync;
 import static pl.auroramc.commons.BukkitUtils.postToMainThread;
-import static pl.auroramc.quests.message.MessageVariableKey.QUEST_VARIABLE_KEY;
+import static pl.auroramc.quests.message.MutableMessageVariableKey.QUEST_VARIABLE_KEY;
 import static pl.auroramc.quests.quest.QuestState.COMPLETED;
 
 import java.util.Objects;
@@ -12,7 +12,7 @@ import java.util.concurrent.CompletableFuture;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import pl.auroramc.quests.message.MessageSource;
+import pl.auroramc.quests.message.MutableMessageSource;
 import pl.auroramc.quests.objective.Objective;
 import pl.auroramc.quests.objective.progress.ObjectiveProgressFacade;
 import pl.auroramc.quests.quest.Quest;
@@ -26,7 +26,7 @@ public class QuestTrackController {
 
   private final Plugin plugin;
   private final Server server;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final QuestTrackFacade questTrackFacade;
   private final QuestObserverFacade questObserverFacade;
   private final ObjectiveProgressFacade objectiveProgressFacade;
@@ -34,7 +34,7 @@ public class QuestTrackController {
   public QuestTrackController(
       final Plugin plugin,
       final Server server,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final QuestTrackFacade questTrackFacade,
       final QuestObserverFacade questObserverFacade,
       final ObjectiveProgressFacade objectiveProgressFacade

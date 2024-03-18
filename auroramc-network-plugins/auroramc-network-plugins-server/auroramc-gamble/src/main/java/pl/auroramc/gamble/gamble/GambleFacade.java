@@ -3,14 +3,14 @@ package pl.auroramc.gamble.gamble;
 import java.util.logging.Logger;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
-import pl.auroramc.gamble.message.MessageSource;
+import pl.auroramc.gamble.message.MutableMessageSource;
 
 public interface GambleFacade {
 
   static GambleFacade getGambleFacade(
       final Logger logger,
       final Currency fundsCurrency,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final EconomyFacade economyFacade
   ) {
     return new GambleService(

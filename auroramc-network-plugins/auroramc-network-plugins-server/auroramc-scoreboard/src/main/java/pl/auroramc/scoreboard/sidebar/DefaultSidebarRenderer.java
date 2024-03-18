@@ -8,17 +8,17 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import pl.auroramc.commons.message.BukkitMutableMessage;
 import pl.auroramc.commons.message.MutableMessage;
-import pl.auroramc.scoreboard.message.MessageSource;
+import pl.auroramc.scoreboard.message.MutableMessageSource;
 import pl.auroramc.scoreboard.sidebar.component.SidebarComponentKyori;
 
 class DefaultSidebarRenderer implements SidebarRenderer {
 
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final SidebarFacade sidebarFacade;
   private final Set<SidebarComponentKyori<?>> sidebarComponents;
 
   DefaultSidebarRenderer(
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final SidebarFacade sidebarFacade,
       final Set<SidebarComponentKyori<?>> sidebarComponents
   ) {

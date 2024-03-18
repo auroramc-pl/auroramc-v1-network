@@ -4,15 +4,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static java.time.Duration.between;
 import static java.time.Duration.ofSeconds;
 import static java.time.Instant.now;
-import static pl.auroramc.auctions.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MessageVariableKey.CURRENT_OFFER_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MessageVariableKey.CURRENT_TRADER_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MessageVariableKey.MINIMAL_PRICE_PUNCTURE_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MessageVariableKey.MINIMAL_PRICE_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MessageVariableKey.OFFSET_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MessageVariableKey.SUBJECT_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MessageVariableKey.UNIQUE_ID_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MessageVariableKey.VENDOR_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.CURRENT_OFFER_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.CURRENT_TRADER_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.MINIMAL_PRICE_PUNCTURE_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.MINIMAL_PRICE_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.OFFSET_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.SUBJECT_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.UNIQUE_ID_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.VENDOR_VARIABLE_KEY;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.item.ItemStackFormatter.getFormattedItemStack;
@@ -27,7 +27,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import pl.auroramc.auctions.AuctionsConfig;
 import pl.auroramc.auctions.message.MessageFacade;
-import pl.auroramc.auctions.message.MessageSource;
+import pl.auroramc.auctions.message.MutableMessageSource;
 import pl.auroramc.auctions.vault.VaultController;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
@@ -41,7 +41,7 @@ public class AuctionController {
   private final Logger logger;
   private final AuctionsConfig auctionsConfig;
   private final AuctionFacade auctionFacade;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final MessageFacade messageFacade;
   private final EconomyFacade economyFacade;
   private final VaultController vaultController;
@@ -52,7 +52,7 @@ public class AuctionController {
       final Logger logger,
       final AuctionsConfig auctionsConfig,
       final AuctionFacade auctionFacade,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final MessageFacade messageFacade,
       final EconomyFacade economyFacade,
       final Currency fundsCurrency,

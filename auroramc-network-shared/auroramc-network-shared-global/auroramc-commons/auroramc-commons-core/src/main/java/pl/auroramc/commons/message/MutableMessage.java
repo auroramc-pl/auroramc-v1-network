@@ -1,31 +1,25 @@
 package pl.auroramc.commons.message;
 
-import static java.util.Arrays.stream;
 import static java.util.concurrent.CompletableFuture.completedFuture;
-import static java.util.stream.Collectors.toMap;
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
-import static pl.auroramc.commons.lazy.Lazy.lazy;
+import static pl.auroramc.commons.message.MutableMessageProxy.getCompiledMessage;
 import static pl.auroramc.commons.message.MutableMessageVariableResolver.getResolvedMessageVariable;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 import net.kyori.adventure.text.Component;
-import pl.auroramc.commons.lazy.Lazy;
 
 public class MutableMessage {
 
+  public static final String EMPTY_DELIMITER = "";
   private static final char PLACEHOLDER_KEY_INITIATOR = '{';
   private static final char PLACEHOLDER_KEY_TERMINATOR = '}';
   private static final String LINE_SEPARATOR = "<newline>";
-  public static final String EMPTY_DELIMITER = "";
   private static final MutableMessage EMPTY_MUTABLE_MESSAGE = of(EMPTY_DELIMITER);
   private static final MutableMessage NEWLINE_MUTABLE_MESSAGE = of(LINE_SEPARATOR);
   private final String template;
-  private final Lazy<Component> templateCompiled;
 
   MutableMessage(final String template) {
     this.template = template;
-    this.templateCompiled = lazy(() -> miniMessage().deserialize(template));
   }
 
   public static MutableMessage of(final String template) {
@@ -57,10 +51,6 @@ public class MutableMessage {
     );
   }
 
-  public MutableMessage with(final String key, final Component value) {
-    return with(key, miniMessage().serialize(value));
-  }
-
   public MutableMessage append(final MutableMessage message, final String delimiter) {
     if (isEmpty()) {
       return message;
@@ -84,16 +74,7 @@ public class MutableMessage {
   }
 
   public Component compile(final MutableMessageDecoration... decorations) {
-    return templateCompiled.get()
-        .decorations(
-            stream(decorations)
-                .collect(
-                    toMap(
-                        MutableMessageDecoration::decoration,
-                        MutableMessageDecoration::state
-                    )
-                )
-        );
+    return getCompiledMessage(this, decorations);
   }
 
   public Component[] compileChildren(

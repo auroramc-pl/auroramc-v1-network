@@ -6,8 +6,8 @@ import static dev.rollczi.litecommands.message.LiteMessages.INVALID_USAGE;
 import static dev.rollczi.litecommands.message.LiteMessages.MISSING_PERMISSIONS;
 import static moe.rafal.juliet.datasource.HikariPooledDataSourceFactory.produceHikariDataSource;
 import static pl.auroramc.cheque.ChequeConfig.PLUGIN_CONFIG_FILE_NAME;
-import static pl.auroramc.cheque.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
-import static pl.auroramc.cheque.message.MessageVariableKey.SCHEMATICS_VARIABLE_KEY;
+import static pl.auroramc.cheque.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
+import static pl.auroramc.cheque.message.MutableMessageVariableKey.SCHEMATICS_VARIABLE_KEY;
 import static pl.auroramc.cheque.payment.PaymentFacade.getPaymentFacade;
 import static pl.auroramc.commons.BukkitUtils.registerListeners;
 import static pl.auroramc.commons.BukkitUtils.resolveService;
@@ -24,7 +24,7 @@ import moe.rafal.juliet.Juliet;
 import moe.rafal.juliet.JulietBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.auroramc.cheque.message.MessageSource;
+import pl.auroramc.cheque.message.MutableMessageSource;
 import pl.auroramc.cheque.payment.PaymentFacade;
 import pl.auroramc.commons.config.ConfigFactory;
 import pl.auroramc.commons.config.serdes.juliet.JulietConfig;
@@ -58,8 +58,8 @@ public class ChequeBukkitPlugin extends JavaPlugin {
         .withDataSource(produceHikariDataSource(julietConfig.hikari))
         .build();
 
-    final MessageSource messageSource = configFactory.produceConfig(
-        MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
+    final MutableMessageSource messageSource = configFactory.produceConfig(
+        MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
     );
 
     final CurrencyFacade currencyFacade = resolveService(getServer(), CurrencyFacade.class);

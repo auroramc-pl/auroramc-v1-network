@@ -8,9 +8,9 @@ import static org.apache.commons.lang3.StringUtils.capitalize;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.gamble.gamble.GambleKey.COINFLIP;
-import static pl.auroramc.gamble.message.MessageVariableKey.PREDICTION_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MessageVariableKey.STAKE_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.PREDICTION_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.STAKE_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -26,7 +26,7 @@ import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.gamble.gamble.Participant;
-import pl.auroramc.gamble.message.MessageSource;
+import pl.auroramc.gamble.message.MutableMessageSource;
 import pl.auroramc.gamble.stake.StakeContext;
 import pl.auroramc.gamble.stake.StakeFacade;
 import pl.auroramc.gamble.stake.view.StakeViewFacade;
@@ -39,7 +39,7 @@ public class CoinflipCommand {
   private final StakeFacade stakeFacade;
   private final StakeViewFacade stakeViewFacade;
   private final Currency fundsCurrency;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final EconomyFacade economyFacade;
 
   public CoinflipCommand(
@@ -47,7 +47,7 @@ public class CoinflipCommand {
       final StakeFacade stakeFacade,
       final StakeViewFacade stakeViewFacade,
       final Currency fundsCurrency,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final EconomyFacade economyFacade
   ) {
     this.logger = logger;

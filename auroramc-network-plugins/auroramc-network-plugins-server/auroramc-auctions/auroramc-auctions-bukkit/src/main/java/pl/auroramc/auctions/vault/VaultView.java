@@ -21,14 +21,14 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.ApiStatus.Internal;
-import pl.auroramc.auctions.message.MessageSource;
+import pl.auroramc.auctions.message.MutableMessageSource;
 import pl.auroramc.auctions.vault.item.VaultItem;
 import pl.auroramc.commons.item.ItemStackBuilder;
 
 class VaultView {
 
   private final Plugin plugin;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final VaultController vaultController;
   private final UUID vaultOwnerUniqueId;
   public ChestGui vaultGui;
@@ -36,7 +36,7 @@ class VaultView {
 
   VaultView(
       final Plugin plugin,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final VaultController vaultController,
       final UUID vaultOwnerUniqueId
   ) {

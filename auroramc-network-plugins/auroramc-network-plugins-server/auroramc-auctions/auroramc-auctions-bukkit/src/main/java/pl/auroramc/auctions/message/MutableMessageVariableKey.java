@@ -1,6 +1,6 @@
 package pl.auroramc.auctions.message;
 
-public final class MessageVariableKey {
+public final class MutableMessageVariableKey {
 
   public static final String SCHEMATICS_VARIABLE_KEY = "schematics";
   public static final String OFFER_VARIABLE_KEY = "offer";
@@ -17,7 +17,7 @@ public final class MessageVariableKey {
   public static final String MINIMAL_PRICE_VARIABLE_KEY = "minimalPrice";
   public static final String MINIMAL_PRICE_PUNCTURE_VARIABLE_KEY = "minimalPricePuncture";
 
-  private MessageVariableKey() {
+  private MutableMessageVariableKey() {
 
   }
 }

@@ -8,8 +8,8 @@ import static pl.auroramc.commons.BukkitUtils.registerListeners;
 import static pl.auroramc.commons.BukkitUtils.resolveService;
 import static pl.auroramc.gamble.GambleConfig.GAMBLING_CONFIG_FILE_NAME;
 import static pl.auroramc.gamble.gamble.GambleFacade.getGambleFacade;
-import static pl.auroramc.gamble.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
-import static pl.auroramc.gamble.message.MessageVariableKey.SCHEMATICS_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.SCHEMATICS_VARIABLE_KEY;
 import static pl.auroramc.gamble.stake.StakeFacade.getStakeFacade;
 import static pl.auroramc.gamble.stake.view.StakeViewFacade.getStakeViewFacade;
 
@@ -31,7 +31,7 @@ import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
 import pl.auroramc.gamble.coinflip.CoinflipCommand;
 import pl.auroramc.gamble.gamble.GambleFacade;
-import pl.auroramc.gamble.message.MessageSource;
+import pl.auroramc.gamble.message.MutableMessageSource;
 import pl.auroramc.gamble.stake.StakeCommand;
 import pl.auroramc.gamble.stake.StakeFacade;
 import pl.auroramc.gamble.stake.view.StakeViewFacade;
@@ -51,8 +51,8 @@ public class GambleBukkitPlugin extends JavaPlugin {
         GambleConfig.class, GAMBLING_CONFIG_FILE_NAME
     );
 
-    final MessageSource messageSource = configFactory.produceConfig(
-        MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
+    final MutableMessageSource messageSource = configFactory.produceConfig(
+        MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
     );
 
     final Logger logger = getLogger();

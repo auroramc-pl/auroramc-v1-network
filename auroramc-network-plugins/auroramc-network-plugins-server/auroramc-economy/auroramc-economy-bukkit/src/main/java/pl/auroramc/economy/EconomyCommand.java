@@ -4,10 +4,10 @@ import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_DOWN;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
-import static pl.auroramc.economy.message.MessageVariableKey.AMOUNT_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.CURRENCY_ID_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.USERNAME_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.AMOUNT_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_ID_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.USERNAME_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -21,20 +21,20 @@ import org.bukkit.entity.Player;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
-import pl.auroramc.economy.message.MessageSource;
+import pl.auroramc.economy.message.MutableMessageSource;
 
 @Permission("auroramc.economy.economy")
 @Command(name = "economy", aliases = "eco")
 public class EconomyCommand {
 
   private final Logger logger;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final EconomyFacade economyFacade;
   private final CurrencyFacade currencyFacade;
 
   public EconomyCommand(
       final Logger logger,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final EconomyFacade economyFacade,
       final CurrencyFacade currencyFacade
   ) {

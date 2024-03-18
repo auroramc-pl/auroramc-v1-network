@@ -9,15 +9,15 @@ import dev.rollczi.litecommands.argument.resolver.ArgumentResolver;
 import dev.rollczi.litecommands.invocation.Invocation;
 import dev.rollczi.litecommands.suggestion.SuggestionContext;
 import dev.rollczi.litecommands.suggestion.SuggestionResult;
-import pl.auroramc.quests.message.MessageSource;
+import pl.auroramc.quests.message.MutableMessageSource;
 import pl.auroramc.quests.resource.key.ResourceKey;
 
 public class QuestArgumentResolver<T> extends ArgumentResolver<T, Quest> {
 
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final QuestIndex questIndex;
 
-  public QuestArgumentResolver(final MessageSource messageSource, final QuestIndex questIndex) {
+  public QuestArgumentResolver(final MutableMessageSource messageSource, final QuestIndex questIndex) {
     this.messageSource = messageSource;
     this.questIndex = questIndex;
   }

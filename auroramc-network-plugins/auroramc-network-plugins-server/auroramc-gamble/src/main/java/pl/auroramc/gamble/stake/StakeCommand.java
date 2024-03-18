@@ -9,7 +9,7 @@ import java.util.Optional;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import pl.auroramc.commons.message.MutableMessage;
-import pl.auroramc.gamble.message.MessageSource;
+import pl.auroramc.gamble.message.MutableMessageSource;
 import pl.auroramc.gamble.stake.view.StakeViewFacade;
 
 @Permission("auroramc.gamble.stake")
@@ -17,10 +17,10 @@ import pl.auroramc.gamble.stake.view.StakeViewFacade;
 public class StakeCommand {
 
   private static final int INITIAL_STAKE_PAGE_INDEX = 0;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final StakeViewFacade stakeViewFacade;
 
-  public StakeCommand(final MessageSource messageSource, final StakeViewFacade stakeViewFacade) {
+  public StakeCommand(final MutableMessageSource messageSource, final StakeViewFacade stakeViewFacade) {
     this.messageSource = messageSource;
     this.stakeViewFacade = stakeViewFacade;
   }

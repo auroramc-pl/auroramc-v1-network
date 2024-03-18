@@ -14,8 +14,8 @@ import static pl.auroramc.commons.duration.DurationFormatterStyle.DEFAULT;
 import static pl.auroramc.commons.duration.DurationFormatterStyle.SHORTLY;
 import static pl.auroramc.commons.plural.Pluralizers.getPluralizer;
 import static pl.auroramc.dailyrewards.DailyRewardsConfig.PLUGIN_CONFIG_FILE_NAME;
-import static pl.auroramc.dailyrewards.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
-import static pl.auroramc.dailyrewards.message.MessageVariableKey.SCHEMATICS_VARIABLE_KEY;
+import static pl.auroramc.dailyrewards.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
+import static pl.auroramc.dailyrewards.message.MutableMessageVariableKey.SCHEMATICS_VARIABLE_KEY;
 import static pl.auroramc.dailyrewards.visit.VisitFacadeFactory.getVisitFacade;
 import static pl.auroramc.nametag.NametagFacade.getNametagFacade;
 import static pl.auroramc.nametag.context.NametagContextFacade.getNametagContextFacade;
@@ -39,7 +39,7 @@ import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
 import pl.auroramc.commons.duration.DurationFormatter;
 import pl.auroramc.commons.integration.litecommands.MutableMessageResultHandler;
 import pl.auroramc.commons.message.MutableMessage;
-import pl.auroramc.dailyrewards.message.MessageSource;
+import pl.auroramc.dailyrewards.message.MutableMessageSource;
 import pl.auroramc.dailyrewards.visit.VisitCommand;
 import pl.auroramc.dailyrewards.visit.VisitController;
 import pl.auroramc.dailyrewards.visit.VisitFacade;
@@ -69,8 +69,8 @@ public class DailyRewardsBukkitPlugin extends JavaPlugin {
         getPluralizer(POLISH), SHORTLY
     );
 
-    final MessageSource messageSource = configFactory.produceConfig(
-        MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
+    final MutableMessageSource messageSource = configFactory.produceConfig(
+        MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
     );
 
     final Logger logger = getLogger();

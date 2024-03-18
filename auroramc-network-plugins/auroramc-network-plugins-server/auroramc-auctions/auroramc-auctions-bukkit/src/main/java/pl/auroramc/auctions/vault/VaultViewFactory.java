@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 import org.bukkit.plugin.Plugin;
-import pl.auroramc.auctions.message.MessageSource;
+import pl.auroramc.auctions.message.MutableMessageSource;
 
 class VaultViewFactory {
 
@@ -17,7 +17,7 @@ class VaultViewFactory {
 
   static ChestGui produceVaultView(
       final Plugin plugin,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final VaultController vaultController,
       final UUID vaultOwnerUniqueId
   ) {

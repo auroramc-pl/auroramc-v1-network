@@ -1,6 +1,6 @@
 package pl.auroramc.economy.message;
 
-public final class MessageVariableKey {
+public final class MutableMessageVariableKey {
 
   public static final String SCHEMATICS_VARIABLE_KEY = "schematics";
   public static final String NAME_VARIABLE_KEY = "name";
@@ -17,7 +17,7 @@ public final class MessageVariableKey {
   public static final String TRANSACTION_TIME_VARIABLE_KEY = "transactionTime";
   public static final String CURRENCY_ID_VARIABLE_KEY = "currencyId";
 
-  private MessageVariableKey() {
+  private MutableMessageVariableKey() {
 
   }
 }

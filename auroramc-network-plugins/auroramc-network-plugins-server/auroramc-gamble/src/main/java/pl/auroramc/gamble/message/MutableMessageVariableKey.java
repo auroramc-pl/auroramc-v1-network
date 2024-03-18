@@ -1,6 +1,6 @@
 package pl.auroramc.gamble.message;
 
-public final class MessageVariableKey {
+public final class MutableMessageVariableKey {
 
   public static final String SCHEMATICS_VARIABLE_KEY = "schematics";
   public static final String COMPETITOR_VARIABLE_KEY = "competitor";
@@ -11,7 +11,7 @@ public final class MessageVariableKey {
   public static final String CURRENCY_VARIABLE_KEY = "currency";
   public static final String STAKE_VARIABLE_KEY = "stake";
 
-  private MessageVariableKey() {
+  private MutableMessageVariableKey() {
 
   }
 }

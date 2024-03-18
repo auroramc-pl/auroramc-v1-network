@@ -21,20 +21,20 @@ import pl.auroramc.bazaars.bazaar.BazaarFacade;
 import pl.auroramc.bazaars.bazaar.parser.BazaarParser;
 import pl.auroramc.bazaars.bazaar.parser.BazaarParsingContext;
 import pl.auroramc.bazaars.bazaar.transaction.context.BazaarTransactionContext;
-import pl.auroramc.bazaars.message.MessageSource;
+import pl.auroramc.bazaars.message.MutableMessageSource;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.registry.user.User;
 import pl.auroramc.registry.user.UserFacade;
 
 public class BazaarUsageListener implements Listener {
 
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final BazaarParser bazaarParser;
   private final BazaarFacade bazaarFacade;
   private final UserFacade userFacade;
 
   public BazaarUsageListener(
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final BazaarParser bazaarParser,
       final BazaarFacade bazaarFacade,
       final UserFacade userFacade

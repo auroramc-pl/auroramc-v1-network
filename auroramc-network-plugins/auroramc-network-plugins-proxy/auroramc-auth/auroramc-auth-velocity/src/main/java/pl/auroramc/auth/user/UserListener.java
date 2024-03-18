@@ -17,13 +17,13 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import net.kyori.adventure.text.Component;
-import pl.auroramc.auth.message.MessageSource;
+import pl.auroramc.auth.message.MutableMessageSource;
 import pl.auroramc.auth.identity.IdentityGenerator;
 
 public class UserListener {
 
   private final Logger logger;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final UserFacade userFacade;
   private final UserController userController;
   private final IdentityGenerator identityGenerator;
@@ -31,7 +31,7 @@ public class UserListener {
 
   public UserListener(
       final Logger logger,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final UserFacade userFacade,
       final UserController userController,
       final IdentityGenerator identityGenerator,

@@ -22,18 +22,18 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import pl.auroramc.bazaars.bazaar.parser.BazaarParser;
 import pl.auroramc.bazaars.bazaar.parser.BazaarParsingContext;
-import pl.auroramc.bazaars.message.MessageSource;
+import pl.auroramc.bazaars.message.MutableMessageSource;
 import pl.auroramc.commons.message.MutableMessage;
 
 public class BazaarCreateListener implements Listener {
 
   private static final int PLAYER_INVENTORY_CAPACITY = 2304;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final DecimalFormat priceFormat;
   private final BazaarParser bazaarParser;
 
   public BazaarCreateListener(
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final DecimalFormat priceFormat,
       final BazaarParser bazaarParser
   ) {

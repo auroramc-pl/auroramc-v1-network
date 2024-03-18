@@ -15,7 +15,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 import pl.auroramc.auth.hash.HashingStrategy;
-import pl.auroramc.auth.message.MessageSource;
+import pl.auroramc.auth.message.MutableMessageSource;
 import pl.auroramc.auth.timeout.TimeoutFacade;
 import pl.auroramc.auth.user.User;
 import pl.auroramc.auth.user.UserController;
@@ -29,7 +29,7 @@ public class LoginCommand {
   private static final int MAXIMUM_LOGIN_ATTEMPTS = 3;
   private static final int DEFAULT_LOGIN_ATTEMPTS = 1;
   private final Logger logger;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final UserFacade userFacade;
   private final UserController userController;
   private final HashingStrategy hashingStrategy;
@@ -38,7 +38,7 @@ public class LoginCommand {
 
   public LoginCommand(
       final Logger logger,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final UserFacade userFacade,
       final UserController userController,
       final HashingStrategy hashingStrategy,

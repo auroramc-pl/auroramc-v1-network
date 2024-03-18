@@ -4,15 +4,15 @@ import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_DOWN;
 import static java.util.UUID.randomUUID;
 import static pl.auroramc.auctions.auction.AuctionUtils.getPotentialOffer;
-import static pl.auroramc.auctions.message.MessageVariableKey.HIGHEST_BID_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MessageVariableKey.MINIMAL_PRICE_PUNCTURE_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MessageVariableKey.MINIMAL_PRICE_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MessageVariableKey.OFFER_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MessageVariableKey.SUBJECT_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MessageVariableKey.TRADER_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MessageVariableKey.UNIQUE_ID_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MessageVariableKey.VENDOR_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.HIGHEST_BID_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.MINIMAL_PRICE_PUNCTURE_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.MINIMAL_PRICE_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.OFFER_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.SUBJECT_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.TRADER_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.UNIQUE_ID_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.VENDOR_VARIABLE_KEY;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.item.ItemStackFormatter.getFormattedItemStack;
@@ -35,7 +35,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import pl.auroramc.auctions.AuctionsConfig;
-import pl.auroramc.auctions.message.MessageSource;
+import pl.auroramc.auctions.message.MutableMessageSource;
 import pl.auroramc.auctions.audience.Audience;
 import pl.auroramc.auctions.audience.AudienceFacade;
 import pl.auroramc.commons.message.MutableMessage;
@@ -48,7 +48,7 @@ public class AuctionCommand {
 
   private final Logger logger;
   private final AudienceFacade audienceFacade;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final EconomyFacade economyFacade;
   private final Currency fundsCurrency;
   private final AuctionsConfig auctionsConfig;
@@ -58,7 +58,7 @@ public class AuctionCommand {
   public AuctionCommand(
       final Logger logger,
       final AudienceFacade audienceFacade,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final EconomyFacade economyFacade,
       final Currency fundsCurrency,
       final AuctionsConfig auctionsConfig,

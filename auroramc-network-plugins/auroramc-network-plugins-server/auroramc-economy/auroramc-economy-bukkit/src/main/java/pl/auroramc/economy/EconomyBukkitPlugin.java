@@ -14,8 +14,8 @@ import static pl.auroramc.economy.account.AccountFacadeFactory.getAccountFacade;
 import static pl.auroramc.economy.balance.leaderboard.LeaderboardFacade.getLeaderboardFacade;
 import static pl.auroramc.economy.currency.CurrencyFacadeFactory.produceCurrencyFacade;
 import static pl.auroramc.economy.integration.placeholderapi.PlaceholderApiIntegrationFactory.producePlaceholderApiIntegration;
-import static pl.auroramc.economy.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
-import static pl.auroramc.economy.message.MessageVariableKey.SCHEMATICS_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.SCHEMATICS_VARIABLE_KEY;
 import static pl.auroramc.economy.payment.PaymentFacadeFactory.producePaymentFacade;
 
 import dev.rollczi.litecommands.LiteCommands;
@@ -44,7 +44,7 @@ import pl.auroramc.economy.balance.leaderboard.LeaderboardFacade;
 import pl.auroramc.economy.currency.CurrencyFacade;
 import pl.auroramc.commons.integration.ExternalIntegration;
 import pl.auroramc.commons.integration.ExternalIntegrator;
-import pl.auroramc.economy.message.MessageSource;
+import pl.auroramc.economy.message.MutableMessageSource;
 import pl.auroramc.economy.payment.PaymentCommand;
 import pl.auroramc.economy.payment.PaymentFacade;
 import pl.auroramc.economy.rest.server.RestServerExtension;
@@ -65,8 +65,8 @@ public class EconomyBukkitPlugin extends JavaPlugin {
         EconomyConfig.class, ECONOMY_CONFIG_FILE_NAME, new SerdesCommons()
     );
 
-    final MessageSource messageSource = configFactory.produceConfig(
-        MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
+    final MutableMessageSource messageSource = configFactory.produceConfig(
+        MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
     );
 
     final JulietConfig julietConfig = configFactory.produceConfig(

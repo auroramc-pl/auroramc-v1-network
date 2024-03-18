@@ -1,6 +1,6 @@
 package pl.auroramc.dailyrewards.message;
 
-public final class MessageVariableKey {
+public final class MutableMessageVariableKey {
 
   public static final String SCHEMATICS_VARIABLE_KEY = "schematics";
   public static final String PERIOD_VARIABLE_KEY = "period";
@@ -10,7 +10,7 @@ public final class MessageVariableKey {
   public static final String SESSION_START_VARIABLE_KEY = "sessionStart";
   public static final String SESSION_DITCH_VARIABLE_KEY = "sessionDitch";
 
-  private MessageVariableKey() {
+  private MutableMessageVariableKey() {
 
   }
 }

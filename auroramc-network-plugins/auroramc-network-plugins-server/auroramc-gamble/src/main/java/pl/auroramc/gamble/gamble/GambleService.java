@@ -2,27 +2,27 @@ package pl.auroramc.gamble.gamble;
 
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
-import static pl.auroramc.gamble.message.MessageVariableKey.COMPETITOR_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MessageVariableKey.STAKE_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MessageVariableKey.UNIQUE_ID_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.COMPETITOR_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.STAKE_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.UNIQUE_ID_VARIABLE_KEY;
 
 import java.util.logging.Logger;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
-import pl.auroramc.gamble.message.MessageSource;
+import pl.auroramc.gamble.message.MutableMessageSource;
 
 class GambleService implements GambleFacade {
 
   private final Logger logger;
   private final Currency fundsCurrency;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final EconomyFacade economyFacade;
 
   GambleService(
       final Logger logger,
       final Currency fundsCurrency,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final EconomyFacade economyFacade
   ) {
     this.logger = logger;

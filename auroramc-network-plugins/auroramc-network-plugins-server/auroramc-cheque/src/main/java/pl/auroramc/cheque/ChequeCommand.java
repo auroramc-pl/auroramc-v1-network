@@ -1,11 +1,11 @@
 package pl.auroramc.cheque;
 
-import static pl.auroramc.cheque.message.MessageVariableKey.AMOUNT_VARIABLE_KEY;
-import static pl.auroramc.cheque.message.MessageVariableKey.MAXIMUM_CHEQUE_WORTH_VARIABLE_KEY;
-import static pl.auroramc.cheque.message.MessageVariableKey.MAXIMUM_FRACTION_LENGTH_VARIABLE_KEY;
-import static pl.auroramc.cheque.message.MessageVariableKey.MAXIMUM_INTEGRAL_LENGTH_VARIABLE_KEY;
-import static pl.auroramc.cheque.message.MessageVariableKey.MINIMUM_CHEQUE_WORTH_VARIABLE_KEY;
-import static pl.auroramc.cheque.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
+import static pl.auroramc.cheque.message.MutableMessageVariableKey.AMOUNT_VARIABLE_KEY;
+import static pl.auroramc.cheque.message.MutableMessageVariableKey.MAXIMUM_CHEQUE_WORTH_VARIABLE_KEY;
+import static pl.auroramc.cheque.message.MutableMessageVariableKey.MAXIMUM_FRACTION_LENGTH_VARIABLE_KEY;
+import static pl.auroramc.cheque.message.MutableMessageVariableKey.MAXIMUM_INTEGRAL_LENGTH_VARIABLE_KEY;
+import static pl.auroramc.cheque.message.MutableMessageVariableKey.MINIMUM_CHEQUE_WORTH_VARIABLE_KEY;
+import static pl.auroramc.cheque.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.decimal.DecimalUtils.getLengthOfFractionalPart;
@@ -21,7 +21,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import pl.auroramc.cheque.message.MessageSource;
+import pl.auroramc.cheque.message.MutableMessageSource;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
@@ -35,14 +35,14 @@ class ChequeCommand {
   private static final BigDecimal MINIMUM_CHEQUE_WORTH = BigDecimal.valueOf(100);
   private static final BigDecimal MAXIMUM_CHEQUE_WORTH = BigDecimal.valueOf(1_000_000);
   private final Logger logger;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final ChequeFacade chequeFacade;
   private final Currency fundsCurrency;
   private final EconomyFacade economyFacade;
 
   public ChequeCommand(
       final Logger logger,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final ChequeFacade chequeFacade,
       final Currency fundsCurrency,
       final EconomyFacade economyFacade

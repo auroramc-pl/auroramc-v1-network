@@ -7,15 +7,15 @@ import java.util.concurrent.CompletableFuture;
 import org.bukkit.entity.Player;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.lobby.LobbyConfig;
-import pl.auroramc.lobby.message.MessageSource;
+import pl.auroramc.lobby.message.MutableMessageSource;
 
 @Command(name = "spawn")
 public class SpawnCommand {
 
   private final LobbyConfig lobbyConfig;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
 
-  public SpawnCommand(final LobbyConfig lobbyConfig, final MessageSource messageSource) {
+  public SpawnCommand(final LobbyConfig lobbyConfig, final MutableMessageSource messageSource) {
     this.lobbyConfig = lobbyConfig;
     this.messageSource = messageSource;
   }

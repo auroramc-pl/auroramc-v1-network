@@ -2,10 +2,10 @@ package pl.auroramc.bazaars.bazaar;
 
 import static pl.auroramc.bazaars.bazaar.BazaarUtils.getEmptySlotsCount;
 import static pl.auroramc.bazaars.bazaar.BazaarUtils.getQuantityInSlots;
-import static pl.auroramc.bazaars.message.MessageVariableKey.MERCHANT_VARIABLE_KEY;
-import static pl.auroramc.bazaars.message.MessageVariableKey.PRICE_VARIABLE_KEY;
-import static pl.auroramc.bazaars.message.MessageVariableKey.PRODUCT_VARIABLE_KEY;
-import static pl.auroramc.bazaars.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
+import static pl.auroramc.bazaars.message.MutableMessageVariableKey.MERCHANT_VARIABLE_KEY;
+import static pl.auroramc.bazaars.message.MutableMessageVariableKey.PRICE_VARIABLE_KEY;
+import static pl.auroramc.bazaars.message.MutableMessageVariableKey.PRODUCT_VARIABLE_KEY;
+import static pl.auroramc.bazaars.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.commons.BukkitUtils.postToMainThread;
 import static pl.auroramc.commons.item.ItemStackFormatter.getFormattedItemStack;
 
@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import pl.auroramc.bazaars.bazaar.parser.BazaarParsingContext;
 import pl.auroramc.bazaars.bazaar.transaction.context.BazaarTransactionContext;
-import pl.auroramc.bazaars.message.MessageSource;
+import pl.auroramc.bazaars.message.MutableMessageSource;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
@@ -24,14 +24,14 @@ class BazaarService implements BazaarFacade {
 
   private final Plugin plugin;
   private final DecimalFormat priceFormat;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final Currency fundsCurrency;
   private final EconomyFacade economyFacade;
 
   BazaarService(
       final Plugin plugin,
       final DecimalFormat priceFormat,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final Currency fundsCurrency,
       final EconomyFacade economyFacade
   ) {

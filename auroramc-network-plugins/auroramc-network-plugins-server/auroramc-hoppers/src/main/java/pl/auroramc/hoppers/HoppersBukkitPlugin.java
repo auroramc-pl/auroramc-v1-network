@@ -6,8 +6,8 @@ import static dev.rollczi.litecommands.bukkit.LiteBukkitMessages.PLAYER_ONLY;
 import static dev.rollczi.litecommands.message.LiteMessages.INVALID_USAGE;
 import static dev.rollczi.litecommands.message.LiteMessages.MISSING_PERMISSIONS;
 import static pl.auroramc.commons.BukkitUtils.registerListeners;
-import static pl.auroramc.hoppers.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
-import static pl.auroramc.hoppers.message.MessageVariableKey.SCHEMATICS_VARIABLE_KEY;
+import static pl.auroramc.hoppers.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
+import static pl.auroramc.hoppers.message.MutableMessageVariableKey.SCHEMATICS_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.adventure.LiteAdventureExtension;
@@ -24,7 +24,7 @@ import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.hoppers.hopper.HopperCommand;
 import pl.auroramc.hoppers.hopper.HopperInitializeListener;
 import pl.auroramc.hoppers.hopper.HopperTransferListener;
-import pl.auroramc.hoppers.message.MessageSource;
+import pl.auroramc.hoppers.message.MutableMessageSource;
 
 public class HoppersBukkitPlugin extends JavaPlugin {
 
@@ -37,8 +37,8 @@ public class HoppersBukkitPlugin extends JavaPlugin {
         getDataFolder().toPath(),
         YamlBukkitConfigurer::new
     );
-    final MessageSource messageSource = configFactory.produceConfig(
-        MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
+    final MutableMessageSource messageSource = configFactory.produceConfig(
+        MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
     );
 
     final NamespacedKey transferQuantityKey = new NamespacedKey(this, TRANSFER_QUANTITY_KEY_ID);

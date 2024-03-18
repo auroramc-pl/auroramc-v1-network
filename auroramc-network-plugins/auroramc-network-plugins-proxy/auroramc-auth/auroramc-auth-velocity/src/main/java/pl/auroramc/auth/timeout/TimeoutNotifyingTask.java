@@ -1,24 +1,24 @@
 package pl.auroramc.auth.timeout;
 
 import static java.time.Duration.ZERO;
-import static pl.auroramc.auth.message.MessageVariableKey.PERIOD_VARIABLE_KEY;
+import static pl.auroramc.auth.message.MutableMessageVariableKey.PERIOD_VARIABLE_KEY;
 
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import java.time.Duration;
-import pl.auroramc.auth.message.MessageSource;
+import pl.auroramc.auth.message.MutableMessageSource;
 import pl.auroramc.commons.duration.DurationFormatter;
 
 public class TimeoutNotifyingTask implements Runnable {
 
   private final ProxyServer server;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final TimeoutFacade timeoutFacade;
   private final DurationFormatter durationFormatter;
 
   public TimeoutNotifyingTask(
       final ProxyServer server,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final TimeoutFacade timeoutFacade,
       final DurationFormatter durationFormatter
   ) {

@@ -5,17 +5,17 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import java.io.InputStream;
 import org.simplejavamail.api.email.Email;
 import org.simplejavamail.email.EmailBuilder;
-import pl.auroramc.auth.message.MessageSource;
+import pl.auroramc.auth.message.MutableMessageSource;
 import pl.auroramc.auth.user.User;
 import pl.auroramc.commons.message.MutableMessage;
 
 class MailService implements MailFacade {
 
   private final MailConfig mailConfig;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final MutableMessage recoveryEmailMessage;
 
-  MailService(final MailConfig mailConfig, final MessageSource messageSource) {
+  MailService(final MailConfig mailConfig, final MutableMessageSource messageSource) {
     this.mailConfig = mailConfig;
     this.messageSource = messageSource;
     this.recoveryEmailMessage = getRecoveryEmailMessage();

@@ -1,6 +1,6 @@
 package pl.auroramc.quests.message;
 
-public class MessageVariableKey {
+public class MutableMessageVariableKey {
 
   public static final String SCHEMATICS_VARIABLE_KEY = "schematics";
   public static final String QUEST_VARIABLE_KEY = "quest";
@@ -10,7 +10,7 @@ public class MessageVariableKey {
   public static final String ITEM_VARIABLE_KEY = "item";
   public static final String USERNAME_VARIABLE_KEY = "username";
 
-  private MessageVariableKey() {
+  private MutableMessageVariableKey() {
 
   }
 }

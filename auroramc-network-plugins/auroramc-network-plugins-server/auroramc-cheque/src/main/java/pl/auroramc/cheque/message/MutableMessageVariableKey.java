@@ -1,6 +1,6 @@
 package pl.auroramc.cheque.message;
 
-public final class MessageVariableKey {
+public final class MutableMessageVariableKey {
 
   public static final String SCHEMATICS_VARIABLE_KEY = "schematics";
   public static final String CURRENCY_VARIABLE_KEY = "currency";
@@ -11,7 +11,7 @@ public final class MessageVariableKey {
   public static final String MINIMUM_CHEQUE_WORTH_VARIABLE_KEY = "minimumChequeWorth";
   public static final String MAXIMUM_CHEQUE_WORTH_VARIABLE_KEY = "maximumChequeWorth";
 
-  private MessageVariableKey() {
+  private MutableMessageVariableKey() {
 
   }
 }

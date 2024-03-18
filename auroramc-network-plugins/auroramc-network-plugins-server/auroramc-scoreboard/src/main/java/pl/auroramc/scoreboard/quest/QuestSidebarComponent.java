@@ -7,7 +7,7 @@ import static pl.auroramc.commons.message.MutableMessage.EMPTY_DELIMITER;
 import static pl.auroramc.commons.message.MutableMessage.empty;
 import static pl.auroramc.commons.message.MutableMessage.newline;
 import static pl.auroramc.quests.objective.ObjectiveUtils.getQuestObjectiveTemplate;
-import static pl.auroramc.scoreboard.message.MessageVariableKey.QUEST_VARIABLE_KEY;
+import static pl.auroramc.scoreboard.message.MutableMessageVariableKey.QUEST_VARIABLE_KEY;
 
 import java.util.Map;
 import java.util.Optional;
@@ -23,13 +23,13 @@ import pl.auroramc.quests.quest.QuestIndex;
 import pl.auroramc.quests.quest.observer.QuestObserver;
 import pl.auroramc.quests.quest.observer.QuestObserverFacade;
 import pl.auroramc.registry.user.UserFacade;
-import pl.auroramc.scoreboard.message.MessageSource;
+import pl.auroramc.scoreboard.message.MutableMessageSource;
 import pl.auroramc.scoreboard.sidebar.component.SidebarComponentKyori;
 
 public class QuestSidebarComponent implements SidebarComponentKyori<Quest> {
 
   private final Logger logger;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final UserFacade userFacade;
   private final QuestIndex questIndex;
   private final QuestObserverFacade questObserverFacade;
@@ -37,7 +37,7 @@ public class QuestSidebarComponent implements SidebarComponentKyori<Quest> {
 
   public QuestSidebarComponent(
       final Logger logger,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final UserFacade userFacade,
       final QuestIndex questIndex,
       final QuestObserverFacade questObserverFacade,

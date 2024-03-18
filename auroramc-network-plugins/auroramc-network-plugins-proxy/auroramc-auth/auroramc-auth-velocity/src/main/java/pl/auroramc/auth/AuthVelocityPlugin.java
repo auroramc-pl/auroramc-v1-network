@@ -12,9 +12,9 @@ import static pl.auroramc.auth.account.AccountFacadeFactory.getAccountFacade;
 import static pl.auroramc.auth.mail.MailFacade.getEmailFacade;
 import static pl.auroramc.auth.hash.HashingStrategyFactory.getHashingStrategy;
 import static pl.auroramc.auth.hash.salt.SaltGeneratorFactory.getSaltGenerator;
-import static pl.auroramc.auth.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
+import static pl.auroramc.auth.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
 import static pl.auroramc.auth.identity.generator.IdentityGeneratorFactory.getIdentityGenerator;
-import static pl.auroramc.auth.message.MessageVariableKey.SCHEMATICS_VARIABLE_KEY;
+import static pl.auroramc.auth.message.MutableMessageVariableKey.SCHEMATICS_VARIABLE_KEY;
 import static pl.auroramc.auth.password.PasswordValidatorFactory.getPasswordValidator;
 import static pl.auroramc.auth.timeout.TimeoutFacadeFactory.getTimeoutFacade;
 import static pl.auroramc.auth.user.UserFacadeFactory.getUserFacade;
@@ -57,7 +57,7 @@ import pl.auroramc.auth.command.UnregisterCommand;
 import pl.auroramc.auth.mail.MailFacade;
 import pl.auroramc.auth.hash.HashingStrategy;
 import pl.auroramc.auth.hash.salt.SaltGenerator;
-import pl.auroramc.auth.message.MessageSource;
+import pl.auroramc.auth.message.MutableMessageSource;
 import pl.auroramc.auth.command.RegisterCommand;
 import pl.auroramc.auth.password.PasswordValidator;
 import pl.auroramc.auth.timeout.TimeoutFacade;
@@ -104,8 +104,8 @@ public class AuthVelocityPlugin {
         .withDataSource(produceHikariDataSource(julietConfig.hikari))
         .build();
 
-    final MessageSource messageSource = configFactory.produceConfig(
-        MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
+    final MutableMessageSource messageSource = configFactory.produceConfig(
+        MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
     );
 
     final DurationFormatter durationFormatter = new DurationFormatter(

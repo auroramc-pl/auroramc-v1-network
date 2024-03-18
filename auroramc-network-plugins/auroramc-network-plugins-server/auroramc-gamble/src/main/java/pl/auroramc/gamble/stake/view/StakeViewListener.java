@@ -18,7 +18,7 @@ import pl.auroramc.gamble.coinflip.CoinSide;
 import pl.auroramc.gamble.gamble.GambleContext;
 import pl.auroramc.gamble.gamble.GambleFacade;
 import pl.auroramc.gamble.gamble.Participant;
-import pl.auroramc.gamble.message.MessageSource;
+import pl.auroramc.gamble.message.MutableMessageSource;
 import pl.auroramc.gamble.stake.StakeContext;
 import pl.auroramc.gamble.stake.StakeFacade;
 
@@ -27,7 +27,7 @@ public class StakeViewListener implements Listener {
   private final Plugin plugin;
   private final Logger logger;
   private final Currency fundsCurrency;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final EconomyFacade economyFacade;
   private final GambleFacade gambleFacade;
   private final StakeFacade stakeFacade;
@@ -37,7 +37,7 @@ public class StakeViewListener implements Listener {
       final Plugin plugin,
       final Logger logger,
       final Currency fundsCurrency,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final EconomyFacade economyFacade,
       final GambleFacade gambleFacade,
       final StakeFacade stakeFacade,

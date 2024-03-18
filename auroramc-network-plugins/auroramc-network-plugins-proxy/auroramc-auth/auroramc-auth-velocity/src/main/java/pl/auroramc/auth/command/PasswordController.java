@@ -7,7 +7,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 import panda.std.function.TriFunction;
 import pl.auroramc.auth.hash.HashingStrategy;
-import pl.auroramc.auth.message.MessageSource;
+import pl.auroramc.auth.message.MutableMessageSource;
 import pl.auroramc.auth.password.PasswordValidator;
 import pl.auroramc.auth.user.User;
 import pl.auroramc.auth.user.UserController;
@@ -17,7 +17,7 @@ import pl.auroramc.commons.message.MutableMessage;
 public class PasswordController {
 
   private final Logger logger;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final UserFacade userFacade;
   private final UserController userController;
   private final HashingStrategy hashingStrategy;
@@ -25,7 +25,7 @@ public class PasswordController {
 
   public PasswordController(
       final Logger logger,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final UserFacade userFacade,
       final UserController userController,
       final HashingStrategy hashingStrategy,

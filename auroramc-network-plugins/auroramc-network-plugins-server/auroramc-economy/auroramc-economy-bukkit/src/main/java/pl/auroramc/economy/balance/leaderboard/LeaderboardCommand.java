@@ -3,11 +3,11 @@ package pl.auroramc.economy.balance.leaderboard;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.message.MutableMessage.EMPTY_DELIMITER;
 import static pl.auroramc.commons.message.MutableMessage.empty;
-import static pl.auroramc.economy.message.MessageVariableKey.BALANCE_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.CURRENCY_ID_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.POSITION_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.USERNAME_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.BALANCE_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_ID_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.POSITION_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.USERNAME_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
@@ -19,19 +19,19 @@ import org.bukkit.entity.Player;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
-import pl.auroramc.economy.message.MessageSource;
+import pl.auroramc.economy.message.MutableMessageSource;
 
 @Permission("auroramc.economy.leaderboard")
 @Command(name = "leaderboard", aliases = "baltop")
 public class LeaderboardCommand {
 
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final CurrencyFacade currencyFacade;
   private final LeaderboardFacade leaderboardFacade;
   private final LeaderboardConfig leaderboardConfig;
 
   public LeaderboardCommand(
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final CurrencyFacade currencyFacade,
       final LeaderboardFacade leaderboardFacade,
       final LeaderboardConfig leaderboardConfig

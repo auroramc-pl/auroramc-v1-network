@@ -6,10 +6,10 @@ import static java.util.logging.Level.SEVERE;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.lazy.Lazy.lazy;
-import static pl.auroramc.economy.message.MessageVariableKey.AMOUNT_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.SOURCE_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.TARGET_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.AMOUNT_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.SOURCE_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.TARGET_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -23,20 +23,20 @@ import pl.auroramc.commons.lazy.Lazy;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
-import pl.auroramc.economy.message.MessageSource;
+import pl.auroramc.economy.message.MutableMessageSource;
 
 @Permission("auroramc.economy.transfer")
 @Command(name = "transfer", aliases = {"pay", "przelej", "zaplac"})
 public class TransferCommand {
 
   private final Logger logger;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final EconomyFacade economyFacade;
   private final Lazy<Currency> transferCurrency;
 
   public TransferCommand(
       final Logger logger,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final EconomyFacade economyFacade,
       final TransferConfig transferConfig,
       final CurrencyFacade currencyFacade

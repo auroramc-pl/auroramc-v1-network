@@ -13,8 +13,8 @@ import static pl.auroramc.commons.BukkitUtils.registerServices;
 import static pl.auroramc.commons.BukkitUtils.resolveService;
 import static pl.auroramc.commons.config.serdes.juliet.JulietConfig.JULIET_CONFIG_FILE_NAME;
 import static pl.auroramc.quests.integration.placeholderapi.PlaceholderApiIntegrationFactory.producePlaceholderApiIntegration;
-import static pl.auroramc.quests.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
-import static pl.auroramc.quests.message.MessageVariableKey.SCHEMATICS_VARIABLE_KEY;
+import static pl.auroramc.quests.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
+import static pl.auroramc.quests.message.MutableMessageVariableKey.SCHEMATICS_VARIABLE_KEY;
 import static pl.auroramc.quests.objective.progress.ObjectiveProgressFacadeFactory.getObjectiveProgressFacade;
 import static pl.auroramc.quests.quest.QuestFacadeFactory.getQuestFacade;
 import static pl.auroramc.quests.quest.QuestIndexFactory.getQuestIndex;
@@ -45,7 +45,7 @@ import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.commons.config.ConfigFactory;
 import pl.auroramc.commons.config.serdes.juliet.SerdesJuliet;
 import pl.auroramc.commons.event.publisher.EventPublisher;
-import pl.auroramc.quests.message.MessageSource;
+import pl.auroramc.quests.message.MutableMessageSource;
 import pl.auroramc.commons.integration.litecommands.MutableMessageResultHandler;
 import pl.auroramc.quests.objective.Objective;
 import pl.auroramc.quests.objectives.block.BreakBlockObjectiveHandler;
@@ -78,8 +78,8 @@ public class QuestsBukkitPlugin extends JavaPlugin {
     final ConfigFactory configFactory = new ConfigFactory(
         getDataFolder().toPath(), YamlBukkitConfigurer::new);
 
-    final MessageSource messageSource = configFactory.produceConfig(
-        MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
+    final MutableMessageSource messageSource = configFactory.produceConfig(
+        MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
     );
 
     final Logger logger = getLogger();
@@ -200,14 +200,14 @@ public class QuestsBukkitPlugin extends JavaPlugin {
   }
 
   private void initTranslationForObjectivesFromQuests(
-      final MessageSource messageSource, final List<Quest> quests) {
+      final MutableMessageSource messageSource, final List<Quest> quests) {
     for (final Quest quest : quests) {
       initTranslationForObjectivesAndRequirements(messageSource, quest.getObjectives());
     }
   }
 
   private void initTranslationForObjectivesAndRequirements(
-      final MessageSource messageSource, final List<Objective<?>> objectives) {
+      final MutableMessageSource messageSource, final List<Objective<?>> objectives) {
     for (final Objective<?> objective : objectives) {
       objective.setMessage(
           getMessageByFieldName(
@@ -227,7 +227,7 @@ public class QuestsBukkitPlugin extends JavaPlugin {
   }
 
   private MutableMessage getMessageByFieldName(
-      final MessageSource messageSource, final String translationFieldName
+      final MutableMessageSource messageSource, final String translationFieldName
   ) {
     try {
       return (MutableMessage) messageSource.getClass()

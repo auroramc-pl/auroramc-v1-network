@@ -8,8 +8,8 @@ import static java.time.Duration.ofSeconds;
 import static pl.auroramc.commons.BukkitUtils.getTicksOf;
 import static pl.auroramc.commons.BukkitUtils.registerListeners;
 import static pl.auroramc.lobby.LobbyConfig.PLUGIN_CONFIG_FILE_NAME;
-import static pl.auroramc.lobby.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
-import static pl.auroramc.lobby.message.MessageVariableKey.SCHEMATICS_VARIABLE_KEY;
+import static pl.auroramc.lobby.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
+import static pl.auroramc.lobby.message.MutableMessageVariableKey.SCHEMATICS_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.adventure.LiteAdventureExtension;
@@ -23,7 +23,7 @@ import pl.auroramc.commons.config.ConfigFactory;
 import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
 import pl.auroramc.commons.integration.litecommands.MutableMessageResultHandler;
 import pl.auroramc.commons.message.MutableMessage;
-import pl.auroramc.lobby.message.MessageSource;
+import pl.auroramc.lobby.message.MutableMessageSource;
 import pl.auroramc.lobby.spawn.SpawnCommand;
 
 public class LobbyBukkitPlugin extends JavaPlugin {
@@ -34,8 +34,8 @@ public class LobbyBukkitPlugin extends JavaPlugin {
   public void onEnable() {
     final ConfigFactory configFactory = new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
 
-    final MessageSource messageSource = configFactory.produceConfig(
-        MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
+    final MutableMessageSource messageSource = configFactory.produceConfig(
+        MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
     );
     final LobbyConfig lobbyConfig = configFactory.produceConfig(
         LobbyConfig.class, PLUGIN_CONFIG_FILE_NAME, new SerdesBukkit()

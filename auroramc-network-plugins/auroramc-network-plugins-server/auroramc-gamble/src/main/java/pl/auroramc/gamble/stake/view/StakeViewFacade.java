@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 import pl.auroramc.economy.currency.Currency;
-import pl.auroramc.gamble.message.MessageSource;
+import pl.auroramc.gamble.message.MutableMessageSource;
 import pl.auroramc.gamble.stake.StakeFacade;
 
 public interface StakeViewFacade {
@@ -14,7 +14,7 @@ public interface StakeViewFacade {
       final Plugin plugin,
       final StakeFacade stakeFacade,
       final Currency fundsCurrency,
-      final MessageSource messageSource
+      final MutableMessageSource messageSource
   ) {
     return new StakeViewService(
         plugin, stakeFacade, fundsCurrency, messageSource

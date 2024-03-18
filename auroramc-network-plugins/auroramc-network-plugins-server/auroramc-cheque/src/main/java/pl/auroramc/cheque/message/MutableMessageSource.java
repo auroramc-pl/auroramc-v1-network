@@ -4,7 +4,7 @@ import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Exclude;
 import pl.auroramc.commons.message.MutableMessage;
 
-public class MessageSource extends OkaeriConfig {
+public class MutableMessageSource extends OkaeriConfig {
 
   public static final @Exclude String MESSAGE_SOURCE_FILE_NAME = "messages.yml";
 

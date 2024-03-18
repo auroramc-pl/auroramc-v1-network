@@ -3,15 +3,15 @@ package pl.auroramc.lobby;
 import static org.bukkit.Bukkit.getOnlinePlayers;
 
 import org.bukkit.entity.Player;
-import pl.auroramc.lobby.message.MessageSource;
+import pl.auroramc.lobby.message.MutableMessageSource;
 
 class VoidTeleportationTask implements Runnable {
 
   private static final int TELEPORT_SINCE_Y = 20;
   private final LobbyConfig lobbyConfig;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
 
-  VoidTeleportationTask(final LobbyConfig lobbyConfig, final MessageSource messageSource) {
+  VoidTeleportationTask(final LobbyConfig lobbyConfig, final MutableMessageSource messageSource) {
     this.lobbyConfig = lobbyConfig;
     this.messageSource = messageSource;
   }

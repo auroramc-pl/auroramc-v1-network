@@ -6,12 +6,12 @@ import static pl.auroramc.commons.period.PeriodFormatter.getFormattedPeriod;
 import static pl.auroramc.commons.period.PeriodFormatter.getFormattedPeriodShortly;
 import static pl.auroramc.commons.period.PeriodUtils.getMaximumTimeOfDay;
 import static pl.auroramc.commons.period.PeriodUtils.getMinimumTimeOfDay;
-import static pl.auroramc.dailyrewards.message.MessageVariableKey.FROM_VARIABLE_KEY;
-import static pl.auroramc.dailyrewards.message.MessageVariableKey.PERIOD_VARIABLE_KEY;
-import static pl.auroramc.dailyrewards.message.MessageVariableKey.PLAYTIME_VARIABLE_KEY;
-import static pl.auroramc.dailyrewards.message.MessageVariableKey.SESSION_DITCH_VARIABLE_KEY;
-import static pl.auroramc.dailyrewards.message.MessageVariableKey.SESSION_START_VARIABLE_KEY;
-import static pl.auroramc.dailyrewards.message.MessageVariableKey.TO_VARIABLE_KEY;
+import static pl.auroramc.dailyrewards.message.MutableMessageVariableKey.FROM_VARIABLE_KEY;
+import static pl.auroramc.dailyrewards.message.MutableMessageVariableKey.PERIOD_VARIABLE_KEY;
+import static pl.auroramc.dailyrewards.message.MutableMessageVariableKey.PLAYTIME_VARIABLE_KEY;
+import static pl.auroramc.dailyrewards.message.MutableMessageVariableKey.SESSION_DITCH_VARIABLE_KEY;
+import static pl.auroramc.dailyrewards.message.MutableMessageVariableKey.SESSION_START_VARIABLE_KEY;
+import static pl.auroramc.dailyrewards.message.MutableMessageVariableKey.TO_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -23,20 +23,20 @@ import java.util.concurrent.CompletableFuture;
 import org.bukkit.entity.Player;
 import pl.auroramc.commons.duration.DurationFormatter;
 import pl.auroramc.commons.message.MutableMessage;
-import pl.auroramc.dailyrewards.message.MessageSource;
+import pl.auroramc.dailyrewards.message.MutableMessageSource;
 import pl.auroramc.registry.user.User;
 import pl.auroramc.registry.user.UserFacade;
 
 @Command(name = "visit", aliases = {"session", "sessions"})
 public class VisitCommand {
 
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final UserFacade userFacade;
   private final VisitFacade visitFacade;
   private final DurationFormatter durationFormatter;
 
   public VisitCommand(
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final UserFacade userFacade,
       final VisitFacade visitFacade,
       final DurationFormatter durationFormatter

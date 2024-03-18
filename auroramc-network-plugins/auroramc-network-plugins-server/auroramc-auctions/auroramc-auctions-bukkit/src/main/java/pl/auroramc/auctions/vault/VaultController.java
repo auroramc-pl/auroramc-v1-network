@@ -1,7 +1,7 @@
 package pl.auroramc.auctions.vault;
 
 import static org.bukkit.Bukkit.getPlayer;
-import static pl.auroramc.auctions.message.MessageVariableKey.SUBJECT_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.SUBJECT_VARIABLE_KEY;
 import static pl.auroramc.commons.BukkitUtils.appendItemStackOrDropBelow;
 import static pl.auroramc.commons.BukkitUtils.postToMainThreadAndNextTick;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Blocking;
-import pl.auroramc.auctions.message.MessageSource;
+import pl.auroramc.auctions.message.MutableMessageSource;
 import pl.auroramc.auctions.vault.item.VaultItem;
 import pl.auroramc.auctions.vault.item.VaultItemFacade;
 import pl.auroramc.registry.user.User;
@@ -25,7 +25,7 @@ public class VaultController {
 
   private final Plugin plugin;
   private final Logger logger;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final UserFacade userFacade;
   private final VaultFacade vaultFacade;
   private final VaultItemFacade vaultItemFacade;
@@ -33,7 +33,7 @@ public class VaultController {
   public VaultController(
       final Plugin plugin,
       final Logger logger,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final UserFacade userFacade,
       final VaultFacade vaultFacade,
       final VaultItemFacade vaultItemFacade

@@ -2,13 +2,13 @@ package pl.auroramc.economy.payment;
 
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.period.PeriodFormatter.getFormattedPeriod;
-import static pl.auroramc.economy.message.MessageVariableKey.AMOUNT_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.INITIATOR_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.RECEIVER_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.TRANSACTION_ID_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.TRANSACTION_TIME_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.USERNAME_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.AMOUNT_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.INITIATOR_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.RECEIVER_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.TRANSACTION_ID_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.TRANSACTION_TIME_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.USERNAME_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -19,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.LongFunction;
 import org.bukkit.entity.Player;
 import pl.auroramc.commons.message.MutableMessage;
-import pl.auroramc.economy.message.MessageSource;
+import pl.auroramc.economy.message.MutableMessageSource;
 import pl.auroramc.registry.user.User;
 import pl.auroramc.registry.user.UserFacade;
 
@@ -28,12 +28,12 @@ import pl.auroramc.registry.user.UserFacade;
 public class PaymentCommand {
 
   private final UserFacade userFacade;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final PaymentFacade paymentFacade;
 
   public PaymentCommand(
       final UserFacade userFacade,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final PaymentFacade paymentFacade
   ) {
     this.userFacade = userFacade;

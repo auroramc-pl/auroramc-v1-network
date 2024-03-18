@@ -11,7 +11,7 @@ import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 import pl.auroramc.auth.hash.HashingStrategy;
-import pl.auroramc.auth.message.MessageSource;
+import pl.auroramc.auth.message.MutableMessageSource;
 import pl.auroramc.auth.user.User;
 import pl.auroramc.commons.message.MutableMessage;
 
@@ -20,13 +20,13 @@ import pl.auroramc.commons.message.MutableMessage;
 public class PasswordChangeCommand {
 
   private final Logger logger;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final HashingStrategy hashingStrategy;
   private final PasswordController passwordController;
 
   public PasswordChangeCommand(
       final Logger logger,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final HashingStrategy hashingStrategy,
       final PasswordController passwordController
   ) {

@@ -6,12 +6,13 @@ import static pl.auroramc.commons.message.MutableMessage.empty;
 import com.velocitypowered.api.proxy.Player;
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
+import dev.rollczi.litecommands.annotations.context.Context;
 import dev.rollczi.litecommands.annotations.execute.Execute;
 import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 import pl.auroramc.auth.hash.HashingStrategy;
-import pl.auroramc.auth.message.MessageSource;
+import pl.auroramc.auth.message.MutableMessageSource;
 import pl.auroramc.auth.user.User;
 import pl.auroramc.auth.user.UserFacade;
 import pl.auroramc.commons.message.MutableMessage;
@@ -21,13 +22,13 @@ import pl.auroramc.commons.message.MutableMessage;
 public class UnregisterCommand {
 
   private final Logger logger;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final UserFacade userFacade;
   private final HashingStrategy hashingStrategy;
 
   public UnregisterCommand(
       final Logger logger,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final UserFacade userFacade,
       final HashingStrategy hashingStrategy
   ) {
@@ -39,7 +40,7 @@ public class UnregisterCommand {
 
   @Execute
   public CompletableFuture<MutableMessage> unregister(
-      final Player player, final @Arg String password
+      final @Context Player player, final @Arg String password
   ) {
     return userFacade.getUserByUniqueId(player.getUniqueId())
         .thenCompose(user -> handleUserUnregistration(player, user, password))

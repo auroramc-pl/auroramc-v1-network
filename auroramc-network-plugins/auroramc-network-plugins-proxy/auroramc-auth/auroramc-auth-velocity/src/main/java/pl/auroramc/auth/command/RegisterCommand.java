@@ -10,7 +10,7 @@ import dev.rollczi.litecommands.annotations.execute.Execute;
 import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
-import pl.auroramc.auth.message.MessageSource;
+import pl.auroramc.auth.message.MutableMessageSource;
 import pl.auroramc.auth.timeout.TimeoutFacade;
 import pl.auroramc.auth.user.User;
 import pl.auroramc.commons.message.MutableMessage;
@@ -20,13 +20,13 @@ import pl.auroramc.commons.message.MutableMessage;
 public class RegisterCommand {
 
   private final Logger logger;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final TimeoutFacade timeoutFacade;
   private final PasswordController passwordController;
 
   public RegisterCommand(
       final Logger logger,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final TimeoutFacade timeoutFacade,
       final PasswordController passwordController
   ) {

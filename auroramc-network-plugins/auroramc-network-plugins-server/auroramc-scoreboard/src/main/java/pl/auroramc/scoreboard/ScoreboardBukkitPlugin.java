@@ -6,7 +6,7 @@ import static pl.auroramc.commons.BukkitUtils.getTicksOf;
 import static pl.auroramc.commons.BukkitUtils.registerListeners;
 import static pl.auroramc.commons.BukkitUtils.resolveService;
 import static pl.auroramc.scoreboard.ScoreboardConfig.PLUGIN_CONFIG_FILE_NAME;
-import static pl.auroramc.scoreboard.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
+import static pl.auroramc.scoreboard.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
 import static pl.auroramc.scoreboard.sidebar.SidebarFacade.getSidebarFacade;
 import static pl.auroramc.scoreboard.sidebar.SidebarRenderer.getSidebarRenderer;
 
@@ -20,7 +20,7 @@ import pl.auroramc.quests.objective.progress.ObjectiveProgressController;
 import pl.auroramc.quests.quest.QuestIndex;
 import pl.auroramc.quests.quest.observer.QuestObserverFacade;
 import pl.auroramc.registry.user.UserFacade;
-import pl.auroramc.scoreboard.message.MessageSource;
+import pl.auroramc.scoreboard.message.MutableMessageSource;
 import pl.auroramc.scoreboard.quest.QuestListener;
 import pl.auroramc.scoreboard.sidebar.SidebarFacade;
 import pl.auroramc.scoreboard.sidebar.SidebarRenderer;
@@ -39,8 +39,8 @@ public class ScoreboardBukkitPlugin extends JavaPlugin {
     final ScoreboardConfig scoreboardConfig = configFactory.produceConfig(
         ScoreboardConfig.class, PLUGIN_CONFIG_FILE_NAME
     );
-    final MessageSource messageSource = configFactory.produceConfig(
-        MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
+    final MutableMessageSource messageSource = configFactory.produceConfig(
+        MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
     );
 
     final Logger logger = getLogger();
@@ -64,7 +64,7 @@ public class ScoreboardBukkitPlugin extends JavaPlugin {
     }
   }
 
-  private Set<SidebarComponentKyori<?>> getAvailableComponents(final Logger logger, final MessageSource messageSource) {
+  private Set<SidebarComponentKyori<?>> getAvailableComponents(final Logger logger, final MutableMessageSource messageSource) {
     return hasQuestSupport()
         ? Set.of(getQuestComponent(logger, messageSource))
         : Set.of();
@@ -74,7 +74,7 @@ public class ScoreboardBukkitPlugin extends JavaPlugin {
     return getServer().getPluginManager().isPluginEnabled(QUESTS_PLUGIN_NAME);
   }
 
-  private SidebarComponentKyori<?> getQuestComponent(final Logger logger, final MessageSource messageSource) {
+  private SidebarComponentKyori<?> getQuestComponent(final Logger logger, final MutableMessageSource messageSource) {
     final UserFacade userFacade = resolveService(getServer(), UserFacade.class);
     final QuestIndex questIndex = resolveService(getServer(), QuestIndex.class);
     final QuestObserverFacade questObserverFacade = resolveService(getServer(), QuestObserverFacade.class);

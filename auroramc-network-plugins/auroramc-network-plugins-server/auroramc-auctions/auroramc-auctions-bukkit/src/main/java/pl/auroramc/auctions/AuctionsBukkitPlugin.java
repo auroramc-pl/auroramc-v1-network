@@ -9,8 +9,8 @@ import static pl.auroramc.auctions.AuctionsConfig.PLUGIN_CONFIG_FILE_NAME;
 import static pl.auroramc.auctions.auction.AuctionFacadeFactory.getAuctionFacade;
 import static pl.auroramc.auctions.audience.AudienceFacade.getAudienceFacade;
 import static pl.auroramc.auctions.message.MessageFacade.getMessageFacade;
-import static pl.auroramc.auctions.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
-import static pl.auroramc.auctions.message.MessageVariableKey.SCHEMATICS_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.SCHEMATICS_VARIABLE_KEY;
 import static pl.auroramc.auctions.vault.VaultFacade.getVaultFacade;
 import static pl.auroramc.auctions.vault.item.VaultItemFacade.getVaultItemFacade;
 import static pl.auroramc.commons.BukkitUtils.getTicksOf;
@@ -35,7 +35,7 @@ import pl.auroramc.auctions.auction.AuctionController;
 import pl.auroramc.auctions.auction.AuctionFacade;
 import pl.auroramc.auctions.auction.AuctionSchedulingTask;
 import pl.auroramc.auctions.message.MessageFacade;
-import pl.auroramc.auctions.message.MessageSource;
+import pl.auroramc.auctions.message.MutableMessageSource;
 import pl.auroramc.auctions.audience.AudienceFacade;
 import pl.auroramc.auctions.vault.VaultCommand;
 import pl.auroramc.auctions.vault.VaultController;
@@ -64,8 +64,8 @@ public class AuctionsBukkitPlugin extends JavaPlugin {
         YamlBukkitConfigurer::new
     );
 
-    final MessageSource messageSource = configFactory.produceConfig(
-        MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
+    final MutableMessageSource messageSource = configFactory.produceConfig(
+        MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
     );
 
     final JulietConfig julietConfig = configFactory.produceConfig(

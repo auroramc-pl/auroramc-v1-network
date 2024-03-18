@@ -9,10 +9,10 @@ import static net.kyori.adventure.text.event.ClickEvent.suggestCommand;
 import static org.bukkit.event.EventPriority.HIGHEST;
 import static pl.auroramc.commons.command.CommandUtils.resolveCommand;
 import static pl.auroramc.commons.lazy.Lazy.lazy;
-import static pl.auroramc.essentials.message.MessageVariableKey.PLUGINS_PERCENTAGE_VARIABLE_KEY;
-import static pl.auroramc.essentials.message.MessageVariableKey.PLUGIN_NAME_VARIABLE_KEY;
-import static pl.auroramc.essentials.message.MessageVariableKey.SEPARATOR_VARIABLE_KEY;
-import static pl.auroramc.essentials.message.MessageVariableKey.SUGGESTION_VARIABLE_KEY;
+import static pl.auroramc.essentials.message.MutableMessageVariableKey.PLUGINS_PERCENTAGE_VARIABLE_KEY;
+import static pl.auroramc.essentials.message.MutableMessageVariableKey.PLUGIN_NAME_VARIABLE_KEY;
+import static pl.auroramc.essentials.message.MutableMessageVariableKey.SEPARATOR_VARIABLE_KEY;
+import static pl.auroramc.essentials.message.MutableMessageVariableKey.SUGGESTION_VARIABLE_KEY;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -35,7 +35,7 @@ import org.bukkit.plugin.Plugin;
 import pl.auroramc.essentials.EssentialsConfig;
 import pl.auroramc.commons.lazy.Lazy;
 import pl.auroramc.commons.search.FuzzySearch;
-import pl.auroramc.essentials.message.MessageSource;
+import pl.auroramc.essentials.message.MutableMessageSource;
 
 public class CommandListener implements Listener {
 
@@ -50,7 +50,7 @@ public class CommandListener implements Listener {
   private static final int COMMAND_ARGUMENTS_OFFSET = 1;
   private final Server server;
   private final FuzzySearch fuzzySearch;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final EssentialsConfig essentialsConfig;
   private final Cache<UUID, Set<String>> availableCommandsByName;
   private final Lazy<Component> overviewOfPluginSummaries;
@@ -58,7 +58,7 @@ public class CommandListener implements Listener {
   public CommandListener(
       final Server server,
       final FuzzySearch fuzzySearch,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final EssentialsConfig essentialsConfig
   ) {
     this.server = server;

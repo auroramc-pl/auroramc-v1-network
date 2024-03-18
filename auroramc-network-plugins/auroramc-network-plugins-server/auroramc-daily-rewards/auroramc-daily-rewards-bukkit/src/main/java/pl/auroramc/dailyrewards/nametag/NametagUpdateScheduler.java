@@ -1,24 +1,24 @@
 package pl.auroramc.dailyrewards.nametag;
 
 import static org.bukkit.Bukkit.getOnlinePlayers;
-import static pl.auroramc.dailyrewards.message.MessageVariableKey.PLAYTIME_VARIABLE_KEY;
+import static pl.auroramc.dailyrewards.message.MutableMessageVariableKey.PLAYTIME_VARIABLE_KEY;
 
 import java.time.Duration;
 import org.bukkit.entity.Player;
 import pl.auroramc.commons.duration.DurationFormatter;
-import pl.auroramc.dailyrewards.message.MessageSource;
+import pl.auroramc.dailyrewards.message.MutableMessageSource;
 import pl.auroramc.dailyrewards.visit.VisitController;
 import pl.auroramc.nametag.NametagFacade;
 
 public class NametagUpdateScheduler implements Runnable {
 
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final NametagFacade nametagFacade;
   private final VisitController visitController;
   private final DurationFormatter durationFormatter;
 
   public NametagUpdateScheduler(
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final NametagFacade nametagFacade,
       final VisitController visitController,
       final DurationFormatter durationFormatter

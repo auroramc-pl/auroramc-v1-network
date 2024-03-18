@@ -20,7 +20,7 @@ import pl.auroramc.commons.config.ConfigFactory;
 import pl.auroramc.commons.config.serdes.juliet.JulietConfig;
 import pl.auroramc.commons.config.serdes.juliet.SerdesJuliet;
 import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
-import pl.auroramc.punishments.message.MessageSource;
+import pl.auroramc.punishments.message.MutableMessageSource;
 import pl.auroramc.punishments.punishment.PunishmentFacade;
 
 @Plugin(id = PROJECT_ARTIFACT_ID, version = PROJECT_VERSION, authors = "shitzuu <hello@rafal.moe>")
@@ -37,8 +37,8 @@ public class PunishmentsVelocityPlugin {
 
   @Subscribe
   public void onProxyInitialize(final ProxyInitializeEvent event) {
-    final MessageSource messageSource = configFactory.produceConfig(
-        MessageSource.class, MessageSource.MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
+    final MutableMessageSource messageSource = configFactory.produceConfig(
+        MutableMessageSource.class, MutableMessageSource.MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
     );
 
     final JulietConfig julietConfig = configFactory.produceConfig(

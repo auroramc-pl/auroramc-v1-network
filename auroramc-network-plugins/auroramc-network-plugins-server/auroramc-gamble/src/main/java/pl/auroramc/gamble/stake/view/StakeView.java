@@ -9,11 +9,11 @@ import static org.bukkit.Material.PAPER;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.BACKWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.FORWARD;
-import static pl.auroramc.gamble.message.MessageVariableKey.GAMBLE_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MessageVariableKey.INITIATOR_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MessageVariableKey.PREDICTION_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MessageVariableKey.STAKE_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.GAMBLE_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.INITIATOR_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.PREDICTION_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.STAKE_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.gamble.stake.view.StakeViewUtils.getSlotIndexOf;
 import static pl.auroramc.gamble.stake.view.StakeViewUtils.setItemAsFrame;
 
@@ -32,7 +32,7 @@ import pl.auroramc.commons.item.ItemStackBuilder;
 import pl.auroramc.commons.message.MutableMessageDecoration;
 import pl.auroramc.commons.page.navigation.PageNavigator;
 import pl.auroramc.economy.currency.Currency;
-import pl.auroramc.gamble.message.MessageSource;
+import pl.auroramc.gamble.message.MutableMessageSource;
 import pl.auroramc.gamble.stake.StakeContext;
 
 class StakeView implements InventoryHolder {
@@ -48,14 +48,14 @@ class StakeView implements InventoryHolder {
   private final Map<Integer, PageNavigator> navigatorBySlot;
   private final int pageIndex;
   private final Currency fundsCurrency;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final List<StakeContext> stakes;
   private final Inventory stakeInventory;
 
   StakeView(
       final int pageIndex,
       final Currency fundsCurrency,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final List<StakeContext> stakes
   ) {
     this.pageIndex = pageIndex;

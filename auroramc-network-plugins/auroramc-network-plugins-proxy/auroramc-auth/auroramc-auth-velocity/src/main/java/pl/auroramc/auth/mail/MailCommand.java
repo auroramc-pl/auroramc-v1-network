@@ -1,6 +1,6 @@
 package pl.auroramc.auth.mail;
 
-import static pl.auroramc.auth.message.MessageVariableKey.EMAIL_VARIABLE_KEY;
+import static pl.auroramc.auth.message.MutableMessageVariableKey.EMAIL_VARIABLE_KEY;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 
 import com.velocitypowered.api.proxy.Player;
@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import pl.auroramc.auth.message.MessageSource;
+import pl.auroramc.auth.message.MutableMessageSource;
 import pl.auroramc.auth.user.User;
 import pl.auroramc.auth.user.UserFacade;
 import pl.auroramc.commons.message.MutableMessage;
@@ -23,13 +23,13 @@ import pl.auroramc.commons.message.MutableMessage;
 public class MailCommand {
 
   private final Logger logger;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final UserFacade userFacade;
   private final Pattern emailPattern;
 
   public MailCommand(
       final Logger logger,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final UserFacade userFacade,
       final String unparsedEmailPattern
   ) {

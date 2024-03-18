@@ -18,7 +18,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.Plugin;
 import pl.auroramc.economy.currency.Currency;
-import pl.auroramc.gamble.message.MessageSource;
+import pl.auroramc.gamble.message.MutableMessageSource;
 import pl.auroramc.gamble.stake.StakeContext;
 import pl.auroramc.gamble.stake.StakeFacade;
 
@@ -31,13 +31,13 @@ class StakeViewService implements StakeViewFacade {
   private final Plugin plugin;
   private final StakeFacade stakeFacade;
   private final Currency fundsCurrency;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
 
   StakeViewService(
       final Plugin plugin,
       final StakeFacade stakeFacade,
       final Currency fundsCurrency,
-      final MessageSource messageSource
+      final MutableMessageSource messageSource
   ) {
     this.plugin = plugin;
     this.stakeViewByPageIndex = new ConcurrentHashMap<>();

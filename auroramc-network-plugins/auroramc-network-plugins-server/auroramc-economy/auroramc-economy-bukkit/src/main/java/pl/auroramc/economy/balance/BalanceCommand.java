@@ -2,10 +2,10 @@ package pl.auroramc.economy.balance;
 
 import static com.spotify.futures.CompletableFutures.joinList;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
-import static pl.auroramc.economy.message.MessageVariableKey.BALANCE_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.NAME_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MessageVariableKey.USERNAME_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.BALANCE_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.NAME_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.USERNAME_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -21,7 +21,7 @@ import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
-import pl.auroramc.economy.message.MessageSource;
+import pl.auroramc.economy.message.MutableMessageSource;
 
 @Permission("auroramc.economy.balance")
 @Command(name = "balance", aliases = {"bal", "saldo"})
@@ -30,14 +30,14 @@ public class BalanceCommand {
   private final Logger logger;
   private final EconomyFacade economyFacade;
   private final BalanceConfig balanceConfig;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final CurrencyFacade currencyFacade;
 
   public BalanceCommand(
       final Logger logger,
       final EconomyFacade economyFacade,
       final BalanceConfig balanceConfig,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final CurrencyFacade currencyFacade
   ) {
     this.logger = logger;

@@ -8,19 +8,19 @@ import dev.rollczi.litecommands.annotations.execute.Execute;
 import dev.rollczi.litecommands.annotations.permission.Permission;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import pl.auroramc.auctions.message.MessageSource;
+import pl.auroramc.auctions.message.MutableMessageSource;
 
 @Permission("auroramc.auctions.vault")
 @Command(name = "vault")
 public class VaultCommand {
 
   private final Plugin plugin;
-  private final MessageSource messageSource;
+  private final MutableMessageSource messageSource;
   private final VaultController vaultController;
 
   public VaultCommand(
       final Plugin plugin,
-      final MessageSource messageSource,
+      final MutableMessageSource messageSource,
       final VaultController vaultController
   ) {
     this.plugin = plugin;

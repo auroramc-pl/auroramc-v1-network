@@ -5,7 +5,7 @@ import eu.okaeri.configs.annotation.Exclude;
 import java.util.List;
 import pl.auroramc.commons.message.MutableMessage;
 
-public class MessageSource extends OkaeriConfig {
+public class MutableMessageSource extends OkaeriConfig {
 
   public static final @Exclude String MESSAGE_SOURCE_FILE_NAME = "translation.yml";
 
@@ -22,5 +22,5 @@ public class MessageSource extends OkaeriConfig {
       )
   );
 
-  public MessageSourceQuest quest = new MessageSourceQuest();
+  public MutableMessageSourceQuest quest = new MutableMessageSourceQuest();
 }
