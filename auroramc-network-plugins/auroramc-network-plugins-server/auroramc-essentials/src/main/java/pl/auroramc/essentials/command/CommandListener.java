@@ -32,9 +32,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.command.UnknownCommandEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.Plugin;
+import pl.auroramc.commons.search.FuzzySearch;
 import pl.auroramc.essentials.EssentialsConfig;
 import pl.auroramc.commons.lazy.Lazy;
-import pl.auroramc.commons.search.FuzzySearch;
 import pl.auroramc.essentials.message.MutableMessageSource;
 
 public class CommandListener implements Listener {
@@ -52,6 +52,7 @@ public class CommandListener implements Listener {
   private final FuzzySearch fuzzySearch;
   private final MutableMessageSource messageSource;
   private final EssentialsConfig essentialsConfig;
+  private final Cache<CommandSuggestionCompositeKey, String> suggestedCommandsByCompositeKey;
   private final Cache<UUID, Set<String>> availableCommandsByName;
   private final Lazy<Component> overviewOfPluginSummaries;
 
@@ -65,6 +66,9 @@ public class CommandListener implements Listener {
     this.fuzzySearch = fuzzySearch;
     this.messageSource = messageSource;
     this.essentialsConfig = essentialsConfig;
+    this.suggestedCommandsByCompositeKey = Caffeine.newBuilder()
+        .expireAfterWrite(ofSeconds(10))
+        .build();
     this.availableCommandsByName = Caffeine.newBuilder()
         .expireAfterWrite(ofSeconds(30))
         .build();
@@ -82,10 +86,14 @@ public class CommandListener implements Listener {
       return;
     }
 
-    final boolean whetherHasArguments = whetherInputHasArguments(input);
+    final boolean isCommandWithArguments = isCommandWithArguments(input);
     final String arguments = "%s%s".formatted(
-        whetherHasArguments ? COMMAND_ARGUMENT_DELIMITER : "",
-        input.substring(performedCommand.length() + (whetherHasArguments ? COMMAND_ARGUMENTS_OFFSET : 0)));
+        isCommandWithArguments
+            ? COMMAND_ARGUMENT_DELIMITER
+            : "",
+        input.substring(
+            performedCommand.length() + (isCommandWithArguments ? COMMAND_ARGUMENTS_OFFSET : 0)
+        ));
 
     event.message(messageSource.unknownCommandWithPotentialSuggestion
         .with(SUGGESTION_VARIABLE_KEY,
@@ -96,26 +104,37 @@ public class CommandListener implements Listener {
         .compile());
   }
 
-  private boolean whetherInputHasArguments(final String input) {
-    return input.split(COMMAND_ARGUMENT_DELIMITER).length > 1;
+  @EventHandler(priority = HIGHEST, ignoreCancelled = true)
+  public void onPluginSummaryRequest(final PlayerCommandPreprocessEvent event) {
+    if (whetherIsPluginSummaryRequest(event.getMessage())) {
+      event.setCancelled(true);
+      event.getPlayer().sendMessage(overviewOfPluginSummaries.get());
+    }
   }
 
   private String getPotentialSuggestionForCommand(
-      final CommandSender player, final String usedCommand
+      final CommandSender invoker, final String invokedCommand
   ) {
-    if (player instanceof ConsoleCommandSender) {
+    if (isSpecialCommand(invokedCommand)) {
       return null;
     }
 
-    final Set<String> availableCommands = getAvailableCommandsWithCaching((Player) player);
-    return fuzzySearch.getMostSimilar(usedCommand, availableCommands, essentialsConfig.minimalScoreForCommandSuggestion);
+    if (invoker instanceof ConsoleCommandSender) {
+      return null;
+    }
+
+    final Player player = (Player) invoker;
+    return suggestedCommandsByCompositeKey.get(
+        new CommandSuggestionCompositeKey(player.getUniqueId(), invokedCommand),
+        key -> fuzzySearch.getMostSimilarString(
+            invokedCommand,
+            availableCommandsByName.get(player.getUniqueId(), ignored -> getAvailableCommands(player)),
+            essentialsConfig.minimalScoreForCommandSuggestion
+        )
+    );
   }
 
-  private Set<String> getAvailableCommandsWithCaching(final Player player) {
-    return availableCommandsByName.get(player.getUniqueId(), key -> getAvailableCommands(player));
-  }
-
-  private Set<String> getAvailableCommands(final CommandSender player) {
+  private Set<String> getAvailableCommands(final CommandSender invoker) {
     final Set<String> availableCommands = new HashSet<>();
     for (final Entry<String, Command> commandByCommandName : server.getCommandMap()
         .getKnownCommands()
@@ -125,7 +144,7 @@ public class CommandListener implements Listener {
       }
 
       final Command command = commandByCommandName.getValue();
-      if (command.testPermissionSilent(player)) {
+      if (command.testPermissionSilent(invoker)) {
         availableCommands.add(commandByCommandName.getKey().toLowerCase());
       }
     }
@@ -136,20 +155,12 @@ public class CommandListener implements Listener {
     return commandName.startsWith(SPECIAL_COMMAND_NAME_PREFIX);
   }
 
-  @EventHandler(priority = HIGHEST, ignoreCancelled = true)
-  public void onPluginSummaryRequest(final PlayerCommandPreprocessEvent event) {
-    if (whetherIsPluginSummaryRequest(event.getMessage())) {
-      event.setCancelled(true);
-      event.getPlayer().sendMessage(overviewOfPluginSummaries.get());
-    }
-  }
-
   private Component getOverviewOfPluginSummaries() {
     final List<Plugin> listOfPlugins = stream(server.getPluginManager().getPlugins())
-        .filter(not(this::whetherPluginIsBentoBoxExtension))
+        .filter(not(this::isBentoBoxExtension))
         .toList();
     final List<Plugin> customPlugins = listOfPlugins.stream()
-        .filter(this::whetherPluginIsCustom)
+        .filter(this::isCustomPlugin)
         .toList();
     final int percentageOfCustomPlugins =
         (int) round((double) customPlugins.size() / listOfPlugins.size() * 100);
@@ -189,11 +200,15 @@ public class CommandListener implements Listener {
         commandName.equals(PLUGIN_SUMMARY_COMMAND_ALIAS);
   }
 
-  private boolean whetherPluginIsCustom(final Plugin plugin) {
+  private boolean isCommandWithArguments(final String input) {
+    return input.split(COMMAND_ARGUMENT_DELIMITER).length > 1;
+  }
+
+  private boolean isCustomPlugin(final Plugin plugin) {
     return plugin.getName().startsWith(CUSTOM_MADE_PLUGIN_NAME_PREFIX);
   }
 
-  private boolean whetherPluginIsBentoBoxExtension(final Plugin plugin) {
+  private boolean isBentoBoxExtension(final Plugin plugin) {
     return plugin.getName().startsWith(BENTOBOX_EXTENSION_PREFIX);
   }
 }
