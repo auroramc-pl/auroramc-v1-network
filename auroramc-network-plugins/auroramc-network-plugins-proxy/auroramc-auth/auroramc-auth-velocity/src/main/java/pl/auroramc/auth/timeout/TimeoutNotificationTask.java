@@ -9,14 +9,14 @@ import java.time.Duration;
 import pl.auroramc.auth.message.MutableMessageSource;
 import pl.auroramc.commons.duration.DurationFormatter;
 
-public class TimeoutNotifyingTask implements Runnable {
+public class TimeoutNotificationTask implements Runnable {
 
   private final ProxyServer server;
   private final MutableMessageSource messageSource;
   private final TimeoutFacade timeoutFacade;
   private final DurationFormatter durationFormatter;
 
-  public TimeoutNotifyingTask(
+  public TimeoutNotificationTask(
       final ProxyServer server,
       final MutableMessageSource messageSource,
       final TimeoutFacade timeoutFacade,
@@ -32,12 +32,12 @@ public class TimeoutNotifyingTask implements Runnable {
   public void run() {
     for (final Player player : server.getAllPlayers()) {
       if (timeoutFacade.hasCountdown(player.getUniqueId())) {
-        tickTimeout(player);
+        processTimeoutSequence(player);
       }
     }
   }
 
-  private void tickTimeout(final Player player) {
+  private void processTimeoutSequence(final Player player) {
     final Duration remainingPeriod = timeoutFacade.getRemainingPeriod(player.getUniqueId());
     if (remainingPeriod.compareTo(ZERO) >= 0) {
       player.sendActionBar(

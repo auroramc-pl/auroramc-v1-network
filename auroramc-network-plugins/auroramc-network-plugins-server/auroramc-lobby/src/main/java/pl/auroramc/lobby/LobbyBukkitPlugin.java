@@ -17,12 +17,13 @@ import dev.rollczi.litecommands.annotations.LiteCommandsAnnotations;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import eu.okaeri.configs.yaml.bukkit.serdes.SerdesBukkit;
+import java.util.logging.Logger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.auroramc.commons.config.ConfigFactory;
 import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
-import pl.auroramc.commons.integration.litecommands.MutableMessageResultHandler;
-import pl.auroramc.commons.message.MutableMessage;
+import pl.auroramc.commons.integration.litecommands.DeliverableMutableMessageResultHandler;
+import pl.auroramc.commons.message.delivery.DeliverableMutableMessage;
 import pl.auroramc.lobby.message.MutableMessageSource;
 import pl.auroramc.lobby.spawn.SpawnCommand;
 
@@ -41,7 +42,9 @@ public class LobbyBukkitPlugin extends JavaPlugin {
         LobbyConfig.class, PLUGIN_CONFIG_FILE_NAME, new SerdesBukkit()
     );
 
-    registerListeners(this, new LobbyListener(lobbyConfig, messageSource));
+    final Logger logger = getLogger();
+
+    registerListeners(this, new LobbyListener(logger, lobbyConfig, messageSource));
 
     getServer().getScheduler().runTaskTimer(this,
         new VoidTeleportationTask(lobbyConfig, messageSource),
@@ -59,8 +62,8 @@ public class LobbyBukkitPlugin extends JavaPlugin {
         )
         .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
         .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
-        .commands(LiteCommandsAnnotations.of(new SpawnCommand(lobbyConfig, messageSource)))
-        .result(MutableMessage.class, new MutableMessageResultHandler<>())
+        .commands(LiteCommandsAnnotations.of(new SpawnCommand(logger, lobbyConfig, messageSource)))
+        .result(DeliverableMutableMessage.class, new DeliverableMutableMessageResultHandler<>())
         .build();
   }
 

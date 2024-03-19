@@ -6,9 +6,9 @@ import eu.okaeri.configs.serdes.SerdesContext;
 import org.jetbrains.annotations.NotNull;
 import pl.auroramc.commons.message.MutableMessage;
 
-class StringToMutableMessageTransformer extends BidirectionalTransformer<String, MutableMessage> {
+class MutableMessageToStringTransformer extends BidirectionalTransformer<String, MutableMessage> {
 
-  StringToMutableMessageTransformer() {
+  MutableMessageToStringTransformer() {
 
   }
 

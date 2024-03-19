@@ -62,7 +62,7 @@ import pl.auroramc.auth.command.RegisterCommand;
 import pl.auroramc.auth.password.PasswordValidator;
 import pl.auroramc.auth.timeout.TimeoutFacade;
 import pl.auroramc.auth.timeout.TimeoutListener;
-import pl.auroramc.auth.timeout.TimeoutNotifyingTask;
+import pl.auroramc.auth.timeout.TimeoutNotificationTask;
 import pl.auroramc.auth.user.UserController;
 import pl.auroramc.auth.user.UserFacade;
 import pl.auroramc.auth.user.UserListener;
@@ -146,7 +146,7 @@ public class AuthVelocityPlugin {
     server.getScheduler()
         .buildTask(
             this,
-            new TimeoutNotifyingTask(server, messageSource, timeoutFacade, durationFormatter)
+            new TimeoutNotificationTask(server, messageSource, timeoutFacade, durationFormatter)
         )
         .repeat(ofSeconds(1))
         .delay(ZERO)

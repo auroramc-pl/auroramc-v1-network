@@ -15,6 +15,7 @@ import static pl.auroramc.commons.collection.CollectionUtils.merge;
 import static pl.auroramc.commons.message.MutableMessage.EMPTY_DELIMITER;
 import static pl.auroramc.commons.message.MutableMessage.empty;
 import static pl.auroramc.commons.message.MutableMessage.newline;
+import static pl.auroramc.commons.message.MutableMessageDecoration.NO_CURSIVE;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.BACKWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.FORWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationUtils.navigate;
@@ -34,8 +35,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Logger;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.format.TextDecoration.State;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -45,7 +44,6 @@ import org.jetbrains.annotations.ApiStatus.Internal;
 import pl.auroramc.commons.item.ItemStackBuilder;
 import pl.auroramc.commons.event.publisher.EventPublisher;
 import pl.auroramc.commons.message.MutableMessage;
-import pl.auroramc.commons.message.MutableMessageDecoration;
 import pl.auroramc.quests.message.MutableMessageSource;
 import pl.auroramc.quests.objective.Objective;
 import pl.auroramc.quests.objective.ObjectiveUtils;
@@ -233,9 +231,7 @@ public class QuestsView {
                       );
             })
         .orElse(messageSource.questCouldBeStarted)
-        .compileChildren(
-            MutableMessageDecoration.of(TextDecoration.ITALIC, State.FALSE)
-        );
+        .compileChildren(NO_CURSIVE);
   }
 
   private MutableMessage getQuestObjectives(final Quest quest, final UUID viewerUniqueId) {
@@ -266,15 +262,11 @@ public class QuestsView {
             ItemStackBuilder.newBuilder(PAPER)
                 .displayName(
                     messageSource.nameOfPrevPageNavigationButton
-                        .compile(
-                            MutableMessageDecoration.of(TextDecoration.ITALIC, State.FALSE)
-                        )
+                        .compile(NO_CURSIVE)
                 )
                 .lore(
                     messageSource.loreOfPrevPageNavigationButton
-                        .compileChildren(
-                            MutableMessageDecoration.of(TextDecoration.ITALIC, State.FALSE)
-                        )
+                        .compileChildren(NO_CURSIVE)
                 )
                 .build(),
             event -> navigateToPrevPage(questsGui, questsPane),
@@ -287,15 +279,11 @@ public class QuestsView {
             ItemStackBuilder.newBuilder(PAPER)
                 .displayName(
                     messageSource.nameOfNextPageNavigationButton
-                        .compile(
-                            MutableMessageDecoration.of(TextDecoration.ITALIC, State.FALSE)
-                        )
+                        .compile(NO_CURSIVE)
                 )
                 .lore(
                     messageSource.loreOfNextPageNavigationButton
-                        .compileChildren(
-                            MutableMessageDecoration.of(TextDecoration.ITALIC, State.FALSE)
-                        )
+                        .compileChildren(NO_CURSIVE)
                 )
                 .build(),
             event -> navigateToNextPage(questsGui, questsPane),

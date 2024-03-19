@@ -10,3 +10,4 @@ softdepend:
   - auroramc-quests
 libraries:
   - fr.mrmicky:fastboard:2.1.0
+  - com.github.ben-manes.caffeine:caffeine:3.1.8

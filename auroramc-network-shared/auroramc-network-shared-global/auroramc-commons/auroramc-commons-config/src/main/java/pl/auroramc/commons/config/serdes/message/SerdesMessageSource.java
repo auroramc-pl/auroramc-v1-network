@@ -8,6 +8,8 @@ public class SerdesMessageSource implements OkaeriSerdesPack {
 
   @Override
   public void register(final @NotNull SerdesRegistry registry) {
-    registry.register(new StringToMutableMessageTransformer());
+    registry.register(new MutableMessageToStringTransformer());
+    registry.register(new MutableMessageDecorationSerializer());
+    registry.register(new DeliverableMutableMessageSerializer());
   }
 }

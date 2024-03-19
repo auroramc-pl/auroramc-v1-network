@@ -7,6 +7,7 @@ import static org.bukkit.Material.ARROW;
 import static org.bukkit.Material.BLACK_STAINED_GLASS_PANE;
 import static org.bukkit.Material.PAPER;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
+import static pl.auroramc.commons.message.MutableMessageDecoration.NO_CURSIVE;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.BACKWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.FORWARD;
 import static pl.auroramc.gamble.message.MutableMessageVariableKey.GAMBLE_VARIABLE_KEY;
@@ -22,14 +23,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.format.TextDecoration.State;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import pl.auroramc.commons.item.ItemStackBuilder;
-import pl.auroramc.commons.message.MutableMessageDecoration;
 import pl.auroramc.commons.page.navigation.PageNavigator;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.gamble.message.MutableMessageSource;
@@ -121,11 +119,11 @@ class StakeView implements InventoryHolder {
     return ItemStackBuilder.newBuilder(ARROW)
         .displayName(
             messageSource.navigateForward
-                .compile(MutableMessageDecoration.of(TextDecoration.ITALIC, State.FALSE))
+                .compile(NO_CURSIVE)
         )
         .lore(
             messageSource.navigateForwardSuggestion
-                .compile(MutableMessageDecoration.of(TextDecoration.ITALIC, State.FALSE))
+                .compile(NO_CURSIVE)
         )
         .build();
   }
@@ -134,11 +132,11 @@ class StakeView implements InventoryHolder {
     return ItemStackBuilder.newBuilder(ARROW)
         .displayName(
             messageSource.navigateBackward
-                .compile(MutableMessageDecoration.of(TextDecoration.ITALIC, State.FALSE))
+                .compile(NO_CURSIVE)
         )
         .lore(
             messageSource.navigateBackwardSuggestion
-                .compile(MutableMessageDecoration.of(TextDecoration.ITALIC, State.FALSE))
+                .compile(NO_CURSIVE)
         )
         .build();
   }
@@ -153,9 +151,7 @@ class StakeView implements InventoryHolder {
                         stakeContext.gambleKey().id().toLowerCase(ROOT)
                     )
                 )
-                .compile(
-                    MutableMessageDecoration.of(TextDecoration.ITALIC, State.FALSE)
-                )
+                .compile(NO_CURSIVE)
         )
         .lore(
             messageSource.stakeBrief
@@ -168,9 +164,7 @@ class StakeView implements InventoryHolder {
                 )
                 .with(STAKE_VARIABLE_KEY, getFormattedDecimal(stakeContext.stake()))
                 .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
-                .compileChildren(
-                    MutableMessageDecoration.of(TextDecoration.ITALIC, State.FALSE)
-                )
+                .compileChildren(NO_CURSIVE)
         )
         .build();
   }
