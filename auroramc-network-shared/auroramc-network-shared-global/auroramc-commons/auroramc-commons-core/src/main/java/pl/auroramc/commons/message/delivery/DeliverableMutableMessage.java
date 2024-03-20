@@ -1,6 +1,7 @@
 package pl.auroramc.commons.message.delivery;
 
 import static pl.auroramc.commons.message.delivery.DeliverableMutableMessageDisplay.CHAT;
+import static pl.auroramc.commons.message.delivery.DeliverableMutableMessageDisplay.NONE;
 
 import java.util.Set;
 import net.kyori.adventure.audience.Audience;
@@ -10,6 +11,12 @@ import pl.auroramc.commons.message.MutableMessageDecoration;
 
 public class DeliverableMutableMessage {
 
+  private static final DeliverableMutableMessage EMPTY_DELIVERABLE_MUTABLE_MESSAGE =
+      new DeliverableMutableMessage(
+          MutableMessage.empty(),
+          Set.of(),
+          Set.of(NONE)
+      );
   private final MutableMessage mutableMessage;
   private final Set<MutableMessageDecoration> decorations;
   private final Set<DeliverableMutableMessageDisplay> displays;
@@ -40,6 +47,10 @@ public class DeliverableMutableMessage {
         Set.of(),
         Set.of(CHAT)
     );
+  }
+
+  public static DeliverableMutableMessage empty() {
+    return EMPTY_DELIVERABLE_MUTABLE_MESSAGE;
   }
 
   public DeliverableMutableMessage with(final String key, final Object value) {
