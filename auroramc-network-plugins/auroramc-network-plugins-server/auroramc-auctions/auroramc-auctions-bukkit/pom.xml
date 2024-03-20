@@ -59,6 +59,12 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>com.spotify</groupId>
+      <artifactId>completable-futures</artifactId>
+      <version>0.3.6</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>com.github.stefvanschie.inventoryframework</groupId>
       <artifactId>IF</artifactId>
       <version>0.10.13</version>

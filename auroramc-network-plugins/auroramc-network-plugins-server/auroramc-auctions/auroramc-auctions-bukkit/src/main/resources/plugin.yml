@@ -8,5 +8,6 @@ depend:
   - auroramc-economy
 libraries:
   - org.mariadb.jdbc:mariadb-java-client:3.3.3
+  - com.spotify:completable-futures:0.3.6
   - com.github.ben-manes.caffeine:caffeine:3.1.8
   - com.github.stefvanschie.inventoryframework:IF:0.10.13

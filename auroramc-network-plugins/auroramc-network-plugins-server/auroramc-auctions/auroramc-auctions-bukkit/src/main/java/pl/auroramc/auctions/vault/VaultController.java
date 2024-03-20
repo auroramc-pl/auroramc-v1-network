@@ -58,11 +58,9 @@ public class VaultController {
   public void createVaultItem(final UUID uniqueId, final byte[] subject) {
     final Player player = getPlayer(uniqueId);
     if (player != null) {
-      player.sendMessage(
-          messageSource.vaultItemReceived
-              .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(subject))
-              .compile()
-      );
+      messageSource.vaultItemReceived
+          .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(subject))
+          .deliver(player);
     }
 
     userFacade.getUserByUniqueId(uniqueId)
@@ -83,11 +81,9 @@ public class VaultController {
 
     return vaultItemFacade.deleteVaultItem(vaultItem)
         .thenAccept(state ->
-            player.sendMessage(
-                messageSource.vaultItemRedeemed
-                    .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(vaultItem.getSubject()))
-                    .compile()
-            )
+            messageSource.vaultItemRedeemed
+                .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(vaultItem.getSubject()))
+                .deliver(player)
         )
         .thenAccept(state ->
             postToMainThreadAndNextTick(

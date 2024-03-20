@@ -12,6 +12,7 @@ import static pl.auroramc.commons.BukkitUtils.resolveService;
 import static pl.auroramc.commons.config.serdes.juliet.JulietConfig.JULIET_CONFIG_FILE_NAME;
 import static pl.auroramc.commons.duration.DurationFormatterStyle.DEFAULT;
 import static pl.auroramc.commons.duration.DurationFormatterStyle.SHORTLY;
+import static pl.auroramc.commons.message.MutableMessage.LINE_SEPARATOR;
 import static pl.auroramc.commons.plural.Pluralizers.getPluralizer;
 import static pl.auroramc.dailyrewards.DailyRewardsConfig.PLUGIN_CONFIG_FILE_NAME;
 import static pl.auroramc.dailyrewards.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
@@ -111,7 +112,7 @@ public class DailyRewardsBukkitPlugin extends JavaPlugin {
         )
         .message(INVALID_USAGE,
             context -> messageSource.availableSchematicsSuggestion
-                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join("<newline>"))
+                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join(LINE_SEPARATOR))
         )
         .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
         .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)

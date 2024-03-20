@@ -36,7 +36,7 @@ class SqlAudienceRepository implements AudienceRepository {
   }
 
   @Override
-  public Audience findMessageViewerByUniqueId(final UUID uniqueId) {
+  public Audience findAudienceByUniqueId(final UUID uniqueId) {
     try (
         final Connection connection = juliet.borrowConnection();
         final PreparedStatement statement = connection.prepareStatement(FIND_MESSAGE_VIEWER_BY_USER_UNIQUE_ID)

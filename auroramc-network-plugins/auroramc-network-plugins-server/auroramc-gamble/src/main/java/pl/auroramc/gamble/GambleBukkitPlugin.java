@@ -6,6 +6,7 @@ import static dev.rollczi.litecommands.message.LiteMessages.INVALID_USAGE;
 import static dev.rollczi.litecommands.message.LiteMessages.MISSING_PERMISSIONS;
 import static pl.auroramc.commons.BukkitUtils.registerListeners;
 import static pl.auroramc.commons.BukkitUtils.resolveService;
+import static pl.auroramc.commons.message.MutableMessage.LINE_SEPARATOR;
 import static pl.auroramc.gamble.GambleConfig.GAMBLING_CONFIG_FILE_NAME;
 import static pl.auroramc.gamble.gamble.GambleFacade.getGambleFacade;
 import static pl.auroramc.gamble.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
@@ -95,7 +96,7 @@ public class GambleBukkitPlugin extends JavaPlugin {
         )
         .message(INVALID_USAGE,
             context -> messageSource.availableSchematicsSuggestion
-                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join("<newline>"))
+                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join(LINE_SEPARATOR))
         )
         .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
         .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)

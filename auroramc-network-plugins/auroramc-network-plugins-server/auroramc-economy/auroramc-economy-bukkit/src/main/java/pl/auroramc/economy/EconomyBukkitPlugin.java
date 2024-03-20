@@ -8,6 +8,7 @@ import static moe.rafal.juliet.datasource.HikariPooledDataSourceFactory.produceH
 import static pl.auroramc.commons.BukkitUtils.registerServices;
 import static pl.auroramc.commons.BukkitUtils.resolveService;
 import static pl.auroramc.commons.config.serdes.juliet.JulietConfig.JULIET_CONFIG_FILE_NAME;
+import static pl.auroramc.commons.message.MutableMessage.LINE_SEPARATOR;
 import static pl.auroramc.economy.EconomyConfig.ECONOMY_CONFIG_FILE_NAME;
 import static pl.auroramc.economy.EconomyFacadeFactory.getEconomyFacade;
 import static pl.auroramc.economy.account.AccountFacadeFactory.getAccountFacade;
@@ -104,7 +105,7 @@ public class EconomyBukkitPlugin extends JavaPlugin {
         )
         .message(INVALID_USAGE,
             context -> messageSource.availableSchematicsSuggestion
-                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join("<newline>"))
+                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join(LINE_SEPARATOR))
         )
         .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
         .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)

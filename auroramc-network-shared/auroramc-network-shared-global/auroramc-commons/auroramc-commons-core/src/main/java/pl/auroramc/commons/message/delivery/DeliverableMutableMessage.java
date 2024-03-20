@@ -55,6 +55,20 @@ public class DeliverableMutableMessage {
     return this;
   }
 
+  public Component compile(final MutableMessageDecoration... decorations) {
+    return mutableMessage.compile(decorations);
+  }
+
+  public Component[] compileChildren(
+      final String delimiter, final MutableMessageDecoration... decorations
+  ) {
+    return mutableMessage.compileChildren(delimiter, decorations);
+  }
+
+  public Component[] compileChildren(final MutableMessageDecoration... decorations) {
+    return mutableMessage.compileChildren(decorations);
+  }
+
   public void deliver(
       final Audience viewer
   ) {

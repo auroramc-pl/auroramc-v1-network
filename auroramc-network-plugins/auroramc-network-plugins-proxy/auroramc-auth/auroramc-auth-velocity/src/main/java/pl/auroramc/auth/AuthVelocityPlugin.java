@@ -21,6 +21,7 @@ import static pl.auroramc.auth.user.UserFacadeFactory.getUserFacade;
 import static pl.auroramc.commons.VelocityUtils.registerListeners;
 import static pl.auroramc.commons.config.serdes.juliet.JulietConfig.JULIET_CONFIG_FILE_NAME;
 import static pl.auroramc.commons.duration.DurationFormatterStyle.DEFAULT;
+import static pl.auroramc.commons.message.MutableMessage.LINE_SEPARATOR;
 import static pl.auroramc.commons.plural.Pluralizers.getPluralizer;
 
 import com.google.inject.Inject;
@@ -163,7 +164,7 @@ public class AuthVelocityPlugin {
         )
         .message(INVALID_USAGE,
             context -> messageSource.availableSchematicsSuggestion
-                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join("<newline>"))
+                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join(LINE_SEPARATOR))
         )
         .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
         .commands(

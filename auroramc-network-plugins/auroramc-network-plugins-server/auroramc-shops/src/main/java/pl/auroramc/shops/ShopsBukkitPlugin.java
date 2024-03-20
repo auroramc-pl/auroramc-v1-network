@@ -6,6 +6,7 @@ import static dev.rollczi.litecommands.message.LiteMessages.MISSING_PERMISSIONS;
 import static java.nio.file.Files.createDirectory;
 import static java.nio.file.Files.exists;
 import static pl.auroramc.commons.BukkitUtils.resolveService;
+import static pl.auroramc.commons.message.MutableMessage.LINE_SEPARATOR;
 import static pl.auroramc.shops.ShopsConfig.SHOPS_CONFIG_FILE_NAME;
 import static pl.auroramc.shops.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
 import static pl.auroramc.shops.message.MessageVariableKey.SCHEMATICS_VARIABLE_KEY;
@@ -77,7 +78,7 @@ public class ShopsBukkitPlugin extends JavaPlugin {
         )
         .message(INVALID_USAGE,
             context -> messageSource.availableSchematicsSuggestion
-                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join("<newline>"))
+                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join(LINE_SEPARATOR))
         )
         .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
         .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)

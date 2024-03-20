@@ -10,10 +10,10 @@ import net.kyori.adventure.text.Component;
 
 public class MutableMessage {
 
+  public static final String LINE_SEPARATOR = "<newline>";
   public static final String EMPTY_DELIMITER = "";
   private static final char PLACEHOLDER_KEY_INITIATOR = '{';
   private static final char PLACEHOLDER_KEY_TERMINATOR = '}';
-  private static final String LINE_SEPARATOR = "<newline>";
   private static final MutableMessage EMPTY_MUTABLE_MESSAGE = of(EMPTY_DELIMITER);
   private static final MutableMessage NEWLINE_MUTABLE_MESSAGE = of(LINE_SEPARATOR);
   private final String template;

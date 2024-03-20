@@ -42,7 +42,7 @@ class DataValidationListener implements Listener {
         .thenCompose(user ->
             allOf(
                 createVaultIfRequired(user),
-                createMessageViewerIfRequired(user)
+                createAudienceIfRequired(user)
             )
         )
         .exceptionally(exception -> delegateCaughtException(logger, exception));
@@ -61,10 +61,10 @@ class DataValidationListener implements Listener {
         });
   }
 
-  private CompletableFuture<Void> createMessageViewerIfRequired(final User user) {
+  private CompletableFuture<Void> createAudienceIfRequired(final User user) {
     return audienceFacade.getAudienceByUniqueId(user.getUniqueId())
-        .thenCompose(messageViewer -> {
-          if (messageViewer == null) {
+        .thenCompose(audience -> {
+          if (audience == null) {
             return audienceFacade.createAudience(
                 new Audience(user.getId(), true)
             );

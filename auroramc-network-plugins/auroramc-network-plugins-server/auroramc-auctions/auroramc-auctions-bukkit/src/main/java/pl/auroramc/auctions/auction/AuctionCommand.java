@@ -38,7 +38,7 @@ import pl.auroramc.auctions.AuctionsConfig;
 import pl.auroramc.auctions.message.MutableMessageSource;
 import pl.auroramc.auctions.audience.Audience;
 import pl.auroramc.auctions.audience.AudienceFacade;
-import pl.auroramc.commons.message.MutableMessage;
+import pl.auroramc.commons.message.delivery.DeliverableMutableMessage;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
 
@@ -77,7 +77,7 @@ public class AuctionCommand {
 
   @Permission("auroramc.auctions.auction.schedule")
   @Execute(name = "schedule")
-  public MutableMessage schedule(
+  public DeliverableMutableMessage schedule(
       final @Context Player player,
       final @Arg BigDecimal minimalPrice,
       final @Arg BigDecimal minimalPricePuncture,
@@ -134,7 +134,7 @@ public class AuctionCommand {
 
   @Permission("auroramc.auctions.auction.bid")
   @Execute(name = "bid")
-  public MutableMessage bid(
+  public DeliverableMutableMessage bid(
       final @Context Player player,
       final @OptionalArg BigDecimal offer
   ) {
@@ -174,7 +174,7 @@ public class AuctionCommand {
         .join();
   }
 
-  private MutableMessage completeBidOfAuction(
+  private DeliverableMutableMessage completeBidOfAuction(
       final Player trader, final BigDecimal offer, final boolean whetherTraderHasEnoughMoney
   ) {
     if (!whetherTraderHasEnoughMoney) {
@@ -190,7 +190,7 @@ public class AuctionCommand {
 
   @Permission("auroramc.auctions.auction.summary")
   @Execute(name = "summary")
-  public MutableMessage summary() {
+  public DeliverableMutableMessage summary() {
     final Auction auction = auctionFacade.getActiveAuction();
     if (auction == null) {
       return messageSource.auctionIsMissing;
@@ -208,12 +208,12 @@ public class AuctionCommand {
 
   @Permission("auroramc.auctions.auction.notifications")
   @Execute(name = "notifications")
-  public CompletableFuture<MutableMessage> notifications(final @Context Player player) {
+  public CompletableFuture<DeliverableMutableMessage> notifications(final @Context Player player) {
     return audienceFacade.getAudienceByUniqueId(player.getUniqueId())
         .thenApply(this::toggleNotifications);
   }
 
-  private MutableMessage toggleNotifications(final Audience audience) {
+  private DeliverableMutableMessage toggleNotifications(final Audience audience) {
     audience.setAllowsMessages(!audience.isAllowsMessages());
     audienceFacade.updateAudience(audience);
     return audience.isAllowsMessages()
@@ -221,7 +221,7 @@ public class AuctionCommand {
         : messageSource.notificationsDisabled;
   }
 
-  private MutableMessage getHighestBid(final Auction auction, final Currency fundsCurrency) {
+  private DeliverableMutableMessage getHighestBid(final Auction auction, final Currency fundsCurrency) {
     if (auction.getCurrentTraderUniqueId() == null) {
       return messageSource.unknownOffer;
     }
@@ -236,6 +236,9 @@ public class AuctionCommand {
     return Optional.ofNullable(playerUniqueId)
         .map(Bukkit::getPlayer)
         .map(Player::name)
-        .orElse(messageSource.unknownPlayer.compile());
+        .orElse(
+            messageSource.unknownPlayer
+                .compile()
+        );
   }
 }
