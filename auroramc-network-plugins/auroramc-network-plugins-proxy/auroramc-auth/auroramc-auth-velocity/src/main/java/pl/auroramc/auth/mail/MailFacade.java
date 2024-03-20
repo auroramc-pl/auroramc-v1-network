@@ -7,9 +7,7 @@ import pl.auroramc.auth.user.User;
 public interface MailFacade {
 
   static MailFacade getEmailFacade(
-      final MailConfig mailConfig,
-      final MutableMessageSource messageSource
-  ) {
+      final MailConfig mailConfig, final MutableMessageSource messageSource) {
     return new MailService(mailConfig, messageSource);
   }
 

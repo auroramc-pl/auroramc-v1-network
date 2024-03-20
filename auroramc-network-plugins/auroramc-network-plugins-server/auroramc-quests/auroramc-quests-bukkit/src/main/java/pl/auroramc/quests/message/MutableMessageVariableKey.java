@@ -10,7 +10,5 @@ public class MutableMessageVariableKey {
   public static final String ITEM_VARIABLE_KEY = "item";
   public static final String USERNAME_VARIABLE_KEY = "username";
 
-  private MutableMessageVariableKey() {
-
-  }
+  private MutableMessageVariableKey() {}
 }

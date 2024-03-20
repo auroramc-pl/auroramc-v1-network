@@ -31,8 +31,7 @@ public class MailCommand {
       final Logger logger,
       final MutableMessageSource messageSource,
       final UserFacade userFacade,
-      final String unparsedEmailPattern
-  ) {
+      final String unparsedEmailPattern) {
     this.logger = logger;
     this.messageSource = messageSource;
     this.userFacade = userFacade;
@@ -41,63 +40,49 @@ public class MailCommand {
 
   @Execute
   public CompletableFuture<MutableMessage> mail(
-      final @Context Player player, final @Arg String email
-  ) {
+      final @Context Player player, final @Arg String email) {
     if (!emailPattern.matcher(email).matches()) {
-      return messageSource.specifiedEmailIsInvalid
-          .asCompletedFuture();
+      return messageSource.specifiedEmailIsInvalid.asCompletedFuture();
     }
 
-    return userFacade.getUserByUniqueId(player.getUniqueId())
+    return userFacade
+        .getUserByUniqueId(player.getUniqueId())
         .thenCompose(user -> handleUserEmail(user, email))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
-  private CompletableFuture<MutableMessage> handleUserEmail(
-      final User user, final String email
-  ) {
+  private CompletableFuture<MutableMessage> handleUserEmail(final User user, final String email) {
     if (user.isPremium()) {
-      return messageSource.notAllowedBecauseOfPremiumAccount
-          .asCompletedFuture();
+      return messageSource.notAllowedBecauseOfPremiumAccount.asCompletedFuture();
     }
 
     if (!user.isRegistered()) {
-      return messageSource.notAllowedBecauseOfNonRegisteredAccount
-          .asCompletedFuture();
+      return messageSource.notAllowedBecauseOfNonRegisteredAccount.asCompletedFuture();
     }
 
     if (!user.isAuthenticated()) {
-      return messageSource.notAllowedBecauseOfMissingAuthorization
-          .asCompletedFuture();
+      return messageSource.notAllowedBecauseOfMissingAuthorization.asCompletedFuture();
     }
 
-    if (
-        Optional.ofNullable(user.getEmail())
-            .filter(email::equalsIgnoreCase)
-            .isPresent()
-    ) {
-      return messageSource.specifiedEmailIsTheSame
-          .asCompletedFuture();
+    if (Optional.ofNullable(user.getEmail()).filter(email::equalsIgnoreCase).isPresent()) {
+      return messageSource.specifiedEmailIsTheSame.asCompletedFuture();
     }
 
-    return userFacade.getUserByEmail(email)
+    return userFacade
+        .getUserByEmail(email)
         .thenCompose(persistedUser -> handleUserLogin(user, persistedUser, email));
   }
 
   private CompletableFuture<MutableMessage> handleUserLogin(
-      final User user, final User persistedUser, final String email
-  ) {
+      final User user, final User persistedUser, final String email) {
     if (persistedUser != null) {
-      return messageSource.specifiedEmailIsClaimed
-          .asCompletedFuture();
+      return messageSource.specifiedEmailIsClaimed.asCompletedFuture();
     }
 
     user.setEmail(email);
-    return userFacade.updateUser(user)
-        .thenApply(state ->
-            messageSource.emailHasBeenChanged
-                .with(EMAIL_VARIABLE_KEY, email)
-        )
+    return userFacade
+        .updateUser(user)
+        .thenApply(state -> messageSource.emailHasBeenChanged.with(EMAIL_VARIABLE_KEY, email))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 }

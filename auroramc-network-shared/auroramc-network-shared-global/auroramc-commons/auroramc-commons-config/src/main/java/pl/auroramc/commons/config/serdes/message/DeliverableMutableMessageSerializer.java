@@ -14,9 +14,7 @@ import pl.auroramc.commons.message.delivery.DeliverableMutableMessageDisplay;
 
 class DeliverableMutableMessageSerializer implements ObjectSerializer<DeliverableMutableMessage> {
 
-  DeliverableMutableMessageSerializer() {
-
-  }
+  DeliverableMutableMessageSerializer() {}
 
   @Override
   public boolean supports(final @NotNull Class<? super DeliverableMutableMessage> type) {
@@ -27,8 +25,7 @@ class DeliverableMutableMessageSerializer implements ObjectSerializer<Deliverabl
   public void serialize(
       final @NotNull DeliverableMutableMessage object,
       final @NotNull SerializationData data,
-      final @NotNull GenericsDeclaration generics
-  ) {
+      final @NotNull GenericsDeclaration generics) {
     data.add("message", object.getMutableMessage());
     if (!object.getDecorations().isEmpty()) {
       data.addCollection("decorations", object.getDecorations(), MutableMessageDecoration.class);
@@ -38,13 +35,10 @@ class DeliverableMutableMessageSerializer implements ObjectSerializer<Deliverabl
 
   @Override
   public DeliverableMutableMessage deserialize(
-      final @NotNull DeserializationData data,
-      final @NotNull GenericsDeclaration generics
-  ) {
+      final @NotNull DeserializationData data, final @NotNull GenericsDeclaration generics) {
     return DeliverableMutableMessage.of(
         data.get("message", MutableMessage.class),
         getAsHashSet(data, "decorations", MutableMessageDecoration.class),
-        getAsHashSet(data, "displays", DeliverableMutableMessageDisplay.class)
-    );
+        getAsHashSet(data, "displays", DeliverableMutableMessageDisplay.class));
   }
 }

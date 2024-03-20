@@ -23,7 +23,8 @@ class PaymentService implements PaymentFacade {
   @Override
   public CompletableFuture<Void> createPayment(final Payment payment) {
     return payment.amount().compareTo(PAYMENT_AMOUNT_BUFFER) >= 0
-        ? runAsync(() -> paymentRepository.createPayment(payment)).exceptionally(exception -> delegateCaughtException(logger, exception))
+        ? runAsync(() -> paymentRepository.createPayment(payment))
+            .exceptionally(exception -> delegateCaughtException(logger, exception))
         : EMPTY_FUTURE;
   }
 }

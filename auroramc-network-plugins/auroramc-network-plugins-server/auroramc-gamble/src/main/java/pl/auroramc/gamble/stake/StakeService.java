@@ -20,18 +20,20 @@ class StakeService implements StakeFacade {
 
   @Override
   public void createStakeContext(final StakeContext stakeContext) {
-    bunchOfStakeContexts.mutate(bunch -> {
-      bunch.add(stakeContext);
-      return bunch;
-    });
+    bunchOfStakeContexts.mutate(
+        bunch -> {
+          bunch.add(stakeContext);
+          return bunch;
+        });
   }
 
   @Override
   public void deleteStakeContext(final StakeContext stakeContext) {
-    bunchOfStakeContexts.mutate(bunch -> {
-      bunch.remove(stakeContext);
-      return bunch;
-    });
+    bunchOfStakeContexts.mutate(
+        bunch -> {
+          bunch.remove(stakeContext);
+          return bunch;
+        });
   }
 
   @Override

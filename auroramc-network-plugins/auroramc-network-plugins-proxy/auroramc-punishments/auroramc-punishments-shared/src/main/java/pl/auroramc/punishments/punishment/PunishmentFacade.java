@@ -8,14 +8,9 @@ public interface PunishmentFacade {
   CompletableFuture<Punishment> getPunishmentById(final Long id);
 
   CompletableFuture<Punishment> getPunishmentByPenalizedIdWithScopeAndState(
-      final Long penalizedId,
-      final PunishmentScope scope,
-      final PunishmentState state
-  );
+      final Long penalizedId, final PunishmentScope scope, final PunishmentState state);
 
-  CompletableFuture<List<Punishment>> getPunishmentsByPenalizedId(
-      final Long penalizedId
-  );
+  CompletableFuture<List<Punishment>> getPunishmentsByPenalizedId(final Long penalizedId);
 
   CompletableFuture<Void> createPunishment(final Punishment punishment);
 

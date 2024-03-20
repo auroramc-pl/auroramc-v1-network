@@ -1,10 +1,10 @@
 package pl.auroramc.auctions.vault;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
+import static pl.auroramc.auctions.vault.SqlVaultRepositoryQuery.CREATE_VAULT;
 import static pl.auroramc.auctions.vault.SqlVaultRepositoryQuery.CREATE_VAULT_SCHEMA;
 import static pl.auroramc.auctions.vault.SqlVaultRepositoryQuery.DELETE_VAULT;
 import static pl.auroramc.auctions.vault.SqlVaultRepositoryQuery.FIND_VAULT_BY_USER_ID;
-import static pl.auroramc.auctions.vault.SqlVaultRepositoryQuery.CREATE_VAULT;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

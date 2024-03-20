@@ -21,7 +21,8 @@ class ChequeFinalizationListener implements Listener {
   private final Logger logger;
   private final ChequeFacade chequeFacade;
 
-  ChequeFinalizationListener(final Plugin plugin, final Logger logger, final ChequeFacade chequeFacade) {
+  ChequeFinalizationListener(
+      final Plugin plugin, final Logger logger, final ChequeFacade chequeFacade) {
     this.plugin = plugin;
     this.logger = logger;
     this.chequeFacade = chequeFacade;
@@ -45,13 +46,14 @@ class ChequeFinalizationListener implements Listener {
     if (chequeFacade.whetherItemIsCheque(heldItemStack.clone())) {
       final Player retriever = event.getPlayer();
       event.setCancelled(true);
-      postToMainThreadAndNextTick(plugin,
+      postToMainThreadAndNextTick(
+          plugin,
           () ->
-              chequeFacade.finalizeCheque(retriever.getUniqueId(), heldItemStack)
+              chequeFacade
+                  .finalizeCheque(retriever.getUniqueId(), heldItemStack)
                   .thenApply(MutableMessage::compile)
                   .thenAccept(retriever::sendMessage)
-                  .exceptionally(exception -> delegateCaughtException(logger, exception))
-      );
+                  .exceptionally(exception -> delegateCaughtException(logger, exception)));
     }
   }
 }

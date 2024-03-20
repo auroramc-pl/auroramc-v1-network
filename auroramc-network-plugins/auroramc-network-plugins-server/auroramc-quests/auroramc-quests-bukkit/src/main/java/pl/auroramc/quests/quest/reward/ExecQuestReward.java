@@ -25,15 +25,12 @@ public class ExecQuestReward implements QuestReward<Player> {
     server.dispatchCommand(server.getConsoleSender(), completeCommand);
   }
 
-  private String getTargetedCommand(
-      final String templateOfCommand, final String usernameOfTarget
-  ) {
+  private String getTargetedCommand(final String templateOfCommand, final String usernameOfTarget) {
     return templateOfCommand.replace(TARGET_VARIABLE_NAME, usernameOfTarget);
   }
 
   private List<String> getTargetedCommands(
-      final List<String> templatesOfCommands, final String usernameOfTarget
-  ) {
+      final List<String> templatesOfCommands, final String usernameOfTarget) {
     return templatesOfCommands.stream()
         .map(templateOfCommand -> getTargetedCommand(templateOfCommand, usernameOfTarget))
         .toList();

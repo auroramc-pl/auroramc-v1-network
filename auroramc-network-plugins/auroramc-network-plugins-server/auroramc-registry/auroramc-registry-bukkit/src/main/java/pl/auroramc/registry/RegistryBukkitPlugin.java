@@ -22,15 +22,16 @@ public class RegistryBukkitPlugin extends JavaPlugin {
 
   @Override
   public void onEnable() {
-    final ConfigFactory configFactory = new ConfigFactory(
-        getDataFolder().toPath(), YamlBukkitConfigurer::new);
+    final ConfigFactory configFactory =
+        new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
 
-    final JulietConfig julietConfig = configFactory.produceConfig(
-        JulietConfig.class, JULIET_CONFIG_FILE_NAME, new SerdesJuliet()
-    );
-    final Juliet juliet = JulietBuilder.newBuilder()
-        .withDataSource(produceHikariDataSource(julietConfig.hikari))
-        .build();
+    final JulietConfig julietConfig =
+        configFactory.produceConfig(
+            JulietConfig.class, JULIET_CONFIG_FILE_NAME, new SerdesJuliet());
+    final Juliet juliet =
+        JulietBuilder.newBuilder()
+            .withDataSource(produceHikariDataSource(julietConfig.hikari))
+            .build();
 
     final Logger logger = getLogger();
 

@@ -46,7 +46,5 @@ final class SqlLeaderboardRepositoryQuery {
       ORDER BY `position`;
       """;
 
-  private SqlLeaderboardRepositoryQuery() {
-
-  }
+  private SqlLeaderboardRepositoryQuery() {}
 }

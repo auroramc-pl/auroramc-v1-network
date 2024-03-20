@@ -41,26 +41,21 @@ class ShopService implements ShopFacade {
           .forEach(parsedShops::add);
     } catch (final Exception exception) {
       throw new ShopDiscoveryException(
-          "Could not discover shops in %s path, because of unexpected exception.".formatted(traversalPath.toString()),
-          exception
-      );
+          "Could not discover shops in %s path, because of unexpected exception."
+              .formatted(traversalPath.toString()),
+          exception);
     }
   }
 
   private Shop parseShopDefinition(final GroovyShell groovyShell, final Path definitionPath) {
-    try (
-        final InputStream inputStream = Files.newInputStream(definitionPath);
-        final InputStreamReader reader = new InputStreamReader(inputStream)
-    ) {
+    try (final InputStream inputStream = Files.newInputStream(definitionPath);
+        final InputStreamReader reader = new InputStreamReader(inputStream)) {
       return (Shop) groovyShell.evaluate(reader);
     } catch (final Exception exception) {
       throw new ShopDiscoveryException(
           "Could not parse shop definition from %s path, because of unexpected exception."
-              .formatted(
-                  definitionPath.toString()
-              ),
-          exception
-      );
+              .formatted(definitionPath.toString()),
+          exception);
     }
   }
 

@@ -3,8 +3,8 @@ package pl.auroramc.gamble.gamble;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.gamble.message.MutableMessageVariableKey.COMPETITOR_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MutableMessageVariableKey.STAKE_VARIABLE_KEY;
 import static pl.auroramc.gamble.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.STAKE_VARIABLE_KEY;
 import static pl.auroramc.gamble.message.MutableMessageVariableKey.UNIQUE_ID_VARIABLE_KEY;
 
 import java.util.logging.Logger;

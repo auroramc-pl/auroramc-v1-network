@@ -21,12 +21,14 @@ class UserService implements UserFacade {
   UserService(final Logger logger, final UserRepository userRepository) {
     this.logger = logger;
     this.userRepository = userRepository;
-    this.userByUniqueId = Caffeine.newBuilder()
-        .expireAfterWrite(ofSeconds(30))
-        .buildAsync(userRepository::findUserByUniqueId);
-    this.userByUsername = Caffeine.newBuilder()
-        .expireAfterWrite(ofSeconds(30))
-        .buildAsync(userRepository::findUserByUsername);
+    this.userByUniqueId =
+        Caffeine.newBuilder()
+            .expireAfterWrite(ofSeconds(30))
+            .buildAsync(userRepository::findUserByUniqueId);
+    this.userByUsername =
+        Caffeine.newBuilder()
+            .expireAfterWrite(ofSeconds(30))
+            .buildAsync(userRepository::findUserByUsername);
   }
 
   @Override
@@ -42,11 +44,12 @@ class UserService implements UserFacade {
   @Override
   public CompletableFuture<Void> createUser(final User user) {
     return runAsync(() -> userRepository.createUser(user))
-        .thenAccept(state -> {
-          final CompletableFuture<User> updatedUser = completedFuture(user);
-          userByUniqueId.put(user.getUniqueId(), updatedUser);
-          userByUsername.put(user.getUsername(), updatedUser);
-        })
+        .thenAccept(
+            state -> {
+              final CompletableFuture<User> updatedUser = completedFuture(user);
+              userByUniqueId.put(user.getUniqueId(), updatedUser);
+              userByUsername.put(user.getUsername(), updatedUser);
+            })
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 

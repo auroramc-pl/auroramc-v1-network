@@ -40,8 +40,7 @@ public class QuestsCommand {
       final UserFacade userFacade,
       final QuestsView questsView,
       final QuestTrackFacade questTrackFacade,
-      final QuestTrackController questTrackController
-  ) {
+      final QuestTrackController questTrackController) {
     this.logger = logger;
     this.messageSource = messageSource;
     this.userFacade = userFacade;
@@ -57,33 +56,29 @@ public class QuestsCommand {
 
   @Execute(name = "assign")
   public CompletableFuture<MutableMessage> assign(
-      final @Arg Player target,
-      final @Arg Quest quest,
-      final @Arg Optional<QuestState> state
-  ) {
-    return userFacade.getUserByUniqueId(target.getUniqueId())
+      final @Arg Player target, final @Arg Quest quest, final @Arg Optional<QuestState> state) {
+    return userFacade
+        .getUserByUniqueId(target.getUniqueId())
         .thenApply(user -> assignQuest(user, quest, state.orElse(IN_PROGRESS)))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
-  private MutableMessage assignQuest(
-      final User user, final Quest quest, final QuestState state
-  ) {
+  private MutableMessage assignQuest(final User user, final Quest quest, final QuestState state) {
     final Optional<QuestState> currentState =
-        questTrackFacade.getQuestTrackByUniqueIdAndQuestId(user.getUniqueId(), quest.getKey().getId())
+        questTrackFacade
+            .getQuestTrackByUniqueIdAndQuestId(user.getUniqueId(), quest.getKey().getId())
             .map(QuestTrack::getQuestState);
     if (currentState.isPresent()) {
-      return (
-          currentState.get() == COMPLETED
+      return (currentState.get() == COMPLETED
               ? messageSource.questIsAlreadyCompleted
-              : messageSource.questIsAlreadyAssigned
-      )
+              : messageSource.questIsAlreadyAssigned)
           .with(USERNAME_VARIABLE_KEY, user.getUsername())
           .with(QUEST_VARIABLE_KEY, quest.getKey().getName());
     }
 
     questTrackController.assignQuest(user, quest, state);
-    return messageSource.questHasBeenAssigned
+    return messageSource
+        .questHasBeenAssigned
         .with(USERNAME_VARIABLE_KEY, user.getUsername())
         .with(QUEST_VARIABLE_KEY, quest.getKey().getName());
   }

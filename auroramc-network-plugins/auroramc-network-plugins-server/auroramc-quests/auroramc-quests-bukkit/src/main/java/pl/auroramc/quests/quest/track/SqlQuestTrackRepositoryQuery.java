@@ -45,7 +45,5 @@ final class SqlQuestTrackRepositoryQuery {
         `user_id` = ? AND `quest_id` = ?;
       """;
 
-  private SqlQuestTrackRepositoryQuery() {
-
-  }
+  private SqlQuestTrackRepositoryQuery() {}
 }

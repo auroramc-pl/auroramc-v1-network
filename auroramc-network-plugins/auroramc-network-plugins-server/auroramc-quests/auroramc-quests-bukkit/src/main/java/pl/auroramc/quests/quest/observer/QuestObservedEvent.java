@@ -13,10 +13,15 @@ public class QuestObservedEvent extends Event {
   private final Quest observedQuest;
   private final Quest previousQuest;
 
-  public QuestObservedEvent(final Player player, final Quest observedQuest, final Quest previousQuest) {
+  public QuestObservedEvent(
+      final Player player, final Quest observedQuest, final Quest previousQuest) {
     this.player = player;
     this.observedQuest = observedQuest;
     this.previousQuest = previousQuest;
+  }
+
+  public static HandlerList getHandlerList() {
+    return HANDLER_LIST;
   }
 
   public Player getPlayer() {
@@ -33,10 +38,6 @@ public class QuestObservedEvent extends Event {
 
   @Override
   public @NotNull HandlerList getHandlers() {
-    return HANDLER_LIST;
-  }
-
-  public static HandlerList getHandlerList() {
     return HANDLER_LIST;
   }
 }

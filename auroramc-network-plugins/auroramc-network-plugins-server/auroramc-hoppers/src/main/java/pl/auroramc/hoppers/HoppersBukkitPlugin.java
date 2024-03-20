@@ -34,40 +34,35 @@ public class HoppersBukkitPlugin extends JavaPlugin {
 
   @Override
   public void onEnable() {
-    final ConfigFactory configFactory = new ConfigFactory(
-        getDataFolder().toPath(),
-        YamlBukkitConfigurer::new
-    );
-    final MutableMessageSource messageSource = configFactory.produceConfig(
-        MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
-    );
+    final ConfigFactory configFactory =
+        new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
+    final MutableMessageSource messageSource =
+        configFactory.produceConfig(
+            MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource());
 
     final NamespacedKey transferQuantityKey = new NamespacedKey(this, TRANSFER_QUANTITY_KEY_ID);
 
     registerListener(this);
-    registerListeners(this,
+    registerListeners(
+        this,
         new HopperInitializeListener(this, transferQuantityKey),
-        new HopperTransferListener(this, transferQuantityKey)
-    );
+        new HopperTransferListener(this, transferQuantityKey));
 
-    commands = LiteBukkitFactory.builder(getName(), this)
-        .extension(new LiteAdventureExtension<>(),
-            configurer -> configurer.miniMessage(true)
-        )
-        .message(INVALID_USAGE,
-            context -> messageSource.availableSchematicsSuggestion
-                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join(LINE_SEPARATOR))
-        )
-        .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
-        .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
-        .message(PLAYER_NOT_FOUND, messageSource.specifiedPlayerIsUnknown)
-        .commands(
-            LiteCommandsAnnotations.of(
-                new HopperCommand(messageSource, transferQuantityKey)
-            )
-        )
-        .result(MutableMessage.class, new MutableMessageResultHandler<>())
-        .build();
+    commands =
+        LiteBukkitFactory.builder(getName(), this)
+            .extension(new LiteAdventureExtension<>(), configurer -> configurer.miniMessage(true))
+            .message(
+                INVALID_USAGE,
+                context ->
+                    messageSource.availableSchematicsSuggestion.with(
+                        SCHEMATICS_VARIABLE_KEY, context.getSchematic().join(LINE_SEPARATOR)))
+            .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
+            .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
+            .message(PLAYER_NOT_FOUND, messageSource.specifiedPlayerIsUnknown)
+            .commands(
+                LiteCommandsAnnotations.of(new HopperCommand(messageSource, transferQuantityKey)))
+            .result(MutableMessage.class, new MutableMessageResultHandler<>())
+            .build();
   }
 
   @Override

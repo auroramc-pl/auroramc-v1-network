@@ -13,9 +13,11 @@ public class ItemQuestReward implements QuestReward<Player> {
 
   @Override
   public void apply(final Player target) {
-    target.getInventory()
+    target
+        .getInventory()
         .addItem(item)
-        .forEach((index, remainingItem) ->
-            target.getWorld().dropItemNaturally(target.getLocation(), remainingItem));
+        .forEach(
+            (index, remainingItem) ->
+                target.getWorld().dropItemNaturally(target.getLocation(), remainingItem));
   }
 }

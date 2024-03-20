@@ -17,7 +17,5 @@ public final class MutableMessageVariableKey {
   public static final String TRANSACTION_TIME_VARIABLE_KEY = "transactionTime";
   public static final String CURRENCY_ID_VARIABLE_KEY = "currencyId";
 
-  private MutableMessageVariableKey() {
-
-  }
+  private MutableMessageVariableKey() {}
 }

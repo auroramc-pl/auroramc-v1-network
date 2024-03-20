@@ -28,15 +28,15 @@ class NametagService implements NametagFacade {
   private static final MutableComponent EMPTY = literal("");
   private static final MutableComponent ALIGNING_COMPONENT = literal(" ");
   private static final Scoreboard DUMMY_SCOREBOARD = new Scoreboard();
-  private static final Objective DUMMY_OBJECTIVE = new Objective(
-      DUMMY_SCOREBOARD,
-      DUMMY_OBJECTIVE_NAME,
-      DUMMY,
-      EMPTY,
-      INTEGER,
-      false,
-      new FixedFormat(EMPTY)
-  );
+  private static final Objective DUMMY_OBJECTIVE =
+      new Objective(
+          DUMMY_SCOREBOARD,
+          DUMMY_OBJECTIVE_NAME,
+          DUMMY,
+          EMPTY,
+          INTEGER,
+          false,
+          new FixedFormat(EMPTY));
   private final NametagContextFacade nametagContextFacade;
 
   NametagService(final NametagContextFacade nametagContextFacade) {
@@ -52,12 +52,10 @@ class NametagService implements NametagFacade {
   public void inject(final Player player) {
     final ServerPlayerConnection outboundConnection = getOutboundConnection(player);
 
-    final ClientboundSetObjectivePacket setObjectivePacket = new ClientboundSetObjectivePacket(
-        DUMMY_OBJECTIVE, 0
-    );
-    final ClientboundSetDisplayObjectivePacket setDisplayObjectivePacket = new ClientboundSetDisplayObjectivePacket(
-        BELOW_NAME, DUMMY_OBJECTIVE
-    );
+    final ClientboundSetObjectivePacket setObjectivePacket =
+        new ClientboundSetObjectivePacket(DUMMY_OBJECTIVE, 0);
+    final ClientboundSetDisplayObjectivePacket setDisplayObjectivePacket =
+        new ClientboundSetDisplayObjectivePacket(BELOW_NAME, DUMMY_OBJECTIVE);
 
     outboundConnection.send(setObjectivePacket);
     outboundConnection.send(setDisplayObjectivePacket);
@@ -70,8 +68,8 @@ class NametagService implements NametagFacade {
     final ServerPlayerConnection outboundConnection = getOutboundConnection(player);
 
     for (final Player seenPlayer : getOnlinePlayers()) {
-      final NametagContext nametagContext = nametagContextFacade.findNameTagContextByUniqueId(
-          seenPlayer.getUniqueId());
+      final NametagContext nametagContext =
+          nametagContextFacade.findNameTagContextByUniqueId(seenPlayer.getUniqueId());
       if (nametagContext == null) {
         continue;
       }
@@ -90,25 +88,18 @@ class NametagService implements NametagFacade {
   private void update(
       final ServerPlayerConnection outboundConnection,
       final Player seenPlayer,
-      final NametagContext nametagContext
-  ) {
+      final NametagContext nametagContext) {
     final AdventureComponent belowName = new AdventureComponent(nametagContext.belowName());
     final FixedFormat belowNameFormat = new FixedFormat(getAlignedBelowName(belowName));
 
-    final ClientboundSetScorePacket setScorePacket = new ClientboundSetScorePacket(
-        seenPlayer.getName(),
-        DUMMY_OBJECTIVE_NAME,
-        DUMMY_SCORE,
-        EMPTY,
-        belowNameFormat
-    );
+    final ClientboundSetScorePacket setScorePacket =
+        new ClientboundSetScorePacket(
+            seenPlayer.getName(), DUMMY_OBJECTIVE_NAME, DUMMY_SCORE, EMPTY, belowNameFormat);
 
     outboundConnection.send(setScorePacket);
   }
 
   private MutableComponent getAlignedBelowName(final AdventureComponent belowName) {
-    return ALIGNING_COMPONENT
-        .copy()
-        .append(belowName != null ? belowName : EMPTY);
+    return ALIGNING_COMPONENT.copy().append(belowName != null ? belowName : EMPTY);
   }
 }

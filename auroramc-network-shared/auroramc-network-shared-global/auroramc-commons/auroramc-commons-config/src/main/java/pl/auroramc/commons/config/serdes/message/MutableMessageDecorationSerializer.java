@@ -10,9 +10,7 @@ import pl.auroramc.commons.message.MutableMessageDecoration;
 
 class MutableMessageDecorationSerializer implements ObjectSerializer<MutableMessageDecoration> {
 
-  MutableMessageDecorationSerializer() {
-
-  }
+  MutableMessageDecorationSerializer() {}
 
   @Override
   public boolean supports(final @NotNull Class<? super MutableMessageDecoration> type) {
@@ -23,20 +21,16 @@ class MutableMessageDecorationSerializer implements ObjectSerializer<MutableMess
   public void serialize(
       final @NotNull MutableMessageDecoration object,
       final @NotNull SerializationData data,
-      final @NotNull GenericsDeclaration generics
-  ) {
+      final @NotNull GenericsDeclaration generics) {
     data.add("decoration", object.decoration());
     data.add("state", object.state());
   }
 
   @Override
   public MutableMessageDecoration deserialize(
-      final @NotNull DeserializationData data,
-      final @NotNull GenericsDeclaration generics
-  ) {
+      final @NotNull DeserializationData data, final @NotNull GenericsDeclaration generics) {
     return MutableMessageDecoration.of(
         data.get("decoration", TextDecoration.class),
-        data.get("state", TextDecoration.State.class)
-    );
+        data.get("state", TextDecoration.State.class));
   }
 }

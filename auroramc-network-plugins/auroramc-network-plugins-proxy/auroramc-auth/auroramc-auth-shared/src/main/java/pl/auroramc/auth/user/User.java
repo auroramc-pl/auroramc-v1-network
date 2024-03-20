@@ -4,8 +4,8 @@ import java.util.UUID;
 
 public class User {
 
-  private Long id;
   private final UUID uniqueId;
+  private Long id;
   private String username;
   private String password;
   private String email;
@@ -19,8 +19,7 @@ public class User {
       final String password,
       final String email,
       final UUID premiumUniqueId,
-      final boolean authenticated
-  ) {
+      final boolean authenticated) {
     this.id = id;
     this.uniqueId = uniqueId;
     this.username = username;

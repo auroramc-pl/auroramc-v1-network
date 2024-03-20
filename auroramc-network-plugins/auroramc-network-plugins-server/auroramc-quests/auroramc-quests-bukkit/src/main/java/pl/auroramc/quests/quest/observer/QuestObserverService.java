@@ -23,14 +23,14 @@ class QuestObserverService implements QuestObserverFacade {
   public QuestObserverService(
       final Logger logger,
       final UserFacade userFacade,
-      final QuestObserverRepository questObserverRepository
-  ) {
+      final QuestObserverRepository questObserverRepository) {
     this.logger = logger;
     this.userFacade = userFacade;
     this.questObserverRepository = questObserverRepository;
-    this.questObserverByUniqueId = Caffeine.newBuilder()
-        .expireAfterAccess(ofSeconds(20))
-        .build(questObserverRepository::findQuestObserverByUniqueId);
+    this.questObserverByUniqueId =
+        Caffeine.newBuilder()
+            .expireAfterAccess(ofSeconds(20))
+            .build(questObserverRepository::findQuestObserverByUniqueId);
   }
 
   @Override
@@ -45,13 +45,15 @@ class QuestObserverService implements QuestObserverFacade {
       return completedFuture(questObserver);
     }
 
-    return userFacade.getUserByUniqueId(uniqueId)
+    return userFacade
+        .getUserByUniqueId(uniqueId)
         .thenApply(User::getId)
-        .thenApply(userId -> {
-          final QuestObserver newQuestObserver = new QuestObserver(userId, null);
-          createQuestObserver(newQuestObserver);
-          return newQuestObserver;
-        })
+        .thenApply(
+            userId -> {
+              final QuestObserver newQuestObserver = new QuestObserver(userId, null);
+              createQuestObserver(newQuestObserver);
+              return newQuestObserver;
+            })
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 

@@ -7,15 +7,14 @@ import pl.auroramc.quests.objective.progress.ObjectiveProgressController;
 import pl.auroramc.quests.quest.Quest;
 import pl.auroramc.quests.quest.QuestController;
 
-public class BreakBlockObjectiveHandler extends
-    ObjectiveHandlerDelegate<BreakBlockObjective, BlockBreakEvent> {
+public class BreakBlockObjectiveHandler
+    extends ObjectiveHandlerDelegate<BreakBlockObjective, BlockBreakEvent> {
 
   private final ObjectiveProgressController objectiveProgressController;
 
   public BreakBlockObjectiveHandler(
       final QuestController questController,
-      final ObjectiveProgressController objectiveProgressController
-  ) {
+      final ObjectiveProgressController objectiveProgressController) {
     super(questController);
     this.objectiveProgressController = objectiveProgressController;
   }
@@ -27,7 +26,8 @@ public class BreakBlockObjectiveHandler extends
       return;
     }
 
-    objectiveProgressController.processObjectiveGoal(event.getPlayer().getUniqueId(), quest, objective);
+    objectiveProgressController.processObjectiveGoal(
+        event.getPlayer().getUniqueId(), quest, objective);
   }
 
   @EventHandler

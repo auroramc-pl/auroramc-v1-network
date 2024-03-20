@@ -5,16 +5,15 @@ public class ObjectiveProgress {
   private final Long userId;
   private final Long questId;
   private final Long objectiveId;
-  private Integer data;
   private final Integer goal;
+  private Integer data;
 
   public ObjectiveProgress(
       final Long userId,
       final Long questId,
       final Long objectiveId,
       final Integer data,
-      final Integer goal
-  ) {
+      final Integer goal) {
     this.userId = userId;
     this.questId = questId;
     this.objectiveId = objectiveId;

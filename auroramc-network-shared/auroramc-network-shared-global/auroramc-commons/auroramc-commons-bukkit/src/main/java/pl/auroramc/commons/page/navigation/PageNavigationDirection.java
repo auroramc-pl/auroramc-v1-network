@@ -8,13 +8,8 @@ import static pl.auroramc.commons.page.navigation.PageNavigator.INITIAL_PAGE_IND
 import java.util.function.BinaryOperator;
 
 public enum PageNavigationDirection {
-
-  FORWARD((pageCount, pageIndex) ->
-      min(pageIndex + INDICATOR_OFFSET, pageCount - 1)
-  ),
-  BACKWARD((pageCount, pageIndex) ->
-      max(pageIndex - INDICATOR_OFFSET, INITIAL_PAGE_INDEX)
-  );
+  FORWARD((pageCount, pageIndex) -> min(pageIndex + INDICATOR_OFFSET, pageCount - 1)),
+  BACKWARD((pageCount, pageIndex) -> max(pageIndex - INDICATOR_OFFSET, INITIAL_PAGE_INDEX));
 
   private final BinaryOperator<Integer> pageIndexModifier;
 

@@ -15,9 +15,7 @@ final class ProductViewFactory {
 
   private static final String VIEW_DEFINITION_RESOURCE_PATH = "guis/product.xml";
 
-  private ProductViewFactory() {
-
-  }
+  private ProductViewFactory() {}
 
   static ChestGui produceProductGui(
       final Plugin plugin,
@@ -26,33 +24,21 @@ final class ProductViewFactory {
       final ProductFacade productFacade,
       final DecimalFormat priceFormat,
       final Shop shop,
-      final ChestGui shopsGui
-  ) {
+      final ChestGui shopsGui) {
     try (final InputStream inputStream = plugin.getResource(VIEW_DEFINITION_RESOURCE_PATH)) {
       if (inputStream == null) {
         throw new ProductViewInstantiationException(
-            "Could not find product gui definition in resources."
-        );
+            "Could not find product gui definition in resources.");
       }
 
       return load(
           new ProductView(
-              plugin,
-              fundsCurrency,
-              messageSource,
-              priceFormat,
-              productFacade,
-              shop,
-              shopsGui
-          ),
+              plugin, fundsCurrency, messageSource, priceFormat, productFacade, shop, shopsGui),
           inputStream,
-          plugin
-      );
+          plugin);
     } catch (final IOException exception) {
       throw new ProductViewInstantiationException(
-          "Could not load product gui from resources, because of unexpected exception.",
-          exception
-      );
+          "Could not load product gui from resources, because of unexpected exception.", exception);
     }
   }
 }

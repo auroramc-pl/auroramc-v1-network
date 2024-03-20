@@ -7,16 +7,13 @@ import pl.auroramc.registry.user.UserFacade;
 
 public final class EconomyFacadeFactory {
 
-  private EconomyFacadeFactory() {
-
-  }
+  private EconomyFacadeFactory() {}
 
   public static EconomyFacade getEconomyFacade(
       final Logger logger,
       final UserFacade userFacade,
       final AccountFacade accountFacade,
-      final PaymentFacade paymentFacade
-  ) {
+      final PaymentFacade paymentFacade) {
     return new EconomyService(logger, userFacade, accountFacade, paymentFacade);
   }
 }

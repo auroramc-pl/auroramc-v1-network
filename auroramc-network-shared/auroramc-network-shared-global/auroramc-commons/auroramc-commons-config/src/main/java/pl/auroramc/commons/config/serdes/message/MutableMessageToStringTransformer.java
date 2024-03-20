@@ -8,9 +8,7 @@ import pl.auroramc.commons.message.MutableMessage;
 
 class MutableMessageToStringTransformer extends BidirectionalTransformer<String, MutableMessage> {
 
-  MutableMessageToStringTransformer() {
-
-  }
+  MutableMessageToStringTransformer() {}
 
   @Override
   public GenericsPair<String, MutableMessage> getPair() {
@@ -19,17 +17,13 @@ class MutableMessageToStringTransformer extends BidirectionalTransformer<String,
 
   @Override
   public MutableMessage leftToRight(
-      final @NotNull String data,
-      final @NotNull SerdesContext serdesContext
-  ) {
+      final @NotNull String data, final @NotNull SerdesContext serdesContext) {
     return MutableMessage.of(data);
   }
 
   @Override
   public String rightToLeft(
-      final @NotNull MutableMessage data,
-      final @NotNull SerdesContext serdesContext
-  ) {
+      final @NotNull MutableMessage data, final @NotNull SerdesContext serdesContext) {
     return data.getTemplate();
   }
 }

@@ -11,7 +11,9 @@ import org.bukkit.plugin.Plugin;
 import pl.auroramc.shops.product.ProductFacade;
 
 @Permission("auroramc.shops.shop")
-@Command(name = "shop", aliases = {"shops", "sklep"})
+@Command(
+    name = "shop",
+    aliases = {"shops", "sklep"})
 public class ShopCommand {
 
   private final Plugin plugin;
@@ -19,8 +21,7 @@ public class ShopCommand {
   private final ProductFacade productFacade;
 
   public ShopCommand(
-      final Plugin plugin, final ShopFacade shopFacade, final ProductFacade productFacade
-  ) {
+      final Plugin plugin, final ShopFacade shopFacade, final ProductFacade productFacade) {
     this.plugin = plugin;
     this.shopFacade = shopFacade;
     this.productFacade = productFacade;
@@ -28,7 +29,6 @@ public class ShopCommand {
 
   @Execute
   public void shop(final @Context Player player) {
-    produceShopsGui(plugin, shopFacade, productFacade)
-        .show(player);
+    produceShopsGui(plugin, shopFacade, productFacade).show(player);
   }
 }

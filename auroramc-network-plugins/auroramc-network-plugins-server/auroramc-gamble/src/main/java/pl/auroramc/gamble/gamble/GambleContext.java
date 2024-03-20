@@ -4,8 +4,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public record GambleContext(
-    UUID gambleUniqueId, BigDecimal stake, Participant initiator, Participant competitor
-) {
+    UUID gambleUniqueId, BigDecimal stake, Participant initiator, Participant competitor) {
 
   public static GambleContextBuilder newBuilder() {
     return new GambleContextBuilder();
@@ -17,9 +16,7 @@ public record GambleContext(
     } else if (competitor.prediction().equals(prediction)) {
       return competitor;
     } else {
-      throw new ParticipantResolvingException(
-          "Could not resolve initiator by prediction."
-      );
+      throw new ParticipantResolvingException("Could not resolve initiator by prediction.");
     }
   }
 }

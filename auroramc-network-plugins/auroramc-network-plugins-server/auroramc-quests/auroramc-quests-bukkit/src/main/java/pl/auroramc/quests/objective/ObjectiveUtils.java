@@ -24,76 +24,58 @@ public final class ObjectiveUtils {
 
   private static final String EMPTY_ARGUMENT = "";
 
-  private ObjectiveUtils() {
-
-  }
+  private ObjectiveUtils() {}
 
   static <T extends Objective<?>> Map<Quest, List<T>> aggregateObjectives(
-      final List<Quest> bunchOfQuests, final Class<T> objectiveType
-  ) {
+      final List<Quest> bunchOfQuests, final Class<T> objectiveType) {
     return bunchOfQuests.stream()
         .collect(toMap(quest -> quest, quest -> quest.getObjectives(objectiveType)));
   }
 
   public static MutableMessage getQuestObjectives(
       final List<? extends Objective<?>> objectives,
-      final Map<? extends Objective<?>, ObjectiveProgress> objectiveToObjectiveProgress
-  ) {
+      final Map<? extends Objective<?>, ObjectiveProgress> objectiveToObjectiveProgress) {
     return objectives.stream()
-        .map(objective ->
-            getQuestObjective(
-                objective,
-                objectiveToObjectiveProgress.get(objective)
-            )
-        )
+        .map(objective -> getQuestObjective(objective, objectiveToObjectiveProgress.get(objective)))
         .collect(MutableMessage.collector());
   }
 
   public static String getQuestObjectivesTemplate(
       final List<? extends Objective<?>> objectives,
-      final Map<? extends Objective<?>, ObjectiveProgress> objectiveToObjectiveProgress
-  ) {
+      final Map<? extends Objective<?>, ObjectiveProgress> objectiveToObjectiveProgress) {
     return getQuestObjectives(objectives, objectiveToObjectiveProgress).getTemplate();
   }
 
   public static MutableMessage getQuestObjective(
-      final Objective<?> objective,
-      final ObjectiveProgress objectiveProgress
-  ) {
+      final Objective<?> objective, final ObjectiveProgress objectiveProgress) {
     return concat(
-        Stream.of(getQuestObjective0(objective, objectiveProgress)),
-        objective.getRequirements()
-            .stream()
-            .map(ObjectiveUtils::getObjectiveRequirement)
-    ).collect(MutableMessage.collector());
+            Stream.of(getQuestObjective0(objective, objectiveProgress)),
+            objective.getRequirements().stream().map(ObjectiveUtils::getObjectiveRequirement))
+        .collect(MutableMessage.collector());
   }
 
   public static String getQuestObjectiveTemplate(
-      final Objective<?> objective,
-      final ObjectiveProgress objectiveProgress
-  ) {
+      final Objective<?> objective, final ObjectiveProgress objectiveProgress) {
     return getQuestObjective(objective, objectiveProgress).getTemplate();
   }
 
   private static MutableMessage getQuestObjective0(
-      final Objective<?> objective,
-      final ObjectiveProgress objectiveProgress
-  ) {
-    return objective.getMessage()
+      final Objective<?> objective, final ObjectiveProgress objectiveProgress) {
+    return objective
+        .getMessage()
         .with(TYPE_VARIABLE_KEY, getFormattedNameOfMaterial(objective.getType()))
         .with(DATA_VARIABLE_KEY, objectiveProgress.getData())
         .with(GOAL_VARIABLE_KEY, objectiveProgress.getGoal());
   }
 
-  private static MutableMessage getObjectiveRequirement(
-      final ObjectiveRequirement requirement
-  ) {
-    return requirement.getMessage()
-        .with(ITEM_VARIABLE_KEY,
+  private static MutableMessage getObjectiveRequirement(final ObjectiveRequirement requirement) {
+    return requirement
+        .getMessage()
+        .with(
+            ITEM_VARIABLE_KEY,
             requirement instanceof HeldItemRequirement heldItemRequirement
                 ? getFormattedNameOfMaterial(heldItemRequirement.getRequiredMaterial())
-                : EMPTY_ARGUMENT
-        );
+                : EMPTY_ARGUMENT);
   }
 
   private static String getFormattedNameOfMaterial(final Object material) {

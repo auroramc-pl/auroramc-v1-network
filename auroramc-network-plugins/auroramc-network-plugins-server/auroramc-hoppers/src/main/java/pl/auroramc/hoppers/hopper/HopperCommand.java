@@ -24,28 +24,22 @@ public class HopperCommand {
   private final MutableMessageSource messageSource;
   private final NamespacedKey transferQuantityKey;
 
-  public HopperCommand(final MutableMessageSource messageSource, final NamespacedKey transferQuantityKey) {
+  public HopperCommand(
+      final MutableMessageSource messageSource, final NamespacedKey transferQuantityKey) {
     this.messageSource = messageSource;
     this.transferQuantityKey = transferQuantityKey;
   }
 
   @Execute
-  MutableMessage hopper(
-      final @Context Player player,
-      final @Arg Integer transferQuantity
-  ) {
+  MutableMessage hopper(final @Context Player player, final @Arg Integer transferQuantity) {
     appendItemStackOrDropBelow(player, getHopperItem(transferQuantity));
-    return messageSource.hopperHasBeenGiven
-        .with(QUANTITY_VARIABLE_KEY, transferQuantity);
+    return messageSource.hopperHasBeenGiven.with(QUANTITY_VARIABLE_KEY, transferQuantity);
   }
 
   private ItemStack getHopperItem(final Integer transferQuantity) {
     return ItemStackBuilder.newBuilder(HOPPER)
         .displayName(
-            messageSource.hopperDisplayName
-                .with(QUANTITY_VARIABLE_KEY, transferQuantity)
-                .compile()
-        )
+            messageSource.hopperDisplayName.with(QUANTITY_VARIABLE_KEY, transferQuantity).compile())
         .data(transferQuantityKey, INTEGER, transferQuantity)
         .build();
   }

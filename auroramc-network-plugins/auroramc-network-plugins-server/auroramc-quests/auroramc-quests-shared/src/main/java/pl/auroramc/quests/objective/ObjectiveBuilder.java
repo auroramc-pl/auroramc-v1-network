@@ -80,8 +80,12 @@ public final class ObjectiveBuilder<T> {
   public <Y extends Objective<T>> Y build() {
     try {
       // noinspection unchecked
-      return (Y) typeOfAction.getDeclaredConstructors()[0].newInstance(key, type, saveInterval, goalResolver, requirements);
-    } catch (final InvocationTargetException | InstantiationException | IllegalAccessException exception) {
+      return (Y)
+          typeOfAction.getDeclaredConstructors()[0].newInstance(
+              key, type, saveInterval, goalResolver, requirements);
+    } catch (final InvocationTargetException
+        | InstantiationException
+        | IllegalAccessException exception) {
       throw new ObjectiveInstantiationException(
           "Could not create a new instance of objective, because of unexpected exception.",
           exception);

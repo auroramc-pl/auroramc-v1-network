@@ -14,11 +14,8 @@ public interface StakeViewFacade {
       final Plugin plugin,
       final StakeFacade stakeFacade,
       final Currency fundsCurrency,
-      final MutableMessageSource messageSource
-  ) {
-    return new StakeViewService(
-        plugin, stakeFacade, fundsCurrency, messageSource
-    );
+      final MutableMessageSource messageSource) {
+    return new StakeViewService(plugin, stakeFacade, fundsCurrency, messageSource);
   }
 
   void recalculate();

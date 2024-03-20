@@ -14,8 +14,7 @@ public class PlaceBlockObjectiveHandler
 
   public PlaceBlockObjectiveHandler(
       final QuestController questController,
-      final ObjectiveProgressController objectiveProgressController
-  ) {
+      final ObjectiveProgressController objectiveProgressController) {
     super(questController);
     this.objectiveProgressController = objectiveProgressController;
   }
@@ -27,7 +26,8 @@ public class PlaceBlockObjectiveHandler
       return;
     }
 
-    objectiveProgressController.processObjectiveGoal(event.getPlayer().getUniqueId(), quest, objective);
+    objectiveProgressController.processObjectiveGoal(
+        event.getPlayer().getUniqueId(), quest, objective);
   }
 
   @EventHandler

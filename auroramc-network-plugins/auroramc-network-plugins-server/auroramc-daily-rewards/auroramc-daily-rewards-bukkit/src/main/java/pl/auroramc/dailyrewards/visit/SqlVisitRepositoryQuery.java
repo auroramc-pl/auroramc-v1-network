@@ -54,7 +54,5 @@ final class SqlVisitRepositoryQuery {
         20;
       """;
 
-  private SqlVisitRepositoryQuery() {
-
-  }
+  private SqlVisitRepositoryQuery() {}
 }

@@ -5,8 +5,8 @@ import static pl.auroramc.commons.message.MutableMessage.EMPTY_DELIMITER;
 import static pl.auroramc.commons.message.MutableMessage.empty;
 import static pl.auroramc.economy.message.MutableMessageVariableKey.BALANCE_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_ID_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.POSITION_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.POSITION_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MutableMessageVariableKey.USERNAME_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.annotations.command.Command;

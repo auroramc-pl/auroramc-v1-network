@@ -1,7 +1,6 @@
 package pl.auroramc.gamble.coinflip;
 
 public enum CoinSide {
-
   HEADS,
   TAILS;
 

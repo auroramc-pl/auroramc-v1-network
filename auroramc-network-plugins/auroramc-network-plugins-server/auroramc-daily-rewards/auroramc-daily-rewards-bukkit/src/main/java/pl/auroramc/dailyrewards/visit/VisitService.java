@@ -24,16 +24,13 @@ class VisitService implements VisitFacade {
   }
 
   @Override
-  public Set<Visit> getVisitsByUserId(
-      final Long userId
-  ) {
+  public Set<Visit> getVisitsByUserId(final Long userId) {
     return visitRepository.findVisitsByUserId(userId);
   }
 
   @Override
   public Set<Visit> getVisitsByUserIdBetween(
-      final Long userId, final Instant from, final Instant to
-  ) {
+      final Long userId, final Instant from, final Instant to) {
     return visitRepository.findVisitsByUserIdBetween(userId, from, to);
   }
 }

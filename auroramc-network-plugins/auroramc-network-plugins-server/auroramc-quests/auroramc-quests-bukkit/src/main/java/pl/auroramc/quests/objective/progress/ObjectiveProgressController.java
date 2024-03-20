@@ -30,8 +30,7 @@ public class ObjectiveProgressController {
       final Logger logger,
       final UserFacade userFacade,
       final QuestTrackController questTrackController,
-      final ObjectiveProgressFacade objectiveProgressFacade
-  ) {
+      final ObjectiveProgressFacade objectiveProgressFacade) {
     this.logger = logger;
     this.userFacade = userFacade;
     this.questTrackController = questTrackController;
@@ -39,77 +38,75 @@ public class ObjectiveProgressController {
   }
 
   public void processObjectiveGoal(
-      final UUID uniqueId, final Quest quest, final Objective<?> objective
-  ) {
+      final UUID uniqueId, final Quest quest, final Objective<?> objective) {
     final Player player = checkNotNull(getPlayer(uniqueId));
 
     final List<ObjectiveRequirement> requirements = objective.getRequirements();
-    if (requirements.isEmpty() ||
-        requirements.stream().allMatch(requirement -> requirement.isValid(player))
-    ) {
+    if (requirements.isEmpty()
+        || requirements.stream().allMatch(requirement -> requirement.isValid(player))) {
       processObjectiveGoal0(uniqueId, quest, objective);
     }
   }
 
   private void processObjectiveGoal0(
-      final UUID uniqueId, final Quest quest, final Objective<?> objective
-  ) {
-    userFacade.getUserByUniqueId(uniqueId)
+      final UUID uniqueId, final Quest quest, final Objective<?> objective) {
+    userFacade
+        .getUserByUniqueId(uniqueId)
         .thenAccept(user -> processObjectiveGoal(user, quest, objective))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
   public void processObjectiveGoal(
-      final User user, final Quest quest, final Objective<?> objective
-  ) {
-    final ObjectiveProgress objectiveProgress = objectiveProgressFacade.resolveObjectiveProgress(
-        user.getId(),
-        quest.getKey().getId(),
-        objective.getKey().getId(),
-        objective.getGoalResolver().resolveGoal()
-    );
+      final User user, final Quest quest, final Objective<?> objective) {
+    final ObjectiveProgress objectiveProgress =
+        objectiveProgressFacade.resolveObjectiveProgress(
+            user.getId(),
+            quest.getKey().getId(),
+            objective.getKey().getId(),
+            objective.getGoalResolver().resolveGoal());
     if (isObjectiveCompleted(objectiveProgress)) {
       completeQuestIfAllObjectivesAreCompleted(user, quest);
       return;
     }
 
     objectiveProgress.setData(objectiveProgress.getData() + 1);
-    objectiveProgressFacade.updateObjectiveProgress(objective, objectiveProgress)
-        .thenAccept(state -> completeQuestIfAllObjectivesAreCompleted(user, quest, objectiveProgress))
+    objectiveProgressFacade
+        .updateObjectiveProgress(objective, objectiveProgress)
+        .thenAccept(
+            state -> completeQuestIfAllObjectivesAreCompleted(user, quest, objectiveProgress))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
   public Map<Objective<?>, ObjectiveProgress> getUncompletedObjectives(
-      final User user, final Quest quest
-  ) {
-    return objectiveProgressFacade.getObjectiveProgresses(user.getId(), quest.getKey().getId()).stream()
+      final User user, final Quest quest) {
+    return objectiveProgressFacade
+        .getObjectiveProgresses(user.getId(), quest.getKey().getId())
+        .stream()
         .filter(not(this::isObjectiveCompleted))
         .collect(
             toMap(
-                objectiveProgress -> quest.getObjectiveByObjectiveId(objectiveProgress.getObjectiveId()),
-                identity()
-            )
-        );
+                objectiveProgress ->
+                    quest.getObjectiveByObjectiveId(objectiveProgress.getObjectiveId()),
+                identity()));
   }
 
   private void completeQuestIfAllObjectivesAreCompleted(
-      final User user, final Quest quest, final ObjectiveProgress objectiveProgress
-  ) {
+      final User user, final Quest quest, final ObjectiveProgress objectiveProgress) {
     if (isObjectiveCompleted(objectiveProgress)) {
       completeQuestIfAllObjectivesAreCompleted(user, quest);
     }
   }
 
-  private void completeQuestIfAllObjectivesAreCompleted(
-      final User user, final Quest quest
-  ) {
+  private void completeQuestIfAllObjectivesAreCompleted(final User user, final Quest quest) {
     if (getSumOfCompletedObjectives(user, quest) >= quest.getObjectives().size()) {
       questTrackController.completeQuest(user, quest);
     }
   }
 
   private long getSumOfCompletedObjectives(final User user, final Quest quest) {
-    return objectiveProgressFacade.getObjectiveProgresses(user.getId(), quest.getKey().getId()).stream()
+    return objectiveProgressFacade
+        .getObjectiveProgresses(user.getId(), quest.getKey().getId())
+        .stream()
         .filter(this::isObjectiveCompleted)
         .count();
   }

@@ -8,9 +8,7 @@ public final class AccountBuilder {
   private Long currencyId;
   private BigDecimal balance;
 
-  private AccountBuilder() {
-
-  }
+  private AccountBuilder() {}
 
   public static AccountBuilder newBuilder() {
     return new AccountBuilder();

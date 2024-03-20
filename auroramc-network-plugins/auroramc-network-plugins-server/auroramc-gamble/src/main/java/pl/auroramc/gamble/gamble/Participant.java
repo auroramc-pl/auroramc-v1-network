@@ -28,9 +28,7 @@ public record Participant(UUID uniqueId, String username, Object prediction) {
     }
 
     final Participant that = (Participant) object;
-    return
-        Objects.equals(uniqueId, that.uniqueId) &&
-        Objects.equals(username, that.username);
+    return Objects.equals(uniqueId, that.uniqueId) && Objects.equals(username, that.username);
   }
 
   @Override

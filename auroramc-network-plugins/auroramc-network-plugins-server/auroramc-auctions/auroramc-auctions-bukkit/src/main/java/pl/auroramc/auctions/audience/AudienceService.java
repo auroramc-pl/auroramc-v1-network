@@ -16,14 +16,13 @@ class AudienceService implements AudienceFacade {
   private final AudienceRepository audienceRepository;
   private final AsyncLoadingCache<UUID, Audience> audienceByUniqueId;
 
-  AudienceService(
-      final Logger logger, final AudienceRepository audienceRepository
-  ) {
+  AudienceService(final Logger logger, final AudienceRepository audienceRepository) {
     this.logger = logger;
     this.audienceRepository = audienceRepository;
-    this.audienceByUniqueId = Caffeine.newBuilder()
-        .expireAfterWrite(ofSeconds(20))
-        .buildAsync(audienceRepository::findAudienceByUniqueId);
+    this.audienceByUniqueId =
+        Caffeine.newBuilder()
+            .expireAfterWrite(ofSeconds(20))
+            .buildAsync(audienceRepository::findAudienceByUniqueId);
   }
 
   @Override

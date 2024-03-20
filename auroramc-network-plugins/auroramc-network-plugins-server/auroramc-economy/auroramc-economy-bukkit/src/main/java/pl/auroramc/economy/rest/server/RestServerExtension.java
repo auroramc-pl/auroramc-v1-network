@@ -18,23 +18,24 @@ public class RestServerExtension {
   public RestServerExtension(
       final EconomyConfig economyConfig,
       final EconomyFacade economyFacade,
-      final CurrencyFacade currencyFacade
-  ) {
+      final CurrencyFacade currencyFacade) {
     this.economyConfig = economyConfig;
     this.economyFacade = economyFacade;
     this.currencyFacade = currencyFacade;
   }
 
   private void enableRestServer() {
-    javalin = create(configuration -> configuration.showJavalinBanner = false)
-        .start(economyConfig.restServer.port);
+    javalin =
+        create(configuration -> configuration.showJavalinBanner = false)
+            .start(economyConfig.restServer.port);
 
-    final RestSecurityHandler restSecurityHandler = new RestSecurityHandler(
-        economyConfig.restServer.security);
+    final RestSecurityHandler restSecurityHandler =
+        new RestSecurityHandler(economyConfig.restServer.security);
     javalin.before(restSecurityHandler);
     javalin.exception(RestSecurityException.class, restSecurityHandler);
 
-    javalin.get("/balance/{currencyId}/{uniqueId}",
+    javalin.get(
+        "/balance/{currencyId}/{uniqueId}",
         new BalanceRequestHandler(economyFacade, currencyFacade));
   }
 

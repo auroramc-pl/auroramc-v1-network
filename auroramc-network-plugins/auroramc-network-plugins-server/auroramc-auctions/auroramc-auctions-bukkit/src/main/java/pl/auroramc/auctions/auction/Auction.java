@@ -15,10 +15,10 @@ public class Auction {
   private final byte[] subject;
   private final Mutex<UUID> currentTraderUniqueId;
   private final Mutex<BigDecimal> currentOffer;
+  private final Mutex<Instant> availableUntil;
   private BigDecimal minimalPrice;
   private BigDecimal minimalPricePuncture;
   private Instant availableSince;
-  private final Mutex<Instant> availableUntil;
 
   Auction(
       final UUID actionUniqueId,

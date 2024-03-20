@@ -38,8 +38,7 @@ class VaultView {
       final Plugin plugin,
       final MutableMessageSource messageSource,
       final VaultController vaultController,
-      final UUID vaultOwnerUniqueId
-  ) {
+      final UUID vaultOwnerUniqueId) {
     this.plugin = plugin;
     this.messageSource = messageSource;
     this.vaultController = vaultController;
@@ -52,20 +51,16 @@ class VaultView {
     vaultItemsPane.populateWithGuiItems(
         vaultController.searchVaultItems(vaultOwnerUniqueId).stream()
             .map(this::getGuiItemForVaultItem)
-            .toList()
-    );
+            .toList());
 
     postToMainThread(plugin, () -> vaultGui.update());
   }
 
   public void requestVaultItemRedeem(final InventoryClickEvent event, final VaultItem vaultItem) {
-    vaultController.redeemVaultItem(event.getWhoClicked().getUniqueId(), vaultItem)
-        .thenAccept(state ->
-                postToMainThreadAndNextTick(
-                    plugin,
-                    () -> populateVaultItems(vaultItemsPane)
-                )
-        );
+    vaultController
+        .redeemVaultItem(event.getWhoClicked().getUniqueId(), vaultItem)
+        .thenAccept(
+            state -> postToMainThreadAndNextTick(plugin, () -> populateVaultItems(vaultItemsPane)));
   }
 
   @Internal
@@ -85,34 +80,18 @@ class VaultView {
 
   private GuiItem getGuiItemForVaultItem(final VaultItem vaultItem) {
     final ItemStack originItemStack = ItemStack.deserializeBytes(vaultItem.getSubject());
-    final ItemStack renderItemStack = mergeLore(
-        originItemStack,
-        List.of(
-            messageSource.vaultItemRedeemSuggestion
-                .compile()
-        )
-    );
-    return new GuiItem(
-        renderItemStack,
-        event -> requestVaultItemRedeem(event, vaultItem),
-        plugin
-    );
+    final ItemStack renderItemStack =
+        mergeLore(originItemStack, List.of(messageSource.vaultItemRedeemSuggestion.compile()));
+    return new GuiItem(renderItemStack, event -> requestVaultItemRedeem(event, vaultItem), plugin);
   }
 
-  private ItemStack mergeLore(
-      final ItemStack source, final List<Component> lines
-  ) {
+  private ItemStack mergeLore(final ItemStack source, final List<Component> lines) {
     return ItemStackBuilder.newBuilder(source)
         .lore(
             merge(
-                Optional.ofNullable(source.lore())
-                    .orElse(emptyList()),
-                lines.stream()
-                    .map(line -> line.decoration(ITALIC, FALSE))
-                    .toList(),
-                Component[]::new
-            )
-        )
+                Optional.ofNullable(source.lore()).orElse(emptyList()),
+                lines.stream().map(line -> line.decoration(ITALIC, FALSE)).toList(),
+                Component[]::new))
         .build();
   }
 }

@@ -18,7 +18,9 @@ import pl.auroramc.auth.user.UserFacade;
 import pl.auroramc.commons.message.MutableMessage;
 
 @Permission("auroramc.auth.unregister")
-@Command(name = "unregister", aliases = {"unreg", "odrejestruj"})
+@Command(
+    name = "unregister",
+    aliases = {"unreg", "odrejestruj"})
 public class UnregisterCommand {
 
   private final Logger logger;
@@ -30,8 +32,7 @@ public class UnregisterCommand {
       final Logger logger,
       final MutableMessageSource messageSource,
       final UserFacade userFacade,
-      final HashingStrategy hashingStrategy
-  ) {
+      final HashingStrategy hashingStrategy) {
     this.logger = logger;
     this.messageSource = messageSource;
     this.userFacade = userFacade;
@@ -40,38 +41,34 @@ public class UnregisterCommand {
 
   @Execute
   public CompletableFuture<MutableMessage> unregister(
-      final @Context Player player, final @Arg String password
-  ) {
-    return userFacade.getUserByUniqueId(player.getUniqueId())
+      final @Context Player player, final @Arg String password) {
+    return userFacade
+        .getUserByUniqueId(player.getUniqueId())
         .thenCompose(user -> handleUserUnregistration(player, user, password))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
   private CompletableFuture<MutableMessage> handleUserUnregistration(
-      final Player player, final User user, final String password
-  ) {
+      final Player player, final User user, final String password) {
     if (user.isPremium()) {
-      return messageSource.notAllowedBecauseOfPremiumAccount
-          .asCompletedFuture();
+      return messageSource.notAllowedBecauseOfPremiumAccount.asCompletedFuture();
     }
 
     if (!user.isRegistered()) {
-      return messageSource.notAllowedBecauseOfRegisteredAccount
-          .asCompletedFuture();
+      return messageSource.notAllowedBecauseOfRegisteredAccount.asCompletedFuture();
     }
 
     if (!user.isAuthenticated()) {
-      return messageSource.notAllowedBecauseOfMissingAuthorization
-          .asCompletedFuture();
+      return messageSource.notAllowedBecauseOfMissingAuthorization.asCompletedFuture();
     }
 
     if (!hashingStrategy.verifyPassword(password, user.getPassword())) {
-      return messageSource.specifiedPasswordIsInvalid
-          .asCompletedFuture();
+      return messageSource.specifiedPasswordIsInvalid.asCompletedFuture();
     }
 
     user.setPassword(null);
-    return userFacade.updateUser(user)
+    return userFacade
+        .updateUser(user)
         .thenAccept(state -> user.setAuthenticated(false))
         .thenAccept(state -> player.disconnect(messageSource.unregisterAccount.compile()))
         .thenApply(state -> empty());

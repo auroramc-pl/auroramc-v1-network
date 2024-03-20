@@ -103,7 +103,5 @@ final class SqlPunishmentRepositoryQuery {
         `id` = ?;
       """;
 
-  private SqlPunishmentRepositoryQuery() {
-
-  }
+  private SqlPunishmentRepositoryQuery() {}
 }

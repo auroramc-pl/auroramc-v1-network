@@ -10,13 +10,15 @@ import java.util.concurrent.CompletableFuture;
 
 class HttpAccountService implements AccountFacade {
 
-  private static final String UUID_REQUEST_HTTP_URI_TEMPLATE = "https://api.ashcon.app/mojang/v2/uuid/%s";
+  private static final String UUID_REQUEST_HTTP_URI_TEMPLATE =
+      "https://api.ashcon.app/mojang/v2/uuid/%s";
   private final AsyncLoadingCache<String, UUID> usernameToPremiumUniqueId;
 
   HttpAccountService() {
-    this.usernameToPremiumUniqueId = Caffeine.newBuilder()
-        .expireAfterWrite(ofSeconds(20))
-        .buildAsync(this::requestPremiumUniqueIdByUsername);
+    this.usernameToPremiumUniqueId =
+        Caffeine.newBuilder()
+            .expireAfterWrite(ofSeconds(20))
+            .buildAsync(this::requestPremiumUniqueIdByUsername);
   }
 
   @Override

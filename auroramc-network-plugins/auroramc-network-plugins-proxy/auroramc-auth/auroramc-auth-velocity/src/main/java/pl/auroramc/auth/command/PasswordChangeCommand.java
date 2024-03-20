@@ -28,8 +28,7 @@ public class PasswordChangeCommand {
       final Logger logger,
       final MutableMessageSource messageSource,
       final HashingStrategy hashingStrategy,
-      final PasswordController passwordController
-  ) {
+      final PasswordController passwordController) {
     this.logger = logger;
     this.messageSource = messageSource;
     this.hashingStrategy = hashingStrategy;
@@ -38,44 +37,40 @@ public class PasswordChangeCommand {
 
   @Execute
   public CompletableFuture<MutableMessage> changePassword(
-      final @Context Player player,
-      final @Arg String oldPassword,
-      final @Arg String newPassword
-  ) {
-    return passwordController.validateChangeOfPassword(
-        player, newPassword, (subject, user, password) ->
-            handlePasswordChange(subject, user, oldPassword, newPassword)
-    ).exceptionally(exception -> delegateCaughtException(logger, exception));
+      final @Context Player player, final @Arg String oldPassword, final @Arg String newPassword) {
+    return passwordController
+        .validateChangeOfPassword(
+            player,
+            newPassword,
+            (subject, user, password) ->
+                handlePasswordChange(subject, user, oldPassword, newPassword))
+        .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
   private CompletableFuture<MutableMessage> handlePasswordChange(
       final Player player, final User user, final String oldPassword, final String newPassword) {
     if (user.isPremium()) {
-      return messageSource.notAllowedBecauseOfPremiumAccount
-          .asCompletedFuture();
+      return messageSource.notAllowedBecauseOfPremiumAccount.asCompletedFuture();
     }
 
     if (!user.isRegistered()) {
-      return messageSource.notAllowedBecauseOfNonRegisteredAccount
-          .asCompletedFuture();
+      return messageSource.notAllowedBecauseOfNonRegisteredAccount.asCompletedFuture();
     }
 
     if (!user.isAuthenticated()) {
-      return messageSource.notAllowedBecauseOfMissingAuthorization
-          .asCompletedFuture();
+      return messageSource.notAllowedBecauseOfMissingAuthorization.asCompletedFuture();
     }
 
     if (!hashingStrategy.verifyPassword(oldPassword, user.getPassword())) {
-      return messageSource.specifiedPasswordIsInvalid
-          .asCompletedFuture();
+      return messageSource.specifiedPasswordIsInvalid.asCompletedFuture();
     }
 
     if (hashingStrategy.verifyPassword(newPassword, user.getPassword())) {
-      return messageSource.specifiedPasswordIsSame
-          .asCompletedFuture();
+      return messageSource.specifiedPasswordIsSame.asCompletedFuture();
     }
 
-    return passwordController.submitChangeOfPassword(player, user, newPassword)
+    return passwordController
+        .submitChangeOfPassword(player, user, newPassword)
         .thenApply(state -> messageSource.passwordChanged);
   }
 }

@@ -42,23 +42,21 @@ class QuestService implements QuestFacade {
           .toList();
     } catch (final Exception exception) {
       throw new QuestDiscoveryException(
-          "Could not discover quests in %s path, because of unexpected exception.".formatted(traversalPath.toString()),
-          exception
-      );
+          "Could not discover quests in %s path, because of unexpected exception."
+              .formatted(traversalPath.toString()),
+          exception);
     }
   }
 
   private Quest parseQuestDefinition(final GroovyShell groovyShell, final Path definitionPath) {
-    try (
-        final InputStream inputStream = Files.newInputStream(definitionPath);
-        final InputStreamReader reader = new InputStreamReader(inputStream)
-    ) {
+    try (final InputStream inputStream = Files.newInputStream(definitionPath);
+        final InputStreamReader reader = new InputStreamReader(inputStream)) {
       return (Quest) groovyShell.evaluate(reader);
     } catch (final Exception exception) {
       throw new QuestDiscoveryException(
-          "Could not parse quests definition from %s path, because of unexpected exception.".formatted(definitionPath.toString()),
-          exception
-      );
+          "Could not parse quests definition from %s path, because of unexpected exception."
+              .formatted(definitionPath.toString()),
+          exception);
     }
   }
 
@@ -79,17 +77,17 @@ class QuestService implements QuestFacade {
   }
 
   private void registerObjectiveImports(final ImportCustomizer importCustomizer) {
-    try (final ScanResult scanResult = new ClassGraph()
-        .enableAllInfo()
-        .acceptPackages(OBJECTIVE_PACKAGE_NAME)
-        .overrideClassLoaders(pluginClassLoader)
-        .scan()
-    ) {
+    try (final ScanResult scanResult =
+        new ClassGraph()
+            .enableAllInfo()
+            .acceptPackages(OBJECTIVE_PACKAGE_NAME)
+            .overrideClassLoaders(pluginClassLoader)
+            .scan()) {
       scanResult.getSubclasses(Objective.class).stream()
           .map(ClassInfo::getName)
           .forEach(importCustomizer::addImports);
     }
-}
+  }
 
   private boolean isGroovyFile(final Path path) {
     return path.getFileName().toString().endsWith(GROOVY_FILE_EXTENSION);

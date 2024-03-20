@@ -9,24 +9,20 @@ import pl.auroramc.registry.user.UserFacade;
 
 public final class PlaceholderApiIntegrationFactory {
 
-  private PlaceholderApiIntegrationFactory() {
-
-  }
+  private PlaceholderApiIntegrationFactory() {}
 
   public static ExternalIntegration producePlaceholderApiIntegration(
       final Plugin plugin,
       final UserFacade userFacade,
       final QuestIndex questIndex,
       final QuestObserverFacade questObserverFacade,
-      final ObjectiveProgressController objectiveProgressController
-  ) {
+      final ObjectiveProgressController objectiveProgressController) {
     return new PlaceholderApiIntegration(
         plugin,
         plugin.getServer(),
         userFacade,
         questIndex,
         questObserverFacade,
-        objectiveProgressController
-    );
+        objectiveProgressController);
   }
 }

@@ -17,34 +17,30 @@ import pl.auroramc.commons.plural.variety.VarietiesByCases;
 
 public final class DurationFormatter {
 
-  private static final ChronoUnit[] UNITS = new ChronoUnit[] {
-      YEARS, MONTHS, WEEKS, DAYS, HOURS, MINUTES, SECONDS, MILLIS
-  };
-  private static final long[] UNIT_PERIODS = new long[]{
-      1_000L * 60 * 60 * 24 * 365,
-      1_000L * 60 * 60 * 24 * 30,
-      1_000L * 60 * 60 * 24 * 7,
-      1_000L * 60 * 60 * 24,
-      1_000L * 60 * 60,
-      1_000L * 60,
-      1_000L
-  };
+  private static final ChronoUnit[] UNITS =
+      new ChronoUnit[] {YEARS, MONTHS, WEEKS, DAYS, HOURS, MINUTES, SECONDS, MILLIS};
+  private static final long[] UNIT_PERIODS =
+      new long[] {
+        1_000L * 60 * 60 * 24 * 365,
+        1_000L * 60 * 60 * 24 * 30,
+        1_000L * 60 * 60 * 24 * 7,
+        1_000L * 60 * 60 * 24,
+        1_000L * 60 * 60,
+        1_000L * 60,
+        1_000L
+      };
   private static final long SMALLEST_UNIT_PERIOD = UNIT_PERIODS[UNIT_PERIODS.length - 1];
   private final Pluralizer pluralizer;
   private final DurationFormatterSettings formatterSettings;
 
   public DurationFormatter(
-      final Pluralizer pluralizer,
-      final DurationFormatterSettings formatterSettings
-  ) {
+      final Pluralizer pluralizer, final DurationFormatterSettings formatterSettings) {
     this.pluralizer = pluralizer;
     this.formatterSettings = formatterSettings;
   }
 
   public DurationFormatter(
-      final Pluralizer pluralizer,
-      final DurationFormatterStyle formattingStyle
-  ) {
+      final Pluralizer pluralizer, final DurationFormatterStyle formattingStyle) {
     this(pluralizer, formattingStyle.getFormatterSettings());
   }
 
@@ -72,10 +68,8 @@ public final class DurationFormatter {
       final long matches = remainingMillis / divider;
       if (matches > 0) {
         final VarietiesByCases unitForm = formatterSettings.getUnitForm(UNITS[index]);
-        final String currentUnit = "%d %s".formatted(
-            matches,
-            pluralizer.pluralize(unitForm, matches)
-        );
+        final String currentUnit =
+            "%d %s".formatted(matches, pluralizer.pluralize(unitForm, matches));
 
         if (lastMatch != null) {
           chain.append(lastMatch).append(formatterSettings.getAggregatingPhrase());
@@ -93,7 +87,8 @@ public final class DurationFormatter {
       }
 
       chain
-          .delete(chain.length() - formatterSettings.getAggregatingPhrase().length(), chain.length())
+          .delete(
+              chain.length() - formatterSettings.getAggregatingPhrase().length(), chain.length())
           .append(formatterSettings.getAggregatingPhraseEnclosing())
           .append(lastMatch);
     }

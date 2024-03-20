@@ -22,8 +22,7 @@ public class SpawnCommand {
   public SpawnCommand(
       final Logger logger,
       final LobbyConfig lobbyConfig,
-      final MutableMessageSource messageSource
-  ) {
+      final MutableMessageSource messageSource) {
     this.logger = logger;
     this.lobbyConfig = lobbyConfig;
     this.messageSource = messageSource;
@@ -31,7 +30,8 @@ public class SpawnCommand {
 
   @Execute
   public CompletableFuture<DeliverableMutableMessage> spawn(final @Context Player invoker) {
-    return invoker.teleportAsync(lobbyConfig.spawn)
+    return invoker
+        .teleportAsync(lobbyConfig.spawn)
         .thenApply(state -> messageSource.teleportedIntoSpawn)
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }

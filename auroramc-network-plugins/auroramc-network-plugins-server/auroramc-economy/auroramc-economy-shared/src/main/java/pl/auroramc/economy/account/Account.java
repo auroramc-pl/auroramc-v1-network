@@ -56,9 +56,7 @@ public class Account {
     }
 
     final Account account = (Account) comparedObject;
-    return
-        Objects.equals(userId, account.userId) &&
-        Objects.equals(currencyId, account.currencyId);
+    return Objects.equals(userId, account.userId) && Objects.equals(currencyId, account.currencyId);
   }
 
   @Override

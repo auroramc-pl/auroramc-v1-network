@@ -13,9 +13,7 @@ public class HeldItemRequirement implements ObjectiveRequirement {
   private MutableMessage message;
 
   public HeldItemRequirement(
-      final Material requiredMaterial,
-      final Predicate<ItemStack> requirementOnItem
-  ) {
+      final Material requiredMaterial, final Predicate<ItemStack> requirementOnItem) {
     this.requiredMaterial = requiredMaterial;
     this.requirementOnItem = requirementOnItem;
   }

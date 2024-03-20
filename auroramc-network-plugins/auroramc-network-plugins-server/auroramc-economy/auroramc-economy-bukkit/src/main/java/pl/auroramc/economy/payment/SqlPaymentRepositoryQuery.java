@@ -108,7 +108,5 @@ final class SqlPaymentRepositoryQuery {
         `id` = ?;
       """;
 
-  private SqlPaymentRepositoryQuery() {
-
-  }
+  private SqlPaymentRepositoryQuery() {}
 }

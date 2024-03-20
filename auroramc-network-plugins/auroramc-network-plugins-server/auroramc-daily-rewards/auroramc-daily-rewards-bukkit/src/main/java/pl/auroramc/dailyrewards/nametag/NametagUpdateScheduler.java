@@ -21,8 +21,7 @@ public class NametagUpdateScheduler implements Runnable {
       final MutableMessageSource messageSource,
       final NametagFacade nametagFacade,
       final VisitController visitController,
-      final DurationFormatter durationFormatter
-  ) {
+      final DurationFormatter durationFormatter) {
     this.messageSource = messageSource;
     this.nametagFacade = nametagFacade;
     this.visitController = visitController;
@@ -39,10 +38,11 @@ public class NametagUpdateScheduler implements Runnable {
 
   private void updateNameTag(final Player player) {
     final Duration visitPeriod = visitController.getVisitPeriod(player.getUniqueId());
-    nametagFacade.belowName(player,
-        messageSource.belowName
+    nametagFacade.belowName(
+        player,
+        messageSource
+            .belowName
             .with(PLAYTIME_VARIABLE_KEY, durationFormatter.getFormattedDuration(visitPeriod))
-            .compile()
-    );
+            .compile());
   }
 }

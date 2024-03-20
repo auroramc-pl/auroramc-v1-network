@@ -5,9 +5,7 @@ import moe.rafal.juliet.Juliet;
 
 public final class UserFacadeFactory {
 
-  private UserFacadeFactory() {
-
-  }
+  private UserFacadeFactory() {}
 
   public static UserFacade getUserFacade(final Logger logger, final Juliet juliet) {
     final SqlUserRepository sqlUserRepository = new SqlUserRepository(juliet);

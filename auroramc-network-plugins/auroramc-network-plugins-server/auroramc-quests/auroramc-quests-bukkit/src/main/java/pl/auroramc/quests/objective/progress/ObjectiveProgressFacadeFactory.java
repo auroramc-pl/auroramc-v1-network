@@ -5,14 +5,12 @@ import moe.rafal.juliet.Juliet;
 
 public final class ObjectiveProgressFacadeFactory {
 
-  private ObjectiveProgressFacadeFactory() {
-
-  }
+  private ObjectiveProgressFacadeFactory() {}
 
   public static ObjectiveProgressFacade getObjectiveProgressFacade(
-      final Logger logger, final Juliet juliet
-  ) {
-    final SqlObjectiveProgressRepository sqlObjectiveProgressRepository = new SqlObjectiveProgressRepository(juliet);
+      final Logger logger, final Juliet juliet) {
+    final SqlObjectiveProgressRepository sqlObjectiveProgressRepository =
+        new SqlObjectiveProgressRepository(juliet);
     sqlObjectiveProgressRepository.createObjectiveProgressSchemaIfRequired();
     return new ObjectiveProgressService(logger, sqlObjectiveProgressRepository);
   }

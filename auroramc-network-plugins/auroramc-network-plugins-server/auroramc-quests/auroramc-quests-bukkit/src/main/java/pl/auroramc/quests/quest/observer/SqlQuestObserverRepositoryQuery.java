@@ -44,7 +44,5 @@ class SqlQuestObserverRepositoryQuery {
         `user_id` = ?;
       """;
 
-  SqlQuestObserverRepositoryQuery() {
-
-  }
+  SqlQuestObserverRepositoryQuery() {}
 }

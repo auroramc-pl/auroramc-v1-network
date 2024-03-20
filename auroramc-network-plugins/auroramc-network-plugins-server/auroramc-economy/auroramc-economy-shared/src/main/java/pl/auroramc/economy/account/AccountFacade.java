@@ -19,6 +19,5 @@ public interface AccountFacade {
       final Account initiator,
       final Account receiver,
       final Long currencyId,
-      final BigDecimal amount
-  );
+      final BigDecimal amount);
 }

@@ -20,13 +20,13 @@ class MojangIdentityGenerator implements IdentityGenerator {
 
   @Override
   public CompletableFuture<UUID> generateIdentity(final String username) {
-    return accountFacade.getPremiumUniqueIdByUsername(username)
+    return accountFacade
+        .getPremiumUniqueIdByUsername(username)
         .thenApply(premiumUniqueId -> getUuid(premiumUniqueId, username));
   }
 
   private UUID getUuid(final UUID premiumUniqueId, final String username) {
-    return Optional.ofNullable(premiumUniqueId)
-        .orElseGet(() -> getUuidFromUsername(username));
+    return Optional.ofNullable(premiumUniqueId).orElseGet(() -> getUuidFromUsername(username));
   }
 
   private UUID getUuidFromUsername(final String username) {

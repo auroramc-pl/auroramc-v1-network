@@ -18,10 +18,11 @@ class AuctionService implements AuctionFacade {
 
   @Override
   public void addAuction(final Auction auction) {
-    auctionQueue.mutate(queue -> {
-      queue.add(auction);
-      return queue;
-    });
+    auctionQueue.mutate(
+        queue -> {
+          queue.add(auction);
+          return queue;
+        });
   }
 
   @Override

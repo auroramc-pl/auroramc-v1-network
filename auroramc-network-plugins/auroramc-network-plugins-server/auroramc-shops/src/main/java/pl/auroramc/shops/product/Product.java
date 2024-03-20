@@ -8,8 +8,7 @@ public record Product(
     ItemStack subject,
     Integer quantity,
     BigDecimal priceForSale,
-    BigDecimal priceForPurchase
-) {
+    BigDecimal priceForPurchase) {
 
   public static ProductBuilder newBuilder() {
     return new ProductBuilder();

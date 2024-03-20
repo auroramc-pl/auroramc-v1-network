@@ -5,11 +5,7 @@ import java.util.UUID;
 
 interface LeaderboardRepository {
 
-  LeaderboardEntry getLeaderboardEntryByUniqueId(
-      final Long currencyId, final UUID uniqueId
-  );
+  LeaderboardEntry getLeaderboardEntryByUniqueId(final Long currencyId, final UUID uniqueId);
 
-  List<LeaderboardEntry> getLeaderboardEntriesByBalanceAscending(
-      final Long currencyId
-  );
+  List<LeaderboardEntry> getLeaderboardEntriesByBalanceAscending(final Long currencyId);
 }

@@ -23,7 +23,9 @@ import pl.auroramc.auth.user.UserFacade;
 import pl.auroramc.commons.message.MutableMessage;
 
 @Permission("auroramc.auth.login")
-@Command(name = "login", aliases = {"l", "zaloguj"})
+@Command(
+    name = "login",
+    aliases = {"l", "zaloguj"})
 public class LoginCommand {
 
   private static final int MAXIMUM_LOGIN_ATTEMPTS = 3;
@@ -42,31 +44,28 @@ public class LoginCommand {
       final UserFacade userFacade,
       final UserController userController,
       final HashingStrategy hashingStrategy,
-      final TimeoutFacade timeoutFacade
-  ) {
+      final TimeoutFacade timeoutFacade) {
     this.logger = logger;
     this.messageSource = messageSource;
     this.userFacade = userFacade;
     this.userController = userController;
     this.hashingStrategy = hashingStrategy;
     this.timeoutFacade = timeoutFacade;
-    this.loginAttemptsCache = Caffeine.newBuilder()
-        .expireAfterWrite(ofSeconds(20))
-        .build(key -> DEFAULT_LOGIN_ATTEMPTS);
+    this.loginAttemptsCache =
+        Caffeine.newBuilder().expireAfterWrite(ofSeconds(20)).build(key -> DEFAULT_LOGIN_ATTEMPTS);
   }
 
   @Execute
   public CompletableFuture<MutableMessage> login(
-      final @Context Player player, final @Arg String password
-  ) {
-    return userFacade.getUserByUniqueId(player.getUniqueId())
+      final @Context Player player, final @Arg String password) {
+    return userFacade
+        .getUserByUniqueId(player.getUniqueId())
         .thenApply(user -> handleUserLogin(player, user, password))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
   private MutableMessage handleUserLogin(
-      final Player player, final User user, final String password
-  ) {
+      final Player player, final User user, final String password) {
     if (user.isPremium()) {
       return messageSource.notAllowedBecauseOfPremiumAccount;
     }

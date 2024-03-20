@@ -3,8 +3,8 @@ package pl.auroramc.economy.balance;
 import static com.spotify.futures.CompletableFutures.joinList;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.economy.message.MutableMessageVariableKey.BALANCE_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.NAME_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.NAME_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MutableMessageVariableKey.USERNAME_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;

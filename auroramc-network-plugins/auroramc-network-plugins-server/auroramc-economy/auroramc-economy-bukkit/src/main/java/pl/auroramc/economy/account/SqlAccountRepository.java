@@ -30,26 +30,21 @@ class SqlAccountRepository implements AccountRepository {
   }
 
   void createAccountSchemaIfRequired() {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final Statement statement = connection.createStatement()
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final Statement statement = connection.createStatement()) {
       statement.execute(CREATE_ACCOUNT_SCHEMA);
       statement.execute(CREATE_ACCOUNT_INDEX_FOR_BALANCE);
     } catch (final SQLException exception) {
       throw new AccountRepositoryException(
-          "Could not create schema for account entity, because of unexpected exception",
-          exception
-      );
+          "Could not create schema for account entity, because of unexpected exception", exception);
     }
   }
 
   @Override
   public Account findAccountByUserIdAndCurrencyId(final Long userId, final Long currencyId) {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(FIND_ACCOUNT_BY_USER_ID_AND_CURRENCY_ID)
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement =
+            connection.prepareStatement(FIND_ACCOUNT_BY_USER_ID_AND_CURRENCY_ID)) {
       statement.setLong(1, userId);
       statement.setLong(2, currencyId);
       try (final ResultSet resultSet = statement.executeQuery()) {
@@ -61,21 +56,15 @@ class SqlAccountRepository implements AccountRepository {
     } catch (final SQLException exception) {
       throw new AccountRepositoryException(
           "Could not find account identified by %d for %d currency, because of unexpected exception"
-              .formatted(
-                  userId,
-                  currencyId
-              ),
-          exception
-      );
+              .formatted(userId, currencyId),
+          exception);
     }
   }
 
   @Override
   public void createAccount(final Account account) {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(CREATE_ACCOUNT)
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement = connection.prepareStatement(CREATE_ACCOUNT)) {
       statement.setLong(1, account.getUserId());
       statement.setLong(2, account.getCurrencyId());
       statement.setBigDecimal(3, account.getBalance());
@@ -83,31 +72,22 @@ class SqlAccountRepository implements AccountRepository {
     } catch (final SQLException exception) {
       throw new AccountRepositoryException(
           "Could not create account identified by %d for %d currency, because of unexpected exception"
-              .formatted(
-                  account.getUserId(),
-                  account.getCurrencyId()
-              ),
-          exception
-      );
+              .formatted(account.getUserId(), account.getCurrencyId()),
+          exception);
     }
   }
 
   @Override
   public void updateAccount(final Account account) {
-    if (getDigitCountBeforeDecimalPoint(account.getBalance()) > MAXIMUM_BALANCE_DIGIT_COUNT_BEFORE_DECIMAL_POINT) {
+    if (getDigitCountBeforeDecimalPoint(account.getBalance())
+        > MAXIMUM_BALANCE_DIGIT_COUNT_BEFORE_DECIMAL_POINT) {
       throw new AccountRepositoryException(
           "Could not update account identified by %d for %d currency, because balance overflows over table definition"
-              .formatted(
-                  account.getUserId(),
-                  account.getCurrencyId()
-              )
-      );
+              .formatted(account.getUserId(), account.getCurrencyId()));
     }
 
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(UPDATE_ACCOUNT)
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement = connection.prepareStatement(UPDATE_ACCOUNT)) {
       statement.setBigDecimal(1, account.getBalance());
       statement.setLong(2, account.getUserId());
       statement.setLong(3, account.getCurrencyId());
@@ -115,33 +95,23 @@ class SqlAccountRepository implements AccountRepository {
     } catch (final SQLException exception) {
       throw new AccountRepositoryException(
           "Could not update account identified by %d for %d currency, because of unexpected exception"
-              .formatted(
-                  account.getUserId(),
-                  account.getCurrencyId()
-              ),
-          exception
-      );
+              .formatted(account.getUserId(), account.getCurrencyId()),
+          exception);
     }
   }
 
   @Override
   public void deleteAccount(final Account account) {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(DELETE_ACCOUNT)
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement = connection.prepareStatement(DELETE_ACCOUNT)) {
       statement.setLong(1, account.getUserId());
       statement.setLong(2, account.getCurrencyId());
       statement.executeUpdate();
     } catch (final SQLException exception) {
       throw new AccountRepositoryException(
           "Could not delete account identified by %d for %d currency, because of unexpected exception"
-              .formatted(
-                  account.getUserId(),
-                  account.getCurrencyId()
-              ),
-          exception
-      );
+              .formatted(account.getUserId(), account.getCurrencyId()),
+          exception);
     }
   }
 
@@ -150,23 +120,16 @@ class SqlAccountRepository implements AccountRepository {
       final Account initiatorAccount,
       final Account receivingAccount,
       final Long currencyId,
-      final BigDecimal amount
-  ) {
+      final BigDecimal amount) {
     try (final Connection connection = juliet.borrowConnection()) {
       executeTransactionForTransferOfBalance(
-          connection, initiatorAccount, receivingAccount, currencyId, amount
-      );
+          connection, initiatorAccount, receivingAccount, currencyId, amount);
     } catch (final SQLException exception) {
       throw new AccountRepositoryException(
           "Could not transfer %.2f from %d to %d for %d currency, because of unexpected exception"
               .formatted(
-                  amount,
-                  initiatorAccount.getUserId(),
-                  receivingAccount.getUserId(),
-                  currencyId
-              ),
-          exception
-      );
+                  amount, initiatorAccount.getUserId(), receivingAccount.getUserId(), currencyId),
+          exception);
     }
   }
 
@@ -175,30 +138,31 @@ class SqlAccountRepository implements AccountRepository {
       final Account initiatorAccount,
       final Account receivingAccount,
       final Long currencyId,
-      final BigDecimal amount
-  ) throws SQLException {
-    try (
-        final PreparedStatement depositionStatement = connection.prepareStatement(UPDATE_ACCOUNT);
-        final PreparedStatement withdrawalStatement = connection.prepareStatement(UPDATE_ACCOUNT)
-    ) {
+      final BigDecimal amount)
+      throws SQLException {
+    try (final PreparedStatement depositionStatement = connection.prepareStatement(UPDATE_ACCOUNT);
+        final PreparedStatement withdrawalStatement = connection.prepareStatement(UPDATE_ACCOUNT)) {
       connection.setAutoCommit(false);
 
       final long initiatorStamp = initiatorAccount.getLock().writeLock();
       final long receivingStamp = receivingAccount.getLock().writeLock();
 
-      final BigDecimal newBalanceForInitiatorAccount = initiatorAccount.getBalance().subtract(amount);
+      final BigDecimal newBalanceForInitiatorAccount =
+          initiatorAccount.getBalance().subtract(amount);
       final BigDecimal newBalanceForReceivingAccount = receivingAccount.getBalance().add(amount);
       try {
         setParametersForTransferOfBalance(
-            depositionStatement, initiatorAccount.getUserId(), currencyId,
-            newBalanceForInitiatorAccount
-        );
+            depositionStatement,
+            initiatorAccount.getUserId(),
+            currencyId,
+            newBalanceForInitiatorAccount);
         depositionStatement.executeUpdate();
 
         setParametersForTransferOfBalance(
-            withdrawalStatement, receivingAccount.getUserId(), currencyId,
-            newBalanceForReceivingAccount
-        );
+            withdrawalStatement,
+            receivingAccount.getUserId(),
+            currencyId,
+            newBalanceForReceivingAccount);
         withdrawalStatement.executeUpdate();
 
         connection.commit();
@@ -218,15 +182,12 @@ class SqlAccountRepository implements AccountRepository {
                     initiatorAccount.getUserId(),
                     receivingAccount.getUserId(),
                     currencyId,
-                    amount
-                )
-        );
+                    amount));
         connection.rollback();
       } catch (final SQLException exceptionFromRollback) {
         throw new AccountRepositoryException(
             "Could not rollback transaction, because of unexpected exception",
-            exceptionFromRollback
-        );
+            exceptionFromRollback);
       }
     }
   }
@@ -235,8 +196,8 @@ class SqlAccountRepository implements AccountRepository {
       final PreparedStatement statement,
       final Long userId,
       final Long currencyId,
-      final BigDecimal balance
-  ) throws SQLException {
+      final BigDecimal balance)
+      throws SQLException {
     statement.setBigDecimal(1, balance);
     statement.setLong(2, userId);
     statement.setLong(3, currencyId);
@@ -246,7 +207,6 @@ class SqlAccountRepository implements AccountRepository {
     return new Account(
         resultSet.getLong("user_id"),
         resultSet.getLong("currency_id"),
-        resultSet.getBigDecimal("balance")
-    );
+        resultSet.getBigDecimal("balance"));
   }
 }

@@ -25,25 +25,20 @@ class SqlQuestTrackRepository implements QuestTrackRepository {
   }
 
   void createQuestTrackSchemaIfRequired() {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final Statement statement = connection.createStatement()
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final Statement statement = connection.createStatement()) {
       statement.execute(CREATE_QUEST_TRACK_SCHEMA);
     } catch (final SQLException exception) {
       throw new QuestTrackRepositoryException(
-          "Could not create schema for quest tracks, because of unexpected exception.",
-          exception
-      );
+          "Could not create schema for quest tracks, because of unexpected exception.", exception);
     }
   }
 
   @Override
   public List<QuestTrack> getQuestTracksByUniqueId(final UUID uniqueId) {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(GET_QUEST_TRACKS_BY_USER_UNIQUE_ID)
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement =
+            connection.prepareStatement(GET_QUEST_TRACKS_BY_USER_UNIQUE_ID)) {
       statement.setObject(1, uniqueId);
 
       final List<QuestTrack> results = new ArrayList<>();
@@ -64,14 +59,12 @@ class SqlQuestTrackRepository implements QuestTrackRepository {
     return new QuestTrack(
         resultSet.getLong("user_id"),
         resultSet.getLong("quest_id"),
-        QuestState.valueOf(resultSet.getString("quest_state"))
-    );
+        QuestState.valueOf(resultSet.getString("quest_state")));
   }
 
   @Override
   public void createQuestTrack(final QuestTrack questTrack) {
-    try (
-        final Connection connection = juliet.borrowConnection();
+    try (final Connection connection = juliet.borrowConnection();
         final PreparedStatement statement = connection.prepareStatement(CREATE_QUEST_TRACK)) {
       statement.setLong(1, questTrack.getUserId());
       statement.setLong(2, questTrack.getQuestId());
@@ -79,27 +72,21 @@ class SqlQuestTrackRepository implements QuestTrackRepository {
       statement.executeUpdate();
     } catch (final SQLException exception) {
       throw new QuestTrackRepositoryException(
-          "Could not create quest track, because of unexpected exception.",
-          exception
-      );
+          "Could not create quest track, because of unexpected exception.", exception);
     }
   }
 
   @Override
   public void updateQuestTrack(final QuestTrack questTrack) {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(UPDATE_QUEST_TRACK)
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement = connection.prepareStatement(UPDATE_QUEST_TRACK)) {
       statement.setString(1, questTrack.getQuestState().name());
       statement.setLong(2, questTrack.getUserId());
       statement.setLong(3, questTrack.getQuestId());
       statement.executeUpdate();
     } catch (final SQLException exception) {
       throw new QuestTrackRepositoryException(
-          "Could not update quest track, because of unexpected exception.",
-          exception
-      );
+          "Could not update quest track, because of unexpected exception.", exception);
     }
   }
 }

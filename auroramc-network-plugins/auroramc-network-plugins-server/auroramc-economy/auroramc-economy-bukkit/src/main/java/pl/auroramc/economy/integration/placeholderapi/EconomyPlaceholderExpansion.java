@@ -32,8 +32,7 @@ class EconomyPlaceholderExpansion extends PlaceholderExpansion {
       final Plugin plugin,
       final Logger logger,
       final EconomyFacade economyFacade,
-      final CurrencyFacade currencyFacade
-  ) {
+      final CurrencyFacade currencyFacade) {
     this.plugin = plugin;
     this.logger = logger;
     this.economyFacade = economyFacade;
@@ -49,24 +48,20 @@ class EconomyPlaceholderExpansion extends PlaceholderExpansion {
 
     if (params.startsWith(BALANCE_PLACEHOLDER_NAME) || params.startsWith(SYMBOL_PLACEHOLDER_NAME)) {
       final String[] variablesIncludingName = params.split(PLACEHOLDER_PARAMETER_DELIMITER);
-      final String[] variables = copyOfRange(
-          variablesIncludingName, 1, variablesIncludingName.length);
+      final String[] variables =
+          copyOfRange(variablesIncludingName, 1, variablesIncludingName.length);
       if (variables.length == 0) {
-        logger.warning(
-            "Could not retrieve any variables from the balance retrieval."
-        );
+        logger.warning("Could not retrieve any variables from the balance retrieval.");
         return null;
       }
 
-      final Long currencyId = supplyThrowing(() -> parseLong(variables[0])).orElseGet(DEFAULT_CURRENCY_ID);
+      final Long currencyId =
+          supplyThrowing(() -> parseLong(variables[0])).orElseGet(DEFAULT_CURRENCY_ID);
       final Currency currency = currencyFacade.getCurrencyById(currencyId);
       if (currency == null) {
         logger.warning(
             "Could not find currency with id %s to process the balance retrieval."
-                .formatted(
-                    currencyId
-                )
-        );
+                .formatted(currencyId));
         return null;
       }
 
@@ -75,7 +70,8 @@ class EconomyPlaceholderExpansion extends PlaceholderExpansion {
       }
 
       if (params.startsWith(BALANCE_PLACEHOLDER_NAME)) {
-        return economyFacade.balance(requester.getUniqueId(), currency)
+        return economyFacade
+            .balance(requester.getUniqueId(), currency)
             .thenApply(DecimalFormatter::getFormattedDecimal)
             .join();
       }
@@ -91,7 +87,7 @@ class EconomyPlaceholderExpansion extends PlaceholderExpansion {
 
   @Override
   public @NotNull String getAuthor() {
-    return join(PLACEHOLDER_AUTHORS_DELIMITER,  plugin.getPluginMeta().getAuthors());
+    return join(PLACEHOLDER_AUTHORS_DELIMITER, plugin.getPluginMeta().getAuthors());
   }
 
   @Override

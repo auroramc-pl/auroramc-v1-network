@@ -29,9 +29,8 @@ public class HopperTransferListener implements Listener {
   public HopperTransferListener(final Plugin plugin, final NamespacedKey transferQuantityKey) {
     this.plugin = plugin;
     this.transferQuantityKey = transferQuantityKey;
-    this.transferQuantityByPositionCache = Caffeine.newBuilder()
-        .expireAfterWrite(ofSeconds(20))
-        .build();
+    this.transferQuantityByPositionCache =
+        Caffeine.newBuilder().expireAfterWrite(ofSeconds(20)).build();
   }
 
   @EventHandler(priority = HIGHEST, ignoreCancelled = true)
@@ -48,10 +47,12 @@ public class HopperTransferListener implements Listener {
     final ItemStack transferredItemStack = event.getItem().clone();
     transferredItemStack.setAmount(transferringQuantity);
 
-    postToMainThreadAndNextTick(plugin, () -> {
-      sourceInventory.removeItemAnySlot(transferredItemStack);
-      targetInventory.addItem(transferredItemStack);
-    });
+    postToMainThreadAndNextTick(
+        plugin,
+        () -> {
+          sourceInventory.removeItemAnySlot(transferredItemStack);
+          targetInventory.addItem(transferredItemStack);
+        });
 
     event.setCancelled(true);
   }
@@ -61,37 +62,32 @@ public class HopperTransferListener implements Listener {
   }
 
   private int resolveTransferQuantity(final Location location) {
-    final Position position = Optional.ofNullable(location)
-        .map(value ->
-            new Position(
-                value.getWorld().getName(),
-                value.getBlockX(),
-                value.getBlockY(),
-                value.getBlockZ()
-            )
-        )
-        .orElseThrow(() ->
-            new HopperTransferringException("Could not retrieve initiator's location.")
-        );
+    final Position position =
+        Optional.ofNullable(location)
+            .map(
+                value ->
+                    new Position(
+                        value.getWorld().getName(),
+                        value.getBlockX(),
+                        value.getBlockY(),
+                        value.getBlockZ()))
+            .orElseThrow(
+                () -> new HopperTransferringException("Could not retrieve initiator's location."));
 
     return transferQuantityByPositionCache.get(
         position,
-        key -> resolveTransferQuantityBlocking(new CustomBlockData(location.getBlock(), plugin))
-    );
+        key -> resolveTransferQuantityBlocking(new CustomBlockData(location.getBlock(), plugin)));
   }
 
   private int resolveTransferQuantityBlocking(final CustomBlockData blockData) {
-    final int transferQuantity = Optional.ofNullable(blockData.get(transferQuantityKey, INTEGER))
-        .orElse(DEFAULT_TRANSFER_QUANTITY);
+    final int transferQuantity =
+        Optional.ofNullable(blockData.get(transferQuantityKey, INTEGER))
+            .orElse(DEFAULT_TRANSFER_QUANTITY);
     if (transferQuantity <= 0) {
-      throw new HopperTransferringException(
-          "Hopper transfer quantity is less than or equal to 0."
-      );
+      throw new HopperTransferringException("Hopper transfer quantity is less than or equal to 0.");
     }
     return transferQuantity;
   }
 
-  private record Position(String dimensionName, int x, int y, int z) {
-
-  }
+  private record Position(String dimensionName, int x, int y, int z) {}
 }

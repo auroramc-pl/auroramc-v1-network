@@ -16,24 +16,18 @@ public interface BazaarFacade {
       final DecimalFormat priceFormat,
       final MutableMessageSource messageSource,
       final Currency fundsCurrency,
-      final EconomyFacade economyFacade
-  ) {
-    return new BazaarService(
-        plugin, priceFormat, messageSource, fundsCurrency, economyFacade
-    );
+      final EconomyFacade economyFacade) {
+    return new BazaarService(plugin, priceFormat, messageSource, fundsCurrency, economyFacade);
   }
 
   CompletableFuture<MutableMessage> handleItemTransaction(
-      final BazaarTransactionContext transactionContext
-  );
+      final BazaarTransactionContext transactionContext);
 
   CompletableFuture<MutableMessage> handleItemPurchase(
       final BazaarTransactionContext transactionContext,
-      final boolean whetherCustomerHasEnoughFunds
-  );
+      final boolean whetherCustomerHasEnoughFunds);
 
   CompletableFuture<MutableMessage> handleItemSale(
       final BazaarTransactionContext transactionContext,
-      final boolean whetherMerchantHasEnoughFunds
-  );
+      final boolean whetherMerchantHasEnoughFunds);
 }

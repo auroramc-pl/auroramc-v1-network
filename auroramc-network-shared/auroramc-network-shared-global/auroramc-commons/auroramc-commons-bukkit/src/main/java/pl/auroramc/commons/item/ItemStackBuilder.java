@@ -41,9 +41,7 @@ public final class ItemStackBuilder {
   }
 
   public ItemStackBuilder displayName(final String unparsedDisplayName) {
-    return displayName(miniMessage()
-        .deserialize(unparsedDisplayName)
-        .decoration(ITALIC, FALSE));
+    return displayName(miniMessage().deserialize(unparsedDisplayName).decoration(ITALIC, FALSE));
   }
 
   public ItemStackBuilder type(final Material material) {
@@ -89,8 +87,7 @@ public final class ItemStackBuilder {
   }
 
   public <T> ItemStackBuilder manipulate(
-      final Predicate<T> condition, final T value, final Consumer<ItemStackBuilder> manipulator
-  ) {
+      final Predicate<T> condition, final T value, final Consumer<ItemStackBuilder> manipulator) {
     return condition.test(value) ? manipulate(manipulator) : this;
   }
 

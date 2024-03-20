@@ -61,7 +61,5 @@ final class SqlObjectiveProgressRepositoryQuery {
         `user_id` = ? AND `quest_id` = ?;
       """;
 
-  private SqlObjectiveProgressRepositoryQuery() {
-
-  }
+  private SqlObjectiveProgressRepositoryQuery() {}
 }

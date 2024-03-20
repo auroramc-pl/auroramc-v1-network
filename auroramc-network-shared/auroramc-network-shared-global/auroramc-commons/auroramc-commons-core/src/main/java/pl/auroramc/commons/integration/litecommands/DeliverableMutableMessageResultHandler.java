@@ -13,8 +13,7 @@ public class DeliverableMutableMessageResultHandler<T extends Audience>
   public void handle(
       final Invocation<T> invocation,
       final DeliverableMutableMessage message,
-      final ResultHandlerChain<T> chain
-  ) {
+      final ResultHandlerChain<T> chain) {
     message.deliver(invocation.sender());
   }
 }

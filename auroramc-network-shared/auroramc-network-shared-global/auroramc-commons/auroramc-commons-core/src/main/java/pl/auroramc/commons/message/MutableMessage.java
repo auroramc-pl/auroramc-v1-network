@@ -46,9 +46,7 @@ public class MutableMessage {
     return new MutableMessage(
         template.replace(
             PLACEHOLDER_KEY_INITIATOR + key + PLACEHOLDER_KEY_TERMINATOR,
-            getResolvedMessageVariable(value)
-        )
-    );
+            getResolvedMessageVariable(value)));
   }
 
   public MutableMessage append(final MutableMessage message, final String delimiter) {
@@ -78,8 +76,7 @@ public class MutableMessage {
   }
 
   public Component[] compileChildren(
-      final String delimiter, final MutableMessageDecoration... decorations
-  ) {
+      final String delimiter, final MutableMessageDecoration... decorations) {
     return Stream.of(children(delimiter))
         .map(message -> message.compile(decorations))
         .toArray(Component[]::new);

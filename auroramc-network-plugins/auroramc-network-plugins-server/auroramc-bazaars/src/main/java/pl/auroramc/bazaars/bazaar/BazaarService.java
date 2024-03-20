@@ -2,10 +2,10 @@ package pl.auroramc.bazaars.bazaar;
 
 import static pl.auroramc.bazaars.bazaar.BazaarUtils.getEmptySlotsCount;
 import static pl.auroramc.bazaars.bazaar.BazaarUtils.getQuantityInSlots;
+import static pl.auroramc.bazaars.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.bazaars.message.MutableMessageVariableKey.MERCHANT_VARIABLE_KEY;
 import static pl.auroramc.bazaars.message.MutableMessageVariableKey.PRICE_VARIABLE_KEY;
 import static pl.auroramc.bazaars.message.MutableMessageVariableKey.PRODUCT_VARIABLE_KEY;
-import static pl.auroramc.bazaars.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.commons.BukkitUtils.postToMainThread;
 import static pl.auroramc.commons.item.ItemStackFormatter.getFormattedItemStack;
 

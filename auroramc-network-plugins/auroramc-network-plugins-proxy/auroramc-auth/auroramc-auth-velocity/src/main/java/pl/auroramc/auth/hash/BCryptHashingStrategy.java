@@ -23,7 +23,8 @@ class BCryptHashingStrategy implements HashingStrategy {
   public String hashPassword(final String plainPassword) {
     final byte[] password = plainPassword.getBytes(UTF_8);
     final byte[] passwordSalt = saltGenerator.generateSalt(PASSWORD_SALT_LENGTH);
-    final byte[] encodedPassword = PASSWORD_HASHER.hash(BCRYPT_HASHING_ROUNDS, passwordSalt, password);
+    final byte[] encodedPassword =
+        PASSWORD_HASHER.hash(BCRYPT_HASHING_ROUNDS, passwordSalt, password);
     return new String(encodedPassword, UTF_8);
   }
 

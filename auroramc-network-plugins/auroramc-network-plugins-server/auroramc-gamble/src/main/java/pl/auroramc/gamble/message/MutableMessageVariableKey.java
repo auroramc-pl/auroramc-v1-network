@@ -11,7 +11,5 @@ public final class MutableMessageVariableKey {
   public static final String CURRENCY_VARIABLE_KEY = "currency";
   public static final String STAKE_VARIABLE_KEY = "stake";
 
-  private MutableMessageVariableKey() {
-
-  }
+  private MutableMessageVariableKey() {}
 }

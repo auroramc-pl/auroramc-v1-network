@@ -6,9 +6,7 @@ class SecureSaltGenerator implements SaltGenerator {
 
   private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
-  SecureSaltGenerator() {
-
-  }
+  SecureSaltGenerator() {}
 
   @Override
   public byte[] generateSalt(final int length) {

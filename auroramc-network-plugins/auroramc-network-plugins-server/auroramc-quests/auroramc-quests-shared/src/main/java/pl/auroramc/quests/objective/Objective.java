@@ -20,8 +20,7 @@ public class Objective<T> extends Resource {
       final T type,
       final int saveInterval,
       final ObjectiveGoalResolver goalResolver,
-      final List<ObjectiveRequirement> requirements
-  ) {
+      final List<ObjectiveRequirement> requirements) {
     super(key);
     this.type = type;
     this.saveInterval = saveInterval;

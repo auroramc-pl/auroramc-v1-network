@@ -50,7 +50,5 @@ final class SqlVaultItemRepositoryQuery {
         `id` = ?;
       """;
 
-  private SqlVaultItemRepositoryQuery() {
-
-  }
+  private SqlVaultItemRepositoryQuery() {}
 }

@@ -7,14 +7,9 @@ interface PunishmentRepository {
   Punishment findPunishmentById(final Long id);
 
   Punishment findPunishmentByPenalizedIdWithScopeAndState(
-      final Long penalizedId,
-      final PunishmentScope scope,
-      final PunishmentState state
-  );
+      final Long penalizedId, final PunishmentScope scope, final PunishmentState state);
 
-  List<Punishment> findPunishmentsByPenalizedId(
-      final Long penalizedId
-  );
+  List<Punishment> findPunishmentsByPenalizedId(final Long penalizedId);
 
   void createPunishment(final Punishment punishment);
 

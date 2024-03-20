@@ -37,16 +37,19 @@ public class PunishmentsVelocityPlugin {
 
   @Subscribe
   public void onProxyInitialize(final ProxyInitializeEvent event) {
-    final MutableMessageSource messageSource = configFactory.produceConfig(
-        MutableMessageSource.class, MutableMessageSource.MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
-    );
+    final MutableMessageSource messageSource =
+        configFactory.produceConfig(
+            MutableMessageSource.class,
+            MutableMessageSource.MESSAGE_SOURCE_FILE_NAME,
+            new SerdesMessageSource());
 
-    final JulietConfig julietConfig = configFactory.produceConfig(
-        JulietConfig.class, JULIET_CONFIG_FILE_NAME, new SerdesJuliet()
-    );
-    final Juliet juliet = JulietBuilder.newBuilder()
-        .withDataSource(produceHikariDataSource(julietConfig.hikari))
-        .build();
+    final JulietConfig julietConfig =
+        configFactory.produceConfig(
+            JulietConfig.class, JULIET_CONFIG_FILE_NAME, new SerdesJuliet());
+    final Juliet juliet =
+        JulietBuilder.newBuilder()
+            .withDataSource(produceHikariDataSource(julietConfig.hikari))
+            .build();
 
     final PunishmentFacade punishmentFacade = getPunishmentFacade(logger, juliet);
   }

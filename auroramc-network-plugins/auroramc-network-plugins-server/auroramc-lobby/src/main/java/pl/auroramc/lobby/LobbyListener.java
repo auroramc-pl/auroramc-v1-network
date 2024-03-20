@@ -18,8 +18,7 @@ class LobbyListener implements Listener {
   LobbyListener(
       final Logger logger,
       final LobbyConfig lobbyConfig,
-      final MutableMessageSource messageSource
-  ) {
+      final MutableMessageSource messageSource) {
     this.logger = logger;
     this.lobbyConfig = lobbyConfig;
     this.messageSource = messageSource;
@@ -28,7 +27,8 @@ class LobbyListener implements Listener {
   @EventHandler
   public void onLobbyJoin(final PlayerJoinEvent event) {
     final Player player = event.getPlayer();
-    player.teleportAsync(lobbyConfig.spawn)
+    player
+        .teleportAsync(lobbyConfig.spawn)
         .thenAccept(state -> messageSource.lobbyClarification.deliver(player))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }

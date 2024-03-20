@@ -14,8 +14,7 @@ public class Visit {
       final Long userId,
       final Duration sessionDuration,
       final Instant sessionStartTime,
-      final Instant sessionDitchTime
-  ) {
+      final Instant sessionDitchTime) {
     this.userId = userId;
     this.sessionDuration = sessionDuration;
     this.sessionStartTime = sessionStartTime;

@@ -37,7 +37,5 @@ final class SqlResourceKeyRepositoryQuery {
         `id` = ?;
       """;
 
-  private SqlResourceKeyRepositoryQuery() {
-
-  }
+  private SqlResourceKeyRepositoryQuery() {}
 }

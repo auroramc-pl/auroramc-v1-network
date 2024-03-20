@@ -18,9 +18,7 @@ public final class BukkitUtils {
   private static final long MILLISECONDS_PER_TICK = MILLISECONDS_PER_SECOND / TICKS_PER_SECOND;
   private static final long ONE_TICK_DELAY = 1L;
 
-  private BukkitUtils() {
-
-  }
+  private BukkitUtils() {}
 
   public static void postToMainThread(final Plugin plugin, final Runnable task) {
     plugin.getServer().getScheduler().runTask(plugin, task);
@@ -31,11 +29,12 @@ public final class BukkitUtils {
   }
 
   public static void appendItemStackOrDropBelow(final Player player, final ItemStack itemStack) {
-    player.getInventory()
+    player
+        .getInventory()
         .addItem(itemStack)
-        .forEach((index, remainingItemStack) ->
-            player.getWorld().dropItemNaturally(player.getLocation(), remainingItemStack)
-        );
+        .forEach(
+            (index, remainingItemStack) ->
+                player.getWorld().dropItemNaturally(player.getLocation(), remainingItemStack));
   }
 
   public static long getTicksOf(final Duration period) {
@@ -45,33 +44,25 @@ public final class BukkitUtils {
   public static <T> T resolveService(final Server server, final Class<T> serviceType) {
     return Optional.ofNullable(server.getServicesManager().getRegistration(serviceType))
         .map(RegisteredServiceProvider::getProvider)
-        .orElseThrow(() ->
-            new BukkitServiceRetrievalException(
-                "Could not resolve %s service through bukkit's services."
-                    .formatted(
-                        serviceType.getSimpleName()
-                    )
-            )
-        );
+        .orElseThrow(
+            () ->
+                new BukkitServiceRetrievalException(
+                    "Could not resolve %s service through bukkit's services."
+                        .formatted(serviceType.getSimpleName())));
   }
 
-  public static void registerServices(
-      final Plugin plugin, final Set<?> services
-  ) {
+  public static void registerServices(final Plugin plugin, final Set<?> services) {
     services.forEach(service -> registerService(plugin, service));
   }
 
-  public static <T> void registerService(
-      final Plugin plugin, final T service
-  ) {
-    plugin.getServer().getServicesManager().register(
-        getFacadeType(service), service, plugin, ServicePriority.Normal
-    );
+  public static <T> void registerService(final Plugin plugin, final T service) {
+    plugin
+        .getServer()
+        .getServicesManager()
+        .register(getFacadeType(service), service, plugin, ServicePriority.Normal);
   }
 
-  public static void registerListeners(
-      final Plugin plugin, final Listener... bunchOfListeners
-  ) {
+  public static void registerListeners(final Plugin plugin, final Listener... bunchOfListeners) {
     for (final Listener listener : bunchOfListeners) {
       plugin.getServer().getPluginManager().registerEvents(listener, plugin);
     }

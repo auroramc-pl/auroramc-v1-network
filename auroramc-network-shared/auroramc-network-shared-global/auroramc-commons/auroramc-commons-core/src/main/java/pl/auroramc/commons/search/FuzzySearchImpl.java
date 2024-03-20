@@ -12,10 +12,7 @@ class FuzzySearchImpl implements FuzzySearch {
 
   @Override
   public String getMostSimilarString(
-      final String source,
-      final Iterable<String> possibilities,
-      final double threshold
-  ) {
+      final String source, final Iterable<String> possibilities, final double threshold) {
     StringMetricResult closestResult = null;
     for (final String possibility : possibilities) {
       final double similarity = stringMetric.getSimilarityScore(source, possibility);
@@ -23,8 +20,11 @@ class FuzzySearchImpl implements FuzzySearch {
         return possibility;
       }
 
-      if (similarity >= threshold && (closestResult == null || closestResult.similarity() < similarity)) {
-        closestResult = new StringMetricResult(possibility, stringMetric.getSimilarityScore(source, possibility));
+      if (similarity >= threshold
+          && (closestResult == null || closestResult.similarity() < similarity)) {
+        closestResult =
+            new StringMetricResult(
+                possibility, stringMetric.getSimilarityScore(source, possibility));
       }
     }
     return closestResult != null ? closestResult.result() : null;

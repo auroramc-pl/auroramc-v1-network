@@ -28,8 +28,7 @@ class DataValidationListener implements Listener {
       final Logger logger,
       final UserFacade userFacade,
       final VaultFacade vaultFacade,
-      final AudienceFacade audienceFacade
-  ) {
+      final AudienceFacade audienceFacade) {
     this.logger = logger;
     this.userFacade = userFacade;
     this.vaultFacade = vaultFacade;
@@ -38,39 +37,35 @@ class DataValidationListener implements Listener {
 
   @EventHandler
   public void onDataValidation(final PlayerJoinEvent event) {
-    userFacade.getUserByUniqueId(event.getPlayer().getUniqueId())
-        .thenCompose(user ->
-            allOf(
-                createVaultIfRequired(user),
-                createAudienceIfRequired(user)
-            )
-        )
+    userFacade
+        .getUserByUniqueId(event.getPlayer().getUniqueId())
+        .thenCompose(user -> allOf(createVaultIfRequired(user), createAudienceIfRequired(user)))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
   private CompletableFuture<Void> createVaultIfRequired(final User user) {
-    return vaultFacade.getVaultByUserId(user.getId())
-        .thenCompose(vault -> {
-          if (vault == null) {
-            return vaultFacade.createVault(
-                new Vault(null, user.getId())
-            );
-          }
+    return vaultFacade
+        .getVaultByUserId(user.getId())
+        .thenCompose(
+            vault -> {
+              if (vault == null) {
+                return vaultFacade.createVault(new Vault(null, user.getId()));
+              }
 
-          return EMPTY_FUTURE;
-        });
+              return EMPTY_FUTURE;
+            });
   }
 
   private CompletableFuture<Void> createAudienceIfRequired(final User user) {
-    return audienceFacade.getAudienceByUniqueId(user.getUniqueId())
-        .thenCompose(audience -> {
-          if (audience == null) {
-            return audienceFacade.createAudience(
-                new Audience(user.getId(), true)
-            );
-          }
+    return audienceFacade
+        .getAudienceByUniqueId(user.getUniqueId())
+        .thenCompose(
+            audience -> {
+              if (audience == null) {
+                return audienceFacade.createAudience(new Audience(user.getId(), true));
+              }
 
-          return EMPTY_FUTURE;
-        });
+              return EMPTY_FUTURE;
+            });
   }
 }

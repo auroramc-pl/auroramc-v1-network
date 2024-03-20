@@ -9,9 +9,7 @@ public class QuestListener implements Listener {
 
   private final SidebarRenderer sidebarRenderer;
 
-  public QuestListener(
-      final SidebarRenderer sidebarRenderer
-  ) {
+  public QuestListener(final SidebarRenderer sidebarRenderer) {
     this.sidebarRenderer = sidebarRenderer;
   }
 

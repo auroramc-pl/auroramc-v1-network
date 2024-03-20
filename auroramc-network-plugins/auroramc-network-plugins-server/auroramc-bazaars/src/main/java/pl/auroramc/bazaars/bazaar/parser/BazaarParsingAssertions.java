@@ -2,9 +2,7 @@ package pl.auroramc.bazaars.bazaar.parser;
 
 final class BazaarParsingAssertions {
 
-  private BazaarParsingAssertions() {
-
-  }
+  private BazaarParsingAssertions() {}
 
   static <T> T assertNotNull(final T value, final String errorMessage) {
     if (value == null) {

@@ -23,8 +23,7 @@ public class AuctionCompletionTask implements Runnable {
       final MutableMessageSource messageSource,
       final MessageFacade messageFacade,
       final AuctionFacade auctionFacade,
-      final AuctionController auctionController
-  ) {
+      final AuctionController auctionController) {
     this.messageSource = messageSource;
     this.messageFacade = messageFacade;
     this.auctionFacade = auctionFacade;
@@ -44,16 +43,11 @@ public class AuctionCompletionTask implements Runnable {
 
       final Duration period = between(now(), auction.getAvailableUntil());
       if (period.compareTo(AUCTION_NOTIFY_SINCE) < 0) {
-        messageFacade.deliverMessageToOnlinePlayers(
-            messageSource.auctionNearCompletion
+        messageFacade.deliverMessage(
+            messageSource
+                .auctionNearCompletion
                 .with(UNIQUE_ID_VARIABLE_KEY, auction.getAuctionUniqueId())
-                .with(
-                    PERIOD_VARIABLE_KEY,
-                    period
-                        .plus(ofSeconds(1))
-                        .getSeconds()
-                )
-        );
+                .with(PERIOD_VARIABLE_KEY, period.plus(ofSeconds(1)).getSeconds()));
       }
     }
   }

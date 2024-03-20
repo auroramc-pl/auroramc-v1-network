@@ -9,7 +9,4 @@ public record PaymentSummary(
     String receiverUsername,
     String currencySymbol,
     BigDecimal amount,
-    Instant transactionTime
-) {
-
-}
+    Instant transactionTime) {}

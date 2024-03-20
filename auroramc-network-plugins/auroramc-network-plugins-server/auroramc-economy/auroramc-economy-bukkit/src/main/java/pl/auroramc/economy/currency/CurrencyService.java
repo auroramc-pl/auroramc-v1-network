@@ -12,9 +12,10 @@ class CurrencyService implements CurrencyFacade {
 
   CurrencyService(final CurrencyRepository currencyRepository) {
     this.currencyRepository = currencyRepository;
-    this.currencyCache = Caffeine.newBuilder()
-        .expireAfterWrite(ofSeconds(90))
-        .build(currencyRepository::findCurrencyById);
+    this.currencyCache =
+        Caffeine.newBuilder()
+            .expireAfterWrite(ofSeconds(90))
+            .build(currencyRepository::findCurrencyById);
   }
 
   @Override

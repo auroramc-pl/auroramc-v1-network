@@ -23,9 +23,7 @@ public final class QuestBuilder {
   private List<QuestReward<?>> rewards = List.of();
   private int weight;
 
-  QuestBuilder() {
-
-  }
+  QuestBuilder() {}
 
   public QuestBuilder key(final ResourceKey key) {
     this.key = key;
@@ -54,7 +52,8 @@ public final class QuestBuilder {
     return this;
   }
 
-  public QuestBuilder objectives(final @DelegatesTo(value = ObjectivesDsl.class) Closure<?> closure) {
+  public QuestBuilder objectives(
+      final @DelegatesTo(value = ObjectivesDsl.class) Closure<?> closure) {
     final ObjectivesDsl objectivesDsl = new ObjectivesDsl();
     closure.setDelegate(objectivesDsl);
     closure.setResolveStrategy(DELEGATE_ONLY);
@@ -67,7 +66,8 @@ public final class QuestBuilder {
     return this;
   }
 
-  public QuestBuilder rewards(final @DelegatesTo(value = QuestRewardsDsl.class) Closure<?> closure) {
+  public QuestBuilder rewards(
+      final @DelegatesTo(value = QuestRewardsDsl.class) Closure<?> closure) {
     final QuestRewardsDsl rewardsDsl = new QuestRewardsDsl();
     closure.setDelegate(rewardsDsl);
     closure.setResolveStrategy(DELEGATE_ONLY);

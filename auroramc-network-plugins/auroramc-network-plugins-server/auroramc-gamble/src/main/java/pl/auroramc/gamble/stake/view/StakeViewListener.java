@@ -41,8 +41,7 @@ public class StakeViewListener implements Listener {
       final EconomyFacade economyFacade,
       final GambleFacade gambleFacade,
       final StakeFacade stakeFacade,
-      final StakeViewFacade stakeViewFacade
-  ) {
+      final StakeViewFacade stakeViewFacade) {
     this.plugin = plugin;
     this.logger = logger;
     this.fundsCurrency = fundsCurrency;
@@ -65,12 +64,9 @@ public class StakeViewListener implements Listener {
       stakeView
           .getNavigatorBySlot(event.getSlot())
           .map(PageNavigator::direction)
-          .map(direction ->
-              direction.navigate(
-                  stakeViewFacade.getPageCount(),
-                  stakeView.getPageIndex()
-              )
-          )
+          .map(
+              direction ->
+                  direction.navigate(stakeViewFacade.getPageCount(), stakeView.getPageIndex()))
           .flatMap(stakeViewFacade::getStakeView)
           .ifPresent(event.getWhoClicked()::openInventory);
     }
@@ -80,33 +76,31 @@ public class StakeViewListener implements Listener {
     event.setCancelled(true);
   }
 
-  public void requestStakeFinalizing(final InventoryClickEvent event, final StakeContext stakeContext) {
+  public void requestStakeFinalizing(
+      final InventoryClickEvent event, final StakeContext stakeContext) {
     final Player player = (Player) event.getWhoClicked();
     if (stakeContext.initiator().uniqueId().equals(player.getUniqueId())) {
-      player.sendMessage(
-          messageSource.stakeFinalizationSelf
-              .compile()
-      );
+      player.sendMessage(messageSource.stakeFinalizationSelf.compile());
       return;
     }
 
-    economyFacade.has(player.getUniqueId(), fundsCurrency, stakeContext.stake())
-        .thenAccept(whetherPlayerHasEnoughFunds ->
-            completeStakeFinalization(event, stakeContext, whetherPlayerHasEnoughFunds)
-        )
+    economyFacade
+        .has(player.getUniqueId(), fundsCurrency, stakeContext.stake())
+        .thenAccept(
+            whetherPlayerHasEnoughFunds ->
+                completeStakeFinalization(event, stakeContext, whetherPlayerHasEnoughFunds))
         .thenAccept(state -> postToMainThread(plugin, player::closeInventory))
         .thenAccept(state -> postToMainThread(plugin, stakeViewFacade::recalculate))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
   private void completeStakeFinalization(
-      final InventoryClickEvent event, final StakeContext stakeContext, final boolean whetherPlayerHasEnoughFunds) {
+      final InventoryClickEvent event,
+      final StakeContext stakeContext,
+      final boolean whetherPlayerHasEnoughFunds) {
     final Player player = (Player) event.getWhoClicked();
     if (!whetherPlayerHasEnoughFunds) {
-      player.sendMessage(
-          messageSource.stakeFinalizationMissingBalance
-              .compile()
-      );
+      player.sendMessage(messageSource.stakeFinalizationMissingBalance.compile());
       return;
     }
 
@@ -123,11 +117,8 @@ public class StakeViewListener implements Listener {
                         .uniqueId(event.getWhoClicked().getUniqueId())
                         .username(event.getWhoClicked().getName())
                         .prediction(((CoinSide) stakeContext.initiator().prediction()).opposite())
-                        .build()
-                )
+                        .build())
                 .build(),
-            stakeContext
-        )
-    );
+            stakeContext));
   }
 }

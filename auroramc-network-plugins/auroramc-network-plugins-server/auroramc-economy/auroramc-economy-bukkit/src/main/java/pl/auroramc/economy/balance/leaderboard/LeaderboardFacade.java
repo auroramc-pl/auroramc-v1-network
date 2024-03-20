@@ -10,11 +10,8 @@ public interface LeaderboardFacade {
     return new LeaderboardService(new SqlLeaderboardRepository(juliet));
   }
 
-  List<LeaderboardEntry> getLeaderboardEntriesByCurrencyId(
-      final Long currencyId
-  );
+  List<LeaderboardEntry> getLeaderboardEntriesByCurrencyId(final Long currencyId);
 
   LeaderboardEntry getLeaderboardEntryByCurrencyIdAndUniqueId(
-      final Long currencyId, final UUID uniqueId
-  );
+      final Long currencyId, final UUID uniqueId);
 }

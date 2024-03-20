@@ -25,50 +25,44 @@ class BazaarParserImpl implements BazaarParser {
 
   @Override
   public BazaarParsingContext parseContext(final SignDelegate sign) throws BazaarParsingException {
-    final String merchant = assertNotEmpty(getLineText(sign, MERCHANT.getLineIndex()),
-        "Could not parse bazaar, because of malformed merchant."
-    );
+    final String merchant =
+        assertNotEmpty(
+            getLineText(sign, MERCHANT.getLineIndex()),
+            "Could not parse bazaar, because of malformed merchant.");
 
     final int quantity;
     try {
       quantity = parseInt(getLineText(sign, QUANTITY.getLineIndex()));
     } catch (final NumberFormatException exception) {
-      throw new BazaarParsingException(
-          "Could not parse bazaar, because of malformed quantity."
-      );
+      throw new BazaarParsingException("Could not parse bazaar, because of malformed quantity.");
     }
 
     if (quantity <= 0) {
       throw new BazaarParsingException(
-          "Could not parse bazaar, because of quantity equal or less than zero."
-      );
+          "Could not parse bazaar, because of quantity equal or less than zero.");
     }
 
     final String combinedPriceValue = getLineText(sign, PRICE.getLineIndex());
-    final BazaarType bazaarType = assertNotNull(
-        getBazaarTypeByShortcut(combinedPriceValue.charAt(0)),
-        "Could not parse bazaar, because of malformed bazaar type."
-    );
+    final BazaarType bazaarType =
+        assertNotNull(
+            getBazaarTypeByShortcut(combinedPriceValue.charAt(0)),
+            "Could not parse bazaar, because of malformed bazaar type.");
     final BigDecimal price;
     try {
-      price = new BigDecimal(combinedPriceValue.substring(2))
-          .setScale(2, HALF_DOWN);
+      price = new BigDecimal(combinedPriceValue.substring(2)).setScale(2, HALF_DOWN);
     } catch (final NumberFormatException exception) {
-      throw new BazaarParsingException(
-          "Could not parse bazaar, because of malformed price."
-      );
+      throw new BazaarParsingException("Could not parse bazaar, because of malformed price.");
     }
 
     if (price.compareTo(ZERO) <= 0) {
       throw new BazaarParsingException(
-          "Could not parse bazaar, because of price equal or less than zero."
-      );
+          "Could not parse bazaar, because of price equal or less than zero.");
     }
 
-    final Material material = assertNotNull(
-        matchMaterial(getLineText(sign, MATERIAL.getLineIndex())),
-        "Could not parse bazaar, because of malformed material."
-    );
+    final Material material =
+        assertNotNull(
+            matchMaterial(getLineText(sign, MATERIAL.getLineIndex())),
+            "Could not parse bazaar, because of malformed material.");
 
     return new BazaarParsingContext(bazaarType, merchant, quantity, price, material);
   }
@@ -83,8 +77,6 @@ class BazaarParserImpl implements BazaarParser {
   }
 
   private String getLineText(final SignDelegate sign, final int index) {
-    return Optional.ofNullable(sign.line(index))
-        .map(plainText()::serialize)
-        .orElse(EMPTY_LINE);
+    return Optional.ofNullable(sign.line(index)).map(plainText()::serialize).orElse(EMPTY_LINE);
   }
 }

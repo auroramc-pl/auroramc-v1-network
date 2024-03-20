@@ -5,9 +5,7 @@ import org.bukkit.event.block.SignChangeEvent;
 
 public final class SignDelegateFactory {
 
-  private SignDelegateFactory() {
-
-  }
+  private SignDelegateFactory() {}
 
   public static SignDelegate produceSignDelegate(final Sign sign) {
     return new SignDelegateBukkit(sign);

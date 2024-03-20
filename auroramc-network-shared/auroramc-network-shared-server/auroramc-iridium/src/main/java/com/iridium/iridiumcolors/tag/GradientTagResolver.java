@@ -7,9 +7,7 @@ import java.awt.Color;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Represents a gradient color pattern which can be applied to a String.
- */
+/** Represents a gradient color pattern which can be applied to a String. */
 public class GradientTagResolver implements TagResolver {
 
   Pattern pattern = compile("<gradient:([0-9A-Fa-f]{6})>(.*?)</gradient:([0-9A-Fa-f]{6})>");
@@ -35,13 +33,9 @@ public class GradientTagResolver implements TagResolver {
               color(
                   content,
                   new Color(Integer.parseInt(start, 16)),
-                  new Color(Integer.parseInt(end, 16))
-              )
-          );
+                  new Color(Integer.parseInt(end, 16))));
       lastMatchEnd = matcher.end();
     }
-    return result
-        .append(string.substring(lastMatchEnd))
-        .toString();
+    return result.append(string.substring(lastMatchEnd)).toString();
   }
 }

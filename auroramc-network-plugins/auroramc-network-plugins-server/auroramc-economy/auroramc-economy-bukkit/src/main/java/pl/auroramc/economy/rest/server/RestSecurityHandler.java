@@ -29,8 +29,6 @@ public class RestSecurityHandler implements Handler, ExceptionHandler<RestSecuri
 
   @Override
   public void handle(final RestSecurityException exception, final Context context) {
-    context
-        .status(FORBIDDEN)
-        .json(response(FORBIDDEN, exception.getMessage()));
+    context.status(FORBIDDEN).json(response(FORBIDDEN, exception.getMessage()));
   }
 }

@@ -26,13 +26,9 @@ public class StaticTagResolver implements TagResolver {
       if (color == null) {
         color = matcher.group(2);
       }
-      result
-          .append(string, lastMatchEnd, matcher.start())
-          .append(getColor(color));
+      result.append(string, lastMatchEnd, matcher.start()).append(getColor(color));
       lastMatchEnd = matcher.end();
     }
-    return result
-        .append(string.substring(lastMatchEnd))
-        .toString();
+    return result.append(string.substring(lastMatchEnd)).toString();
   }
 }

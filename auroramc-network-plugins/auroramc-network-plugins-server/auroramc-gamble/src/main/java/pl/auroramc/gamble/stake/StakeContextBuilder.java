@@ -13,9 +13,7 @@ public final class StakeContextBuilder {
 
   private Participant participant;
 
-  StakeContextBuilder() {
-
-  }
+  StakeContextBuilder() {}
 
   public StakeContextBuilder gambleKey(final GambleKey gambleKey) {
     this.gambleKey = gambleKey;

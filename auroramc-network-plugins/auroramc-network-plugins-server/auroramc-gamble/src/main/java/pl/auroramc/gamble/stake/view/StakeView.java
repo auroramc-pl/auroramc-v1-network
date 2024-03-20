@@ -10,11 +10,11 @@ import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.message.MutableMessageDecoration.NO_CURSIVE;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.BACKWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.FORWARD;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.gamble.message.MutableMessageVariableKey.GAMBLE_VARIABLE_KEY;
 import static pl.auroramc.gamble.message.MutableMessageVariableKey.INITIATOR_VARIABLE_KEY;
 import static pl.auroramc.gamble.message.MutableMessageVariableKey.PREDICTION_VARIABLE_KEY;
 import static pl.auroramc.gamble.message.MutableMessageVariableKey.STAKE_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.gamble.stake.view.StakeViewUtils.getSlotIndexOf;
 import static pl.auroramc.gamble.stake.view.StakeViewUtils.setItemAsFrame;
 

@@ -11,16 +11,13 @@ import pl.auroramc.auctions.message.MutableMessageSource;
 
 class VaultViewFactory {
 
-  private VaultViewFactory() {
-
-  }
+  private VaultViewFactory() {}
 
   static ChestGui produceVaultView(
       final Plugin plugin,
       final MutableMessageSource messageSource,
       final VaultController vaultController,
-      final UUID vaultOwnerUniqueId
-  ) {
+      final UUID vaultOwnerUniqueId) {
     try (final InputStream inputStream = plugin.getResource("guis/vault.xml")) {
       if (inputStream == null) {
         throw new VaultViewInstantiationException(
@@ -28,20 +25,12 @@ class VaultViewFactory {
       }
 
       return load(
-          new VaultView(
-              plugin,
-              messageSource,
-              vaultController,
-              vaultOwnerUniqueId
-          ),
+          new VaultView(plugin, messageSource, vaultController, vaultOwnerUniqueId),
           inputStream,
-          plugin
-      );
+          plugin);
     } catch (final IOException exception) {
       throw new VaultViewInstantiationException(
-          "Could not load vault gui from resources, because of unexpected exception.",
-          exception
-      );
+          "Could not load vault gui from resources, because of unexpected exception.", exception);
     }
   }
 }

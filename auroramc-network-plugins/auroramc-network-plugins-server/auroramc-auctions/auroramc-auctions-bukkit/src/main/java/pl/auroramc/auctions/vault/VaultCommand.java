@@ -21,8 +21,7 @@ public class VaultCommand {
   public VaultCommand(
       final Plugin plugin,
       final MutableMessageSource messageSource,
-      final VaultController vaultController
-  ) {
+      final VaultController vaultController) {
     this.plugin = plugin;
     this.messageSource = messageSource;
     this.vaultController = vaultController;
@@ -30,7 +29,6 @@ public class VaultCommand {
 
   @Execute
   public void vault(final @Context Player player) {
-    produceVaultView(plugin, messageSource, vaultController, player.getUniqueId())
-        .show(player);
+    produceVaultView(plugin, messageSource, vaultController, player.getUniqueId()).show(player);
   }
 }

@@ -28,25 +28,19 @@ class SqlPunishmentRepository implements PunishmentRepository {
   }
 
   void createPunishmentSchemaIfRequired() {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final Statement statement = connection.createStatement()
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final Statement statement = connection.createStatement()) {
       statement.execute(CREATE_PUNISHMENT_SCHEMA_IF_REQUIRED);
     } catch (final SQLException exception) {
       throw new PunishmentRepositoryException(
-          "Could not create punishment schema, because of unexpected exception.",
-          exception
-      );
+          "Could not create punishment schema, because of unexpected exception.", exception);
     }
   }
 
   @Override
   public Punishment findPunishmentById(final Long id) {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(FIND_PUNISHMENT_BY_ID)
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement = connection.prepareStatement(FIND_PUNISHMENT_BY_ID)) {
       statement.setLong(1, id);
       try (final ResultSet resultSet = statement.executeQuery()) {
         if (resultSet.next()) {
@@ -56,22 +50,16 @@ class SqlPunishmentRepository implements PunishmentRepository {
       return null;
     } catch (final SQLException exception) {
       throw new PunishmentRepositoryException(
-          "Could not find punishment by id, because of unexpected exception.",
-          exception
-      );
+          "Could not find punishment by id, because of unexpected exception.", exception);
     }
   }
 
   @Override
   public Punishment findPunishmentByPenalizedIdWithScopeAndState(
-      final Long penalizedId,
-      final PunishmentScope scope,
-      final PunishmentState state
-  ) {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(FIND_PUNISHMENT_BY_PENALIZED_ID_WITH_SCOPE_AND_STATE)
-    ) {
+      final Long penalizedId, final PunishmentScope scope, final PunishmentState state) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement =
+            connection.prepareStatement(FIND_PUNISHMENT_BY_PENALIZED_ID_WITH_SCOPE_AND_STATE)) {
       statement.setLong(1, penalizedId);
       statement.setString(2, scope.name());
       statement.setString(3, state.name());
@@ -84,19 +72,15 @@ class SqlPunishmentRepository implements PunishmentRepository {
     } catch (final SQLException exception) {
       throw new PunishmentRepositoryException(
           "Could not find punishment by penalized id with scope and state, because of unexpected exception.",
-          exception
-      );
+          exception);
     }
   }
 
   @Override
-  public List<Punishment> findPunishmentsByPenalizedId(
-      final Long penalizedId
-  ) {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(FIND_PUNISHMENTS_BY_PENALIZED_ID)
-    ) {
+  public List<Punishment> findPunishmentsByPenalizedId(final Long penalizedId) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement =
+            connection.prepareStatement(FIND_PUNISHMENTS_BY_PENALIZED_ID)) {
       statement.setLong(1, penalizedId);
 
       final List<Punishment> results = new ArrayList<>();
@@ -109,55 +93,45 @@ class SqlPunishmentRepository implements PunishmentRepository {
     } catch (final SQLException exception) {
       throw new PunishmentRepositoryException(
           "Could not find punishments by penalized id, because of unexpected exception.",
-          exception
-      );
+          exception);
     }
   }
 
   @Override
   public void createPunishment(final Punishment punishment) {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(CREATE_PUNISHMENT, RETURN_GENERATED_KEYS)
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement =
+            connection.prepareStatement(CREATE_PUNISHMENT, RETURN_GENERATED_KEYS)) {
       setPunishmentParameters(statement, punishment);
       statement.executeUpdate();
     } catch (final SQLException exception) {
       throw new PunishmentRepositoryException(
-          "Could not create punishment, because of unexpected exception.",
-          exception
-      );
+          "Could not create punishment, because of unexpected exception.", exception);
     }
   }
 
   @Override
   public void updatePunishment(final Punishment punishment) {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(UPDATE_PUNISHMENT)
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement = connection.prepareStatement(UPDATE_PUNISHMENT)) {
       setPunishmentParameters(statement, punishment, true);
       statement.executeUpdate();
     } catch (final SQLException exception) {
       throw new PunishmentRepositoryException(
-          "Could not create punishment, because of unexpected exception.",
-          exception
-      );
+          "Could not create punishment, because of unexpected exception.", exception);
     }
   }
 
   private void setPunishmentParameters(
-      final PreparedStatement statement,
-      final Punishment punishment
-  ) throws SQLException {
+      final PreparedStatement statement, final Punishment punishment) throws SQLException {
     setPunishmentParameters(statement, punishment, false);
   }
 
   private void setPunishmentParameters(
       final PreparedStatement statement,
       final Punishment punishment,
-      final boolean whetherRequiresId
-  ) throws SQLException {
+      final boolean whetherRequiresId)
+      throws SQLException {
     statement.setLong(1, punishment.getPenalizedId());
     statement.setLong(2, punishment.getPerformerId());
     statement.setString(3, punishment.getReason());
@@ -181,7 +155,6 @@ class SqlPunishmentRepository implements PunishmentRepository {
         PunishmentScope.valueOf(resultSet.getString("scope")),
         PunishmentState.valueOf(resultSet.getString("state")),
         resultSet.getTimestamp("issued_at").toInstant(),
-        resultSet.getTimestamp("expires_at").toInstant()
-    );
+        resultSet.getTimestamp("expires_at").toInstant());
   }
 }

@@ -17,20 +17,21 @@ public class Pluralizers {
   private static final Map<Locale, Pluralizer> PLURALIZES_BY_LOCALE = new HashMap<>();
 
   static {
-    PLURALIZES_BY_LOCALE.put(POLISH, (context, count) -> {
-      if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20)) {
-        return context.getPluralForm(PLURAL_NOMINATIVE);
-      }
+    PLURALIZES_BY_LOCALE.put(
+        POLISH,
+        (context, count) -> {
+          if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20)) {
+            return context.getPluralForm(PLURAL_NOMINATIVE);
+          }
 
-      return context.getPluralForm(count == 1 ? SINGULAR : PLURAL_GENITIVE);
-    });
-    PLURALIZES_BY_LOCALE.put(ENGLISH, (context, count) ->
-        context.getPluralForm(abs(count) == 1 ? SINGULAR : PLURAL_GENITIVE));
+          return context.getPluralForm(count == 1 ? SINGULAR : PLURAL_GENITIVE);
+        });
+    PLURALIZES_BY_LOCALE.put(
+        ENGLISH,
+        (context, count) -> context.getPluralForm(abs(count) == 1 ? SINGULAR : PLURAL_GENITIVE));
   }
 
-  private Pluralizers() {
-
-  }
+  private Pluralizers() {}
 
   public static Pluralizer getPluralizer(final Locale locale) {
     return PLURALIZES_BY_LOCALE.getOrDefault(locale, PLURALIZES_BY_LOCALE.get(POLISH));

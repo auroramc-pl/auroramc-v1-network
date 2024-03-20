@@ -8,9 +8,7 @@ import org.bukkit.entity.Player;
 
 final class NametagUtils {
 
-  private NametagUtils() {
-
-  }
+  private NametagUtils() {}
 
   static ServerPlayerConnection getOutboundConnection(final Player player) {
     return ((CraftPlayer) checkNotNull(player)).getHandle().connection;

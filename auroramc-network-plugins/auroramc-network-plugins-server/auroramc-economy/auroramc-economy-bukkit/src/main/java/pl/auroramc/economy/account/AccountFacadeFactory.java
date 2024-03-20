@@ -5,9 +5,7 @@ import moe.rafal.juliet.Juliet;
 
 public final class AccountFacadeFactory {
 
-  private AccountFacadeFactory() {
-
-  }
+  private AccountFacadeFactory() {}
 
   public static AccountFacade getAccountFacade(final Logger logger, final Juliet juliet) {
     final SqlAccountRepository sqlAccountRepository = new SqlAccountRepository(logger, juliet);

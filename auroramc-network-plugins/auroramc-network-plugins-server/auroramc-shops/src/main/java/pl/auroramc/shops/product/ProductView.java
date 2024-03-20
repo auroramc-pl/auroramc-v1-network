@@ -3,8 +3,8 @@ package pl.auroramc.shops.product;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.BACKWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.FORWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationUtils.navigate;
-import static pl.auroramc.shops.message.MessageVariableKey.PRICE_VARIABLE_KEY;
 import static pl.auroramc.shops.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
+import static pl.auroramc.shops.message.MessageVariableKey.PRICE_VARIABLE_KEY;
 import static pl.auroramc.shops.product.ProductViewUtils.mergeLoreOnItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;

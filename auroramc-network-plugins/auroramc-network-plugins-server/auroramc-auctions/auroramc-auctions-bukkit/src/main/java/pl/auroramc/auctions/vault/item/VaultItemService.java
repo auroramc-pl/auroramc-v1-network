@@ -19,9 +19,10 @@ class VaultItemService implements VaultItemFacade {
   VaultItemService(final Logger logger, final VaultItemRepository vaultItemRepository) {
     this.logger = logger;
     this.vaultItemRepository = vaultItemRepository;
-    this.vaultItemsByUniqueId = Caffeine.newBuilder()
-        .expireAfterWrite(ofSeconds(30))
-        .build(vaultItemRepository::findVaultItemsByUserId);
+    this.vaultItemsByUniqueId =
+        Caffeine.newBuilder()
+            .expireAfterWrite(ofSeconds(30))
+            .build(vaultItemRepository::findVaultItemsByUserId);
   }
 
   @Override

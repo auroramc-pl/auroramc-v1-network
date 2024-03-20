@@ -23,8 +23,7 @@ public class AuthorizationListener {
   private final List<String> defaultCommands;
 
   public AuthorizationListener(
-      final Logger logger, final UserFacade userFacade, final List<String> defaultCommands
-  ) {
+      final Logger logger, final UserFacade userFacade, final List<String> defaultCommands) {
     this.logger = logger;
     this.userFacade = userFacade;
     this.defaultCommands = defaultCommands;
@@ -32,21 +31,19 @@ public class AuthorizationListener {
 
   @Subscribe
   public void onNonPermittedCommandExecution(
-      final CommandExecuteEvent event, final Continuation continuation
-  ) {
+      final CommandExecuteEvent event, final Continuation continuation) {
     if (event.getCommandSource() instanceof Player player) {
       resumeWhenComplete(
-          userFacade.getUserByUniqueId(player.getUniqueId())
-              .thenApply(User::isAuthenticated)
-              .thenApply(
-                  whetherIsAuthenticated ->
-                      translateExecutionResult(
-                          whetherIsAuthenticated, resolveCommand(event.getCommand())
-                      )
-              )
-              .thenAccept(event::setResult)
-              .exceptionally(exception -> delegateCaughtException(logger, exception))
-      ).execute(continuation);
+              userFacade
+                  .getUserByUniqueId(player.getUniqueId())
+                  .thenApply(User::isAuthenticated)
+                  .thenApply(
+                      whetherIsAuthenticated ->
+                          translateExecutionResult(
+                              whetherIsAuthenticated, resolveCommand(event.getCommand())))
+                  .thenAccept(event::setResult)
+                  .exceptionally(exception -> delegateCaughtException(logger, exception)))
+          .execute(continuation);
       return;
     }
 
@@ -54,8 +51,7 @@ public class AuthorizationListener {
   }
 
   private CommandResult translateExecutionResult(
-      final boolean whetherIsAuthenticated, final String attemptedCommandName
-  ) {
+      final boolean whetherIsAuthenticated, final String attemptedCommandName) {
     return defaultCommands.contains(attemptedCommandName) || whetherIsAuthenticated
         ? allowed()
         : denied();

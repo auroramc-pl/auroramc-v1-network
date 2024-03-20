@@ -10,9 +10,7 @@ public class GambleContextBuilder {
   private Participant initiator;
   private Participant competitor;
 
-  GambleContextBuilder() {
-
-  }
+  GambleContextBuilder() {}
 
   public GambleContextBuilder gambleUniqueId(final UUID gambleUniqueId) {
     this.gambleUniqueId = gambleUniqueId;

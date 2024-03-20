@@ -13,8 +13,7 @@ public class DistanceObjective extends Objective<Byte> {
       final Byte type,
       final int saveInterval,
       final ObjectiveGoalResolver goalResolver,
-      final List<ObjectiveRequirement> requirements
-  ) {
+      final List<ObjectiveRequirement> requirements) {
     super(key, type, saveInterval, goalResolver, requirements);
   }
 }

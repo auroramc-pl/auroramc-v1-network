@@ -4,8 +4,8 @@ import java.util.UUID;
 
 public class User {
 
-  private Long id;
   private final UUID uniqueId;
+  private Long id;
   private String username;
 
   public User(final Long id, final UUID uniqueId, final String username) {

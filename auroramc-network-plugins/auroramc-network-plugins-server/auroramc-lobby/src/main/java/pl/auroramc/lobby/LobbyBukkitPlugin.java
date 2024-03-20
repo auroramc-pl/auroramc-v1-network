@@ -34,38 +34,41 @@ public class LobbyBukkitPlugin extends JavaPlugin {
 
   @Override
   public void onEnable() {
-    final ConfigFactory configFactory = new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
+    final ConfigFactory configFactory =
+        new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
 
-    final MutableMessageSource messageSource = configFactory.produceConfig(
-        MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
-    );
-    final LobbyConfig lobbyConfig = configFactory.produceConfig(
-        LobbyConfig.class, PLUGIN_CONFIG_FILE_NAME, new SerdesBukkit()
-    );
+    final MutableMessageSource messageSource =
+        configFactory.produceConfig(
+            MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource());
+    final LobbyConfig lobbyConfig =
+        configFactory.produceConfig(LobbyConfig.class, PLUGIN_CONFIG_FILE_NAME, new SerdesBukkit());
 
     final Logger logger = getLogger();
 
     registerListeners(this, new LobbyListener(logger, lobbyConfig, messageSource));
 
-    getServer().getScheduler().runTaskTimer(this,
-        new VoidTeleportationTask(lobbyConfig, messageSource),
-        getTicksOf(ZERO),
-        getTicksOf(ofSeconds(1))
-    );
+    getServer()
+        .getScheduler()
+        .runTaskTimer(
+            this,
+            new VoidTeleportationTask(lobbyConfig, messageSource),
+            getTicksOf(ZERO),
+            getTicksOf(ofSeconds(1)));
 
-    commands = LiteBukkitFactory.builder(getName(), this)
-        .extension(new LiteAdventureExtension<>(),
-            configurer -> configurer.miniMessage(true)
-        )
-        .message(INVALID_USAGE,
-            context -> messageSource.availableSchematicsSuggestion
-                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join(LINE_SEPARATOR))
-        )
-        .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
-        .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
-        .commands(LiteCommandsAnnotations.of(new SpawnCommand(logger, lobbyConfig, messageSource)))
-        .result(DeliverableMutableMessage.class, new DeliverableMutableMessageResultHandler<>())
-        .build();
+    commands =
+        LiteBukkitFactory.builder(getName(), this)
+            .extension(new LiteAdventureExtension<>(), configurer -> configurer.miniMessage(true))
+            .message(
+                INVALID_USAGE,
+                context ->
+                    messageSource.availableSchematicsSuggestion.with(
+                        SCHEMATICS_VARIABLE_KEY, context.getSchematic().join(LINE_SEPARATOR)))
+            .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
+            .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
+            .commands(
+                LiteCommandsAnnotations.of(new SpawnCommand(logger, lobbyConfig, messageSource)))
+            .result(DeliverableMutableMessage.class, new DeliverableMutableMessageResultHandler<>())
+            .build();
   }
 
   @Override

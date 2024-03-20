@@ -10,7 +10,5 @@ public final class MutableMessageVariableKey {
   public static final String SESSION_START_VARIABLE_KEY = "sessionStart";
   public static final String SESSION_DITCH_VARIABLE_KEY = "sessionDitch";
 
-  private MutableMessageVariableKey() {
-
-  }
+  private MutableMessageVariableKey() {}
 }

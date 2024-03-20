@@ -44,40 +44,36 @@ public class GambleBukkitPlugin extends JavaPlugin {
 
   @Override
   public void onEnable() {
-    final ConfigFactory configFactory = new ConfigFactory(
-        getDataFolder().toPath(), YamlBukkitConfigurer::new
-    );
+    final ConfigFactory configFactory =
+        new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
 
-    final GambleConfig gambleConfig = configFactory.produceConfig(
-        GambleConfig.class, GAMBLING_CONFIG_FILE_NAME
-    );
+    final GambleConfig gambleConfig =
+        configFactory.produceConfig(GambleConfig.class, GAMBLING_CONFIG_FILE_NAME);
 
-    final MutableMessageSource messageSource = configFactory.produceConfig(
-        MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
-    );
+    final MutableMessageSource messageSource =
+        configFactory.produceConfig(
+            MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource());
 
     final Logger logger = getLogger();
 
     final CurrencyFacade currencyFacade = resolveService(getServer(), CurrencyFacade.class);
     final Currency fundsCurrency =
         Optional.ofNullable(currencyFacade.getCurrencyById(gambleConfig.fundsCurrencyId))
-            .orElseThrow(() ->
-                new GambleInstantiationException(
-                    "Could not resolve funds currency, make sure that the currency's id is valid."
-                )
-            );
+            .orElseThrow(
+                () ->
+                    new GambleInstantiationException(
+                        "Could not resolve funds currency, make sure that the currency's id is valid."));
     final EconomyFacade economyFacade = resolveService(getServer(), EconomyFacade.class);
 
-    final GambleFacade gambleFacade = getGambleFacade(
-        logger, fundsCurrency, messageSource, economyFacade
-    );
+    final GambleFacade gambleFacade =
+        getGambleFacade(logger, fundsCurrency, messageSource, economyFacade);
 
     final StakeFacade stakeFacade = getStakeFacade();
-    final StakeViewFacade stakeViewFacade = getStakeViewFacade(
-        this, stakeFacade, fundsCurrency, messageSource
-    );
+    final StakeViewFacade stakeViewFacade =
+        getStakeViewFacade(this, stakeFacade, fundsCurrency, messageSource);
 
-    registerListeners(this,
+    registerListeners(
+        this,
         new StakeViewListener(
             this,
             logger,
@@ -86,33 +82,31 @@ public class GambleBukkitPlugin extends JavaPlugin {
             economyFacade,
             gambleFacade,
             stakeFacade,
-            stakeViewFacade
-        )
-    );
+            stakeViewFacade));
 
-    commands = LiteBukkitFactory.builder(getName(), this)
-        .extension(new LiteAdventureExtension<>(),
-            configurer -> configurer.miniMessage(true)
-        )
-        .message(INVALID_USAGE,
-            context -> messageSource.availableSchematicsSuggestion
-                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join(LINE_SEPARATOR))
-        )
-        .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
-        .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
-        .message(PLAYER_NOT_FOUND, messageSource.specifiedPlayerIsUnknown)
-        .commands(
-            LiteCommandsAnnotations.of(
-                new CoinflipCommand(
-                    logger, stakeFacade, stakeViewFacade, fundsCurrency, messageSource, economyFacade
-                ),
-                new StakeCommand(
-                    messageSource, stakeViewFacade
-                )
-            )
-        )
-        .result(MutableMessage.class, new MutableMessageResultHandler<>())
-        .build();
+    commands =
+        LiteBukkitFactory.builder(getName(), this)
+            .extension(new LiteAdventureExtension<>(), configurer -> configurer.miniMessage(true))
+            .message(
+                INVALID_USAGE,
+                context ->
+                    messageSource.availableSchematicsSuggestion.with(
+                        SCHEMATICS_VARIABLE_KEY, context.getSchematic().join(LINE_SEPARATOR)))
+            .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
+            .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
+            .message(PLAYER_NOT_FOUND, messageSource.specifiedPlayerIsUnknown)
+            .commands(
+                LiteCommandsAnnotations.of(
+                    new CoinflipCommand(
+                        logger,
+                        stakeFacade,
+                        stakeViewFacade,
+                        fundsCurrency,
+                        messageSource,
+                        economyFacade),
+                    new StakeCommand(messageSource, stakeViewFacade)))
+            .result(MutableMessage.class, new MutableMessageResultHandler<>())
+            .build();
   }
 
   @Override

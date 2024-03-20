@@ -5,7 +5,4 @@ import org.bukkit.Material;
 import pl.auroramc.bazaars.bazaar.BazaarType;
 
 public record BazaarParsingContext(
-    BazaarType type, String merchant, Integer quantity, BigDecimal price, Material material
-) {
-
-}
+    BazaarType type, String merchant, Integer quantity, BigDecimal price, Material material) {}

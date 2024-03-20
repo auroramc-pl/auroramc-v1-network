@@ -44,53 +44,44 @@ public class ShopsBukkitPlugin extends JavaPlugin {
 
   @Override
   public void onEnable() {
-    final ConfigFactory configFactory = new ConfigFactory(
-        getDataFolder().toPath(), YamlBukkitConfigurer::new
-    );
+    final ConfigFactory configFactory =
+        new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
 
-    final ShopsConfig shopsConfig = configFactory.produceConfig(
-        ShopsConfig.class, SHOPS_CONFIG_FILE_NAME, new SerdesCommons()
-    );
+    final ShopsConfig shopsConfig =
+        configFactory.produceConfig(ShopsConfig.class, SHOPS_CONFIG_FILE_NAME, new SerdesCommons());
     final ShopFacade shopFacade = getShopFacade(getShopsDirectoryPath(), getClassLoader());
 
-    final MessageSource messageSource = configFactory.produceConfig(
-        MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
-    );
+    final MessageSource messageSource =
+        configFactory.produceConfig(
+            MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource());
 
     final Logger logger = getLogger();
 
     final CurrencyFacade currencyFacade = resolveService(getServer(), CurrencyFacade.class);
     final Currency fundsCurrency =
         Optional.ofNullable(currencyFacade.getCurrencyById(shopsConfig.fundsCurrencyId))
-            .orElseThrow(() ->
-                new ShopsInstantiationException(
-                    "Could not resolve funds currency, make sure that the currency's id is valid."
-                )
-            );
+            .orElseThrow(
+                () ->
+                    new ShopsInstantiationException(
+                        "Could not resolve funds currency, make sure that the currency's id is valid."));
     final EconomyFacade economyFacade = resolveService(getServer(), EconomyFacade.class);
-    final ProductFacade productFacade = getProductFacade(
-        this, logger, messageSource, fundsCurrency, economyFacade, shopsConfig.priceFormat
-    );
+    final ProductFacade productFacade =
+        getProductFacade(
+            this, logger, messageSource, fundsCurrency, economyFacade, shopsConfig.priceFormat);
 
-    commands = LiteBukkitFactory.builder(getName(), this)
-        .extension(new LiteAdventureExtension<>(),
-            configurer -> configurer.miniMessage(true)
-        )
-        .message(INVALID_USAGE,
-            context -> messageSource.availableSchematicsSuggestion
-                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join(LINE_SEPARATOR))
-        )
-        .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
-        .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
-        .commands(
-            LiteCommandsAnnotations.of(
-                new ShopCommand(
-                    this, shopFacade, productFacade
-                )
-            )
-        )
-        .result(MutableMessage.class, new MutableMessageResultHandler<>())
-        .build();
+    commands =
+        LiteBukkitFactory.builder(getName(), this)
+            .extension(new LiteAdventureExtension<>(), configurer -> configurer.miniMessage(true))
+            .message(
+                INVALID_USAGE,
+                context ->
+                    messageSource.availableSchematicsSuggestion.with(
+                        SCHEMATICS_VARIABLE_KEY, context.getSchematic().join(LINE_SEPARATOR)))
+            .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
+            .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
+            .commands(LiteCommandsAnnotations.of(new ShopCommand(this, shopFacade, productFacade)))
+            .result(MutableMessage.class, new MutableMessageResultHandler<>())
+            .build();
   }
 
   @Override
@@ -109,11 +100,8 @@ public class ShopsBukkitPlugin extends JavaPlugin {
     } catch (final IOException exception) {
       throw new ShopsInstantiationException(
           "Could not create shops directory in %s path, because of unexpected exception."
-              .formatted(
-                  shopsDirectoryPath.toString()
-              ),
-          exception
-      );
+              .formatted(shopsDirectoryPath.toString()),
+          exception);
     }
   }
 }

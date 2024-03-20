@@ -1,7 +1,6 @@
 package pl.auroramc.bazaars.bazaar;
 
 public enum BazaarType {
-
   BUY('B'),
   SELL('S');
 
@@ -9,10 +8,6 @@ public enum BazaarType {
 
   BazaarType(final char shortcut) {
     this.shortcut = shortcut;
-  }
-
-  public char getShortcut() {
-    return shortcut;
   }
 
   public static BazaarType getBazaarTypeByShortcut(final char shortcut) {
@@ -23,5 +18,9 @@ public enum BazaarType {
     }
 
     return null;
+  }
+
+  public char getShortcut() {
+    return shortcut;
   }
 }

@@ -12,11 +12,7 @@ import pl.auroramc.commons.message.MutableMessageDecoration;
 public class DeliverableMutableMessage {
 
   private static final DeliverableMutableMessage EMPTY_DELIVERABLE_MUTABLE_MESSAGE =
-      new DeliverableMutableMessage(
-          MutableMessage.empty(),
-          Set.of(),
-          Set.of(NONE)
-      );
+      new DeliverableMutableMessage(MutableMessage.empty(), Set.of(), Set.of(NONE));
   private final MutableMessage mutableMessage;
   private final Set<MutableMessageDecoration> decorations;
   private final Set<DeliverableMutableMessageDisplay> displays;
@@ -24,8 +20,7 @@ public class DeliverableMutableMessage {
   DeliverableMutableMessage(
       final MutableMessage mutableMessage,
       final Set<MutableMessageDecoration> decorations,
-      final Set<DeliverableMutableMessageDisplay> displays
-  ) {
+      final Set<DeliverableMutableMessageDisplay> displays) {
     this.mutableMessage = mutableMessage;
     this.decorations = decorations;
     this.displays = displays;
@@ -34,19 +29,12 @@ public class DeliverableMutableMessage {
   public static DeliverableMutableMessage of(
       final MutableMessage mutableMessage,
       final Set<MutableMessageDecoration> decorations,
-      final Set<DeliverableMutableMessageDisplay> displays
-  ) {
+      final Set<DeliverableMutableMessageDisplay> displays) {
     return new DeliverableMutableMessage(mutableMessage, decorations, displays);
   }
 
-  public static DeliverableMutableMessage of(
-      final MutableMessage mutableMessage
-  ) {
-    return new DeliverableMutableMessage(
-        mutableMessage,
-        Set.of(),
-        Set.of(CHAT)
-    );
+  public static DeliverableMutableMessage of(final MutableMessage mutableMessage) {
+    return new DeliverableMutableMessage(mutableMessage, Set.of(), Set.of(CHAT));
   }
 
   public static DeliverableMutableMessage empty() {
@@ -54,11 +42,7 @@ public class DeliverableMutableMessage {
   }
 
   public DeliverableMutableMessage with(final String key, final Object value) {
-    return new DeliverableMutableMessage(
-        mutableMessage.with(key, value),
-        decorations,
-        displays
-    );
+    return new DeliverableMutableMessage(mutableMessage.with(key, value), decorations, displays);
   }
 
   public DeliverableMutableMessage display(final DeliverableMutableMessageDisplay display) {
@@ -71,8 +55,7 @@ public class DeliverableMutableMessage {
   }
 
   public Component[] compileChildren(
-      final String delimiter, final MutableMessageDecoration... decorations
-  ) {
+      final String delimiter, final MutableMessageDecoration... decorations) {
     return mutableMessage.compileChildren(delimiter, decorations);
   }
 
@@ -80,13 +63,9 @@ public class DeliverableMutableMessage {
     return mutableMessage.compileChildren(decorations);
   }
 
-  public void deliver(
-      final Audience viewer
-  ) {
-    final Component compiledMessage = mutableMessage.compile(
-        decorations
-            .toArray(new MutableMessageDecoration[0])
-    );
+  public void deliver(final Audience viewer) {
+    final Component compiledMessage =
+        mutableMessage.compile(decorations.toArray(new MutableMessageDecoration[0]));
     for (final DeliverableMutableMessageDisplay display : displays) {
       deliver(viewer, compiledMessage, display);
     }
@@ -95,8 +74,7 @@ public class DeliverableMutableMessage {
   private void deliver(
       final Audience viewer,
       final Component compiledMessage,
-      final DeliverableMutableMessageDisplay display
-  ) {
+      final DeliverableMutableMessageDisplay display) {
     switch (display) {
       case NONE -> {}
       case CHAT -> viewer.sendMessage(compiledMessage);

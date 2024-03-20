@@ -22,25 +22,21 @@ class SqlAudienceRepository implements AudienceRepository {
   }
 
   void createAudienceSchemaIfRequired() {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final Statement statement = connection.createStatement()
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final Statement statement = connection.createStatement()) {
       statement.execute(CREATE_MESSAGE_VIEWER_SCHEMA);
     } catch (final SQLException exception) {
       throw new AudienceRepositoryException(
           "Could not create schema for message viewer entity, because of unexpected exception.",
-          exception
-      );
+          exception);
     }
   }
 
   @Override
   public Audience findAudienceByUniqueId(final UUID uniqueId) {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(FIND_MESSAGE_VIEWER_BY_USER_UNIQUE_ID)
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement =
+            connection.prepareStatement(FIND_MESSAGE_VIEWER_BY_USER_UNIQUE_ID)) {
       statement.setObject(1, uniqueId.toString());
       try (final ResultSet resultSet = statement.executeQuery()) {
         if (resultSet.next()) {
@@ -50,49 +46,37 @@ class SqlAudienceRepository implements AudienceRepository {
       return null;
     } catch (final SQLException exception) {
       throw new AudienceRepositoryException(
-          "Could not find message viewer by user id, because of unexpected exception.",
-          exception);
+          "Could not find message viewer by user id, because of unexpected exception.", exception);
     }
   }
 
   @Override
   public void createAudience(final Audience audience) {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(CREATE_MESSAGE_VIEWER)
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement = connection.prepareStatement(CREATE_MESSAGE_VIEWER)) {
       statement.setLong(1, audience.getUserId());
       statement.setBoolean(2, audience.isAllowsMessages());
       statement.executeUpdate();
     } catch (final SQLException exception) {
       throw new AudienceRepositoryException(
-          "Could not create message viewer, because of unexpected exception.",
-          exception
-      );
+          "Could not create message viewer, because of unexpected exception.", exception);
     }
   }
 
   @Override
   public void updateAudience(final Audience audience) {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(UPDATE_MESSAGE_VIEWER)
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement = connection.prepareStatement(UPDATE_MESSAGE_VIEWER)) {
       statement.setBoolean(1, audience.isAllowsMessages());
       statement.setLong(2, audience.getUserId());
       statement.executeUpdate();
     } catch (final SQLException exception) {
       throw new AudienceRepositoryException(
-          "Could not update message viewer, because of unexpected exception.",
-          exception
-      );
+          "Could not update message viewer, because of unexpected exception.", exception);
     }
   }
 
   private Audience mapResultSetToAudience(final ResultSet resultSet) throws SQLException {
-    return new Audience(
-        resultSet.getLong("user_id"),
-        resultSet.getBoolean("allows_messages")
-    );
+    return new Audience(resultSet.getLong("user_id"), resultSet.getBoolean("allows_messages"));
   }
 }

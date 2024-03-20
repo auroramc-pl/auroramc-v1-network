@@ -6,9 +6,7 @@ public final class CurrencyBuilder {
   private String symbol;
   private String description;
 
-  private CurrencyBuilder() {
-
-  }
+  private CurrencyBuilder() {}
 
   public static CurrencyBuilder newBuilder() {
     return new CurrencyBuilder();

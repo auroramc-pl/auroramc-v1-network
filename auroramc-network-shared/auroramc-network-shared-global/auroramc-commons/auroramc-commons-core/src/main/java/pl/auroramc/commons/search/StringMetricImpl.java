@@ -6,20 +6,19 @@ import static java.lang.Math.min;
 import java.util.BitSet;
 
 /**
- * The implementation of Jaro-Winkler similarity algorithm,
- * for a string metric that measures an edit distance between
- * two strings.
+ * The implementation of Jaro-Winkler similarity algorithm, for a string metric that measures an
+ * edit distance between two strings.
  *
- * @see <a href="https://iopscience.iop.org/article/10.1088/1742-6596/1361/1/012080/pdf#:~:text=In%20Jaro%2DWinkler%2C%20prefix%20scale,the%20beginning%20of%20each%20word.">Jaro-Winkler's similarity</a>
+ * @see <a
+ *     href="https://iopscience.iop.org/article/10.1088/1742-6596/1361/1/012080/pdf#:~:text=In%20Jaro%2DWinkler%2C%20prefix%20scale,the%20beginning%20of%20each%20word.">Jaro-Winkler's
+ *     similarity</a>
  */
 class StringMetricImpl implements StringMetric {
 
   private final double prefixScale;
   private final int prefixLength;
 
-  StringMetricImpl(
-      final double prefixScale, final int prefixLength
-  ) {
+  StringMetricImpl(final double prefixScale, final int prefixLength) {
     this.prefixScale = prefixScale;
     this.prefixLength = prefixLength;
   }
@@ -46,22 +45,18 @@ class StringMetricImpl implements StringMetric {
   }
 
   private double getSimilarityScore(
-      final String source, final String target, final double similarity
-  ) {
+      final String source, final String target, final double similarity) {
     return similarity + (prefixScale * getLengthOfCommonPrefix(source, target) * (1 - similarity));
   }
 
-  private double getSimilarity(
-      final String source, final String target, final int m, final int t
-  ) {
+  private double getSimilarity(final String source, final String target, final int m, final int t) {
     final double lengthOfSource = source.length();
     final double lengthOfTarget = target.length();
     return (m / lengthOfSource + m / lengthOfTarget + (m - t / 2D) / m) / 3D;
   }
 
   private int getNumberOfMatchingCharacters(
-      final String source, final String target, final BitSet sourceSet, final BitSet targetSet
-  ) {
+      final String source, final String target, final BitSet sourceSet, final BitSet targetSet) {
     final int lengthOfSource = source.length();
     final int lengthOfTarget = target.length();
     final int frame = max(0, max(lengthOfSource, lengthOfTarget) / 2 - 1);
@@ -87,8 +82,7 @@ class StringMetricImpl implements StringMetric {
       final String source,
       final String target,
       final BitSet matchesOfSource,
-      final BitSet matchesOfTarget
-  ) {
+      final BitSet matchesOfTarget) {
     final int lengthOfSource = source.length();
     final int lengthOfTarget = target.length();
     int transpositions = 0;
@@ -111,10 +105,7 @@ class StringMetricImpl implements StringMetric {
     return transpositions;
   }
 
-  private int getLengthOfCommonPrefix(
-      final String source,
-      final String target
-  ) {
+  private int getLengthOfCommonPrefix(final String source, final String target) {
     final int n = min(min(source.length(), target.length()), prefixLength);
 
     int i = 0;

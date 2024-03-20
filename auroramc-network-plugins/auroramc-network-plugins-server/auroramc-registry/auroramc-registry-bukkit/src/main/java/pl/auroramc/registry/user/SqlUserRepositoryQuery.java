@@ -54,7 +54,5 @@ final class SqlUserRepositoryQuery {
         `id` = ?;
       """;
 
-  private SqlUserRepositoryQuery() {
-
-  }
+  private SqlUserRepositoryQuery() {}
 }

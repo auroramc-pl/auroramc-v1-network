@@ -36,8 +36,7 @@ class QuestsPlaceholderExpansion extends PlaceholderExpansion {
       final UserFacade userFacade,
       final QuestIndex questIndex,
       final QuestObserverFacade questObserverFacade,
-      final ObjectiveProgressController objectiveProgressController
-  ) {
+      final ObjectiveProgressController objectiveProgressController) {
     this.plugin = plugin;
     this.server = server;
     this.userFacade = userFacade;
@@ -52,7 +51,8 @@ class QuestsPlaceholderExpansion extends PlaceholderExpansion {
       return null;
     }
 
-    final QuestObserver questObserver = questObserverFacade.resolveQuestObserverByUniqueId(player.getUniqueId()).join();
+    final QuestObserver questObserver =
+        questObserverFacade.resolveQuestObserverByUniqueId(player.getUniqueId()).join();
     if (questObserver.getQuestId() == null) {
       return null;
     }
@@ -66,7 +66,8 @@ class QuestsPlaceholderExpansion extends PlaceholderExpansion {
       case "observed_quest":
         yield quest.getKey().getName();
       case "observed_quest_objectives":
-        yield userFacade.getUserByUniqueId(player.getUniqueId())
+        yield userFacade
+            .getUserByUniqueId(player.getUniqueId())
             .thenApply(user -> objectiveProgressController.getUncompletedObjectives(user, quest))
             .thenApply(this::aggregateQuestObjectives)
             .join();
@@ -76,15 +77,12 @@ class QuestsPlaceholderExpansion extends PlaceholderExpansion {
   }
 
   private String aggregateQuestObjectives(
-      final Map<Objective<?>, ObjectiveProgress> objectivesToObjectiveProgresses
-  ) {
+      final Map<Objective<?>, ObjectiveProgress> objectivesToObjectiveProgresses) {
     return objectivesToObjectiveProgresses.entrySet().stream()
-        .map(objectiveToObjectiveProgress ->
-            getQuestObjective(
-                objectiveToObjectiveProgress.getKey(),
-                objectiveToObjectiveProgress.getValue()
-            )
-        )
+        .map(
+            objectiveToObjectiveProgress ->
+                getQuestObjective(
+                    objectiveToObjectiveProgress.getKey(), objectiveToObjectiveProgress.getValue()))
         .collect(MutableMessage.collector())
         .getTemplate();
   }

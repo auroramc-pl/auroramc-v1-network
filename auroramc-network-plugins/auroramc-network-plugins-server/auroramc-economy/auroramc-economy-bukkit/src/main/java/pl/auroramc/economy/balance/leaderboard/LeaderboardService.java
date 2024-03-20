@@ -10,39 +10,34 @@ import java.util.UUID;
 class LeaderboardService implements LeaderboardFacade {
 
   private final LoadingCache<Long, List<LeaderboardEntry>> entryToCurrencyIdCache;
-  private final LoadingCache<CurrencyIdToUniqueIdCompositeKey, LeaderboardEntry> entryToCurrencyIdAndUniqueIdCache;
+  private final LoadingCache<CurrencyIdToUniqueIdCompositeKey, LeaderboardEntry>
+      entryToCurrencyIdAndUniqueIdCache;
 
   LeaderboardService(final LeaderboardRepository leaderboardRepository) {
-    this.entryToCurrencyIdCache = Caffeine.newBuilder()
-        .expireAfterWrite(ofSeconds(30))
-        .build(leaderboardRepository::getLeaderboardEntriesByBalanceAscending);
-    this.entryToCurrencyIdAndUniqueIdCache = Caffeine.newBuilder()
-        .expireAfterWrite(ofSeconds(90))
-        .build(key ->
-            leaderboardRepository.getLeaderboardEntryByUniqueId(
-                key.currencyId(),
-                key.uniqueId()
-            )
-        );
+    this.entryToCurrencyIdCache =
+        Caffeine.newBuilder()
+            .expireAfterWrite(ofSeconds(30))
+            .build(leaderboardRepository::getLeaderboardEntriesByBalanceAscending);
+    this.entryToCurrencyIdAndUniqueIdCache =
+        Caffeine.newBuilder()
+            .expireAfterWrite(ofSeconds(90))
+            .build(
+                key ->
+                    leaderboardRepository.getLeaderboardEntryByUniqueId(
+                        key.currencyId(), key.uniqueId()));
   }
 
   @Override
-  public List<LeaderboardEntry> getLeaderboardEntriesByCurrencyId(
-      final Long currencyId
-  ) {
+  public List<LeaderboardEntry> getLeaderboardEntriesByCurrencyId(final Long currencyId) {
     return entryToCurrencyIdCache.get(currencyId);
   }
 
   @Override
   public LeaderboardEntry getLeaderboardEntryByCurrencyIdAndUniqueId(
-      final Long currencyId, final UUID uniqueId
-  ) {
+      final Long currencyId, final UUID uniqueId) {
     return entryToCurrencyIdAndUniqueIdCache.get(
-        new CurrencyIdToUniqueIdCompositeKey(currencyId, uniqueId)
-    );
+        new CurrencyIdToUniqueIdCompositeKey(currencyId, uniqueId));
   }
 
-  private record CurrencyIdToUniqueIdCompositeKey(Long currencyId, UUID uniqueId) {
-
-  }
+  private record CurrencyIdToUniqueIdCompositeKey(Long currencyId, UUID uniqueId) {}
 }

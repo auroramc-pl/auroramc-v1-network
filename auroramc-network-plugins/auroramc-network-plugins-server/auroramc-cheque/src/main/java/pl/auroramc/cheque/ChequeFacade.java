@@ -12,6 +12,5 @@ interface ChequeFacade {
   ItemStack createCheque(final ChequeContext chequeContext);
 
   CompletableFuture<MutableMessage> finalizeCheque(
-      final UUID retrieverUniqueId, ItemStack itemStack
-  );
+      final UUID retrieverUniqueId, ItemStack itemStack);
 }

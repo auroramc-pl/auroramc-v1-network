@@ -7,9 +7,7 @@ import java.math.BigDecimal;
 
 public final class DecimalUtils {
 
-  private DecimalUtils() {
-
-  }
+  private DecimalUtils() {}
 
   public static long getIntegralPart(final double amount) {
     final double fractionalPart = getFractionalPart(amount);

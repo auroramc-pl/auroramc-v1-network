@@ -11,7 +11,5 @@ public final class MutableMessageVariableKey {
   public static final String MINIMUM_CHEQUE_WORTH_VARIABLE_KEY = "minimumChequeWorth";
   public static final String MAXIMUM_CHEQUE_WORTH_VARIABLE_KEY = "maximumChequeWorth";
 
-  private MutableMessageVariableKey() {
-
-  }
+  private MutableMessageVariableKey() {}
 }

@@ -35,8 +35,7 @@ public class BazaarCreateListener implements Listener {
   public BazaarCreateListener(
       final MutableMessageSource messageSource,
       final DecimalFormat priceFormat,
-      final BazaarParser bazaarParser
-  ) {
+      final BazaarParser bazaarParser) {
     this.messageSource = messageSource;
     this.priceFormat = priceFormat;
     this.bazaarParser = bazaarParser;
@@ -48,57 +47,40 @@ public class BazaarCreateListener implements Listener {
       return;
     }
 
-    if (event.getBlock().getState() instanceof Sign sign &&
-        sign.getBlockData() instanceof WallSign wallSign
-    ) {
+    if (event.getBlock().getState() instanceof Sign sign
+        && sign.getBlockData() instanceof WallSign wallSign) {
       if (whetherSignHasInvalidProp(resolveSignProp(sign, wallSign))) {
         return;
       }
 
-      final BazaarParsingContext parsingContext = bazaarParser.parseContextOrNull(produceSignDelegate(event));
+      final BazaarParsingContext parsingContext =
+          bazaarParser.parseContextOrNull(produceSignDelegate(event));
       if (parsingContext == null) {
         return;
       }
 
       if (!event.getPlayer().getName().equalsIgnoreCase(parsingContext.merchant())) {
-        destroySign(
-            event.getPlayer(),
-            event.getBlock(),
-            messageSource.invalidMerchant
-        );
+        destroySign(event.getPlayer(), event.getBlock(), messageSource.invalidMerchant);
         return;
       }
 
       if (parsingContext.quantity() > PLAYER_INVENTORY_CAPACITY) {
-        destroySign(
-            event.getPlayer(),
-            event.getBlock(),
-            messageSource.invalidQuantity
-        );
+        destroySign(event.getPlayer(), event.getBlock(), messageSource.invalidQuantity);
         return;
       }
 
       if (parsingContext.price().compareTo(ZERO) <= 0) {
-        destroySign(
-            event.getPlayer(),
-            event.getBlock(),
-            messageSource.invalidPrice
-        );
+        destroySign(event.getPlayer(), event.getBlock(), messageSource.invalidPrice);
         return;
       }
 
-      event.line(
-          MERCHANT.getLineIndex(),
-          text(parsingContext.merchant())
-              .decorate(BOLD)
-      );
+      event.line(MERCHANT.getLineIndex(), text(parsingContext.merchant()).decorate(BOLD));
       event.line(
           PRICE.getLineIndex(),
           empty()
               .append(text(parsingContext.type().getShortcut()))
               .append(text(" "))
-              .append(text(priceFormat.format(parsingContext.price())))
-      );
+              .append(text(priceFormat.format(parsingContext.price()))));
     }
   }
 

@@ -12,16 +12,15 @@ import pl.auroramc.shops.shop.Shop;
 
 public interface ProductFacade {
 
-
   static ProductFacade getProductFacade(
       final Plugin plugin,
       final Logger logger,
       final MessageSource messageSource,
       final Currency fundsCurrency,
       final EconomyFacade economyFacade,
-      final DecimalFormat priceFormat
-  ) {
-    return new ProductService(plugin, logger, messageSource, fundsCurrency, economyFacade, priceFormat);
+      final DecimalFormat priceFormat) {
+    return new ProductService(
+        plugin, logger, messageSource, fundsCurrency, economyFacade, priceFormat);
   }
 
   void showProducts(final HumanEntity view, final Shop shop, final ChestGui shopsGui);

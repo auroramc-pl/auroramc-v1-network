@@ -15,19 +15,19 @@ class PunishmentService implements PunishmentFacade {
 
   private final Logger logger;
   private final PunishmentRepository punishmentRepository;
-  private final AsyncLoadingCache<PunishmentCompositeKey, Punishment> punishmentByPenalizedIdWithScopeAndState;
+  private final AsyncLoadingCache<PunishmentCompositeKey, Punishment>
+      punishmentByPenalizedIdWithScopeAndState;
 
   PunishmentService(final Logger logger, final PunishmentRepository punishmentRepository) {
     this.logger = logger;
     this.punishmentRepository = punishmentRepository;
-    this.punishmentByPenalizedIdWithScopeAndState = Caffeine.newBuilder()
-        .expireAfterWrite(ofSeconds(30))
-        .buildAsync(compositeKey ->
-            punishmentRepository.findPunishmentByPenalizedIdWithScopeAndState(
-                compositeKey.penalizedId(),
-                compositeKey.scope(),
-                compositeKey.state()
-            ));
+    this.punishmentByPenalizedIdWithScopeAndState =
+        Caffeine.newBuilder()
+            .expireAfterWrite(ofSeconds(30))
+            .buildAsync(
+                compositeKey ->
+                    punishmentRepository.findPunishmentByPenalizedIdWithScopeAndState(
+                        compositeKey.penalizedId(), compositeKey.scope(), compositeKey.state()));
   }
 
   @Override
@@ -39,8 +39,10 @@ class PunishmentService implements PunishmentFacade {
   @Override
   public CompletableFuture<Punishment> getPunishmentByPenalizedIdWithScopeAndState(
       final Long penalizedId, final PunishmentScope scope, final PunishmentState state) {
-    final PunishmentCompositeKey compositeKey = new PunishmentCompositeKey(penalizedId, scope, state);
-    return punishmentByPenalizedIdWithScopeAndState.get(compositeKey)
+    final PunishmentCompositeKey compositeKey =
+        new PunishmentCompositeKey(penalizedId, scope, state);
+    return punishmentByPenalizedIdWithScopeAndState
+        .get(compositeKey)
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 

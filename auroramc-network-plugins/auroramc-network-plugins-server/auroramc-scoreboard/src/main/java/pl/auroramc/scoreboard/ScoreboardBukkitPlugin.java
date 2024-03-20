@@ -22,11 +22,11 @@ import pl.auroramc.quests.quest.observer.QuestObserverFacade;
 import pl.auroramc.registry.user.UserFacade;
 import pl.auroramc.scoreboard.message.MutableMessageSource;
 import pl.auroramc.scoreboard.quest.QuestListener;
+import pl.auroramc.scoreboard.quest.QuestSidebarComponent;
 import pl.auroramc.scoreboard.sidebar.SidebarFacade;
 import pl.auroramc.scoreboard.sidebar.SidebarRenderer;
 import pl.auroramc.scoreboard.sidebar.SidebarRenderingTask;
 import pl.auroramc.scoreboard.sidebar.component.SidebarComponentKyori;
-import pl.auroramc.scoreboard.quest.QuestSidebarComponent;
 
 public class ScoreboardBukkitPlugin extends JavaPlugin {
 

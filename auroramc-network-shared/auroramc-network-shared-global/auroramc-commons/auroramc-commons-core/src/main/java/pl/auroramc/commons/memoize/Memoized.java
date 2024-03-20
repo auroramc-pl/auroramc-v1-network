@@ -14,18 +14,13 @@ public class Memoized<T> {
   private Instant valueUpdatedAt;
   private Instant valueUpdatesAt;
 
-  private Memoized(
-      final Duration timeToLive,
-      final Supplier<T> valueInitializer
-  ) {
+  private Memoized(final Duration timeToLive, final Supplier<T> valueInitializer) {
     this.timeToLive = timeToLive;
     this.valueInitializer = valueInitializer;
   }
 
   public static <T> Memoized<T> memoize(
-      final Duration timeToLive,
-      final Supplier<T> valueInitializer
-  ) {
+      final Duration timeToLive, final Supplier<T> valueInitializer) {
     return new Memoized<>(timeToLive, valueInitializer);
   }
 

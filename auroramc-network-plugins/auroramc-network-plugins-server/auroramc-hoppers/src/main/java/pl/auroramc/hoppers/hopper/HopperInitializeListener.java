@@ -36,14 +36,10 @@ public class HopperInitializeListener implements Listener {
   }
 
   private boolean whetherBlockHasTransferQuantity(final ItemStack itemStack) {
-    return itemStack.getItemMeta()
-        .getPersistentDataContainer()
-        .has(transferQuantityKey, INTEGER);
+    return itemStack.getItemMeta().getPersistentDataContainer().has(transferQuantityKey, INTEGER);
   }
 
   private Integer resolveTransferQuantity(final ItemStack itemStack) {
-    return itemStack.getItemMeta()
-        .getPersistentDataContainer()
-        .get(transferQuantityKey, INTEGER);
+    return itemStack.getItemMeta().getPersistentDataContainer().get(transferQuantityKey, INTEGER);
   }
 }

@@ -8,9 +8,7 @@ public final class ParticipantBuilder {
   private String username;
   private Object prediction;
 
-  ParticipantBuilder() {
-
-  }
+  ParticipantBuilder() {}
 
   public ParticipantBuilder uniqueId(final UUID uniqueId) {
     this.uniqueId = uniqueId;

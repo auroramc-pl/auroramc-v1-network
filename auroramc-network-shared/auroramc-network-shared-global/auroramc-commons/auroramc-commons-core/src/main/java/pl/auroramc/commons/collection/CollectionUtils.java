@@ -10,15 +10,10 @@ import java.util.function.IntFunction;
 
 public final class CollectionUtils {
 
-  private CollectionUtils() {
-
-  }
+  private CollectionUtils() {}
 
   public static <T> T[] merge(
-      final Collection<T> a,
-      final Collection<T> b,
-      final IntFunction<T[]> arrayResolver
-  ) {
+      final Collection<T> a, final Collection<T> b, final IntFunction<T[]> arrayResolver) {
     return concat(a.stream(), b.stream()).toArray(arrayResolver);
   }
 

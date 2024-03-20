@@ -18,9 +18,7 @@ import pl.auroramc.quests.quest.reward.QuestReward;
 
 class QuestDsl {
 
-  QuestDsl() {
-
-  }
+  QuestDsl() {}
 
   public static Quest quest(final @DelegatesTo(QuestBuilder.class) Closure<?> closure) {
     final QuestBuilder delegate = new QuestBuilder();

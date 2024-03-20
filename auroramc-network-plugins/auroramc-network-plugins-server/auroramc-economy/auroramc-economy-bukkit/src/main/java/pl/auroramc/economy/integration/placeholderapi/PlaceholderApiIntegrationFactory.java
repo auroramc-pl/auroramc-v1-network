@@ -1,9 +1,9 @@
 package pl.auroramc.economy.integration.placeholderapi;
 
 import org.bukkit.plugin.Plugin;
+import pl.auroramc.commons.integration.ExternalIntegration;
 import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.CurrencyFacade;
-import pl.auroramc.commons.integration.ExternalIntegration;
 
 public final class PlaceholderApiIntegrationFactory {
 

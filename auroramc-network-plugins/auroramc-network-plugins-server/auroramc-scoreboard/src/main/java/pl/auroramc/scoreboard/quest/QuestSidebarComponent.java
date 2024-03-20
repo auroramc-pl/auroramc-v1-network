@@ -41,8 +41,7 @@ public class QuestSidebarComponent implements SidebarComponentKyori<Quest> {
       final UserFacade userFacade,
       final QuestIndex questIndex,
       final QuestObserverFacade questObserverFacade,
-      final ObjectiveProgressController objectiveProgressController
-  ) {
+      final ObjectiveProgressController objectiveProgressController) {
     this.logger = logger;
     this.messageSource = messageSource;
     this.userFacade = userFacade;
@@ -65,7 +64,8 @@ public class QuestSidebarComponent implements SidebarComponentKyori<Quest> {
 
   @Override
   public MutableMessage render(final Player viewer) {
-    return Optional.ofNullable(questObserverFacade.findQuestObserverByUniqueId(viewer.getUniqueId()))
+    return Optional.ofNullable(
+            questObserverFacade.findQuestObserverByUniqueId(viewer.getUniqueId()))
         .map(QuestObserver::getQuestId)
         .map(questIndex::resolveQuest)
         .map(quest -> render(viewer, quest))
@@ -74,28 +74,19 @@ public class QuestSidebarComponent implements SidebarComponentKyori<Quest> {
 
   private MutableMessage renderQuestName(final Quest quest) {
     return newline()
+        .append(messageSource.quest.observedQuest, EMPTY_DELIMITER)
         .append(
-            messageSource.quest.observedQuest,
-            EMPTY_DELIMITER
-        )
-        .append(
-            messageSource.quest.observedQuestName
-                .with(QUEST_VARIABLE_KEY, quest.getKey().getName())
-        );
+            messageSource.quest.observedQuestName.with(
+                QUEST_VARIABLE_KEY, quest.getKey().getName()));
   }
 
   private MutableMessage renderQuestObjectiveHeader() {
-    return newline()
-        .append(
-            messageSource.quest.remainingQuestObjectives,
-            EMPTY_DELIMITER
-        );
+    return newline().append(messageSource.quest.remainingQuestObjectives, EMPTY_DELIMITER);
   }
 
-  private MutableMessage renderQuestObjectives(
-      final Player viewer, final Quest quest
-  ) {
-    return userFacade.getUserByUniqueId(viewer.getUniqueId())
+  private MutableMessage renderQuestObjectives(final Player viewer, final Quest quest) {
+    return userFacade
+        .getUserByUniqueId(viewer.getUniqueId())
         .thenApply(user -> objectiveProgressController.getUncompletedObjectives(user, quest))
         .thenApply(this::aggregateQuestObjectives)
         .exceptionally(exception -> delegateCaughtException(logger, exception))
@@ -103,18 +94,15 @@ public class QuestSidebarComponent implements SidebarComponentKyori<Quest> {
   }
 
   private MutableMessage aggregateQuestObjectives(
-      final Map<Objective<?>, ObjectiveProgress> objectivesToObjectiveProgresses
-  ) {
+      final Map<Objective<?>, ObjectiveProgress> objectivesToObjectiveProgresses) {
     return objectivesToObjectiveProgresses.entrySet().stream()
         .sorted(comparingByKey(comparing(objective -> objective.getClass().getSimpleName())))
-        .map(objectiveToObjectiveProgress ->
-            MutableMessage.of(
-                getQuestObjectiveTemplate(
-                    objectiveToObjectiveProgress.getKey(),
-                    objectiveToObjectiveProgress.getValue()
-                )
-            )
-        )
+        .map(
+            objectiveToObjectiveProgress ->
+                MutableMessage.of(
+                    getQuestObjectiveTemplate(
+                        objectiveToObjectiveProgress.getKey(),
+                        objectiveToObjectiveProgress.getValue())))
         .collect(MutableMessage.collector());
   }
 }

@@ -11,8 +11,7 @@ public class MutableMessageResultHandler<T> implements ResultHandler<T, MutableM
   public void handle(
       final Invocation<T> invocation,
       final MutableMessage result,
-      final ResultHandlerChain<T> chain
-  ) {
+      final ResultHandlerChain<T> chain) {
     chain.resolve(invocation, result.compile());
   }
 }

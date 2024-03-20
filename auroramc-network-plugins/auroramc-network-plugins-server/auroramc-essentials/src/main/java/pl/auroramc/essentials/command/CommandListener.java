@@ -32,9 +32,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.command.UnknownCommandEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.Plugin;
+import pl.auroramc.commons.lazy.Lazy;
 import pl.auroramc.commons.search.FuzzySearch;
 import pl.auroramc.essentials.EssentialsConfig;
-import pl.auroramc.commons.lazy.Lazy;
 import pl.auroramc.essentials.message.MutableMessageSource;
 
 public class CommandListener implements Listener {

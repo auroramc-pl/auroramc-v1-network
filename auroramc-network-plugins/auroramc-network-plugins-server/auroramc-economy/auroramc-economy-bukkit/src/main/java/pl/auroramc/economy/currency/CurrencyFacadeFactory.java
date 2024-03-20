@@ -4,9 +4,7 @@ import moe.rafal.juliet.Juliet;
 
 public final class CurrencyFacadeFactory {
 
-  private CurrencyFacadeFactory() {
-
-  }
+  private CurrencyFacadeFactory() {}
 
   public static CurrencyFacade produceCurrencyFacade(final Juliet juliet) {
     final SqlCurrencyRepository sqlCurrencyRepository = new SqlCurrencyRepository(juliet);

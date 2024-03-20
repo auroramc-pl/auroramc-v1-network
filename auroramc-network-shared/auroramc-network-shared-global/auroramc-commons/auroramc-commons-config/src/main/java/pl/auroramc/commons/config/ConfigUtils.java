@@ -9,17 +9,15 @@ import org.jetbrains.annotations.NotNull;
 
 public final class ConfigUtils {
 
-  private ConfigUtils() {
-
-  }
+  private ConfigUtils() {}
 
   public static <T> Set<T> getAsHashSet(
       final @NotNull DeserializationData data,
       final @NotNull String key,
-      final @NotNull Class<T> setValueType
-  ) {
+      final @NotNull Class<T> setValueType) {
     if (data.containsKey(key)) {
-      final GenericsDeclaration genericType = GenericsDeclaration.of(HashSet.class, List.of(setValueType));
+      final GenericsDeclaration genericType =
+          GenericsDeclaration.of(HashSet.class, List.of(setValueType));
       return (Set<T>) data.getAsCollection(key, genericType);
     }
 

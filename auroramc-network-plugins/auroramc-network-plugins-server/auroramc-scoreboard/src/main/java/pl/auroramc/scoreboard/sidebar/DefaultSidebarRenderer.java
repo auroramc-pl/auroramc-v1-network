@@ -20,8 +20,7 @@ class DefaultSidebarRenderer implements SidebarRenderer {
   DefaultSidebarRenderer(
       final MutableMessageSource messageSource,
       final SidebarFacade sidebarFacade,
-      final Set<SidebarComponentKyori<?>> sidebarComponents
-  ) {
+      final Set<SidebarComponentKyori<?>> sidebarComponents) {
     this.messageSource = messageSource;
     this.sidebarFacade = sidebarFacade;
     this.sidebarComponents = sidebarComponents;
@@ -30,28 +29,20 @@ class DefaultSidebarRenderer implements SidebarRenderer {
   @Override
   public void render(final Player viewer) {
     final FastBoard sidebar = sidebarFacade.resolveSidebarByUniqueId(viewer.getUniqueId());
-    sidebar.updateTitle(
-        getCompiledMessageWithPlaceholders(viewer, messageSource.title)
-    );
+    sidebar.updateTitle(getCompiledMessageWithPlaceholders(viewer, messageSource.title));
     sidebar.updateLines(
         BukkitMutableMessage.of(
-            concat(
-                messageSource.lines.stream(),
-                sidebarComponents.stream()
-                    .map(sidebarComponent -> sidebarComponent.render(viewer))
-            )
-                .collect(MutableMessage.collector())
-        )
+                concat(
+                        messageSource.lines.stream(),
+                        sidebarComponents.stream()
+                            .map(sidebarComponent -> sidebarComponent.render(viewer)))
+                    .collect(MutableMessage.collector()))
             .withTargetedPlaceholders(viewer)
-            .compileChildren()
-    );
+            .compileChildren());
   }
 
   private Component getCompiledMessageWithPlaceholders(
-      final Player viewer, final MutableMessage message
-  ) {
-    return BukkitMutableMessage.of(message)
-        .withTargetedPlaceholders(viewer)
-        .compile();
+      final Player viewer, final MutableMessage message) {
+    return BukkitMutableMessage.of(message).withTargetedPlaceholders(viewer).compile();
   }
 }

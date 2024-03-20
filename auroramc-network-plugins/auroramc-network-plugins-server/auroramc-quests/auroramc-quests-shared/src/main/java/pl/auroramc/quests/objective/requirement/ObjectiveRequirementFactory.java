@@ -8,20 +8,14 @@ public final class ObjectiveRequirementFactory {
 
   private static final Predicate<ItemStack> ANY_ITEM = item -> true;
 
-  private ObjectiveRequirementFactory() {
-
-  }
+  private ObjectiveRequirementFactory() {}
 
   public static ObjectiveRequirement heldItem(
-      final Material requiredMaterial,
-      final Predicate<ItemStack> requirementOnItem
-  ) {
+      final Material requiredMaterial, final Predicate<ItemStack> requirementOnItem) {
     return new HeldItemRequirement(requiredMaterial, requirementOnItem);
   }
 
-  public static ObjectiveRequirement heldItem(
-      final Material requiredMaterial
-  ) {
+  public static ObjectiveRequirement heldItem(final Material requiredMaterial) {
     return heldItem(requiredMaterial, ANY_ITEM);
   }
 }

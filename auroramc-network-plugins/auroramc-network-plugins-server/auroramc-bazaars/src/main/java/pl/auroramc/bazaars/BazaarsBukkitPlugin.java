@@ -26,33 +26,34 @@ public class BazaarsBukkitPlugin extends JavaPlugin {
 
   @Override
   public void onEnable() {
-    final ConfigFactory configFactory = new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
+    final ConfigFactory configFactory =
+        new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
 
-    final MutableMessageSource messageSource = configFactory.produceConfig(
-        MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
-    );
-    final BazaarsConfig bazaarsConfig = configFactory.produceConfig(
-        BazaarsConfig.class, BAZAARS_CONFIG_FILE_NAME, new SerdesCommons()
-    );
+    final MutableMessageSource messageSource =
+        configFactory.produceConfig(
+            MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource());
+    final BazaarsConfig bazaarsConfig =
+        configFactory.produceConfig(
+            BazaarsConfig.class, BAZAARS_CONFIG_FILE_NAME, new SerdesCommons());
 
     final UserFacade userFacade = resolveService(getServer(), UserFacade.class);
 
     final CurrencyFacade currencyFacade = resolveService(getServer(), CurrencyFacade.class);
-    final Currency fundsCurrency = Optional.ofNullable(currencyFacade.getCurrencyById(bazaarsConfig.fundsCurrencyId))
-        .orElseThrow(() ->
-            new BazaarsInstantiationException(
-                "Could not resolve funds currency, make sure that the currency's id is valid."
-            )
-        );
+    final Currency fundsCurrency =
+        Optional.ofNullable(currencyFacade.getCurrencyById(bazaarsConfig.fundsCurrencyId))
+            .orElseThrow(
+                () ->
+                    new BazaarsInstantiationException(
+                        "Could not resolve funds currency, make sure that the currency's id is valid."));
     final EconomyFacade economyFacade = resolveService(getServer(), EconomyFacade.class);
 
-    final BazaarFacade bazaarFacade = getBazaarFacade(
-        this, bazaarsConfig.priceFormat, messageSource, fundsCurrency, economyFacade
-    );
+    final BazaarFacade bazaarFacade =
+        getBazaarFacade(
+            this, bazaarsConfig.priceFormat, messageSource, fundsCurrency, economyFacade);
 
-    registerListeners(this,
+    registerListeners(
+        this,
         new BazaarCreateListener(messageSource, bazaarsConfig.priceFormat, getBazaarParser()),
-        new BazaarUsageListener(messageSource, getBazaarParser(), bazaarFacade, userFacade)
-    );
+        new BazaarUsageListener(messageSource, getBazaarParser(), bazaarFacade, userFacade));
   }
 }

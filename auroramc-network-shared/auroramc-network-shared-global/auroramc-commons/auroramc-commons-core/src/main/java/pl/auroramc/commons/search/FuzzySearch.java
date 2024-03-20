@@ -7,8 +7,5 @@ public interface FuzzySearch {
   }
 
   String getMostSimilarString(
-      final String source,
-      final Iterable<String> possibilities,
-      final double threshold
-  );
+      final String source, final Iterable<String> possibilities, final double threshold);
 }

@@ -37,8 +37,7 @@ public class QuestTrackController {
       final MutableMessageSource messageSource,
       final QuestTrackFacade questTrackFacade,
       final QuestObserverFacade questObserverFacade,
-      final ObjectiveProgressFacade objectiveProgressFacade
-  ) {
+      final ObjectiveProgressFacade objectiveProgressFacade) {
     this.plugin = plugin;
     this.server = server;
     this.messageSource = messageSource;
@@ -52,35 +51,36 @@ public class QuestTrackController {
   }
 
   public CompletableFuture<Void> assignQuest(
-      final User user, final Quest quest, final QuestState state
-  ) {
-    return runAsync(() ->
-        questTrackFacade.createQuestTrack(
-            user.getUniqueId(),
-            new QuestTrack(user.getId(), quest.getKey().getId(), state)
-        )
-    ).thenRun(() -> {
-      for (final Objective<?> objective : quest.getObjectives()) {
-        objectiveProgressFacade.resolveObjectiveProgress(user.getId(), quest.getKey().getId(),
-            objective.getKey().getId(),
-            objective.getGoalResolver().resolveGoal());
-      }
-    });
+      final User user, final Quest quest, final QuestState state) {
+    return runAsync(
+            () ->
+                questTrackFacade.createQuestTrack(
+                    user.getUniqueId(),
+                    new QuestTrack(user.getId(), quest.getKey().getId(), state)))
+        .thenRun(
+            () -> {
+              for (final Objective<?> objective : quest.getObjectives()) {
+                objectiveProgressFacade.resolveObjectiveProgress(
+                    user.getId(),
+                    quest.getKey().getId(),
+                    objective.getKey().getId(),
+                    objective.getGoalResolver().resolveGoal());
+              }
+            });
   }
 
   public void completeQuest(final User user, final Quest quest) {
-    objectiveProgressFacade.deleteObjectiveProgressByUserIdAndQuestId(user.getId(), quest.getKey().getId());
+    objectiveProgressFacade.deleteObjectiveProgressByUserIdAndQuestId(
+        user.getId(), quest.getKey().getId());
 
-    final QuestTrack questTrack = questTrackFacade.getQuestTrackByUniqueIdAndQuestId(user.getUniqueId(), quest.getKey().getId())
-        .orElseThrow(() ->
-            new QuestTrackResolvingException(
-                "Could not get quest track for user %s and quest %d"
-                    .formatted(
-                        user.getUniqueId(),
-                        quest.getKey().getId()
-                    )
-            )
-        );
+    final QuestTrack questTrack =
+        questTrackFacade
+            .getQuestTrackByUniqueIdAndQuestId(user.getUniqueId(), quest.getKey().getId())
+            .orElseThrow(
+                () ->
+                    new QuestTrackResolvingException(
+                        "Could not get quest track for user %s and quest %d"
+                            .formatted(user.getUniqueId(), quest.getKey().getId())));
     questTrack.setQuestState(COMPLETED);
     questTrackFacade.updateQuestTrack(questTrack);
 
@@ -94,17 +94,18 @@ public class QuestTrackController {
       ((QuestReward<Player>) reward).apply(player);
     }
 
-    final QuestObserver questObserver = questObserverFacade.findQuestObserverByUniqueId(
-        player.getUniqueId());
-    if (questObserver != null && Objects.equals(questObserver.getQuestId(), quest.getKey().getId())) {
+    final QuestObserver questObserver =
+        questObserverFacade.findQuestObserverByUniqueId(player.getUniqueId());
+    if (questObserver != null
+        && Objects.equals(questObserver.getQuestId(), quest.getKey().getId())) {
       questObserver.setQuestId(null);
       questObserverFacade.updateQuestObserver(questObserver);
     }
 
     player.sendMessage(
-        messageSource.questHasBeenCompleted
+        messageSource
+            .questHasBeenCompleted
             .with(QUEST_VARIABLE_KEY, quest.getKey().getId())
-            .compile()
-    );
+            .compile());
   }
 }

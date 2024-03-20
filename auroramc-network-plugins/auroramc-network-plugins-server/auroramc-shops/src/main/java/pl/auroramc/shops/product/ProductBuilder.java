@@ -17,9 +17,7 @@ public final class ProductBuilder {
   private BigDecimal priceForSale;
   private BigDecimal priceForPurchase;
 
-  ProductBuilder() {
-
-  }
+  ProductBuilder() {}
 
   public ProductBuilder icon(final ItemStack icon) {
     this.icon = icon;
@@ -27,8 +25,7 @@ public final class ProductBuilder {
   }
 
   public ProductBuilder icon(
-      final @DelegatesTo(value = ItemStackBuilder.class) Closure<?> closure
-  ) {
+      final @DelegatesTo(value = ItemStackBuilder.class) Closure<?> closure) {
     final ItemStackBuilder itemStackBuilder = ItemStackBuilder.newBuilder(STONE);
     closure.setDelegate(itemStackBuilder);
     closure.setResolveStrategy(DELEGATE_ONLY);
@@ -42,8 +39,7 @@ public final class ProductBuilder {
   }
 
   public ProductBuilder subject(
-      final @DelegatesTo(value = ItemStackBuilder.class) Closure<?> closure
-  ) {
+      final @DelegatesTo(value = ItemStackBuilder.class) Closure<?> closure) {
     final ItemStackBuilder itemStackBuilder = ItemStackBuilder.newBuilder(STONE);
     closure.setDelegate(itemStackBuilder);
     closure.setResolveStrategy(DELEGATE_ONLY);

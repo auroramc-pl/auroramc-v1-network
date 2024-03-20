@@ -21,22 +21,21 @@ public class ConfigFactory {
   public <T extends OkaeriConfig> T produceConfig(
       final Class<T> configClass,
       final String configFileName,
-      final OkaeriSerdesPack... serdesPacks
-  ) {
+      final OkaeriSerdesPack... serdesPacks) {
     return produceConfig(configClass, dataPath.resolve(configFileName), serdesPacks);
   }
 
   public <T extends OkaeriConfig> T produceConfig(
       final Class<T> configClass,
       final Path configFilePath,
-      final OkaeriSerdesPack... serdesPacks
-  ) {
-    return ConfigManager.create(configClass, initializer ->
-        initializer
-            .withConfigurer(configurer.get(), serdesPacks)
-            .withBindFile(configFilePath)
-            .saveDefaults()
-            .load(WHETHER_CONFIGURATION_SHOULD_BE_UP_TO_DATE)
-    );
+      final OkaeriSerdesPack... serdesPacks) {
+    return ConfigManager.create(
+        configClass,
+        initializer ->
+            initializer
+                .withConfigurer(configurer.get(), serdesPacks)
+                .withBindFile(configFilePath)
+                .saveDefaults()
+                .load(WHETHER_CONFIGURATION_SHOULD_BE_UP_TO_DATE));
   }
 }

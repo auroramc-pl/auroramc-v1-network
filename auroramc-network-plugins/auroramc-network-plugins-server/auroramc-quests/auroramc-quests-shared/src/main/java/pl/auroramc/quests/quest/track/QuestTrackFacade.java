@@ -6,17 +6,12 @@ import java.util.UUID;
 
 public interface QuestTrackFacade {
 
-  Optional<QuestTrack> getQuestTrackByUniqueIdAndQuestId(
-      final UUID uniqueId, final Long questId
-  );
+  Optional<QuestTrack> getQuestTrackByUniqueIdAndQuestId(final UUID uniqueId, final Long questId);
+
+  List<QuestTrack> getQuestTracksByUniqueId(final UUID uniqueId);
 
   List<QuestTrack> getQuestTracksByUniqueId(
-      final UUID uniqueId
-  );
-
-  List<QuestTrack> getQuestTracksByUniqueId(
-      final UUID uniqueId, final boolean includeCompletedQuests
-  );
+      final UUID uniqueId, final boolean includeCompletedQuests);
 
   void createQuestTrack(final UUID uniqueId, final QuestTrack questTrack);
 

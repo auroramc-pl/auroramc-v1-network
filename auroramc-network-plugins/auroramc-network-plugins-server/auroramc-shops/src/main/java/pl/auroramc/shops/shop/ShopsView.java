@@ -22,9 +22,7 @@ class ShopsView {
   public ChestGui shopsGui;
   public PaginatedPane shopItemsPane;
 
-  ShopsView(
-      final Plugin plugin, final ShopFacade shopFacade, final ProductFacade productFacade
-  ) {
+  ShopsView(final Plugin plugin, final ShopFacade shopFacade, final ProductFacade productFacade) {
     this.plugin = plugin;
     this.shopFacade = shopFacade;
     this.productFacade = productFacade;
@@ -57,16 +55,10 @@ class ShopsView {
   }
 
   private GuiItem getShopItem(final Shop shop) {
-    return new GuiItem(
-        shop.icon(),
-        event -> navigateToShop(event, shop),
-        plugin
-    );
+    return new GuiItem(shop.icon(), event -> navigateToShop(event, shop), plugin);
   }
 
   private List<GuiItem> getShopItems(final Set<Shop> shops) {
-    return shops.stream()
-        .map(this::getShopItem)
-        .toList();
+    return shops.stream().map(this::getShopItem).toList();
   }
 }

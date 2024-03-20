@@ -18,7 +18,6 @@ import pl.auroramc.commons.message.delivery.DeliverableMutableMessage;
 
 class MessageService implements MessageFacade {
 
-
   private final AudienceFacade audienceFacade;
   private final Supplier<CompletableFuture<List<Player>>> memoizedViewers;
 
@@ -29,33 +28,29 @@ class MessageService implements MessageFacade {
 
   @Override
   public void deliverMessage(final DeliverableMutableMessage message) {
-    memoizedViewers.get()
+    memoizedViewers
+        .get()
         .thenApply(net.kyori.adventure.audience.Audience::audience)
         .thenAccept(message::deliver);
   }
 
-  private CompletableFuture<List<Player>> getViewers(
-      final Collection<? extends Player> viewers
-  ) {
+  private CompletableFuture<List<Player>> getViewers(final Collection<? extends Player> viewers) {
     return viewers.stream()
         .map(this::getViewerWithAudience)
         .collect(joinList())
         .thenApply(this::getViewers);
   }
 
-  private List<Player> getViewers(
-      final List<Tuple<Player, Audience>> viewersByAudiences
-  ) {
+  private List<Player> getViewers(final List<Tuple<Player, Audience>> viewersByAudiences) {
     return viewersByAudiences.stream()
         .filter(viewerByAudience -> viewerByAudience.getB().isAllowsMessages())
         .map(Tuple::getA)
         .toList();
   }
 
-  private CompletableFuture<Tuple<Player, Audience>> getViewerWithAudience(
-      final Player viewer
-  ) {
-    return audienceFacade.getAudienceByUniqueId(viewer.getUniqueId())
+  private CompletableFuture<Tuple<Player, Audience>> getViewerWithAudience(final Player viewer) {
+    return audienceFacade
+        .getAudienceByUniqueId(viewer.getUniqueId())
         .thenApply(audience -> tupleOf(viewer, audience));
   }
 }

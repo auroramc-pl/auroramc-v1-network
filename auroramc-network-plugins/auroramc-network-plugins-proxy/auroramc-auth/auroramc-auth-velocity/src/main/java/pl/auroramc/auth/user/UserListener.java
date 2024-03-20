@@ -17,8 +17,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import net.kyori.adventure.text.Component;
-import pl.auroramc.auth.message.MutableMessageSource;
 import pl.auroramc.auth.identity.IdentityGenerator;
+import pl.auroramc.auth.message.MutableMessageSource;
 
 public class UserListener {
 

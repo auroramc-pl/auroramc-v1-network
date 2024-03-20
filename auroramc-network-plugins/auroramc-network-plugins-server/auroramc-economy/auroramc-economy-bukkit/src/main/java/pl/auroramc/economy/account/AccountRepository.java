@@ -16,6 +16,5 @@ interface AccountRepository {
       final Account initiatorAccount,
       final Account receivingAccount,
       final Long currencyId,
-      final BigDecimal amount
-  );
+      final BigDecimal amount);
 }

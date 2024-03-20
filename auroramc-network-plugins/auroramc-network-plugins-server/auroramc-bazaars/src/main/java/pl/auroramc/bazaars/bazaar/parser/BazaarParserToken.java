@@ -1,7 +1,6 @@
 package pl.auroramc.bazaars.bazaar.parser;
 
 public enum BazaarParserToken {
-
   MERCHANT(0),
   QUANTITY(1),
   MATERIAL(3),

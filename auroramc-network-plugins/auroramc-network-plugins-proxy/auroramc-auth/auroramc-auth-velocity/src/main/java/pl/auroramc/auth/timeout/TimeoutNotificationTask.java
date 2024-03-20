@@ -20,8 +20,7 @@ public class TimeoutNotificationTask implements Runnable {
       final ProxyServer server,
       final MutableMessageSource messageSource,
       final TimeoutFacade timeoutFacade,
-      final DurationFormatter durationFormatter
-  ) {
+      final DurationFormatter durationFormatter) {
     this.server = server;
     this.messageSource = messageSource;
     this.timeoutFacade = timeoutFacade;
@@ -41,10 +40,10 @@ public class TimeoutNotificationTask implements Runnable {
     final Duration remainingPeriod = timeoutFacade.getRemainingPeriod(player.getUniqueId());
     if (remainingPeriod.compareTo(ZERO) >= 0) {
       player.sendActionBar(
-          messageSource.authorizationTicking
+          messageSource
+              .authorizationTicking
               .with(PERIOD_VARIABLE_KEY, durationFormatter.getFormattedDuration(remainingPeriod))
-              .compile()
-      );
+              .compile());
       return;
     }
 

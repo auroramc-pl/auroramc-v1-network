@@ -20,10 +20,11 @@ class SidebarService implements SidebarFacade {
   @Override
   public FastBoard resolveSidebarByUniqueId(final UUID uniqueId) {
     return Optional.ofNullable(getSidebarByUniqueId(uniqueId))
-        .orElseGet(() -> {
-          createSidebarByUniqueId(uniqueId);
-          return getSidebarByUniqueId(uniqueId);
-        });
+        .orElseGet(
+            () -> {
+              createSidebarByUniqueId(uniqueId);
+              return getSidebarByUniqueId(uniqueId);
+            });
   }
 
   @Override

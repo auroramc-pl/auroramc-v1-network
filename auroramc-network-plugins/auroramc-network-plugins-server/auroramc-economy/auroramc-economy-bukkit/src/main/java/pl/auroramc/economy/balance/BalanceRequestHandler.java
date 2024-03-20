@@ -21,8 +21,7 @@ public class BalanceRequestHandler implements Handler {
   private final CurrencyFacade currencyFacade;
 
   public BalanceRequestHandler(
-      final EconomyFacade economyFacade,
-      final CurrencyFacade currencyFacade) {
+      final EconomyFacade economyFacade, final CurrencyFacade currencyFacade) {
     this.economyFacade = economyFacade;
     this.currencyFacade = currencyFacade;
   }
@@ -30,18 +29,21 @@ public class BalanceRequestHandler implements Handler {
   @Override
   public void handle(final Context context) {
     final String currencyId = context.pathParam("currencyId");
-    final Option<Currency> currencyById = supplyThrowing(() -> Long.parseLong(currencyId))
-        .map(currencyFacade::getCurrencyById);
+    final Option<Currency> currencyById =
+        supplyThrowing(() -> Long.parseLong(currencyId)).map(currencyFacade::getCurrencyById);
     if (currencyById.isEmpty()) {
       context
           .status(BAD_REQUEST)
-          .json(response(BAD_REQUEST, "Could not parse id, or find currency with id %s.".formatted(currencyId)));
+          .json(
+              response(
+                  BAD_REQUEST,
+                  "Could not parse id, or find currency with id %s.".formatted(currencyId)));
       return;
     }
 
     final String uniqueId = context.pathParam("uniqueId");
-    final Option<UUID> parsedUniqueId = supplyThrowing(
-        () -> UUID.fromString(context.pathParam("uniqueId")));
+    final Option<UUID> parsedUniqueId =
+        supplyThrowing(() -> UUID.fromString(context.pathParam("uniqueId")));
     if (parsedUniqueId.isEmpty()) {
       context
           .status(BAD_REQUEST)
@@ -49,15 +51,23 @@ public class BalanceRequestHandler implements Handler {
       return;
     }
 
-    context.future(() -> economyFacade.balance(parsedUniqueId.get(), currencyById.get())
-        .thenApply(DecimalFormatter::getFormattedDecimal)
-        .thenApply(balance -> response(OK, balance))
-        .thenAccept(context::json)
-        .exceptionally(exception -> {
-          context
-              .status(INTERNAL_SERVER_ERROR)
-              .json(response(INTERNAL_SERVER_ERROR, "Could not retrieve balance for %s and currency with id %s, because of unexpected exception.".formatted(uniqueId, currencyId)));
-          return null;
-        }));
+    context.future(
+        () ->
+            economyFacade
+                .balance(parsedUniqueId.get(), currencyById.get())
+                .thenApply(DecimalFormatter::getFormattedDecimal)
+                .thenApply(balance -> response(OK, balance))
+                .thenAccept(context::json)
+                .exceptionally(
+                    exception -> {
+                      context
+                          .status(INTERNAL_SERVER_ERROR)
+                          .json(
+                              response(
+                                  INTERNAL_SERVER_ERROR,
+                                  "Could not retrieve balance for %s and currency with id %s, because of unexpected exception."
+                                      .formatted(uniqueId, currencyId)));
+                      return null;
+                    }));
   }
 }

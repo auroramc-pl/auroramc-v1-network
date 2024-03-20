@@ -5,12 +5,9 @@ import java.util.List;
 interface ObjectiveProgressRepository {
 
   List<ObjectiveProgress> getObjectiveProgresses(
-      final ObjectiveProgressesKey objectiveProgressesKey
-  );
+      final ObjectiveProgressesKey objectiveProgressesKey);
 
-  ObjectiveProgress getObjectiveProgress(
-      final ObjectiveProgressKey objectiveProgressKey
-  );
+  ObjectiveProgress getObjectiveProgress(final ObjectiveProgressKey objectiveProgressKey);
 
   void createObjectiveProgress(final ObjectiveProgress objectiveProgress);
 

@@ -42,18 +42,15 @@ class ResourceKeyService implements ResourceKeyFacade {
   }
 
   private void assignIdsOfResourceKeys(final List<? extends Resource> resources) {
-    final Map<String, ResourceKey> allResourceKeys = getResourceKeys().stream()
-        .collect(toMap(ResourceKey::getName, identity()));
+    final Map<String, ResourceKey> allResourceKeys =
+        getResourceKeys().stream().collect(toMap(ResourceKey::getName, identity()));
     assignIdsOfResourceKeys(allResourceKeys, resources);
-    assignIdsOfResourceKeys(allResourceKeys, resources.stream()
-        .map(Resource::children)
-        .flatMap(List::stream)
-        .toList());
+    assignIdsOfResourceKeys(
+        allResourceKeys, resources.stream().map(Resource::children).flatMap(List::stream).toList());
   }
 
   private void assignIdsOfResourceKeys(
-      final Map<String, ResourceKey> allResourceKeys, final List<? extends Resource> resources
-  ) {
+      final Map<String, ResourceKey> allResourceKeys, final List<? extends Resource> resources) {
     for (final Resource resource : resources) {
       final ResourceKey resourceKey = resource.getKey();
       final Long idOfResourceKey = allResourceKeys.get(resourceKey.getName()).getId();
@@ -62,25 +59,22 @@ class ResourceKeyService implements ResourceKeyFacade {
   }
 
   private List<String> getNamesOfResourceKeys(final List<? extends Resource> resources) {
-    final List<? extends Resource> childrenOfResources = resources.stream().map(Resource::children)
-        .flatMap(List::stream)
-        .toList();
-    final List<? extends Resource> aggregatedResources = Stream.of(resources, childrenOfResources)
-        .flatMap(Collection::stream)
-        .toList();
-    return aggregatedResources.stream()
-        .map(Resource::getKey)
-        .map(ResourceKey::getName)
-        .toList();
+    final List<? extends Resource> childrenOfResources =
+        resources.stream().map(Resource::children).flatMap(List::stream).toList();
+    final List<? extends Resource> aggregatedResources =
+        Stream.of(resources, childrenOfResources).flatMap(Collection::stream).toList();
+    return aggregatedResources.stream().map(Resource::getKey).map(ResourceKey::getName).toList();
   }
 
   private List<ResourceKey> getResourceKeysToCreate(final List<String> localNamesOfQuestKeys) {
     final List<ResourceKey> allResourceKeys = getResourceKeys();
     return localNamesOfQuestKeys.stream()
         .distinct()
-        .filter(nameOfResourceKey -> allResourceKeys.stream()
-            .map(ResourceKey::getName)
-            .noneMatch(nameOfResourceKey::equals))
+        .filter(
+            nameOfResourceKey ->
+                allResourceKeys.stream()
+                    .map(ResourceKey::getName)
+                    .noneMatch(nameOfResourceKey::equals))
         .map(name -> new ResourceKey(null, name))
         .toList();
   }

@@ -11,13 +11,10 @@ import pl.auroramc.shops.product.ProductBuilder;
 
 class ShopDsl {
 
-  private ShopDsl() {
-
-  }
+  private ShopDsl() {}
 
   public static Shop shop(
-      final @DelegatesTo(value = ShopBuilder.class, strategy = DELEGATE_ONLY) Closure<?> closure
-  ) {
+      final @DelegatesTo(value = ShopBuilder.class, strategy = DELEGATE_ONLY) Closure<?> closure) {
     final ShopBuilder shopBuilder = Shop.newBuilder();
     closure.setDelegate(shopBuilder);
     closure.setResolveStrategy(DELEGATE_ONLY);
@@ -33,9 +30,7 @@ class ShopDsl {
       this.products = new ArrayList<>();
     }
 
-    public void product(
-        final @DelegatesTo(ProductBuilder.class) Closure<?> closure
-    ) {
+    public void product(final @DelegatesTo(ProductBuilder.class) Closure<?> closure) {
       final ProductBuilder delegate = Product.newBuilder();
       closure.setDelegate(delegate);
       closure.setResolveStrategy(DELEGATE_ONLY);

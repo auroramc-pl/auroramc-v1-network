@@ -27,8 +27,7 @@ public class VisitListener implements Listener {
       final UserFacade userFacade,
       final VisitFacade visitFacade,
       final VisitController visitController,
-      final DailyRewardsConfig dailyRewardsConfig
-  ) {
+      final DailyRewardsConfig dailyRewardsConfig) {
     this.logger = logger;
     this.userFacade = userFacade;
     this.visitFacade = visitFacade;
@@ -38,7 +37,8 @@ public class VisitListener implements Listener {
 
   @EventHandler
   public void onPlayerJoin(final PlayerJoinEvent event) {
-    userFacade.getUserByUniqueId(event.getPlayer().getUniqueId())
+    userFacade
+        .getUserByUniqueId(event.getPlayer().getUniqueId())
         .thenAccept(user -> visitController.startVisitTracking(user.getUniqueId()))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
@@ -53,12 +53,7 @@ public class VisitListener implements Listener {
     final boolean isUntrackedSession = visitStartTime == null;
     if (isUntrackedSession) {
       logger.warning(
-          "Found an untracked visit for %s (%s)"
-              .formatted(
-                  player.getName(),
-                  player.getUniqueId()
-              )
-      );
+          "Found an untracked visit for %s (%s)".formatted(player.getName(), player.getUniqueId()));
       return;
     }
 
@@ -67,14 +62,9 @@ public class VisitListener implements Listener {
       return;
     }
 
-    userFacade.getUserByUniqueId(player.getUniqueId())
-        .thenApply(user ->
-            new Visit(user.getId(),
-                visitPeriod,
-                visitStartTime,
-                visitDitchTime
-            )
-        )
+    userFacade
+        .getUserByUniqueId(player.getUniqueId())
+        .thenApply(user -> new Visit(user.getId(), visitPeriod, visitStartTime, visitDitchTime))
         .thenAccept(visitFacade::createVisit)
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }

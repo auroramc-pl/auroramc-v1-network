@@ -39,18 +39,8 @@ public class IridiumColors {
    */
   private static final boolean SUPPORTS_RGB = VERSION >= 16 || VERSION == -1;
 
-  private static final List<String> SPECIAL_COLORS = asList(
-      "&l",
-      "&n",
-      "&o",
-      "&k",
-      "&m",
-      "§l",
-      "§n",
-      "§o",
-      "§k",
-      "§m"
-  );
+  private static final List<String> SPECIAL_COLORS =
+      asList("&l", "&n", "&o", "&k", "&m", "§l", "§n", "§o", "§k", "§m");
 
   /**
    * Cached result of all legacy colors.
@@ -82,22 +72,15 @@ public class IridiumColors {
    *
    * @since 1.0.2
    */
-  private static final List<TagResolver> TAG_RESOLVERS = asList(
-      new StaticTagResolver(),
-      new RainbowTagResolver(),
-      new GradientTagResolver()
-  );
+  private static final List<TagResolver> TAG_RESOLVERS =
+      asList(new StaticTagResolver(), new RainbowTagResolver(), new GradientTagResolver());
 
-  /**
-   * Compiled pattern for stripping color codes.
-   */
-  private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile(
-      "<#[0-9A-F]{6}>|[&§][a-f0-9lnokm]|<(rainbow|gradient|static)(:[0-9A-F]{6})?[0-9]*>|</(rainbow|gradient|static)(:[0-9A-F]{6})?>"
-  );
+  /** Compiled pattern for stripping color codes. */
+  private static final Pattern STRIP_COLOR_PATTERN =
+      Pattern.compile(
+          "<#[0-9A-F]{6}>|[&§][a-f0-9lnokm]|<(rainbow|gradient|static)(:[0-9A-F]{6})?[0-9]*>|</(rainbow|gradient|static)(:[0-9A-F]{6})?>");
 
-  private IridiumColors() {
-
-  }
+  private IridiumColors() {}
 
   /**
    * Processes a string to add color to it. Thanks to Distressing for helping with the regex <3
@@ -121,39 +104,30 @@ public class IridiumColors {
    * @since 1.0.3
    */
   public static @NotNull List<String> process(final @NotNull Collection<String> strings) {
-    return strings.stream()
-        .map(IridiumColors::process)
-        .toList();
+    return strings.stream().map(IridiumColors::process).toList();
   }
 
   /**
    * Colors a String.
    *
    * @param string The string we want to color
-   * @param color  The color we want to set it to
+   * @param color The color we want to set it to
    * @since 1.0.0
    */
   public static @NotNull String color(final @NotNull String string, final @NotNull Color color) {
-    return (
-        SUPPORTS_RGB
-            ? ChatColor.of(color)
-            : getClosestColor(color)
-    ) + string;
+    return (SUPPORTS_RGB ? ChatColor.of(color) : getClosestColor(color)) + string;
   }
 
   /**
    * Colors a String with a gradiant.
    *
    * @param string The string we want to color
-   * @param start  The starting gradiant
-   * @param end    The ending gradiant
+   * @param start The starting gradiant
+   * @param end The ending gradiant
    * @since 1.0.0
    */
   public static @NotNull String color(
-      final @NotNull String string,
-      final @NotNull Color start,
-      final @NotNull Color end
-  ) {
+      final @NotNull String string, final @NotNull Color start, final @NotNull Color end) {
     final ChatColor[] colors = createGradient(start, end, withoutSpecialChar(string).length());
     return apply(string, colors);
   }
@@ -161,7 +135,7 @@ public class IridiumColors {
   /**
    * Colors a String with rainbow colors.
    *
-   * @param string     The string which should have rainbow colors
+   * @param string The string which should have rainbow colors
    * @param saturation The saturation of the rainbow colors
    * @since 1.0.3
    */
@@ -193,7 +167,8 @@ public class IridiumColors {
     return STRIP_COLOR_PATTERN.matcher(string).replaceAll("");
   }
 
-  private static @NotNull String apply(final @NotNull String source, final @NotNull ChatColor[] colors) {
+  private static @NotNull String apply(
+      final @NotNull String source, final @NotNull ChatColor[] colors) {
     final StringBuilder specialColors = new StringBuilder();
     final StringBuilder stringBuilder = new StringBuilder();
     int outIndex = 0;
@@ -230,7 +205,7 @@ public class IridiumColors {
   /**
    * Returns a rainbow array of chat colors.
    *
-   * @param step       How many colors we return
+   * @param step How many colors we return
    * @param saturation The saturation of the rainbow
    * @return The array of colors
    * @since 1.0.3
@@ -253,34 +228,32 @@ public class IridiumColors {
    * Returns a gradient array of chat colors.
    *
    * @param start The starting color.
-   * @param end   The ending color.
-   * @param step  How many colors we return.
+   * @param end The ending color.
+   * @param step How many colors we return.
    * @author TheViperShow
    * @since 1.0.0
    */
   private static @NotNull ChatColor[] createGradient(
-      final @NotNull Color start,
-      final @NotNull Color end,
-      int step
-  ) {
+      final @NotNull Color start, final @NotNull Color end, int step) {
     step = max(step, 2);
 
     final ChatColor[] colors = new ChatColor[step];
     final int stepR = abs(start.getRed() - end.getRed()) / (step - 1);
     final int stepG = abs(start.getGreen() - end.getGreen()) / (step - 1);
     final int stepB = abs(start.getBlue() - end.getBlue()) / (step - 1);
-    final int[] direction = new int[]{
-        start.getRed() < end.getRed() ? +1 : -1,
-        start.getGreen() < end.getGreen() ? +1 : -1,
-        start.getBlue() < end.getBlue() ? +1 : -1
-    };
+    final int[] direction =
+        new int[] {
+          start.getRed() < end.getRed() ? +1 : -1,
+          start.getGreen() < end.getGreen() ? +1 : -1,
+          start.getBlue() < end.getBlue() ? +1 : -1
+        };
 
     for (int i = 0; i < step; i++) {
-      final Color color = new Color(
-          start.getRed() + ((stepR * i) * direction[0]),
-          start.getGreen() + ((stepG * i) * direction[1]),
-          start.getBlue() + ((stepB * i) * direction[2])
-      );
+      final Color color =
+          new Color(
+              start.getRed() + ((stepR * i) * direction[0]),
+              start.getGreen() + ((stepG * i) * direction[1]),
+              start.getBlue() + ((stepB * i) * direction[2]));
       if (SUPPORTS_RGB) {
         colors[i] = ChatColor.of(color);
       } else {
@@ -302,9 +275,10 @@ public class IridiumColors {
     double nearestDistance = Integer.MAX_VALUE;
 
     for (final Color constantColor : COLORS.keySet()) {
-      final double distance = pow(color.getRed() - constantColor.getRed(), 2)
-          + pow(color.getGreen() - constantColor.getGreen(), 2)
-          + pow(color.getBlue() - constantColor.getBlue(), 2);
+      final double distance =
+          pow(color.getRed() - constantColor.getRed(), 2)
+              + pow(color.getGreen() - constantColor.getGreen(), 2)
+              + pow(color.getBlue() - constantColor.getBlue(), 2);
       if (nearestDistance > distance) {
         nearestColor = constantColor;
         nearestDistance = distance;
@@ -321,18 +295,14 @@ public class IridiumColors {
    * @since 1.0.0
    */
   private static int getVersion() {
-    if (
-        !isClassAvailableInClasspath("org.bukkit.Bukkit") &&
-         isClassAvailableInClasspath("net.md_5.bungee.api.ChatColor")
-    ) {
+    if (!isClassAvailableInClasspath("org.bukkit.Bukkit")
+        && isClassAvailableInClasspath("net.md_5.bungee.api.ChatColor")) {
       return -1;
     }
 
     String version = Bukkit.getVersion();
     checkArgument(
-        !version.isEmpty(),
-        "Cannot get major Minecraft version from null or empty string"
-    );
+        !version.isEmpty(), "Cannot get major Minecraft version from null or empty string");
 
     int index = version.lastIndexOf("MC:");
     if (index != -1) {

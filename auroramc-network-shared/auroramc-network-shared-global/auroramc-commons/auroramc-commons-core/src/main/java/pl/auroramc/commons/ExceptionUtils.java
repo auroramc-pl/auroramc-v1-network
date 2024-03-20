@@ -9,9 +9,7 @@ public final class ExceptionUtils {
   private static final String EXCEPTION_CAUGHT_MESSAGE =
       "Caught an exception in future execution: %s";
 
-  private ExceptionUtils() {
-
-  }
+  private ExceptionUtils() {}
 
   public static <T> T delegateCaughtException(final Logger logger, final Throwable cause) {
     logger.log(SEVERE, EXCEPTION_CAUGHT_MESSAGE.formatted(cause.getMessage()), cause);

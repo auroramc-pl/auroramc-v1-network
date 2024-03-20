@@ -5,15 +5,10 @@ import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 
 public final class PageNavigationUtils {
 
-  private PageNavigationUtils() {
-
-  }
+  private PageNavigationUtils() {}
 
   public static void navigate(
-      final PageNavigationDirection direction,
-      final Gui subjectGui,
-      final PaginatedPane subject
-  ) {
+      final PageNavigationDirection direction, final Gui subjectGui, final PaginatedPane subject) {
     if (whetherPaneIsNotEmpty(subject)) {
       final int currPage = subject.getPage();
       final int nextPage = direction.navigate(subject.getPages(), subject.getPage());

@@ -24,8 +24,7 @@ class PlaceholderApiIntegration extends ExternalIntegrationDelegate {
       final UserFacade userFacade,
       final QuestIndex questIndex,
       final QuestObserverFacade questObserverFacade,
-      final ObjectiveProgressController objectiveProgressController
-  ) {
+      final ObjectiveProgressController objectiveProgressController) {
     super(PLACEHOLDER_API_PLUGIN_NAME);
     this.plugin = plugin;
     this.server = server;
@@ -38,12 +37,12 @@ class PlaceholderApiIntegration extends ExternalIntegrationDelegate {
   @Override
   public void configure() {
     new QuestsPlaceholderExpansion(
-        plugin,
-        server,
-        userFacade,
-        questIndex,
-        questObserverFacade,
-        objectiveProgressController
-    ).register();
+            plugin,
+            server,
+            userFacade,
+            questIndex,
+            questObserverFacade,
+            objectiveProgressController)
+        .register();
   }
 }

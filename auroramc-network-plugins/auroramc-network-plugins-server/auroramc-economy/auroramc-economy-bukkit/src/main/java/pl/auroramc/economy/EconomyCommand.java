@@ -36,8 +36,7 @@ public class EconomyCommand {
       final Logger logger,
       final MutableMessageSource messageSource,
       final EconomyFacade economyFacade,
-      final CurrencyFacade currencyFacade
-  ) {
+      final CurrencyFacade currencyFacade) {
     this.logger = logger;
     this.messageSource = messageSource;
     this.economyFacade = economyFacade;
@@ -46,123 +45,111 @@ public class EconomyCommand {
 
   @Execute(name = "set")
   public CompletableFuture<MutableMessage> set(
-      final @Arg Player target,
-      final @Arg Long currencyId,
-      final @Arg BigDecimal amount
-  ) {
-    return processIncomingModification(currencyId, amount,
-        (currency, fixedAmount) -> balance(target, currency, fixedAmount),
-        false
-    ).exceptionally(exception -> delegateCaughtException(logger, exception));
+      final @Arg Player target, final @Arg Long currencyId, final @Arg BigDecimal amount) {
+    return processIncomingModification(
+            currencyId,
+            amount,
+            (currency, fixedAmount) -> balance(target, currency, fixedAmount),
+            false)
+        .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
   @Execute(name = "add")
   public CompletableFuture<MutableMessage> add(
-      final @Arg Player target,
-      final @Arg Long currencyId,
-      final @Arg BigDecimal amount
-  ) {
-    return processIncomingModification(currencyId, amount,
-        (currency, fixedAmount) -> deposit(target, currency, fixedAmount),
-        true
-    ).exceptionally(exception -> delegateCaughtException(logger, exception));
+      final @Arg Player target, final @Arg Long currencyId, final @Arg BigDecimal amount) {
+    return processIncomingModification(
+            currencyId,
+            amount,
+            (currency, fixedAmount) -> deposit(target, currency, fixedAmount),
+            true)
+        .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
   @Execute(name = "take")
   public CompletableFuture<MutableMessage> take(
-      final @Arg Player target,
-      final @Arg Long currencyId,
-      final @Arg BigDecimal amount
-  ) {
-    return processIncomingModification(currencyId, amount,
-        (currency, fixedAmount) -> withdraw(target, currency, fixedAmount),
-        true
-    ).exceptionally(exception -> delegateCaughtException(logger, exception));
+      final @Arg Player target, final @Arg Long currencyId, final @Arg BigDecimal amount) {
+    return processIncomingModification(
+            currencyId,
+            amount,
+            (currency, fixedAmount) -> withdraw(target, currency, fixedAmount),
+            true)
+        .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
   private CompletableFuture<MutableMessage> balance(
-      final Player player, final Currency currency, final BigDecimal amount
-  ) {
-    return economyFacade.balance(player.getUniqueId(), currency, amount)
-        .thenApply(state ->
-            messageSource.balanceSet
-                .with(USERNAME_VARIABLE_KEY, player.name())
-                .with(CURRENCY_VARIABLE_KEY, currency.getSymbol())
-                .with(AMOUNT_VARIABLE_KEY, getFormattedDecimal(amount))
-        ).exceptionally(exception -> {
-          throw new EconomyException(
-              "Could not set balance of %s for %d to %.2f."
-                  .formatted(
-                      player.getUniqueId(),
-                      currency.getId(),
-                      amount
-                  ),
-              exception
-          );
-        });
+      final Player player, final Currency currency, final BigDecimal amount) {
+    return economyFacade
+        .balance(player.getUniqueId(), currency, amount)
+        .thenApply(
+            state ->
+                messageSource
+                    .balanceSet
+                    .with(USERNAME_VARIABLE_KEY, player.name())
+                    .with(CURRENCY_VARIABLE_KEY, currency.getSymbol())
+                    .with(AMOUNT_VARIABLE_KEY, getFormattedDecimal(amount)))
+        .exceptionally(
+            exception -> {
+              throw new EconomyException(
+                  "Could not set balance of %s for %d to %.2f."
+                      .formatted(player.getUniqueId(), currency.getId(), amount),
+                  exception);
+            });
   }
 
   private CompletableFuture<MutableMessage> deposit(
-      final Player player, final Currency currency, final BigDecimal amount
-  ) {
-    return economyFacade.deposit(player.getUniqueId(), currency, amount)
-        .thenApply(state ->
-            messageSource.balanceDeposited
-                .with(USERNAME_VARIABLE_KEY, player.name())
-                .with(CURRENCY_VARIABLE_KEY, currency.getSymbol())
-                .with(AMOUNT_VARIABLE_KEY, getFormattedDecimal(amount))
-        )
-        .exceptionally(exception -> {
-          throw new EconomyException(
-              "Could not give %.2f to balance of %s for %d."
-                  .formatted(
-                      amount,
-                      player.getUniqueId(),
-                      currency.getId()
-                  ),
-              exception
-          );
-        });
+      final Player player, final Currency currency, final BigDecimal amount) {
+    return economyFacade
+        .deposit(player.getUniqueId(), currency, amount)
+        .thenApply(
+            state ->
+                messageSource
+                    .balanceDeposited
+                    .with(USERNAME_VARIABLE_KEY, player.name())
+                    .with(CURRENCY_VARIABLE_KEY, currency.getSymbol())
+                    .with(AMOUNT_VARIABLE_KEY, getFormattedDecimal(amount)))
+        .exceptionally(
+            exception -> {
+              throw new EconomyException(
+                  "Could not give %.2f to balance of %s for %d."
+                      .formatted(amount, player.getUniqueId(), currency.getId()),
+                  exception);
+            });
   }
 
   private CompletableFuture<MutableMessage> withdraw(
-      final Player player, final Currency currency, final BigDecimal amount
-  ) {
-    return economyFacade.withdraw(player.getUniqueId(), currency, amount)
-        .thenApply(state ->
-            messageSource.balanceWithdrawn
-                .with(USERNAME_VARIABLE_KEY, player.name())
-                .with(CURRENCY_VARIABLE_KEY, currency.getSymbol())
-                .with(AMOUNT_VARIABLE_KEY, getFormattedDecimal(amount))
-        )
-        .exceptionally(exception -> {
-          throw new EconomyException(
-              "Could not take %.2f from balance of %s for %d."
-                  .formatted(
-                      amount,
-                      player.getUniqueId(),
-                      currency.getId()
-                  ),
-              exception
-          );
-        });
+      final Player player, final Currency currency, final BigDecimal amount) {
+    return economyFacade
+        .withdraw(player.getUniqueId(), currency, amount)
+        .thenApply(
+            state ->
+                messageSource
+                    .balanceWithdrawn
+                    .with(USERNAME_VARIABLE_KEY, player.name())
+                    .with(CURRENCY_VARIABLE_KEY, currency.getSymbol())
+                    .with(AMOUNT_VARIABLE_KEY, getFormattedDecimal(amount)))
+        .exceptionally(
+            exception -> {
+              throw new EconomyException(
+                  "Could not take %.2f from balance of %s for %d."
+                      .formatted(amount, player.getUniqueId(), currency.getId()),
+                  exception);
+            });
   }
 
   private CompletableFuture<MutableMessage> processIncomingModification(
       final Long currencyId,
       final BigDecimal amount,
       final BiFunction<Currency, BigDecimal, CompletableFuture<MutableMessage>> modifier,
-      final boolean requiresAmountValidation
-  ) {
+      final boolean requiresAmountValidation) {
     final BigDecimal fixedAmount = amount.setScale(2, HALF_DOWN);
     if (requiresAmountValidation && fixedAmount.compareTo(ZERO) <= 0) {
-      return messageSource.modificationAmountHasToBeGreaterThanZero
-          .asCompletedFuture();
+      return messageSource.modificationAmountHasToBeGreaterThanZero.asCompletedFuture();
     }
 
     final Currency currency = currencyFacade.getCurrencyById(currencyId);
     if (currency == null) {
-      return messageSource.modificationFailed
+      return messageSource
+          .modificationFailed
           .with(CURRENCY_ID_VARIABLE_KEY, currencyId)
           .asCompletedFuture();
     }

@@ -14,7 +14,9 @@ import pl.auroramc.auth.mail.MailFacade;
 import pl.auroramc.auth.user.UserFacade;
 
 @Permission("auroramc.auth.recovery")
-@Command(name = "recovery", aliases = {"recover", "odzyskaj"})
+@Command(
+    name = "recovery",
+    aliases = {"recover", "odzyskaj"})
 public class RecoveryCommand {
 
   private final Logger logger;
@@ -26,8 +28,7 @@ public class RecoveryCommand {
       final Logger logger,
       final Mailer mailer,
       final MailFacade mailFacade,
-      final UserFacade userFacade
-  ) {
+      final UserFacade userFacade) {
     this.logger = logger;
     this.mailer = mailer;
     this.mailFacade = mailFacade;
@@ -36,8 +37,10 @@ public class RecoveryCommand {
 
   @Execute
   public void recovery(final @Context Player player) {
-    userFacade.getUserByUniqueId(player.getUniqueId())
-        .thenAccept(user -> mailer.sendMail(mailFacade.getRecoveryEmail(user, generateRecoveryCode())))
+    userFacade
+        .getUserByUniqueId(player.getUniqueId())
+        .thenAccept(
+            user -> mailer.sendMail(mailFacade.getRecoveryEmail(user, generateRecoveryCode())))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 }

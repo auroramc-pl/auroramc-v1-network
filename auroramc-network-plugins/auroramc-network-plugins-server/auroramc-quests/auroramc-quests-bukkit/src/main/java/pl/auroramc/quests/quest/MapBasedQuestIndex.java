@@ -27,9 +27,7 @@ class MapBasedQuestIndex implements QuestIndex {
 
   @Override
   public List<Quest> resolveQuests(final List<Long> bunchOfQuestIds) {
-    return bunchOfQuestIds.stream()
-        .map(questIdToQuest::get)
-        .toList();
+    return bunchOfQuestIds.stream().map(questIdToQuest::get).toList();
   }
 
   @Override

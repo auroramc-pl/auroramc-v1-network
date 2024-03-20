@@ -37,8 +37,7 @@ public class BazaarUsageListener implements Listener {
       final MutableMessageSource messageSource,
       final BazaarParser bazaarParser,
       final BazaarFacade bazaarFacade,
-      final UserFacade userFacade
-  ) {
+      final UserFacade userFacade) {
     this.messageSource = messageSource;
     this.bazaarParser = bazaarParser;
     this.bazaarFacade = bazaarFacade;
@@ -52,20 +51,15 @@ public class BazaarUsageListener implements Listener {
     }
 
     final Block clickedBlock = event.getClickedBlock();
-    if (Optional.ofNullable(clickedBlock)
-        .filter(SIGNS::isTagged)
-        .isEmpty()
-    ) {
+    if (Optional.ofNullable(clickedBlock).filter(SIGNS::isTagged).isEmpty()) {
       return;
     }
 
-    if (clickedBlock.getState() instanceof Sign sign &&
-        sign.getBlockData() instanceof WallSign wallSign &&
-        resolveSignProp(sign, wallSign).getState() instanceof Container magazine
-    ) {
-      final BazaarParsingContext parsingContext = bazaarParser.parseContextOrNull(
-          produceSignDelegate(sign)
-      );
+    if (clickedBlock.getState() instanceof Sign sign
+        && sign.getBlockData() instanceof WallSign wallSign
+        && resolveSignProp(sign, wallSign).getState() instanceof Container magazine) {
+      final BazaarParsingContext parsingContext =
+          bazaarParser.parseContextOrNull(produceSignDelegate(sign));
       if (parsingContext == null) {
         return;
       }
@@ -85,17 +79,13 @@ public class BazaarUsageListener implements Listener {
         return;
       }
 
-      userFacade.getUserByUsername(parsingContext.merchant())
+      userFacade
+          .getUserByUsername(parsingContext.merchant())
           .thenApply(User::getUniqueId)
-          .thenApply(merchantUniqueId ->
-              new BazaarTransactionContext(
-                  customer,
-                  magazine,
-                  customer.getUniqueId(),
-                  merchantUniqueId,
-                  parsingContext
-              )
-          )
+          .thenApply(
+              merchantUniqueId ->
+                  new BazaarTransactionContext(
+                      customer, magazine, customer.getUniqueId(), merchantUniqueId, parsingContext))
           .thenCompose(bazaarFacade::handleItemTransaction)
           .thenApply(MutableMessage::compile)
           .thenAccept(customer::sendMessage);
@@ -103,8 +93,7 @@ public class BazaarUsageListener implements Listener {
   }
 
   private boolean whetherMagazineIsOutOfStock(
-      final Container magazine, final BazaarParsingContext parsingContext
-  ) {
+      final Container magazine, final BazaarParsingContext parsingContext) {
     return !magazine
         .getInventory()
         .containsAtLeast(new ItemStack(parsingContext.material()), parsingContext.quantity());

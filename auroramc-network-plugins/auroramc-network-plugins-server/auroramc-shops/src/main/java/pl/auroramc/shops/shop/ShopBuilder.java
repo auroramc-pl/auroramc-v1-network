@@ -17,9 +17,7 @@ public final class ShopBuilder {
   private ItemStack icon;
   private List<Product> products;
 
-  ShopBuilder() {
-
-  }
+  ShopBuilder() {}
 
   public ShopBuilder paymentCurrencyId(final Long paymentCurrencyId) {
     this.paymentCurrencyId = paymentCurrencyId;

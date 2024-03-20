@@ -36,8 +36,7 @@ class StakeViewService implements StakeViewFacade {
       final Plugin plugin,
       final StakeFacade stakeFacade,
       final Currency fundsCurrency,
-      final MutableMessageSource messageSource
-  ) {
+      final MutableMessageSource messageSource) {
     this.plugin = plugin;
     this.stakeViewByPageIndex = new ConcurrentHashMap<>();
     this.stakeFacade = stakeFacade;
@@ -52,9 +51,7 @@ class StakeViewService implements StakeViewFacade {
             .collect(
                 toMap(
                     StakeView::getPageIndex,
-                    stakeView -> copyOf(stakeView.getInventory().getViewers())
-                )
-            );
+                    stakeView -> copyOf(stakeView.getInventory().getViewers())));
 
     final long stamp = lock.writeLock();
     try {
@@ -69,37 +66,26 @@ class StakeViewService implements StakeViewFacade {
   private void recalculateViews() {
     stakeViewByPageIndex.clear();
 
-    final List<List<StakeContext>> partitions = partition(
-        stakeFacade.getBunchOfStakeContexts(), STAKES_PER_PAGE
-    );
+    final List<List<StakeContext>> partitions =
+        partition(stakeFacade.getBunchOfStakeContexts(), STAKES_PER_PAGE);
     for (final List<StakeContext> partition : partitions) {
       final int pageIndex = partitions.indexOf(partition);
       stakeViewByPageIndex.put(
-          pageIndex,
-          new StakeView(pageIndex, fundsCurrency, messageSource, partition)
-      );
+          pageIndex, new StakeView(pageIndex, fundsCurrency, messageSource, partition));
     }
   }
 
-  private void updateViewsForViewers(
-      final Map<Integer, List<HumanEntity>> pageIndexesToViewers
-  ) {
-    for (final Entry<Integer, List<HumanEntity>> pageIndexToViewers : pageIndexesToViewers.entrySet()) {
+  private void updateViewsForViewers(final Map<Integer, List<HumanEntity>> pageIndexesToViewers) {
+    for (final Entry<Integer, List<HumanEntity>> pageIndexToViewers :
+        pageIndexesToViewers.entrySet()) {
       final List<HumanEntity> viewers = pageIndexToViewers.getValue();
       getStakeView(pageIndexToViewers.getKey())
-          .or(
-              () -> getStakeView(INITIAL_STAKE_PAGE_INDEX)
-          )
+          .or(() -> getStakeView(INITIAL_STAKE_PAGE_INDEX))
           .ifPresentOrElse(
-              inventory -> postToMainThread(
-                  plugin,
-                  () -> viewers.forEach(viewer -> viewer.openInventory(inventory))
-              ),
-              () -> postToMainThread(
-                  plugin,
-                  () -> viewers.forEach(HumanEntity::closeInventory)
-              )
-          );
+              inventory ->
+                  postToMainThread(
+                      plugin, () -> viewers.forEach(viewer -> viewer.openInventory(inventory))),
+              () -> postToMainThread(plugin, () -> viewers.forEach(HumanEntity::closeInventory)));
     }
   }
 
@@ -111,9 +97,7 @@ class StakeViewService implements StakeViewFacade {
 
   @Override
   public Collection<Inventory> getStakeViews() {
-    return stakeViewByPageIndex.values().stream()
-        .map(InventoryHolder::getInventory)
-        .toList();
+    return stakeViewByPageIndex.values().stream().map(InventoryHolder::getInventory).toList();
   }
 
   @Override

@@ -28,25 +28,19 @@ class SqlPaymentRepository implements PaymentRepository {
   }
 
   void createPaymentSchemaIfRequired() {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final Statement statement = connection.createStatement()
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final Statement statement = connection.createStatement()) {
       statement.execute(CREATE_PAYMENT_SCHEMA);
     } catch (final SQLException exception) {
       throw new PaymentRepositoryException(
-          "Could not create schema for payment entity, because of unexpected exception",
-          exception
-      );
+          "Could not create schema for payment entity, because of unexpected exception", exception);
     }
   }
 
   @Override
   public Payment findPaymentById(final Long paymentId) {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(FIND_PAYMENT_BY_ID)
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement = connection.prepareStatement(FIND_PAYMENT_BY_ID)) {
       statement.setLong(1, paymentId);
       try (final ResultSet resultSet = statement.executeQuery()) {
         if (resultSet.next()) {
@@ -57,11 +51,8 @@ class SqlPaymentRepository implements PaymentRepository {
     } catch (final SQLException exception) {
       throw new PaymentRepositoryException(
           "Could not find payment identified by %d, because of unexpected exception"
-              .formatted(
-                  paymentId
-              ),
-          exception
-      );
+              .formatted(paymentId),
+          exception);
     }
   }
 
@@ -75,11 +66,10 @@ class SqlPaymentRepository implements PaymentRepository {
     return findPaymentsByReferencingId(FIND_PAYMENT_SUMMARIES_BY_RECEIVER_ID, receiverId);
   }
 
-  private List<PaymentSummary> findPaymentsByReferencingId(final String query, final Long referencingId) {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(query)
-    ) {
+  private List<PaymentSummary> findPaymentsByReferencingId(
+      final String query, final Long referencingId) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement = connection.prepareStatement(query)) {
       statement.setLong(1, referencingId);
 
       final List<PaymentSummary> resolvedPayments = new ArrayList<>();
@@ -92,20 +82,16 @@ class SqlPaymentRepository implements PaymentRepository {
     } catch (final SQLException exception) {
       throw new PaymentRepositoryException(
           "Could not find payments with referencing id of %d, because of unexpected exception"
-              .formatted(
-                  referencingId
-              ),
-          exception
-      );
+              .formatted(referencingId),
+          exception);
     }
   }
 
   @Override
   public void createPayment(final Payment payment) {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(CREATE_PAYMENT, RETURN_GENERATED_KEYS)
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement =
+            connection.prepareStatement(CREATE_PAYMENT, RETURN_GENERATED_KEYS)) {
       statement.setLong(1, payment.getInitiatorId());
       statement.setLong(2, payment.getReceiverId());
       statement.setLong(3, payment.getCurrencyId());
@@ -120,57 +106,44 @@ class SqlPaymentRepository implements PaymentRepository {
     } catch (final SQLException exception) {
       throw new PaymentRepositoryException(
           "Could not create payment identified by %d, because of unexpected exception"
-              .formatted(
-                  payment.getId()
-              ),
-          exception
-      );
+              .formatted(payment.getId()),
+          exception);
     }
   }
 
   @Override
   public void deletePayment(final Payment payment) {
     checkNotNull(payment.getId());
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(DELETE_PAYMENT)
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement = connection.prepareStatement(DELETE_PAYMENT)) {
       statement.setLong(1, payment.getId());
       statement.executeUpdate();
     } catch (final SQLException exception) {
       throw new PaymentRepositoryException(
           "Could not delete payment identified by %d, because of unexpected exception"
-              .formatted(
-                  payment.getId()
-              ),
-          exception
-      );
+              .formatted(payment.getId()),
+          exception);
     }
   }
 
-  private Payment mapResultSetToPayment(
-      final ResultSet resultSet
-  ) throws SQLException {
+  private Payment mapResultSetToPayment(final ResultSet resultSet) throws SQLException {
     return new Payment(
         resultSet.getLong("id"),
         resultSet.getLong("initiator_id"),
         resultSet.getLong("receiver_id"),
         resultSet.getLong("currency_id"),
         resultSet.getBigDecimal("amount"),
-        resultSet.getTimestamp("transaction_time").toInstant()
-    );
+        resultSet.getTimestamp("transaction_time").toInstant());
   }
 
-  private PaymentSummary mapResultSetToPaymentSummary(
-      final ResultSet resultSet
-  ) throws SQLException {
+  private PaymentSummary mapResultSetToPaymentSummary(final ResultSet resultSet)
+      throws SQLException {
     return new PaymentSummary(
         resultSet.getLong("id"),
         resultSet.getString("initiator_username"),
         resultSet.getString("receiver_username"),
         resultSet.getString("currency_symbol"),
         resultSet.getBigDecimal("amount"),
-        resultSet.getTimestamp("transaction_time").toInstant()
-    );
+        resultSet.getTimestamp("transaction_time").toInstant());
   }
 }

@@ -16,7 +16,9 @@ import pl.auroramc.auth.user.User;
 import pl.auroramc.commons.message.MutableMessage;
 
 @Permission("auroramc.auth.register")
-@Command(name = "register", aliases = {"reg", "rejestracja", "zarejestruj"})
+@Command(
+    name = "register",
+    aliases = {"reg", "rejestracja", "zarejestruj"})
 public class RegisterCommand {
 
   private final Logger logger;
@@ -28,8 +30,7 @@ public class RegisterCommand {
       final Logger logger,
       final MutableMessageSource messageSource,
       final TimeoutFacade timeoutFacade,
-      final PasswordController passwordController
-  ) {
+      final PasswordController passwordController) {
     this.logger = logger;
     this.messageSource = messageSource;
     this.timeoutFacade = timeoutFacade;
@@ -40,32 +41,29 @@ public class RegisterCommand {
   public CompletableFuture<MutableMessage> register(
       final @Context Player player,
       final @Arg String password,
-      final @Arg String repeatedPassword
-  ) {
+      final @Arg String repeatedPassword) {
     if (!password.equals(repeatedPassword)) {
-      return messageSource.specifiedPasswordsDiffers
-          .asCompletedFuture();
+      return messageSource.specifiedPasswordsDiffers.asCompletedFuture();
     }
 
-    return passwordController.validateChangeOfPassword(player, password, this::handleUserRegistration)
+    return passwordController
+        .validateChangeOfPassword(player, password, this::handleUserRegistration)
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
   private CompletableFuture<MutableMessage> handleUserRegistration(
-      final Player player, final User user, final String newPassword
-  ) {
+      final Player player, final User user, final String newPassword) {
     if (user.isPremium()) {
-      return messageSource.notAllowedBecauseOfPremiumAccount
-          .asCompletedFuture();
+      return messageSource.notAllowedBecauseOfPremiumAccount.asCompletedFuture();
     }
 
     if (user.isRegistered()) {
-      return messageSource.notAllowedBecauseOfRegisteredAccount
-          .asCompletedFuture();
+      return messageSource.notAllowedBecauseOfRegisteredAccount.asCompletedFuture();
     }
 
     timeoutFacade.ditchCountdown(player.getUniqueId());
-    return passwordController.submitChangeOfPassword(player, user, newPassword)
+    return passwordController
+        .submitChangeOfPassword(player, user, newPassword)
         .thenApply(state -> messageSource.registeredAccount);
   }
 }

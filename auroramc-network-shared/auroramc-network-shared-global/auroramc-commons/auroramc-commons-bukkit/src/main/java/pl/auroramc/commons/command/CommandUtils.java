@@ -8,9 +8,7 @@ public final class CommandUtils {
   private static final String COMMAND_PREFIX = "/";
   private static final String COMMAND_NAMESPACE_SEPARATOR = ":";
 
-  private CommandUtils() {
-
-  }
+  private CommandUtils() {}
 
   public static String resolveCommand(final String query) {
     final String[] parts = query.split(ARGUMENT_SEPARATOR);
@@ -20,7 +18,8 @@ public final class CommandUtils {
 
     final String rawCommand = parts[0];
     if (!rawCommand.startsWith(COMMAND_PREFIX)) {
-      throw new CommandResolvingException("Could not resolve command, because the query doesn't appears to be a command.");
+      throw new CommandResolvingException(
+          "Could not resolve command, because the query doesn't appears to be a command.");
     }
 
     final String prefixedCommand = rawCommand.substring(1);

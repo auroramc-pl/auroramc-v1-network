@@ -5,9 +5,7 @@ import moe.rafal.juliet.Juliet;
 
 public final class VisitFacadeFactory {
 
-  private VisitFacadeFactory() {
-
-  }
+  private VisitFacadeFactory() {}
 
   public static VisitFacade getVisitFacade(final Logger logger, final Juliet juliet) {
     final SqlVisitRepository sqlVisitRepository = new SqlVisitRepository(juliet);

@@ -43,7 +43,5 @@ final class SqlCurrencyRepositoryQuery {
         `id` = ?;
       """;
 
-  private SqlCurrencyRepositoryQuery() {
-
-  }
+  private SqlCurrencyRepositoryQuery() {}
 }

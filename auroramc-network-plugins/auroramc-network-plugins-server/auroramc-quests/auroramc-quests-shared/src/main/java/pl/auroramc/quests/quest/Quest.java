@@ -12,7 +12,8 @@ import pl.auroramc.quests.resource.key.ResourceKey;
 
 public final class Quest extends Resource {
 
-  private final Map<Class<? extends Objective<?>>, List<? extends Objective<?>>> objectivesByType = new ConcurrentHashMap<>();
+  private final Map<Class<? extends Objective<?>>, List<? extends Objective<?>>> objectivesByType =
+      new ConcurrentHashMap<>();
   private final ItemStack icon;
   private final List<Objective<?>> objectives;
   private final List<QuestReward<?>> rewards;
@@ -23,8 +24,7 @@ public final class Quest extends Resource {
       final ItemStack icon,
       final List<Objective<?>> objectives,
       final List<QuestReward<?>> rewards,
-      final int weight
-  ) {
+      final int weight) {
     super(key);
     this.icon = icon;
     this.objectives = objectives;
@@ -34,7 +34,7 @@ public final class Quest extends Resource {
 
   @Override
   public List<? extends Resource> children() {
-      return List.copyOf(objectives);
+    return List.copyOf(objectives);
   }
 
   public ItemStack getIcon() {
@@ -51,20 +51,17 @@ public final class Quest extends Resource {
     return (List<T>) objectivesByType.get(objectiveType);
   }
 
-  public <T extends Objective<?>> T getObjectiveByObjectiveId(final Class<T> objectiveType, final long objectiveId) {
+  public <T extends Objective<?>> T getObjectiveByObjectiveId(
+      final Class<T> objectiveType, final long objectiveId) {
     return objectives.stream()
         .filter(objectiveType::isInstance)
         .filter(objective -> objective.getKey().getId() == objectiveId)
         .map(objectiveType::cast)
         .findFirst()
-        .orElseThrow(() ->
-            new IllegalArgumentException(
-                "Objective with id %s not found."
-                    .formatted(
-                        objectiveId
-                    )
-            )
-        );
+        .orElseThrow(
+            () ->
+                new IllegalArgumentException(
+                    "Objective with id %s not found.".formatted(objectiveId)));
   }
 
   public Objective<?> getObjectiveByObjectiveId(final long objectiveId) {

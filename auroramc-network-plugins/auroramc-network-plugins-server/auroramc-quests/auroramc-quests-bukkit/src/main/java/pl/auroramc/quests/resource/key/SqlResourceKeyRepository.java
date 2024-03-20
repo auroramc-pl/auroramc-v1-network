@@ -1,8 +1,8 @@
 package pl.auroramc.quests.resource.key;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static pl.auroramc.quests.resource.key.SqlResourceKeyRepositoryQuery.CREATE_RESOURCE_KEY;
 import static pl.auroramc.quests.resource.key.SqlResourceKeyRepositoryQuery.CREATE_QUEST_KEY_SCHEMA;
+import static pl.auroramc.quests.resource.key.SqlResourceKeyRepositoryQuery.CREATE_RESOURCE_KEY;
 import static pl.auroramc.quests.resource.key.SqlResourceKeyRepositoryQuery.DELETE_RESOURCE_KEY;
 import static pl.auroramc.quests.resource.key.SqlResourceKeyRepositoryQuery.GET_RESOURCE_KEYS;
 

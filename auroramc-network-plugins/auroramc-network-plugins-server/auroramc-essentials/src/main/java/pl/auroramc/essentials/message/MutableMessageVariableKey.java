@@ -7,7 +7,5 @@ public final class MutableMessageVariableKey {
   public static final String SEPARATOR_VARIABLE_KEY = "separator";
   public static final String SUGGESTION_VARIABLE_KEY = "suggestion";
 
-  private MutableMessageVariableKey() {
-
-  }
+  private MutableMessageVariableKey() {}
 }

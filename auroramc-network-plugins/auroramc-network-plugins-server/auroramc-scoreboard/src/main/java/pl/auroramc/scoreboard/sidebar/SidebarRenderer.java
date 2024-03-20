@@ -10,8 +10,7 @@ public interface SidebarRenderer {
   static SidebarRenderer getSidebarRenderer(
       final MutableMessageSource messageSource,
       final SidebarFacade sidebarFacade,
-      final Set<SidebarComponentKyori<?>> sidebarComponents
-  ) {
+      final Set<SidebarComponentKyori<?>> sidebarComponents) {
     return new DefaultSidebarRenderer(messageSource, sidebarFacade, sidebarComponents);
   }
 

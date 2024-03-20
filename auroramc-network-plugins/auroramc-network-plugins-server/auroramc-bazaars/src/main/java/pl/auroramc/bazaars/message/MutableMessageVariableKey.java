@@ -7,7 +7,5 @@ public final class MutableMessageVariableKey {
   public static final String PRODUCT_VARIABLE_KEY = "product";
   public static final String MERCHANT_VARIABLE_KEY = "merchant";
 
-  private MutableMessageVariableKey() {
-
-  }
+  private MutableMessageVariableKey() {}
 }

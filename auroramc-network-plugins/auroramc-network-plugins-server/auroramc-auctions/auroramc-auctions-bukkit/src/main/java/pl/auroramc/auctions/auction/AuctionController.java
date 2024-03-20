@@ -57,8 +57,7 @@ public class AuctionController {
       final EconomyFacade economyFacade,
       final Currency fundsCurrency,
       final VaultController vaultController,
-      final UserFacade userFacade
-  ) {
+      final UserFacade userFacade) {
     this.logger = logger;
     this.auctionsConfig = auctionsConfig;
     this.auctionFacade = auctionFacade;
@@ -79,8 +78,7 @@ public class AuctionController {
   }
 
   public void setAuctionOffer(
-      final Auction auction, final UUID traderUniqueId, final BigDecimal offer
-  ) {
+      final Auction auction, final UUID traderUniqueId, final BigDecimal offer) {
     checkNotNull(auction.getAvailableSince());
     checkNotNull(auction.getAvailableUntil());
 
@@ -90,15 +88,18 @@ public class AuctionController {
     extendAuction(auction);
 
     getUsernameByUniqueId(traderUniqueId)
-        .thenAccept(traderName ->
-            messageFacade.deliverMessageToOnlinePlayers(
-                messageSource.auctionReceivedOffer
-                    .with(UNIQUE_ID_VARIABLE_KEY, auction.getAuctionUniqueId())
-                    .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
-                    .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(auction.getSubject()))
-                    .with(CURRENT_TRADER_VARIABLE_KEY, traderName)
-                    .with(CURRENT_OFFER_VARIABLE_KEY, getFormattedDecimal(auction.getCurrentOffer()))
-        ))
+        .thenAccept(
+            traderName ->
+                messageFacade.deliverMessage(
+                    messageSource
+                        .auctionReceivedOffer
+                        .with(UNIQUE_ID_VARIABLE_KEY, auction.getAuctionUniqueId())
+                        .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
+                        .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(auction.getSubject()))
+                        .with(CURRENT_TRADER_VARIABLE_KEY, traderName)
+                        .with(
+                            CURRENT_OFFER_VARIABLE_KEY,
+                            getFormattedDecimal(auction.getCurrentOffer()))))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
@@ -106,11 +107,11 @@ public class AuctionController {
     final Duration period = between(now(), auction.getAvailableUntil());
     if (period.compareTo(AUCTION_BIDDING_OFFSET_APPLYING_SINCE) < 0) {
       auction.setAvailableUntil(auction.getAvailableUntil().plus(AUCTION_BIDDING_OFFSET));
-      messageFacade.deliverMessageToOnlinePlayers(
-          messageSource.auctionHasBeenExtended
+      messageFacade.deliverMessage(
+          messageSource
+              .auctionHasBeenExtended
               .with(UNIQUE_ID_VARIABLE_KEY, auction.getAuctionUniqueId())
-              .with(OFFSET_VARIABLE_KEY, AUCTION_BIDDING_OFFSET.getSeconds())
-      );
+              .with(OFFSET_VARIABLE_KEY, AUCTION_BIDDING_OFFSET.getSeconds()));
     }
   }
 
@@ -118,15 +119,17 @@ public class AuctionController {
     auctionFacade.setActiveAuction(auction);
     auction.setAvailableSince(now());
     auction.setAvailableUntil(auction.getAvailableSince().plus(auctionsConfig.auctioningPeriod));
-    messageFacade.deliverMessageToOnlinePlayers(
-        messageSource.auctionHasStarted
+    messageFacade.deliverMessage(
+        messageSource
+            .auctionHasStarted
             .with(UNIQUE_ID_VARIABLE_KEY, auction.getAuctionUniqueId())
             .with(VENDOR_VARIABLE_KEY, vendorName)
             .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(auction.getSubject()))
             .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
             .with(MINIMAL_PRICE_VARIABLE_KEY, getFormattedDecimal(auction.getMinimalPrice()))
-            .with(MINIMAL_PRICE_PUNCTURE_VARIABLE_KEY, getFormattedDecimal(auction.getMinimalPricePuncture()))
-    );
+            .with(
+                MINIMAL_PRICE_PUNCTURE_VARIABLE_KEY,
+                getFormattedDecimal(auction.getMinimalPricePuncture())));
   }
 
   private void completeAuction(final Auction auction, final Component vendorName) {
@@ -141,57 +144,47 @@ public class AuctionController {
             auction.getCurrentTraderUniqueId(),
             auction.getVendorUniqueId(),
             fundsCurrency,
-            auction.getCurrentOffer()
-        )
+            auction.getCurrentOffer())
         .thenCompose(state -> getUsernameByUniqueId(auction.getCurrentTraderUniqueId()))
         .thenAccept(traderName -> completeAuction(auction, vendorName, traderName))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
   private void completeAuction(
-      final Auction auction,
-      final Component vendorName,
-      final Component traderName
-  ) {
+      final Auction auction, final Component vendorName, final Component traderName) {
     checkNotNull(auction.getCurrentOffer());
 
-    vaultController.createVaultItem(
-        auction.getCurrentTraderUniqueId(),
-        auction.getSubject()
-    );
-    messageFacade.deliverMessageToOnlinePlayers(
-        messageSource.auctionHasCompleted
+    vaultController.createVaultItem(auction.getCurrentTraderUniqueId(), auction.getSubject());
+    messageFacade.deliverMessage(
+        messageSource
+            .auctionHasCompleted
             .with(UNIQUE_ID_VARIABLE_KEY, auction.getAuctionUniqueId())
             .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
             .with(VENDOR_VARIABLE_KEY, vendorName)
             .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(auction.getSubject()))
             .with(CURRENT_OFFER_VARIABLE_KEY, getFormattedDecimal(auction.getCurrentOffer()))
-            .with(CURRENT_TRADER_VARIABLE_KEY, traderName)
-    );
+            .with(CURRENT_TRADER_VARIABLE_KEY, traderName));
   }
 
   private void restoreSubject(final Auction auction, final Component vendorName) {
-    vaultController.createVaultItem(
-        auction.getVendorUniqueId(),
-        auction.getSubject()
-    );
-    messageFacade.deliverMessageToOnlinePlayers(
-        messageSource.auctionHasCompletedWithoutOffers
+    vaultController.createVaultItem(auction.getVendorUniqueId(), auction.getSubject());
+    messageFacade.deliverMessage(
+        messageSource
+            .auctionHasCompletedWithoutOffers
             .with(UNIQUE_ID_VARIABLE_KEY, auction.getAuctionUniqueId())
-            .with(VENDOR_VARIABLE_KEY, vendorName)
-    );
+            .with(VENDOR_VARIABLE_KEY, vendorName));
   }
 
   private void getUsernameByUniqueIdAndDelegate(
-      final Auction auction, final BiConsumer<Auction, Component> delegator
-  ) {
+      final Auction auction, final BiConsumer<Auction, Component> delegator) {
     getUsernameByUniqueId(auction.getVendorUniqueId())
         .thenAccept(vendorName -> delegator.accept(auction, vendorName))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
   private CompletableFuture<TextComponent> getUsernameByUniqueId(final UUID uniqueId) {
-    return userFacade.getUserByUniqueId(uniqueId)
+    return userFacade
+        .getUserByUniqueId(uniqueId)
         .thenApply(User::getUsername)
         .thenApply(Component::text)
         .exceptionally(exception -> delegateCaughtException(logger, exception));

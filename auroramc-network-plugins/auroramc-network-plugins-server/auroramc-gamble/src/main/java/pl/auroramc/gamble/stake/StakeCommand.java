@@ -20,23 +20,20 @@ public class StakeCommand {
   private final MutableMessageSource messageSource;
   private final StakeViewFacade stakeViewFacade;
 
-  public StakeCommand(final MutableMessageSource messageSource, final StakeViewFacade stakeViewFacade) {
+  public StakeCommand(
+      final MutableMessageSource messageSource, final StakeViewFacade stakeViewFacade) {
     this.messageSource = messageSource;
     this.stakeViewFacade = stakeViewFacade;
   }
 
   @Execute
-  public MutableMessage stake(
-      final @Context Player player,
-      final @OptionalArg Integer page
-  ) {
+  public MutableMessage stake(final @Context Player player, final @OptionalArg Integer page) {
     if (stakeViewFacade.getPageCount() == 0) {
       return messageSource.missingStakes;
     }
 
-    final Optional<Inventory> destinedPage = stakeViewFacade.getStakeView(
-        page == null ? INITIAL_STAKE_PAGE_INDEX : page
-    );
+    final Optional<Inventory> destinedPage =
+        stakeViewFacade.getStakeView(page == null ? INITIAL_STAKE_PAGE_INDEX : page);
     if (destinedPage.isEmpty()) {
       return messageSource.missingStakePage;
     }

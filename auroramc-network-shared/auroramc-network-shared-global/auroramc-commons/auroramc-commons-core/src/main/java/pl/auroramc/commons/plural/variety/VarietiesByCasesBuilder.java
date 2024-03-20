@@ -16,7 +16,8 @@ public class VarietiesByCasesBuilder {
     this.pluralForms = new EnumMap<>(PluralizationCase.class);
   }
 
-  public VarietiesByCasesBuilder withPluralForm(final PluralizationCase pluralizationCase, final String pluralForm) {
+  public VarietiesByCasesBuilder withPluralForm(
+      final PluralizationCase pluralizationCase, final String pluralForm) {
     pluralForms.put(pluralizationCase, pluralForm);
     return this;
   }

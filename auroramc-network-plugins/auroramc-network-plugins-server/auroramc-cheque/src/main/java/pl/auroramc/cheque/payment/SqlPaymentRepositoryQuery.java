@@ -22,7 +22,5 @@ final class SqlPaymentRepositoryQuery {
         (?, ?, ?)
       """;
 
-  private SqlPaymentRepositoryQuery() {
-
-  }
+  private SqlPaymentRepositoryQuery() {}
 }

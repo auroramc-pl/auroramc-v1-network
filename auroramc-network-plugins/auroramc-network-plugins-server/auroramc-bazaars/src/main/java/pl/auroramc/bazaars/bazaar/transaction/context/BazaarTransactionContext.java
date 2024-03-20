@@ -10,7 +10,4 @@ public record BazaarTransactionContext(
     Container magazine,
     UUID customerUniqueId,
     UUID merchantUniqueId,
-    BazaarParsingContext parsingContext
-) {
-
-}
+    BazaarParsingContext parsingContext) {}

@@ -14,25 +14,18 @@ import pl.auroramc.commons.message.MutableMessage;
 
 final class ProductViewUtils {
 
-  private ProductViewUtils() {
+  private ProductViewUtils() {}
 
-  }
-
-  static ItemStack mergeLoreOnItemStack(
-      final ItemStack source, final List<MutableMessage> lines
-  ) {
+  static ItemStack mergeLoreOnItemStack(final ItemStack source, final List<MutableMessage> lines) {
     return ItemStackBuilder.newBuilder(source)
         .lore(
             merge(
-                Optional.ofNullable(source.lore())
-                    .orElse(Collections.emptyList()),
+                Optional.ofNullable(source.lore()).orElse(Collections.emptyList()),
                 lines.stream()
                     .map(MutableMessage::compile)
                     .map(line -> line.decoration(ITALIC, FALSE))
                     .toList(),
-                Component[]::new
-            )
-        )
+                Component[]::new))
         .build();
   }
 }

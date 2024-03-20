@@ -26,8 +26,7 @@ public class UserController {
       final ProxyServer server,
       final AuthConfig authConfig,
       final UserFacade userFacade,
-      final AccountFacade accountFacade
-  ) {
+      final AccountFacade accountFacade) {
     this.logger = logger;
     this.server = server;
     this.authConfig = authConfig;
@@ -36,14 +35,14 @@ public class UserController {
   }
 
   public CompletableFuture<Void> authenticateUser(final Player player) {
-    return userFacade.getUserByUniqueId(player.getUniqueId())
+    return userFacade
+        .getUserByUniqueId(player.getUniqueId())
         .thenCompose(user -> createUserIfNotExists(player, user))
         .thenAccept(user -> user.setAuthenticated(player.isOnlineMode()))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
-  private CompletableFuture<User> createUserIfNotExists(
-      final Player player, final User user) {
+  private CompletableFuture<User> createUserIfNotExists(final Player player, final User user) {
     if (user == null) {
       return createUser(player);
     }
@@ -52,18 +51,18 @@ public class UserController {
   }
 
   private CompletableFuture<User> createUser(final Player player) {
-    return accountFacade.getPremiumUniqueIdByUsername(player.getUsername())
-        .thenApply(premiumUniqueId ->
-            new User(
-                null,
-                player.getUniqueId(),
-                player.getUsername(),
-                null,
-                null,
-                premiumUniqueId,
-                player.isOnlineMode()
-            )
-        )
+    return accountFacade
+        .getPremiumUniqueIdByUsername(player.getUsername())
+        .thenApply(
+            premiumUniqueId ->
+                new User(
+                    null,
+                    player.getUniqueId(),
+                    player.getUsername(),
+                    null,
+                    null,
+                    premiumUniqueId,
+                    player.isOnlineMode()))
         .thenCompose(userFacade::createUser)
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
@@ -73,8 +72,7 @@ public class UserController {
       final User user,
       final RegisteredServer originalServer,
       final RegisteredServer previousServer,
-      final BiConsumer<T, RegisteredServer> redirectingFunction
-  ) {
+      final BiConsumer<T, RegisteredServer> redirectingFunction) {
     if (user.isAuthenticated() && previousServer != null) {
       return;
     }
@@ -92,28 +90,26 @@ public class UserController {
   }
 
   public void redirectUser(final Player player, final User user) {
-    player.getCurrentServer().ifPresent(connection ->
-        redirectUser(player, user,
-            connection.getServer(),
-            connection.getPreviousServer().orElse(null),
-            (source, destinedServer) ->
-                player
-                    .createConnectionRequest(destinedServer)
-                    .fireAndForget()
-        )
-    );
+    player
+        .getCurrentServer()
+        .ifPresent(
+            connection ->
+                redirectUser(
+                    player,
+                    user,
+                    connection.getServer(),
+                    connection.getPreviousServer().orElse(null),
+                    (source, destinedServer) ->
+                        player.createConnectionRequest(destinedServer).fireAndForget()));
   }
 
   public RegisteredServer getDestinedServer(final User user) {
-    return server.getServer(
-        user.isAuthenticated()
-            ? authConfig.destinedServerId
-            : authConfig.awaitingServerId
-        )
-        .orElseThrow(() ->
-            new UserRedirectingException(
-                "Could not resolve destined server by id specified in configuration, verify whether specified server exists."
-            )
-        );
+    return server
+        .getServer(
+            user.isAuthenticated() ? authConfig.destinedServerId : authConfig.awaitingServerId)
+        .orElseThrow(
+            () ->
+                new UserRedirectingException(
+                    "Could not resolve destined server by id specified in configuration, verify whether specified server exists."));
   }
 }

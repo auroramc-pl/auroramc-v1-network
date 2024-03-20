@@ -11,9 +11,7 @@ import pl.auroramc.commons.message.MutableMessage;
 
 public final class ItemStackFormatter {
 
-  private ItemStackFormatter() {
-
-  }
+  private ItemStackFormatter() {}
 
   public static Component getFormattedItemStack(final ItemStack itemStack) {
     return getFormattedItemStack(itemStack, itemStack.getAmount());

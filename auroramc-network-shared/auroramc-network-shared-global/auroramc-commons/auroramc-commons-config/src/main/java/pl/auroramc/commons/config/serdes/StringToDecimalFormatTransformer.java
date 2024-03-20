@@ -6,12 +6,9 @@ import eu.okaeri.configs.serdes.SerdesContext;
 import java.text.DecimalFormat;
 import org.jetbrains.annotations.NotNull;
 
-class StringToDecimalFormatTransformer extends
-    BidirectionalTransformer<String, DecimalFormat> {
+class StringToDecimalFormatTransformer extends BidirectionalTransformer<String, DecimalFormat> {
 
-  StringToDecimalFormatTransformer() {
-
-  }
+  StringToDecimalFormatTransformer() {}
 
   @Override
   public GenericsPair<String, DecimalFormat> getPair() {
@@ -20,17 +17,13 @@ class StringToDecimalFormatTransformer extends
 
   @Override
   public DecimalFormat leftToRight(
-      final @NotNull String data,
-      final @NotNull SerdesContext serdesContext
-  ) {
+      final @NotNull String data, final @NotNull SerdesContext serdesContext) {
     return new DecimalFormat(data);
   }
 
   @Override
   public String rightToLeft(
-      final @NotNull DecimalFormat data,
-      final @NotNull SerdesContext serdesContext
-  ) {
+      final @NotNull DecimalFormat data, final @NotNull SerdesContext serdesContext) {
     return data.toPattern();
   }
 }

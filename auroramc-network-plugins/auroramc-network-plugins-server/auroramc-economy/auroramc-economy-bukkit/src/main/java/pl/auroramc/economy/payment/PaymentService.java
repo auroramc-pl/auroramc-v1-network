@@ -20,8 +20,7 @@ class PaymentService implements PaymentFacade {
   PaymentService(
       final Logger logger,
       final PaymentRepository paymentRepository,
-      final BigDecimal paymentAmountBuffer
-  ) {
+      final BigDecimal paymentAmountBuffer) {
     this.logger = logger;
     this.paymentRepository = paymentRepository;
     this.paymentAmountBuffer = paymentAmountBuffer;
@@ -35,16 +34,14 @@ class PaymentService implements PaymentFacade {
 
   @Override
   public CompletableFuture<List<PaymentSummary>> getPaymentSummariesByInitiatorId(
-      final Long initiatorId
-  ) {
+      final Long initiatorId) {
     return supplyAsync(() -> paymentRepository.findPaymentSummariesByInitiatorId(initiatorId))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
   @Override
   public CompletableFuture<List<PaymentSummary>> getPaymentSummariesByReceiverId(
-      final Long receiverId
-  ) {
+      final Long receiverId) {
     return supplyAsync(() -> paymentRepository.findPaymentSummariesByReceiverId(receiverId))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
@@ -52,7 +49,8 @@ class PaymentService implements PaymentFacade {
   @Override
   public CompletableFuture<Void> createPayment(final Payment payment) {
     return payment.getAmount().compareTo(paymentAmountBuffer) >= 0
-        ? runAsync(() -> paymentRepository.createPayment(payment)).exceptionally(exception -> delegateCaughtException(logger, exception))
+        ? runAsync(() -> paymentRepository.createPayment(payment))
+            .exceptionally(exception -> delegateCaughtException(logger, exception))
         : EMPTY_FUTURE;
   }
 

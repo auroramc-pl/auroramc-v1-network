@@ -44,7 +44,5 @@ final class SqlAudienceRepositoryQuery {
         `user_id` = ?;
       """;
 
-  private SqlAudienceRepositoryQuery() {
-
-  }
+  private SqlAudienceRepositoryQuery() {}
 }

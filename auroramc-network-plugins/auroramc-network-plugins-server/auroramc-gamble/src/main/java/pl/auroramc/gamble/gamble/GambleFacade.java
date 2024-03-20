@@ -11,11 +11,8 @@ public interface GambleFacade {
       final Logger logger,
       final Currency fundsCurrency,
       final MutableMessageSource messageSource,
-      final EconomyFacade economyFacade
-  ) {
-    return new GambleService(
-        logger, fundsCurrency, messageSource, economyFacade
-    );
+      final EconomyFacade economyFacade) {
+    return new GambleService(logger, fundsCurrency, messageSource, economyFacade);
   }
 
   void settleGamble(final Gamble gamble);

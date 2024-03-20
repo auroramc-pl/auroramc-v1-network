@@ -22,28 +22,30 @@ class AccountService implements AccountFacade {
   AccountService(final Logger logger, final AccountRepository accountRepository) {
     this.logger = logger;
     this.accountRepository = accountRepository;
-    this.accountCache = Caffeine.newBuilder()
-        .expireAfterWrite(ofSeconds(30))
-        .buildAsync(accountKey -> accountRepository.findAccountByUserIdAndCurrencyId(
-            accountKey.userId(),
-            accountKey.currencyId()));
+    this.accountCache =
+        Caffeine.newBuilder()
+            .expireAfterWrite(ofSeconds(30))
+            .buildAsync(
+                accountKey ->
+                    accountRepository.findAccountByUserIdAndCurrencyId(
+                        accountKey.userId(), accountKey.currencyId()));
   }
 
   @Override
   public CompletableFuture<Account> getAccount(final Long userId, final Long currencyId) {
-    return accountCache.get(new AccountKey(userId, currencyId))
+    return accountCache
+        .get(new AccountKey(userId, currencyId))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
   @Override
   public CompletableFuture<Void> createAccount(final Account account) {
     return runAsync(() -> accountRepository.createAccount(account))
-        .thenAccept(state ->
-            accountCache.put(
-                new AccountKey(
-                    account.getUserId(),
-                    account.getCurrencyId()),
-                completedFuture(account)))
+        .thenAccept(
+            state ->
+                accountCache.put(
+                    new AccountKey(account.getUserId(), account.getCurrencyId()),
+                    completedFuture(account)))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
@@ -56,10 +58,11 @@ class AccountService implements AccountFacade {
   @Override
   public CompletableFuture<Void> deleteAccount(final Account account) {
     return runAsync(() -> accountRepository.deleteAccount(account))
-        .thenAccept(state -> accountCache.synchronous().invalidate(
-            new AccountKey(
-                account.getUserId(),
-                account.getCurrencyId())))
+        .thenAccept(
+            state ->
+                accountCache
+                    .synchronous()
+                    .invalidate(new AccountKey(account.getUserId(), account.getCurrencyId())))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
@@ -71,14 +74,14 @@ class AccountService implements AccountFacade {
   }
 
   private Account createAccountIfNotExists(
-      final Long userId, final Long currencyId, Account account
-  ) {
+      final Long userId, final Long currencyId, Account account) {
     if (account == null) {
-      account = AccountBuilder.newBuilder()
-          .withUserId(userId)
-          .withCurrencyId(currencyId)
-          .withBalance(INITIAL_ACCOUNT_BALANCE)
-          .build();
+      account =
+          AccountBuilder.newBuilder()
+              .withUserId(userId)
+              .withCurrencyId(currencyId)
+              .withBalance(INITIAL_ACCOUNT_BALANCE)
+              .build();
       createAccount(account);
     }
 
@@ -90,9 +93,11 @@ class AccountService implements AccountFacade {
       final Account initiatorAccount,
       final Account receivingAccount,
       final Long currencyId,
-      final BigDecimal amount
-  ) {
-    return runAsync(() -> accountRepository.transferOfBalance(initiatorAccount, receivingAccount, currencyId, amount))
+      final BigDecimal amount) {
+    return runAsync(
+            () ->
+                accountRepository.transferOfBalance(
+                    initiatorAccount, receivingAccount, currencyId, amount))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 }

@@ -44,67 +44,61 @@ public class ChequeBukkitPlugin extends JavaPlugin {
 
   @Override
   public void onEnable() {
-    final ConfigFactory configFactory = new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
+    final ConfigFactory configFactory =
+        new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
 
-    final ChequeConfig chequeConfig = configFactory.produceConfig(
-        ChequeConfig.class, PLUGIN_CONFIG_FILE_NAME
-    );
+    final ChequeConfig chequeConfig =
+        configFactory.produceConfig(ChequeConfig.class, PLUGIN_CONFIG_FILE_NAME);
 
     final Logger logger = getLogger();
 
-    final JulietConfig julietConfig = configFactory.produceConfig(
-        JulietConfig.class, JULIET_CONFIG_FILE_NAME, new SerdesJuliet()
-    );
-    final Juliet juliet = JulietBuilder.newBuilder()
-        .withDataSource(produceHikariDataSource(julietConfig.hikari))
-        .build();
+    final JulietConfig julietConfig =
+        configFactory.produceConfig(
+            JulietConfig.class, JULIET_CONFIG_FILE_NAME, new SerdesJuliet());
+    final Juliet juliet =
+        JulietBuilder.newBuilder()
+            .withDataSource(produceHikariDataSource(julietConfig.hikari))
+            .build();
 
-    final MutableMessageSource messageSource = configFactory.produceConfig(
-        MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
-    );
+    final MutableMessageSource messageSource =
+        configFactory.produceConfig(
+            MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource());
 
     final CurrencyFacade currencyFacade = resolveService(getServer(), CurrencyFacade.class);
-    final Currency fundsCurrency = Optional.ofNullable(currencyFacade.getCurrencyById(chequeConfig.fundsCurrencyId))
-        .orElseThrow(() ->
-            new ChequeInstantiationException(
-                "Could not find currency with id %d, make sure that the id specified in configuration is proper."
-                    .formatted(
-                        chequeConfig.fundsCurrencyId
-                    )
-            )
-        );
+    final Currency fundsCurrency =
+        Optional.ofNullable(currencyFacade.getCurrencyById(chequeConfig.fundsCurrencyId))
+            .orElseThrow(
+                () ->
+                    new ChequeInstantiationException(
+                        "Could not find currency with id %d, make sure that the id specified in configuration is proper."
+                            .formatted(chequeConfig.fundsCurrencyId)));
 
     final UserFacade userFacade = resolveService(getServer(), UserFacade.class);
     final EconomyFacade economyFacade = resolveService(getServer(), EconomyFacade.class);
     final PaymentFacade paymentFacade = getPaymentFacade(logger, juliet);
-    final ChequeFacade chequeFacade = new ChequeService(
-        this, logger, messageSource, fundsCurrency, userFacade, economyFacade, paymentFacade
-    );
+    final ChequeFacade chequeFacade =
+        new ChequeService(
+            this, logger, messageSource, fundsCurrency, userFacade, economyFacade, paymentFacade);
 
-    registerListeners(this,
-        new ChequeFinalizationListener(this, logger, chequeFacade)
-    );
+    registerListeners(this, new ChequeFinalizationListener(this, logger, chequeFacade));
 
-    commands = LiteBukkitFactory.builder(getName(), this)
-        .extension(new LiteAdventureExtension<>(),
-            configurer -> configurer.miniMessage(true)
-        )
-        .message(INVALID_USAGE,
-            context -> messageSource.availableSchematicsSuggestion
-                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join(LINE_SEPARATOR))
-        )
-        .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
-        .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
-        .message(PLAYER_NOT_FOUND, messageSource.specifiedPlayerIsUnknown)
-        .commands(
-            LiteCommandsAnnotations.of(
-              new ChequeCommand(
-                  logger, messageSource, chequeFacade, fundsCurrency, economyFacade
-              )
-            )
-        )
-        .result(MutableMessage.class, new MutableMessageResultHandler<>())
-        .build();
+    commands =
+        LiteBukkitFactory.builder(getName(), this)
+            .extension(new LiteAdventureExtension<>(), configurer -> configurer.miniMessage(true))
+            .message(
+                INVALID_USAGE,
+                context ->
+                    messageSource.availableSchematicsSuggestion.with(
+                        SCHEMATICS_VARIABLE_KEY, context.getSchematic().join(LINE_SEPARATOR)))
+            .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
+            .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
+            .message(PLAYER_NOT_FOUND, messageSource.specifiedPlayerIsUnknown)
+            .commands(
+                LiteCommandsAnnotations.of(
+                    new ChequeCommand(
+                        logger, messageSource, chequeFacade, fundsCurrency, economyFacade)))
+            .result(MutableMessage.class, new MutableMessageResultHandler<>())
+            .build();
   }
 
   @Override

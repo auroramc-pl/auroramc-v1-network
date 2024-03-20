@@ -23,15 +23,15 @@ public class UserListener implements Listener {
 
   @EventHandler
   public void onUserValidation(final AsyncPlayerPreLoginEvent event) {
-    userFacade.getUserByUniqueId(event.getUniqueId())
+    userFacade
+        .getUserByUniqueId(event.getUniqueId())
         .thenCompose(user -> validateUser(user, event.getUniqueId(), event.getName()))
         .exceptionally(exception -> delegateCaughtException(logger, exception))
         .join();
   }
 
   private CompletableFuture<Void> validateUser(
-      final User user, final UUID uniqueId, final String username
-  ) {
+      final User user, final UUID uniqueId, final String username) {
     if (user == null) {
       return userFacade.createUser(new User(null, uniqueId, username));
     }

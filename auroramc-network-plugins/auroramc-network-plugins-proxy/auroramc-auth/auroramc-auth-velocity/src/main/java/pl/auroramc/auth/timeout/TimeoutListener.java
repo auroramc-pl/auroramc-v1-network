@@ -22,9 +22,10 @@ public class TimeoutListener {
   @Subscribe
   public void onTimeoutStart(final ServerConnectedEvent event, final Continuation continuation) {
     resumeWhenComplete(
-        userFacade.getUserByUniqueId(event.getPlayer().getUniqueId())
-            .thenAccept(this::startTimeoutIfRequired)
-    ).execute(continuation);
+            userFacade
+                .getUserByUniqueId(event.getPlayer().getUniqueId())
+                .thenAccept(this::startTimeoutIfRequired))
+        .execute(continuation);
   }
 
   private void startTimeoutIfRequired(final User user) {

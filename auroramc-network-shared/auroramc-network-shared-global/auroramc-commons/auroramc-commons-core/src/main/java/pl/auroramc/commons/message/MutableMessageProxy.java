@@ -8,22 +8,17 @@ public final class MutableMessageProxy {
 
   private static final MutableMessageCompiler MESSAGE_COMPILER = getMutableMessageCompiler();
 
-  private MutableMessageProxy() {
-
-  }
+  private MutableMessageProxy() {}
 
   public static Component getCompiledMessage(
       final MutableMessage mutableMessage,
       final MutableMessageDecoration[] decorations,
-      final boolean shouldCache
-  ) {
+      final boolean shouldCache) {
     return MESSAGE_COMPILER.getCompiledMessage(mutableMessage, decorations, shouldCache);
   }
 
   public static Component getCompiledMessage(
-      final MutableMessage mutableMessage,
-      final MutableMessageDecoration[] decorations
-  ) {
+      final MutableMessage mutableMessage, final MutableMessageDecoration[] decorations) {
     return getCompiledMessage(mutableMessage, decorations, true);
   }
 }

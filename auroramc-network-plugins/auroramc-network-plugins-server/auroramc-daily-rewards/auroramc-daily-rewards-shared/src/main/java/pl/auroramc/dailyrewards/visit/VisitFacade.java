@@ -7,11 +7,7 @@ public interface VisitFacade {
 
   void createVisit(final Visit visit);
 
-  Set<Visit> getVisitsByUserId(
-      final Long userId
-  );
+  Set<Visit> getVisitsByUserId(final Long userId);
 
-  Set<Visit> getVisitsByUserIdBetween(
-      final Long userId, final Instant from, final Instant to
-  );
+  Set<Visit> getVisitsByUserIdBetween(final Long userId, final Instant from, final Instant to);
 }

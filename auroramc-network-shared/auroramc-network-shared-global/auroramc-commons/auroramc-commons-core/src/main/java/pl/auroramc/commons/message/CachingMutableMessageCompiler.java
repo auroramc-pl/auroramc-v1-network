@@ -15,17 +15,15 @@ class CachingMutableMessageCompiler implements MutableMessageCompiler {
   private final Cache<MutableMessage, Component> compiledMessageByMutableMessage;
 
   CachingMutableMessageCompiler() {
-    this.compiledMessageByMutableMessage = Caffeine.newBuilder()
-        .expireAfterAccess(ofSeconds(20))
-        .build();
+    this.compiledMessageByMutableMessage =
+        Caffeine.newBuilder().expireAfterAccess(ofSeconds(20)).build();
   }
 
   @Override
   public Component getCompiledMessage(
       final MutableMessage mutableMessage,
       final MutableMessageDecoration[] decorations,
-      final boolean shouldCache
-  ) {
+      final boolean shouldCache) {
     return Optional.ofNullable(compiledMessageByMutableMessage.getIfPresent(mutableMessage))
         .orElseGet(() -> createMessage(mutableMessage, decorations, shouldCache));
   }
@@ -33,18 +31,16 @@ class CachingMutableMessageCompiler implements MutableMessageCompiler {
   private Component createMessage(
       final MutableMessage mutableMessage,
       final MutableMessageDecoration[] decorations,
-      final boolean shouldCache
-  ) {
-    final Component compiledMessage = miniMessage().deserialize(mutableMessage.getTemplate())
-        .decorations(
-            stream(decorations)
-                .collect(
-                    toMap(
-                        MutableMessageDecoration::decoration,
-                        MutableMessageDecoration::state
-                    )
-                )
-        );
+      final boolean shouldCache) {
+    final Component compiledMessage =
+        miniMessage()
+            .deserialize(mutableMessage.getTemplate())
+            .decorations(
+                stream(decorations)
+                    .collect(
+                        toMap(
+                            MutableMessageDecoration::decoration,
+                            MutableMessageDecoration::state)));
     if (shouldCache) {
       compiledMessageByMutableMessage.put(mutableMessage, compiledMessage);
     }

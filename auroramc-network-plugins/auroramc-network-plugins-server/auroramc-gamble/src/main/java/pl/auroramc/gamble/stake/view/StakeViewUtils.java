@@ -1,6 +1,5 @@
 package pl.auroramc.gamble.stake.view;
 
-
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -9,9 +8,7 @@ final class StakeViewUtils {
   private static final int COORDINATE_OFFSET = 1;
   private static final int ROW_LENGTH = 9;
 
-  private StakeViewUtils() {
-
-  }
+  private StakeViewUtils() {}
 
   static void setItemAsFrame(final Inventory inventory, final ItemStack fill) {
     final int rows = inventory.getSize() / ROW_LENGTH;

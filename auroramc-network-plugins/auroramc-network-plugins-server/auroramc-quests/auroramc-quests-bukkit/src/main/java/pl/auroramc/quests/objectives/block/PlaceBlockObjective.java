@@ -14,8 +14,7 @@ public class PlaceBlockObjective extends Objective<Material> {
       final Material type,
       final int saveInterval,
       final ObjectiveGoalResolver goalResolver,
-      final List<ObjectiveRequirement> requirements
-  ) {
+      final List<ObjectiveRequirement> requirements) {
     super(key, type, saveInterval, goalResolver, requirements);
   }
 }

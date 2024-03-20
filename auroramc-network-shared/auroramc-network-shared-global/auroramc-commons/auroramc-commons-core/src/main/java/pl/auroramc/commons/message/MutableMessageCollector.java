@@ -13,8 +13,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
-public class MutableMessageCollector implements
-    Collector<MutableMessage, List<MutableMessage>, MutableMessage> {
+public class MutableMessageCollector
+    implements Collector<MutableMessage, List<MutableMessage>, MutableMessage> {
 
   @Override
   public Supplier<List<MutableMessage>> supplier() {
@@ -36,11 +36,7 @@ public class MutableMessageCollector implements
 
   @Override
   public Function<List<MutableMessage>, MutableMessage> finisher() {
-    return messages -> messages.stream()
-        .reduce(
-            MutableMessage.empty(),
-            MutableMessage::append
-        );
+    return messages -> messages.stream().reduce(MutableMessage.empty(), MutableMessage::append);
   }
 
   @Override

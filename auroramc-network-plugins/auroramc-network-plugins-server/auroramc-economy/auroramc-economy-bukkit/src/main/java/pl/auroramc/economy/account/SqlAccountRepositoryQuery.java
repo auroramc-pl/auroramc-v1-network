@@ -27,7 +27,7 @@ final class SqlAccountRepositoryQuery {
             )
         );
       """;
-  
+
   static final String CREATE_ACCOUNT_INDEX_FOR_BALANCE =
       """
       CREATE INDEX IF NOT EXISTS
@@ -74,7 +74,5 @@ final class SqlAccountRepositoryQuery {
         `user_id` = ? AND `currency_id` = ?;
       """;
 
-  private SqlAccountRepositoryQuery() {
-
-  }
+  private SqlAccountRepositoryQuery() {}
 }

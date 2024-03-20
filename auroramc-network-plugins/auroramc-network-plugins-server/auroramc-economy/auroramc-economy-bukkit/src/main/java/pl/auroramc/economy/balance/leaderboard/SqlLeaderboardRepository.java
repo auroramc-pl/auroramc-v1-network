@@ -22,12 +22,10 @@ class SqlLeaderboardRepository implements LeaderboardRepository {
 
   @Override
   public LeaderboardEntry getLeaderboardEntryByUniqueId(
-      final Long currencyId, final UUID uniqueId
-  ) {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(GET_LEADERBOARD_ENTRY_BY_UNIQUE_ID)
-    ) {
+      final Long currencyId, final UUID uniqueId) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement =
+            connection.prepareStatement(GET_LEADERBOARD_ENTRY_BY_UNIQUE_ID)) {
       statement.setLong(1, currencyId);
       statement.setLong(2, currencyId);
       statement.setObject(3, uniqueId);
@@ -40,22 +38,16 @@ class SqlLeaderboardRepository implements LeaderboardRepository {
     } catch (final SQLException exception) {
       throw new LeaderboardRepositoryException(
           "Could not find leaderboard entry identified by %s, because of unexpected exception"
-              .formatted(
-                  uniqueId
-              ),
-          exception
-      );
+              .formatted(uniqueId),
+          exception);
     }
   }
 
   @Override
-  public List<LeaderboardEntry> getLeaderboardEntriesByBalanceAscending(
-      final Long currencyId
-  ) {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(GET_LEADERBOARD_ENTRIES_BY_BALANCE_ASCENDING)
-    ) {
+  public List<LeaderboardEntry> getLeaderboardEntriesByBalanceAscending(final Long currencyId) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement =
+            connection.prepareStatement(GET_LEADERBOARD_ENTRIES_BY_BALANCE_ASCENDING)) {
       statement.setLong(1, currencyId);
 
       final List<LeaderboardEntry> results = new LinkedList<>();
@@ -68,23 +60,18 @@ class SqlLeaderboardRepository implements LeaderboardRepository {
     } catch (final SQLException exception) {
       throw new LeaderboardRepositoryException(
           "Could not find leaderboard entries for currency identified by %s, because of unexpected exception"
-              .formatted(
-                  currencyId
-              ),
-          exception
-      );
+              .formatted(currencyId),
+          exception);
     }
   }
 
-  private LeaderboardEntry mapResultSetToLeaderboardEntry(
-      final ResultSet resultSet
-  ) throws SQLException {
+  private LeaderboardEntry mapResultSetToLeaderboardEntry(final ResultSet resultSet)
+      throws SQLException {
     return new LeaderboardEntry(
         UUID.fromString(resultSet.getString("unique_id")),
         resultSet.getString("username"),
         resultSet.getLong("position"),
         resultSet.getLong("currency_id"),
-        resultSet.getBigDecimal("balance")
-    );
+        resultSet.getBigDecimal("balance"));
   }
 }

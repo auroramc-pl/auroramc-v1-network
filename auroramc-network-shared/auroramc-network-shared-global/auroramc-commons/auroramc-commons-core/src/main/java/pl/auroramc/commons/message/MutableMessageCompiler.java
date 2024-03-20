@@ -11,6 +11,5 @@ interface MutableMessageCompiler {
   Component getCompiledMessage(
       final MutableMessage mutableMessage,
       final MutableMessageDecoration[] decorations,
-      boolean shouldCache
-  );
+      boolean shouldCache);
 }

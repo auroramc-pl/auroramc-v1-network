@@ -24,8 +24,7 @@ public class Punishment {
       final PunishmentScope scope,
       final PunishmentState state,
       final Instant issuedAt,
-      final Instant expiresAt
-  ) {
+      final Instant expiresAt) {
     this.id = id;
     this.penalizedId = penalizedId;
     this.performerId = performerId;

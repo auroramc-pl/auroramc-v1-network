@@ -39,7 +39,5 @@ final class SqlVaultRepositoryQuery {
         `id` = ?;
       """;
 
-  private SqlVaultRepositoryQuery() {
-
-  }
+  private SqlVaultRepositoryQuery() {}
 }

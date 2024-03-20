@@ -17,7 +17,5 @@ public final class MutableMessageVariableKey {
   public static final String MINIMAL_PRICE_VARIABLE_KEY = "minimalPrice";
   public static final String MINIMAL_PRICE_PUNCTURE_VARIABLE_KEY = "minimalPricePuncture";
 
-  private MutableMessageVariableKey() {
-
-  }
+  private MutableMessageVariableKey() {}
 }

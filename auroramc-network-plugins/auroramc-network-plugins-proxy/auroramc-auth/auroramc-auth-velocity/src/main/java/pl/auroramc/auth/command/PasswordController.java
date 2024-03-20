@@ -29,8 +29,7 @@ public class PasswordController {
       final UserFacade userFacade,
       final UserController userController,
       final HashingStrategy hashingStrategy,
-      final PasswordValidator passwordValidator
-  ) {
+      final PasswordValidator passwordValidator) {
     this.logger = logger;
     this.messageSource = messageSource;
     this.userFacade = userFacade;
@@ -42,23 +41,22 @@ public class PasswordController {
   public CompletableFuture<MutableMessage> validateChangeOfPassword(
       final Player player,
       final String password,
-      final TriFunction<Player, User, String, CompletableFuture<MutableMessage>> processor
-  ) {
+      final TriFunction<Player, User, String, CompletableFuture<MutableMessage>> processor) {
     if (!passwordValidator.validatePassword(password)) {
-      return messageSource.specifiedPasswordIsUnsafe
-          .asCompletedFuture();
+      return messageSource.specifiedPasswordIsUnsafe.asCompletedFuture();
     }
 
-    return userFacade.getUserByUniqueId(player.getUniqueId())
+    return userFacade
+        .getUserByUniqueId(player.getUniqueId())
         .thenCompose(user -> processor.apply(player, user, password))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
 
   public CompletableFuture<Void> submitChangeOfPassword(
-      final Player player, final User user, final String password
-  ) {
+      final Player player, final User user, final String password) {
     user.setPassword(hashingStrategy.hashPassword(password));
-    return userFacade.updateUser(user)
+    return userFacade
+        .updateUser(user)
         .thenAccept(state -> user.setAuthenticated(true))
         .thenAccept(state -> userController.redirectUser(player, user));
   }

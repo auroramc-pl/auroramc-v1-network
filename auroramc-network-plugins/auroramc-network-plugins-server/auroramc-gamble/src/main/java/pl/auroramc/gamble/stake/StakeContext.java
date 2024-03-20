@@ -24,9 +24,8 @@ public record StakeContext(
     }
 
     final StakeContext that = (StakeContext) object;
-    return
-        Objects.equals(gambleKey, that.gambleKey) &&
-        Objects.equals(stakeUniqueId, that.stakeUniqueId);
+    return Objects.equals(gambleKey, that.gambleKey)
+        && Objects.equals(stakeUniqueId, that.stakeUniqueId);
   }
 
   @Override

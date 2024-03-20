@@ -2,8 +2,8 @@ package pl.auroramc.quests.resource.key;
 
 public class ResourceKey {
 
-  private Long id;
   private final String name;
+  private Long id;
 
   public ResourceKey(final Long id, final String name) {
     this.id = id;

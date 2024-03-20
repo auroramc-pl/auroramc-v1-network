@@ -6,7 +6,6 @@ import static pl.auroramc.commons.duration.settings.DurationFormatterSettingsUti
 import pl.auroramc.commons.duration.settings.DurationFormatterSettings;
 
 public enum DurationFormatterStyle {
-
   DEFAULT(getDefaultFormatterSettings()),
   SHORTLY(getFormatterSettingsShortly());
 

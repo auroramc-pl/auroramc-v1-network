@@ -15,17 +15,13 @@ class StringToZoneIdTransformer extends BidirectionalTransformer<String, ZoneId>
 
   @Override
   public ZoneId leftToRight(
-      final @NotNull String data,
-      final @NotNull SerdesContext serdesContext
-  ) {
+      final @NotNull String data, final @NotNull SerdesContext serdesContext) {
     return ZoneId.of(data);
   }
 
   @Override
   public String rightToLeft(
-      final @NotNull ZoneId data,
-      final @NotNull SerdesContext serdesContext
-  ) {
+      final @NotNull ZoneId data, final @NotNull SerdesContext serdesContext) {
     return data.getId();
   }
 }

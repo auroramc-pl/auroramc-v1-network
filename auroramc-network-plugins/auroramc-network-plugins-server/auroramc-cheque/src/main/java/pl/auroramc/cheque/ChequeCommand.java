@@ -1,11 +1,11 @@
 package pl.auroramc.cheque;
 
 import static pl.auroramc.cheque.message.MutableMessageVariableKey.AMOUNT_VARIABLE_KEY;
+import static pl.auroramc.cheque.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.cheque.message.MutableMessageVariableKey.MAXIMUM_CHEQUE_WORTH_VARIABLE_KEY;
 import static pl.auroramc.cheque.message.MutableMessageVariableKey.MAXIMUM_FRACTION_LENGTH_VARIABLE_KEY;
 import static pl.auroramc.cheque.message.MutableMessageVariableKey.MAXIMUM_INTEGRAL_LENGTH_VARIABLE_KEY;
 import static pl.auroramc.cheque.message.MutableMessageVariableKey.MINIMUM_CHEQUE_WORTH_VARIABLE_KEY;
-import static pl.auroramc.cheque.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.decimal.DecimalUtils.getLengthOfFractionalPart;

@@ -18,8 +18,7 @@ public class Payment {
       final Long receiverId,
       final Long currencyId,
       final BigDecimal amount,
-      final Instant transactionTime
-  ) {
+      final Instant transactionTime) {
     this.id = id;
     this.initiatorId = initiatorId;
     this.receiverId = receiverId;

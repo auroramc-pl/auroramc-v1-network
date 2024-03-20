@@ -6,7 +6,5 @@ public final class MutableMessageVariableKey {
   public static final String PERIOD_VARIABLE_KEY = "period";
   public static final String EMAIL_VARIABLE_KEY = "email";
 
-  private MutableMessageVariableKey() {
-
-  }
+  private MutableMessageVariableKey() {}
 }

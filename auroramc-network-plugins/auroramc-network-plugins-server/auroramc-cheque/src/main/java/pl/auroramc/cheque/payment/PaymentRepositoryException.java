@@ -1,4 +1,3 @@
-
 package pl.auroramc.cheque.payment;
 
 class PaymentRepositoryException extends IllegalStateException {

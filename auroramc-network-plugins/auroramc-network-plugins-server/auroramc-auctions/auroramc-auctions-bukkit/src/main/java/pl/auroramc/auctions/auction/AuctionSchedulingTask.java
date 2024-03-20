@@ -6,9 +6,7 @@ public class AuctionSchedulingTask implements Runnable {
   private final AuctionController auctionController;
 
   public AuctionSchedulingTask(
-      final AuctionFacade auctionFacade,
-      final AuctionController auctionController
-  ) {
+      final AuctionFacade auctionFacade, final AuctionController auctionController) {
     this.auctionFacade = auctionFacade;
     this.auctionController = auctionController;
   }

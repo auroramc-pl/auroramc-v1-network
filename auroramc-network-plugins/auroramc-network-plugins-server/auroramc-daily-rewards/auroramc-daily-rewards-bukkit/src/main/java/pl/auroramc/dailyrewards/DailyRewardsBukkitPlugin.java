@@ -41,12 +41,12 @@ import pl.auroramc.commons.duration.DurationFormatter;
 import pl.auroramc.commons.integration.litecommands.MutableMessageResultHandler;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.dailyrewards.message.MutableMessageSource;
+import pl.auroramc.dailyrewards.nametag.NametagListener;
+import pl.auroramc.dailyrewards.nametag.NametagUpdateScheduler;
 import pl.auroramc.dailyrewards.visit.VisitCommand;
 import pl.auroramc.dailyrewards.visit.VisitController;
 import pl.auroramc.dailyrewards.visit.VisitFacade;
 import pl.auroramc.dailyrewards.visit.VisitListener;
-import pl.auroramc.dailyrewards.nametag.NametagListener;
-import pl.auroramc.dailyrewards.nametag.NametagUpdateScheduler;
 import pl.auroramc.nametag.NametagFacade;
 import pl.auroramc.registry.user.UserFacade;
 

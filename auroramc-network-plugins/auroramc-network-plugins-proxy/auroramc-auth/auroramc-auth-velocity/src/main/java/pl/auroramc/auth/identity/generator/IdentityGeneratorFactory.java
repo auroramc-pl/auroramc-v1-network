@@ -5,9 +5,7 @@ import pl.auroramc.auth.identity.IdentityGenerator;
 
 public final class IdentityGeneratorFactory {
 
-  private IdentityGeneratorFactory() {
-
-  }
+  private IdentityGeneratorFactory() {}
 
   public static IdentityGenerator getIdentityGenerator(final AccountFacade accountFacade) {
     return new MojangIdentityGenerator(accountFacade);

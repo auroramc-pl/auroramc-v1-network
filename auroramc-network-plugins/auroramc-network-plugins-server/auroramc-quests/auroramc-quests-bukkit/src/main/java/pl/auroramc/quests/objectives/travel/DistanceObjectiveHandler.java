@@ -14,30 +14,29 @@ public class DistanceObjectiveHandler
 
   public DistanceObjectiveHandler(
       final QuestController questController,
-      final ObjectiveProgressController objectiveProgressController
-  ) {
+      final ObjectiveProgressController objectiveProgressController) {
     super(questController);
     this.objectiveProgressController = objectiveProgressController;
   }
 
   @Override
   public void validateObjectiveGoal(
-      final Quest quest, final DistanceObjective objective, final PlayerMoveEvent event
-  ) {
+      final Quest quest, final DistanceObjective objective, final PlayerMoveEvent event) {
     final boolean whetherIsMouseMovement =
-        event.getFrom().getX() == event.getTo().getX() &&
-        event.getFrom().getY() == event.getTo().getY() &&
-        event.getFrom().getZ() == event.getTo().getZ();
+        event.getFrom().getX() == event.getTo().getX()
+            && event.getFrom().getY() == event.getTo().getY()
+            && event.getFrom().getZ() == event.getTo().getZ();
     if (whetherIsMouseMovement) {
       return;
     }
 
     final boolean whetherIsBlockChanged =
-        event.getFrom().getBlockX() != event.getTo().getBlockX() ||
-        event.getFrom().getBlockY() != event.getTo().getBlockY() ||
-        event.getFrom().getBlockZ() != event.getTo().getBlockZ();
+        event.getFrom().getBlockX() != event.getTo().getBlockX()
+            || event.getFrom().getBlockY() != event.getTo().getBlockY()
+            || event.getFrom().getBlockZ() != event.getTo().getBlockZ();
     if (whetherIsBlockChanged) {
-      objectiveProgressController.processObjectiveGoal(event.getPlayer().getUniqueId(), quest, objective);
+      objectiveProgressController.processObjectiveGoal(
+          event.getPlayer().getUniqueId(), quest, objective);
     }
   }
 

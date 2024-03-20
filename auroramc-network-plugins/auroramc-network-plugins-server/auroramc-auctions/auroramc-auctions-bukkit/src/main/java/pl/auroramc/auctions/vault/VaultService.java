@@ -18,9 +18,10 @@ class VaultService implements VaultFacade {
   VaultService(final Logger logger, final VaultRepository vaultRepository) {
     this.logger = logger;
     this.vaultRepository = vaultRepository;
-    this.vaultCache = Caffeine.newBuilder()
-        .expireAfterWrite(ofSeconds(30))
-        .buildAsync(vaultRepository::getVaultByUserId);
+    this.vaultCache =
+        Caffeine.newBuilder()
+            .expireAfterWrite(ofSeconds(30))
+            .buildAsync(vaultRepository::getVaultByUserId);
   }
 
   @Override

@@ -13,8 +13,7 @@ public class DurationFormatterSettings {
   DurationFormatterSettings(
       final String aggregatingPhrase,
       final String aggregatingPhraseEnclosing,
-      final Map<ChronoUnit, VarietiesByCases> unitForms
-  ) {
+      final Map<ChronoUnit, VarietiesByCases> unitForms) {
     this.aggregatingPhrase = aggregatingPhrase;
     this.aggregatingPhraseEnclosing = aggregatingPhraseEnclosing;
     this.unitForms = unitForms;

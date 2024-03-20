@@ -11,9 +11,7 @@ public class PaymentBuilder {
   private BigDecimal amount;
   private Instant transactionTime;
 
-  private PaymentBuilder() {
-
-  }
+  private PaymentBuilder() {}
 
   public static PaymentBuilder newBuilder() {
     return new PaymentBuilder();

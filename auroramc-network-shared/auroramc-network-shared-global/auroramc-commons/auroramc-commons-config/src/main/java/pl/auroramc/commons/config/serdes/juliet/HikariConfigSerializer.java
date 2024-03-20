@@ -14,9 +14,7 @@ class HikariConfigSerializer implements ObjectSerializer<HikariConfig> {
   private static final String USERNAME_VARIABLE_KEY = "username";
   private static final String PASSWORD_VARIABLE_KEY = "password";
 
-  HikariConfigSerializer() {
-
-  }
+  HikariConfigSerializer() {}
 
   @Override
   public boolean supports(final @NotNull Class<? super HikariConfig> type) {
@@ -27,8 +25,7 @@ class HikariConfigSerializer implements ObjectSerializer<HikariConfig> {
   public void serialize(
       final @NotNull HikariConfig object,
       final @NotNull SerializationData data,
-      final @NotNull GenericsDeclaration generics
-  ) {
+      final @NotNull GenericsDeclaration generics) {
     data.add(JDBC_URL_VARIABLE_KEY, object.getJdbcUrl());
 
     final boolean whetherDriverClassNameIsSpecified = object.getDriverClassName() != null;
@@ -49,13 +46,12 @@ class HikariConfigSerializer implements ObjectSerializer<HikariConfig> {
 
   @Override
   public HikariConfig deserialize(
-      final @NotNull DeserializationData data,
-      final @NotNull GenericsDeclaration generics
-  ) {
+      final @NotNull DeserializationData data, final @NotNull GenericsDeclaration generics) {
     final HikariConfig hikariConfig = new HikariConfig();
     hikariConfig.setJdbcUrl(data.get(JDBC_URL_VARIABLE_KEY, String.class));
 
-    final boolean whetherDriverClassNameIsSpecified = data.containsKey(DRIVER_CLASS_NAME_VARIABLE_KEY);
+    final boolean whetherDriverClassNameIsSpecified =
+        data.containsKey(DRIVER_CLASS_NAME_VARIABLE_KEY);
     if (whetherDriverClassNameIsSpecified) {
       hikariConfig.setDriverClassName(data.get(DRIVER_CLASS_NAME_VARIABLE_KEY, String.class));
     }

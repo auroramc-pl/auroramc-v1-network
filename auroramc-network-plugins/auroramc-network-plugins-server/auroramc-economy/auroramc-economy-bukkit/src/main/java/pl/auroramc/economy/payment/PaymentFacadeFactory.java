@@ -6,15 +6,10 @@ import moe.rafal.juliet.Juliet;
 
 public final class PaymentFacadeFactory {
 
-  private PaymentFacadeFactory() {
-
-  }
+  private PaymentFacadeFactory() {}
 
   public static PaymentFacade producePaymentFacade(
-      final Logger logger,
-      final Juliet juliet,
-      final BigDecimal paymentBuffer
-  ) {
+      final Logger logger, final Juliet juliet, final BigDecimal paymentBuffer) {
     final SqlPaymentRepository sqlPaymentRepository = new SqlPaymentRepository(juliet);
     sqlPaymentRepository.createPaymentSchemaIfRequired();
     return new PaymentService(logger, sqlPaymentRepository, paymentBuffer);

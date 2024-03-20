@@ -7,8 +7,8 @@ import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.lazy.Lazy.lazy;
 import static pl.auroramc.economy.message.MutableMessageVariableKey.AMOUNT_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.SOURCE_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.SOURCE_VARIABLE_KEY;
 import static pl.auroramc.economy.message.MutableMessageVariableKey.TARGET_VARIABLE_KEY;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;

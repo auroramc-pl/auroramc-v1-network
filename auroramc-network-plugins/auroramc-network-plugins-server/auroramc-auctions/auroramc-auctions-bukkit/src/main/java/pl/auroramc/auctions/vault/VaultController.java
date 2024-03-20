@@ -36,8 +36,7 @@ public class VaultController {
       final MutableMessageSource messageSource,
       final UserFacade userFacade,
       final VaultFacade vaultFacade,
-      final VaultItemFacade vaultItemFacade
-  ) {
+      final VaultItemFacade vaultItemFacade) {
     this.plugin = plugin;
     this.logger = logger;
     this.messageSource = messageSource;
@@ -48,7 +47,8 @@ public class VaultController {
 
   @Blocking
   Set<VaultItem> searchVaultItems(final UUID uniqueId) {
-    return userFacade.getUserByUniqueId(uniqueId)
+    return userFacade
+        .getUserByUniqueId(uniqueId)
         .thenApply(User::getId)
         .thenApply(vaultItemFacade::getVaultItemsByUserId)
         .exceptionally(exception -> delegateCaughtException(logger, exception))
@@ -58,12 +58,14 @@ public class VaultController {
   public void createVaultItem(final UUID uniqueId, final byte[] subject) {
     final Player player = getPlayer(uniqueId);
     if (player != null) {
-      messageSource.vaultItemReceived
+      messageSource
+          .vaultItemReceived
           .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(subject))
           .deliver(player);
     }
 
-    userFacade.getUserByUniqueId(uniqueId)
+    userFacade
+        .getUserByUniqueId(uniqueId)
         .thenApply(User::getId)
         .thenCompose(vaultFacade::getVaultByUserId)
         .thenApply(vault -> new VaultItem(null, vault.getUserId(), vault.getId(), subject))
@@ -75,21 +77,23 @@ public class VaultController {
     final Player player = getPlayer(uniqueId);
     if (player == null) {
       throw new VaultItemRedeemException(
-          "Vault item could not be redeemed, because player is Offline."
-      );
+          "Vault item could not be redeemed, because player is Offline.");
     }
 
-    return vaultItemFacade.deleteVaultItem(vaultItem)
-        .thenAccept(state ->
-            messageSource.vaultItemRedeemed
-                .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(vaultItem.getSubject()))
-                .deliver(player)
-        )
-        .thenAccept(state ->
-            postToMainThreadAndNextTick(
-                plugin,
-                () -> appendItemStackOrDropBelow(player, ItemStack.deserializeBytes(vaultItem.getSubject()))
-            )
-        );
+    return vaultItemFacade
+        .deleteVaultItem(vaultItem)
+        .thenAccept(
+            state ->
+                messageSource
+                    .vaultItemRedeemed
+                    .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(vaultItem.getSubject()))
+                    .deliver(player))
+        .thenAccept(
+            state ->
+                postToMainThreadAndNextTick(
+                    plugin,
+                    () ->
+                        appendItemStackOrDropBelow(
+                            player, ItemStack.deserializeBytes(vaultItem.getSubject()))));
   }
 }
