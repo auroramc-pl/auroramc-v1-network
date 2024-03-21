@@ -6,7 +6,7 @@ public final class CurrencyFacadeFactory {
 
   private CurrencyFacadeFactory() {}
 
-  public static CurrencyFacade produceCurrencyFacade(final Juliet juliet) {
+  public static CurrencyFacade getCurrencyFacade(final Juliet juliet) {
     final SqlCurrencyRepository sqlCurrencyRepository = new SqlCurrencyRepository(juliet);
     sqlCurrencyRepository.createCurrencySchemaIfRequired();
     return new CurrencyService(sqlCurrencyRepository);

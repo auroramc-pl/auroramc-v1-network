@@ -8,7 +8,7 @@ public final class PaymentFacadeFactory {
 
   private PaymentFacadeFactory() {}
 
-  public static PaymentFacade producePaymentFacade(
+  public static PaymentFacade getPaymentFacade(
       final Logger logger, final Juliet juliet, final BigDecimal paymentBuffer) {
     final SqlPaymentRepository sqlPaymentRepository = new SqlPaymentRepository(juliet);
     sqlPaymentRepository.createPaymentSchemaIfRequired();

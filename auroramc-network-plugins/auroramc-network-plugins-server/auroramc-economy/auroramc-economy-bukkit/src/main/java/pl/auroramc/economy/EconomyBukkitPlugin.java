@@ -13,11 +13,11 @@ import static pl.auroramc.economy.EconomyConfig.ECONOMY_CONFIG_FILE_NAME;
 import static pl.auroramc.economy.EconomyFacadeFactory.getEconomyFacade;
 import static pl.auroramc.economy.account.AccountFacadeFactory.getAccountFacade;
 import static pl.auroramc.economy.balance.leaderboard.LeaderboardFacade.getLeaderboardFacade;
-import static pl.auroramc.economy.currency.CurrencyFacadeFactory.produceCurrencyFacade;
+import static pl.auroramc.economy.currency.CurrencyFacadeFactory.getCurrencyFacade;
 import static pl.auroramc.economy.integration.placeholderapi.PlaceholderApiIntegrationFactory.producePlaceholderApiIntegration;
 import static pl.auroramc.economy.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
 import static pl.auroramc.economy.message.MutableMessageVariableKey.SCHEMATICS_VARIABLE_KEY;
-import static pl.auroramc.economy.payment.PaymentFacadeFactory.producePaymentFacade;
+import static pl.auroramc.economy.payment.PaymentFacadeFactory.getPaymentFacade;
 
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.adventure.LiteAdventureExtension;
@@ -80,9 +80,9 @@ public class EconomyBukkitPlugin extends JavaPlugin {
     final Logger logger = getLogger();
 
     final UserFacade userFacade = resolveService(getServer(), UserFacade.class);
-    final CurrencyFacade currencyFacade = produceCurrencyFacade(juliet);
+    final CurrencyFacade currencyFacade = getCurrencyFacade(juliet);
     final AccountFacade accountFacade = getAccountFacade(logger, juliet);
-    final PaymentFacade paymentFacade = producePaymentFacade(logger, juliet, economyConfig.payment.paymentBuffer);
+    final PaymentFacade paymentFacade = getPaymentFacade(logger, juliet, economyConfig.payment.paymentBuffer);
     final EconomyFacade economyFacade = getEconomyFacade(logger, userFacade, accountFacade, paymentFacade);
     registerServices(this, Set.of(currencyFacade, accountFacade, paymentFacade, economyFacade));
 
