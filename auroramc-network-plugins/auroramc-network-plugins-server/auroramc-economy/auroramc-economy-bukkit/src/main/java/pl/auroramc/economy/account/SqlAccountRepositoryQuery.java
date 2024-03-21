@@ -7,6 +7,7 @@ final class SqlAccountRepositoryQuery {
       CREATE TABLE IF NOT EXISTS
         `auroramc_economy_accounts`
         (
+          `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
           `user_id` BIGINT NOT NULL,
           `currency_id` BIGINT NOT NULL,
           `balance` DECIMAL(11, 2) NOT NULL,
@@ -40,7 +41,7 @@ final class SqlAccountRepositoryQuery {
   static final String FIND_ACCOUNT_BY_USER_ID_AND_CURRENCY_ID =
       """
       SELECT
-        `user_id`, `currency_id`, `balance`
+        `id`, `user_id`, `currency_id`, `balance`
       FROM
         `auroramc_economy_accounts`
       WHERE

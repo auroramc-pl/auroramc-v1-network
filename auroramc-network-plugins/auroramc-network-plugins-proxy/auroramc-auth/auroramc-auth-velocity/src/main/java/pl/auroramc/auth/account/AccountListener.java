@@ -3,6 +3,7 @@ package pl.auroramc.auth.account;
 import static com.velocitypowered.api.event.EventTask.resumeWhenComplete;
 import static com.velocitypowered.api.event.connection.PreLoginEvent.PreLoginComponentResult.forceOfflineMode;
 import static com.velocitypowered.api.event.connection.PreLoginEvent.PreLoginComponentResult.forceOnlineMode;
+import static java.lang.Boolean.TRUE;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 
@@ -37,7 +38,9 @@ public class AccountListener {
                 .thenCompose(user -> hasPremium(user, event.getUsername()))
                 .thenApply(
                     requiresAuthentication ->
-                        requiresAuthentication ? forceOnlineMode() : forceOfflineMode())
+                        TRUE.equals(requiresAuthentication)
+                            ? forceOnlineMode()
+                            : forceOfflineMode())
                 .thenAccept(event::setResult)
                 .exceptionally(exception -> delegateCaughtException(logger, exception)))
         .execute(continuation);

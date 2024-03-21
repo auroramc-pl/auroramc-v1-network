@@ -30,6 +30,6 @@ public final class AccountBuilder {
   }
 
   public Account build() {
-    return new Account(userId, currencyId, balance);
+    return new Account(null, userId, currencyId, balance);
   }
 }

@@ -1,5 +1,6 @@
 package pl.auroramc.economy.account;
 
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.economy.account.SqlAccountRepositoryQuery.CREATE_ACCOUNT;
 import static pl.auroramc.economy.account.SqlAccountRepositoryQuery.CREATE_ACCOUNT_INDEX_FOR_BALANCE;
@@ -64,11 +65,17 @@ class SqlAccountRepository implements AccountRepository {
   @Override
   public void createAccount(final Account account) {
     try (final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(CREATE_ACCOUNT)) {
+        final PreparedStatement statement =
+            connection.prepareStatement(CREATE_ACCOUNT, RETURN_GENERATED_KEYS)) {
       statement.setLong(1, account.getUserId());
       statement.setLong(2, account.getCurrencyId());
       statement.setBigDecimal(3, account.getBalance());
       statement.executeUpdate();
+      try (final ResultSet generatedKeys = statement.getGeneratedKeys()) {
+        if (generatedKeys.next()) {
+          account.setId(generatedKeys.getLong(1));
+        }
+      }
     } catch (final SQLException exception) {
       throw new AccountRepositoryException(
           "Could not create account identified by %d for %d currency, because of unexpected exception"
@@ -205,6 +212,7 @@ class SqlAccountRepository implements AccountRepository {
 
   private Account mapResultSetToAccount(final ResultSet resultSet) throws SQLException {
     return new Account(
+        resultSet.getLong("id"),
         resultSet.getLong("user_id"),
         resultSet.getLong("currency_id"),
         resultSet.getBigDecimal("balance"));

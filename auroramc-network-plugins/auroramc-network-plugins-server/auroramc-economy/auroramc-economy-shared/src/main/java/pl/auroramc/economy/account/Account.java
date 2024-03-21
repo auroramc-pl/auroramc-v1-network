@@ -7,11 +7,13 @@ import java.util.concurrent.locks.StampedLock;
 public class Account {
 
   private final StampedLock lock = new StampedLock();
+  private Long id;
   private Long userId;
   private Long currencyId;
   private BigDecimal balance;
 
-  Account(final Long userId, final Long currencyId, final BigDecimal balance) {
+  Account(final Long id, final Long userId, final Long currencyId, final BigDecimal balance) {
+    this.id = id;
     this.userId = userId;
     this.currencyId = currencyId;
     this.balance = balance;
@@ -19,6 +21,14 @@ public class Account {
 
   public StampedLock getLock() {
     return lock;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(final Long id) {
+    this.id = id;
   }
 
   public Long getUserId() {
