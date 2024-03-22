@@ -12,7 +12,6 @@
   <artifactId>auroramc-network-shared-server</artifactId>
   <packaging>pom</packaging>
   <modules>
-    <module>auroramc-iridium</module>
     <module>auroramc-nametags</module>
   </modules>
 
