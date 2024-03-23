@@ -15,8 +15,7 @@ public class ExternalIntegrator {
 
   public void configure(final Server server) {
     for (final Entry<Predicate<Server>, ExternalIntegration> entry : integrations.entrySet()) {
-      final Predicate<Server> whetherIntegrationIsSupported = entry.getKey();
-      if (whetherIntegrationIsSupported.test(server)) {
+      if (entry.getKey().test(server)) {
         entry.getValue().configure();
       }
     }
