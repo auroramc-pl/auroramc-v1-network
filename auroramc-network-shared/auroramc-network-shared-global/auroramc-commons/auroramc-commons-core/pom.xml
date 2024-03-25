@@ -17,6 +17,12 @@
 
   <dependencies>
     <dependency>
+      <groupId>it.unimi.dsi</groupId>
+      <artifactId>sux4j</artifactId>
+      <version>5.4.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>dev.rollczi</groupId>
       <artifactId>litecommands-core</artifactId>
       <version>3.4.0</version>
@@ -39,6 +45,18 @@
       <artifactId>adventure-text-minimessage</artifactId>
       <version>4.16.0</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openjdk.jmh</groupId>
+      <artifactId>jmh-core</artifactId>
+      <version>1.37</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openjdk.jmh</groupId>
+      <artifactId>jmh-generator-annprocess</artifactId>
+      <version>1.37</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 

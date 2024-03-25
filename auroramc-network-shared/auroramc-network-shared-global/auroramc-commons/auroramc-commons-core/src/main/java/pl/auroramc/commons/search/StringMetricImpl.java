@@ -1,9 +1,9 @@
 package pl.auroramc.commons.search;
 
+import it.unimi.dsi.bits.LongArrayBitVector;
+
 import static java.lang.Math.max;
 import static java.lang.Math.min;
-
-import java.util.BitSet;
 
 /**
  * The implementation of Jaro-Winkler similarity algorithm, for a string metric that measures an
@@ -35,8 +35,8 @@ class StringMetricImpl implements StringMetric {
       return 1F;
     }
 
-    final BitSet sourceSet = new BitSet(lengthOfSource);
-    final BitSet targetSet = new BitSet(lengthOfTarget);
+    final LongArrayBitVector sourceSet = LongArrayBitVector.ofLength(lengthOfSource);
+    final LongArrayBitVector targetSet = LongArrayBitVector.ofLength(lengthOfTarget);
 
     final int m = getNumberOfMatchingCharacters(source, target, sourceSet, targetSet);
     final int t = getNumberOfTranspositions(source, target, sourceSet, targetSet);
@@ -56,7 +56,10 @@ class StringMetricImpl implements StringMetric {
   }
 
   private int getNumberOfMatchingCharacters(
-      final String source, final String target, final BitSet sourceSet, final BitSet targetSet) {
+      final String source,
+      final String target,
+      final LongArrayBitVector sourceSet,
+      final LongArrayBitVector targetSet) {
     final int lengthOfSource = source.length();
     final int lengthOfTarget = target.length();
     final int frame = max(0, max(lengthOfSource, lengthOfTarget) / 2 - 1);
@@ -66,7 +69,7 @@ class StringMetricImpl implements StringMetric {
       final int a = max(0, i - frame);
       final int b = min((i + frame + 1), lengthOfTarget);
       for (int j = a; j < b; j++) {
-        if (!sourceSet.get(i) && (source.charAt(i) ^ target.charAt(j)) == 0) {
+        if (!sourceSet.getBoolean(i) && (source.charAt(i) ^ target.charAt(j)) == 0) {
           sourceSet.set(i);
           targetSet.set(j);
           matches++;
@@ -81,19 +84,19 @@ class StringMetricImpl implements StringMetric {
   private int getNumberOfTranspositions(
       final String source,
       final String target,
-      final BitSet matchesOfSource,
-      final BitSet matchesOfTarget) {
+      final LongArrayBitVector matchesOfSource,
+      final LongArrayBitVector matchesOfTarget) {
     final int lengthOfSource = source.length();
     final int lengthOfTarget = target.length();
     int transpositions = 0;
 
     int j = 0;
     for (int i = 0; i < lengthOfSource; i++) {
-      if (!matchesOfSource.get(i)) {
+      if (!matchesOfSource.getBoolean(i)) {
         continue;
       }
 
-      while (j < lengthOfTarget && !matchesOfTarget.get(j)) {
+      while (j < lengthOfTarget && !matchesOfTarget.getBoolean(j)) {
         j++;
       }
 
