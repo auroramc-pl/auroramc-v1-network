@@ -13,6 +13,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
+@Deprecated(forRemoval = true)
 public class MutableMessageCollector
     implements Collector<MutableMessage, List<MutableMessage>, MutableMessage> {
 

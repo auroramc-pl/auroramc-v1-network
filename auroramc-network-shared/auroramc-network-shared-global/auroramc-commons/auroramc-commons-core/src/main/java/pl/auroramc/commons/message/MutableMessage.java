@@ -8,6 +8,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 import net.kyori.adventure.text.Component;
 
+@Deprecated(forRemoval = true)
 public class MutableMessage {
 
   public static final String LINE_SEPARATOR = "<newline>";

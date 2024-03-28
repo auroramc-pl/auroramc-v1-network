@@ -4,6 +4,7 @@ import static pl.auroramc.commons.message.MutableMessageCompiler.getMutableMessa
 
 import net.kyori.adventure.text.Component;
 
+@Deprecated(forRemoval = true)
 public final class MutableMessageProxy {
 
   private static final MutableMessageCompiler MESSAGE_COMPILER = getMutableMessageCompiler();

@@ -10,6 +10,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import java.util.Optional;
 import net.kyori.adventure.text.Component;
 
+@Deprecated(forRemoval = true)
 class CachingMutableMessageCompiler implements MutableMessageCompiler {
 
   private final Cache<MutableMessage, Component> compiledMessageByMutableMessage;

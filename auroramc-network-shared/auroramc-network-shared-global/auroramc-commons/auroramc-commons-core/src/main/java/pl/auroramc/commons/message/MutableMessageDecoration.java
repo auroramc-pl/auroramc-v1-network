@@ -5,6 +5,7 @@ import static net.kyori.adventure.text.format.TextDecoration.State.FALSE;
 
 import net.kyori.adventure.text.format.TextDecoration;
 
+@Deprecated(forRemoval = true)
 public record MutableMessageDecoration(TextDecoration decoration, TextDecoration.State state) {
 
   public static MutableMessageDecoration NO_CURSIVE = of(ITALIC, FALSE);

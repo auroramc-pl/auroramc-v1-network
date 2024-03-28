@@ -8,6 +8,7 @@ import java.util.function.Function;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TranslatableComponent;
 
+@Deprecated(forRemoval = true)
 record MutableMessageVariableResolver<T>(Function<T, String> resolver) {
 
   private static final MutableMessageVariableResolver<Object> MESSAGE_DEFAULT_VARIABLE_RESOLVER;

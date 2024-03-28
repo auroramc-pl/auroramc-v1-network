@@ -4,6 +4,7 @@ import static me.clip.placeholderapi.PlaceholderAPI.setPlaceholders;
 
 import org.bukkit.entity.Player;
 
+@Deprecated(forRemoval = true)
 public class BukkitMutableMessage extends MutableMessage {
 
   BukkitMutableMessage(final String template) {

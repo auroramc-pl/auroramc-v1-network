@@ -9,6 +9,7 @@ import net.kyori.adventure.text.Component;
 import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.commons.message.MutableMessageDecoration;
 
+@Deprecated(forRemoval = true)
 public class DeliverableMutableMessage {
 
   private static final DeliverableMutableMessage EMPTY_DELIVERABLE_MUTABLE_MESSAGE =
