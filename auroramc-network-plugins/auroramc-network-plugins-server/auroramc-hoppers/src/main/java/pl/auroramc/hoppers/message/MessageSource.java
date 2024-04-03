@@ -2,9 +2,9 @@ package pl.auroramc.hoppers.message;
 
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Exclude;
-import pl.auroramc.commons.message.MutableMessage;
+import pl.auroramc.messages.message.MutableMessage;
 
-public class MutableMessageSource extends OkaeriConfig {
+public class MessageSource extends OkaeriConfig {
 
   public static final @Exclude String MESSAGE_SOURCE_FILE_NAME = "messages.yml";
 

@@ -4,7 +4,7 @@ import static java.time.Duration.ofSeconds;
 import static org.bukkit.event.EventPriority.HIGHEST;
 import static org.bukkit.event.inventory.InventoryType.HOPPER;
 import static org.bukkit.persistence.PersistentDataType.INTEGER;
-import static pl.auroramc.commons.BukkitUtils.postToMainThreadAndNextTick;
+import static pl.auroramc.commons.scheduler.SchedulerPoll.SYNC;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -18,16 +18,20 @@ import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import pl.auroramc.commons.scheduler.Scheduler;
 
 public class HopperTransferListener implements Listener {
 
   private static final int DEFAULT_TRANSFER_QUANTITY = 1;
   private final Plugin plugin;
+  private final Scheduler scheduler;
   private final NamespacedKey transferQuantityKey;
   private final Cache<Position, Integer> transferQuantityByPositionCache;
 
-  public HopperTransferListener(final Plugin plugin, final NamespacedKey transferQuantityKey) {
+  public HopperTransferListener(
+      final Plugin plugin, final Scheduler scheduler, final NamespacedKey transferQuantityKey) {
     this.plugin = plugin;
+    this.scheduler = scheduler;
     this.transferQuantityKey = transferQuantityKey;
     this.transferQuantityByPositionCache =
         Caffeine.newBuilder().expireAfterWrite(ofSeconds(20)).build();
@@ -43,12 +47,12 @@ public class HopperTransferListener implements Listener {
     final Inventory sourceInventory = event.getSource();
     final Inventory targetInventory = event.getDestination();
 
-    final int transferringQuantity = resolveTransferQuantity(initiator.getLocation());
+    final int transferringQuantity = getTransferQuantity(initiator.getLocation());
     final ItemStack transferredItemStack = event.getItem().clone();
     transferredItemStack.setAmount(transferringQuantity);
 
-    postToMainThreadAndNextTick(
-        plugin,
+    scheduler.run(
+        SYNC,
         () -> {
           sourceInventory.removeItemAnySlot(transferredItemStack);
           targetInventory.addItem(transferredItemStack);
@@ -61,7 +65,7 @@ public class HopperTransferListener implements Listener {
     return initiator.getType() != HOPPER;
   }
 
-  private int resolveTransferQuantity(final Location location) {
+  private int getTransferQuantity(final Location location) {
     final Position position =
         Optional.ofNullable(location)
             .map(
@@ -76,10 +80,10 @@ public class HopperTransferListener implements Listener {
 
     return transferQuantityByPositionCache.get(
         position,
-        key -> resolveTransferQuantityBlocking(new CustomBlockData(location.getBlock(), plugin)));
+        key -> getTransferQuantityBlocking(new CustomBlockData(location.getBlock(), plugin)));
   }
 
-  private int resolveTransferQuantityBlocking(final CustomBlockData blockData) {
+  private int getTransferQuantityBlocking(final CustomBlockData blockData) {
     final int transferQuantity =
         Optional.ofNullable(blockData.get(transferQuantityKey, INTEGER))
             .orElse(DEFAULT_TRANSFER_QUANTITY);
