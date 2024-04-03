@@ -8,7 +8,7 @@ import static dev.rollczi.litecommands.message.LiteMessages.MISSING_PERMISSIONS;
 import static pl.auroramc.commons.BukkitUtils.registerListeners;
 import static pl.auroramc.commons.message.MutableMessage.LINE_SEPARATOR;
 import static pl.auroramc.hoppers.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
-import static pl.auroramc.hoppers.message.MutableMessageVariableKey.SCHEMATICS_VARIABLE_KEY;
+import static pl.auroramc.hoppers.message.MutableMessageVariableKey.SCHEMATICS_PATH;
 
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.adventure.LiteAdventureExtension;
@@ -55,7 +55,7 @@ public class HoppersBukkitPlugin extends JavaPlugin {
                 INVALID_USAGE,
                 context ->
                     messageSource.availableSchematicsSuggestion.with(
-                        SCHEMATICS_VARIABLE_KEY, context.getSchematic().join(LINE_SEPARATOR)))
+                        SCHEMATICS_PATH, context.getSchematic().join(LINE_SEPARATOR)))
             .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
             .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
             .message(PLAYER_NOT_FOUND, messageSource.specifiedPlayerIsUnknown)

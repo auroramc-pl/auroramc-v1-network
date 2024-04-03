@@ -3,8 +3,8 @@ package pl.auroramc.shops.product;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.BACKWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.FORWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationUtils.navigate;
-import static pl.auroramc.shops.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.shops.message.MessageVariableKey.PRICE_VARIABLE_KEY;
+import static pl.auroramc.shops.message.MessageVariableKey.CURRENCY_PATH;
+import static pl.auroramc.shops.message.MessageVariableKey.PRICE_PATH;
 import static pl.auroramc.shops.product.ProductViewUtils.mergeLoreOnItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
@@ -103,11 +103,11 @@ class ProductView {
   private List<MutableMessage> getAdditionalLoreForProductItem(final Product product) {
     return List.of(
         messageSource.sellTag
-            .with(PRICE_VARIABLE_KEY, priceFormat.format(product.priceForSale()))
-            .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol()),
+            .with(PRICE_PATH, priceFormat.format(product.priceForSale()))
+            .with(CURRENCY_PATH, fundsCurrency.getSymbol()),
         messageSource.purchaseTag
-            .with(PRICE_VARIABLE_KEY, priceFormat.format(product.priceForPurchase()))
-            .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol()),
+            .with(PRICE_PATH, priceFormat.format(product.priceForPurchase()))
+            .with(CURRENCY_PATH, fundsCurrency.getSymbol()),
         messageSource.sellSuggestion,
         messageSource.purchaseSuggestion
     );

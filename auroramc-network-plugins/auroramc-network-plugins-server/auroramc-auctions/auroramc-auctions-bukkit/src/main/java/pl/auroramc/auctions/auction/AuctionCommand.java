@@ -4,15 +4,15 @@ import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_DOWN;
 import static java.util.UUID.randomUUID;
 import static pl.auroramc.auctions.auction.AuctionUtils.getPotentialOffer;
-import static pl.auroramc.auctions.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MutableMessageVariableKey.HIGHEST_BID_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MutableMessageVariableKey.MINIMAL_PRICE_PUNCTURE_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MutableMessageVariableKey.MINIMAL_PRICE_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MutableMessageVariableKey.OFFER_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MutableMessageVariableKey.SUBJECT_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MutableMessageVariableKey.TRADER_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MutableMessageVariableKey.UNIQUE_ID_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MutableMessageVariableKey.VENDOR_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.CURRENCY_PATH;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.HIGHEST_BID_PATH;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.MINIMAL_PRICE_PUNCTURE_PATH;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.MINIMAL_PRICE_PATH;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.OFFER_PATH;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.SUBJECT_PATH;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.TRADER_PATH;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.UNIQUE_ID_PATH;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.VENDOR_PATH;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.item.ItemStackFormatter.getFormattedItemStack;
@@ -184,8 +184,8 @@ public class AuctionCommand {
     final Auction auction = auctionFacade.getActiveAuction();
     auctionController.setAuctionOffer(auction, trader.getUniqueId(), offer);
     return messageSource.offered
-        .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
-        .with(OFFER_VARIABLE_KEY, getFormattedDecimal(offer));
+        .with(CURRENCY_PATH, fundsCurrency.getSymbol())
+        .with(OFFER_PATH, getFormattedDecimal(offer));
   }
 
   @Permission("auroramc.auctions.auction.summary")
@@ -197,13 +197,13 @@ public class AuctionCommand {
     }
 
     return messageSource.auctionSummary
-        .with(UNIQUE_ID_VARIABLE_KEY, auction.getAuctionUniqueId())
-        .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(ItemStack.deserializeBytes(auction.getSubject())))
-        .with(VENDOR_VARIABLE_KEY, getDisplayNameByUniqueId(auction.getVendorUniqueId()))
-        .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
-        .with(HIGHEST_BID_VARIABLE_KEY, getHighestBid(auction, fundsCurrency))
-        .with(MINIMAL_PRICE_VARIABLE_KEY, getFormattedDecimal(auction.getMinimalPrice()))
-        .with(MINIMAL_PRICE_PUNCTURE_VARIABLE_KEY, getFormattedDecimal(auction.getMinimalPricePuncture()));
+        .with(UNIQUE_ID_PATH, auction.getAuctionUniqueId())
+        .with(SUBJECT_PATH, getFormattedItemStack(ItemStack.deserializeBytes(auction.getSubject())))
+        .with(VENDOR_PATH, getDisplayNameByUniqueId(auction.getVendorUniqueId()))
+        .with(CURRENCY_PATH, fundsCurrency.getSymbol())
+        .with(HIGHEST_BID_PATH, getHighestBid(auction, fundsCurrency))
+        .with(MINIMAL_PRICE_PATH, getFormattedDecimal(auction.getMinimalPrice()))
+        .with(MINIMAL_PRICE_PUNCTURE_PATH, getFormattedDecimal(auction.getMinimalPricePuncture()));
   }
 
   @Permission("auroramc.auctions.auction.notifications")
@@ -227,9 +227,9 @@ public class AuctionCommand {
     }
 
     return messageSource.auctionWinningBid
-        .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
-        .with(OFFER_VARIABLE_KEY, getFormattedDecimal(auction.getCurrentOffer()))
-        .with(TRADER_VARIABLE_KEY, getDisplayNameByUniqueId(auction.getCurrentTraderUniqueId()));
+        .with(CURRENCY_PATH, fundsCurrency.getSymbol())
+        .with(OFFER_PATH, getFormattedDecimal(auction.getCurrentOffer()))
+        .with(TRADER_PATH, getDisplayNameByUniqueId(auction.getCurrentTraderUniqueId()));
   }
 
   private Component getDisplayNameByUniqueId(final UUID playerUniqueId) {

@@ -1,11 +1,11 @@
 package pl.auroramc.cheque;
 
-import static pl.auroramc.cheque.message.MutableMessageVariableKey.AMOUNT_VARIABLE_KEY;
-import static pl.auroramc.cheque.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.cheque.message.MutableMessageVariableKey.MAXIMUM_CHEQUE_WORTH_VARIABLE_KEY;
-import static pl.auroramc.cheque.message.MutableMessageVariableKey.MAXIMUM_FRACTION_LENGTH_VARIABLE_KEY;
-import static pl.auroramc.cheque.message.MutableMessageVariableKey.MAXIMUM_INTEGRAL_LENGTH_VARIABLE_KEY;
-import static pl.auroramc.cheque.message.MutableMessageVariableKey.MINIMUM_CHEQUE_WORTH_VARIABLE_KEY;
+import static pl.auroramc.cheque.message.MutableMessageVariableKey.AMOUNT_PATH;
+import static pl.auroramc.cheque.message.MutableMessageVariableKey.CURRENCY_PATH;
+import static pl.auroramc.cheque.message.MutableMessageVariableKey.MAXIMUM_CHEQUE_WORTH_PATH;
+import static pl.auroramc.cheque.message.MutableMessageVariableKey.MAXIMUM_FRACTION_LENGTH_PATH;
+import static pl.auroramc.cheque.message.MutableMessageVariableKey.MAXIMUM_INTEGRAL_LENGTH_PATH;
+import static pl.auroramc.cheque.message.MutableMessageVariableKey.MINIMUM_CHEQUE_WORTH_PATH;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.decimal.DecimalUtils.getLengthOfFractionalPart;
@@ -61,16 +61,16 @@ class ChequeCommand {
   ) {
     if (getLengthOfIntegralPart(amount) > 9 || getLengthOfFractionalPart(amount) > 2) {
       return messageSource.chequeCouldNotBeCreatedBecauseOfDigits
-          .with(MAXIMUM_INTEGRAL_LENGTH_VARIABLE_KEY, MAXIMUM_INTEGRAL_LENGTH)
-          .with(MAXIMUM_FRACTION_LENGTH_VARIABLE_KEY, MAXIMUM_FRACTION_LENGTH)
+          .with(MAXIMUM_INTEGRAL_LENGTH_PATH, MAXIMUM_INTEGRAL_LENGTH)
+          .with(MAXIMUM_FRACTION_LENGTH_PATH, MAXIMUM_FRACTION_LENGTH)
           .asCompletedFuture();
     }
 
     if (amount.compareTo(MINIMUM_CHEQUE_WORTH) < 0 || amount.compareTo(MAXIMUM_CHEQUE_WORTH) > 0) {
       return messageSource.chequeCouldNotBeCreatedBecauseOfAmount
-          .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
-          .with(MINIMUM_CHEQUE_WORTH_VARIABLE_KEY, getFormattedDecimal(MINIMUM_CHEQUE_WORTH))
-          .with(MAXIMUM_CHEQUE_WORTH_VARIABLE_KEY, getFormattedDecimal(MAXIMUM_CHEQUE_WORTH))
+          .with(CURRENCY_PATH, fundsCurrency.getSymbol())
+          .with(MINIMUM_CHEQUE_WORTH_PATH, getFormattedDecimal(MINIMUM_CHEQUE_WORTH))
+          .with(MAXIMUM_CHEQUE_WORTH_PATH, getFormattedDecimal(MAXIMUM_CHEQUE_WORTH))
           .asCompletedFuture();
     }
 
@@ -94,8 +94,8 @@ class ChequeCommand {
         .thenApply(chequeFacade::createCheque)
         .thenAccept(chequeItem -> giveItemOrThrowIfFull(player, chequeItem))
         .thenApply(state -> messageSource.chequeIssued
-            .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
-            .with(AMOUNT_VARIABLE_KEY, getFormattedDecimal(amount))
+            .with(CURRENCY_PATH, fundsCurrency.getSymbol())
+            .with(AMOUNT_PATH, getFormattedDecimal(amount))
         )
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }

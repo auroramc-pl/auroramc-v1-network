@@ -2,10 +2,10 @@ package pl.auroramc.economy.balance;
 
 import static com.spotify.futures.CompletableFutures.joinList;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.BALANCE_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.NAME_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.USERNAME_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.BALANCE_PATH;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_PATH;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.NAME_PATH;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.USERNAME_PATH;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -66,7 +66,7 @@ public class BalanceCommand {
     return retrieveBalanceSummaries(target.getUniqueId())
         .thenApply(balanceSummaries ->
             messageSource.balanceSummaryHeaderTargeted
-                .with(USERNAME_VARIABLE_KEY, target.getName())
+                .with(USERNAME_PATH, target.getName())
                 .append(balanceSummaries)
         )
         .exceptionally(exception -> delegateCaughtException(logger, exception));
@@ -97,9 +97,9 @@ public class BalanceCommand {
         .thenApply(DecimalFormatter::getFormattedDecimal)
         .thenApply(balance ->
             messageSource.balanceSummaryEntry
-                .with(NAME_VARIABLE_KEY, currency.getName())
-                .with(CURRENCY_VARIABLE_KEY, currency.getSymbol())
-                .with(BALANCE_VARIABLE_KEY, balance)
+                .with(NAME_PATH, currency.getName())
+                .with(CURRENCY_PATH, currency.getSymbol())
+                .with(BALANCE_PATH, balance)
         )
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }

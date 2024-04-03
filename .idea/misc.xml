@@ -24,6 +24,7 @@
         <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-scoreboard/pom.xml" />
         <option value="$PROJECT_DIR$/auroramc-network-shared/auroramc-commons/pom.xml" />
         <option value="$PROJECT_DIR$/auroramc-network-shared/auroramc-nametags/pom.xml" />
+        <option value="$PROJECT_DIR$/auroramc-network-shared/auroramc-network-shared-global/pom.xml" />
       </set>
     </option>
   </component>

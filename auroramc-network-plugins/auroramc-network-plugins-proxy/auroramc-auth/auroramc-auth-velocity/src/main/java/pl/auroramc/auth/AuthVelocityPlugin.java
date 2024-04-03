@@ -14,7 +14,7 @@ import static pl.auroramc.auth.hash.salt.SaltGeneratorFactory.getSaltGenerator;
 import static pl.auroramc.auth.identity.generator.IdentityGeneratorFactory.getIdentityGenerator;
 import static pl.auroramc.auth.mail.MailFacade.getEmailFacade;
 import static pl.auroramc.auth.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
-import static pl.auroramc.auth.message.MutableMessageVariableKey.SCHEMATICS_VARIABLE_KEY;
+import static pl.auroramc.auth.message.MutableMessageVariableKey.SCHEMATICS_PATH;
 import static pl.auroramc.auth.password.PasswordValidatorFactory.getPasswordValidator;
 import static pl.auroramc.auth.timeout.TimeoutFacadeFactory.getTimeoutFacade;
 import static pl.auroramc.auth.user.UserFacadeFactory.getUserFacade;
@@ -164,7 +164,7 @@ public class AuthVelocityPlugin {
         )
         .message(INVALID_USAGE,
             context -> messageSource.availableSchematicsSuggestion
-                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join(LINE_SEPARATOR))
+                .with(SCHEMATICS_PATH, context.getSchematic().join(LINE_SEPARATOR))
         )
         .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
         .commands(

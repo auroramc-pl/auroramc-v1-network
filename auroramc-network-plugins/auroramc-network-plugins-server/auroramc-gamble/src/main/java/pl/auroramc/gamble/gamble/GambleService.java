@@ -2,10 +2,10 @@ package pl.auroramc.gamble.gamble;
 
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
-import static pl.auroramc.gamble.message.MutableMessageVariableKey.COMPETITOR_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MutableMessageVariableKey.STAKE_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MutableMessageVariableKey.UNIQUE_ID_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.COMPETITOR_PATH;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.CURRENCY_PATH;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.STAKE_PATH;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.UNIQUE_ID_PATH;
 
 import java.util.logging.Logger;
 import pl.auroramc.economy.EconomyFacade;
@@ -48,18 +48,18 @@ class GambleService implements GambleFacade {
         .thenAccept(state -> {
           winnerParticipant.sendMessage(
               messageSource.stakeWon
-                  .with(UNIQUE_ID_VARIABLE_KEY, gamble.getGambleContext().gambleUniqueId().toString())
-                  .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
-                  .with(STAKE_VARIABLE_KEY, getFormattedDecimal(gamble.getGambleContext().stake()))
-                  .with(COMPETITOR_VARIABLE_KEY, losingParticipant.username())
+                  .with(UNIQUE_ID_PATH, gamble.getGambleContext().gambleUniqueId().toString())
+                  .with(CURRENCY_PATH, fundsCurrency.getSymbol())
+                  .with(STAKE_PATH, getFormattedDecimal(gamble.getGambleContext().stake()))
+                  .with(COMPETITOR_PATH, losingParticipant.username())
                   .compile()
           );
           losingParticipant.sendMessage(
               messageSource.stakeLost
-                  .with(UNIQUE_ID_VARIABLE_KEY, gamble.getGambleContext().gambleUniqueId().toString())
-                  .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
-                  .with(STAKE_VARIABLE_KEY, getFormattedDecimal(gamble.getGambleContext().stake()))
-                  .with(COMPETITOR_VARIABLE_KEY, winnerParticipant.username())
+                  .with(UNIQUE_ID_PATH, gamble.getGambleContext().gambleUniqueId().toString())
+                  .with(CURRENCY_PATH, fundsCurrency.getSymbol())
+                  .with(STAKE_PATH, getFormattedDecimal(gamble.getGambleContext().stake()))
+                  .with(COMPETITOR_PATH, winnerParticipant.username())
                   .compile()
           );
         })

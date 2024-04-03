@@ -3,9 +3,9 @@ package pl.auroramc.shops.product;
 import static pl.auroramc.commons.BukkitUtils.postToMainThread;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.item.ItemStackFormatter.getFormattedItemStack;
-import static pl.auroramc.shops.message.MessageVariableKey.AMOUNT_VARIABLE_KEY;
-import static pl.auroramc.shops.message.MessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.shops.message.MessageVariableKey.PRODUCT_VARIABLE_KEY;
+import static pl.auroramc.shops.message.MessageVariableKey.AMOUNT_PATH;
+import static pl.auroramc.shops.message.MessageVariableKey.CURRENCY_PATH;
+import static pl.auroramc.shops.message.MessageVariableKey.PRODUCT_PATH;
 import static pl.auroramc.shops.product.ProductUtils.getEmptySlotsCount;
 import static pl.auroramc.shops.product.ProductUtils.getQuantityInSlots;
 import static pl.auroramc.shops.product.ProductViewFactory.produceProductGui;
@@ -138,14 +138,14 @@ class ProductService implements ProductFacade {
   ) {
     return message
         .with(
-            PRODUCT_VARIABLE_KEY,
+            PRODUCT_PATH,
             getFormattedItemStack(
                 product.subject(),
                 product.quantity()
             )
         )
-        .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
-        .with(AMOUNT_VARIABLE_KEY, priceFormat.format(merchandiseValue));
+        .with(CURRENCY_PATH, fundsCurrency.getSymbol())
+        .with(AMOUNT_PATH, priceFormat.format(merchandiseValue));
   }
 
   private void giveItemOrDropIfFull(final HumanEntity entity, final ItemStack itemStack) {

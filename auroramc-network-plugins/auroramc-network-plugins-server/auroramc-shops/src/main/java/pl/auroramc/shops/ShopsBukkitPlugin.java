@@ -9,7 +9,7 @@ import static pl.auroramc.commons.BukkitUtils.resolveService;
 import static pl.auroramc.commons.message.MutableMessage.LINE_SEPARATOR;
 import static pl.auroramc.shops.ShopsConfig.SHOPS_CONFIG_FILE_NAME;
 import static pl.auroramc.shops.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
-import static pl.auroramc.shops.message.MessageVariableKey.SCHEMATICS_VARIABLE_KEY;
+import static pl.auroramc.shops.message.MessageVariableKey.SCHEMATICS_PATH;
 import static pl.auroramc.shops.product.ProductFacade.getProductFacade;
 import static pl.auroramc.shops.shop.ShopFacade.getShopFacade;
 
@@ -76,7 +76,7 @@ public class ShopsBukkitPlugin extends JavaPlugin {
                 INVALID_USAGE,
                 context ->
                     messageSource.availableSchematicsSuggestion.with(
-                        SCHEMATICS_VARIABLE_KEY, context.getSchematic().join(LINE_SEPARATOR)))
+                        SCHEMATICS_PATH, context.getSchematic().join(LINE_SEPARATOR)))
             .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
             .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
             .commands(LiteCommandsAnnotations.of(new ShopCommand(this, shopFacade, productFacade)))

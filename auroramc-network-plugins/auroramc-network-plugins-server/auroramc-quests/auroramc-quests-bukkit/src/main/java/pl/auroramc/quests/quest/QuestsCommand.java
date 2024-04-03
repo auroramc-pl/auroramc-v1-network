@@ -1,8 +1,8 @@
 package pl.auroramc.quests.quest;
 
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
-import static pl.auroramc.quests.message.MutableMessageVariableKey.QUEST_VARIABLE_KEY;
-import static pl.auroramc.quests.message.MutableMessageVariableKey.USERNAME_VARIABLE_KEY;
+import static pl.auroramc.quests.message.MutableMessageVariableKey.QUEST_PATH;
+import static pl.auroramc.quests.message.MutableMessageVariableKey.USERNAME_PATH;
 import static pl.auroramc.quests.quest.QuestState.COMPLETED;
 import static pl.auroramc.quests.quest.QuestState.IN_PROGRESS;
 
@@ -72,14 +72,14 @@ public class QuestsCommand {
       return (currentState.get() == COMPLETED
               ? messageSource.questIsAlreadyCompleted
               : messageSource.questIsAlreadyAssigned)
-          .with(USERNAME_VARIABLE_KEY, user.getUsername())
-          .with(QUEST_VARIABLE_KEY, quest.getKey().getName());
+          .with(USERNAME_PATH, user.getUsername())
+          .with(QUEST_PATH, quest.getKey().getName());
     }
 
     questTrackController.assignQuest(user, quest, state);
     return messageSource
         .questHasBeenAssigned
-        .with(USERNAME_VARIABLE_KEY, user.getUsername())
-        .with(QUEST_VARIABLE_KEY, quest.getKey().getName());
+        .with(USERNAME_PATH, user.getUsername())
+        .with(QUEST_PATH, quest.getKey().getName());
   }
 }

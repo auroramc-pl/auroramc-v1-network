@@ -1,7 +1,7 @@
 package pl.auroramc.auctions.vault;
 
 import static org.bukkit.Bukkit.getPlayer;
-import static pl.auroramc.auctions.message.MutableMessageVariableKey.SUBJECT_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.SUBJECT_PATH;
 import static pl.auroramc.commons.BukkitUtils.appendItemStackOrDropBelow;
 import static pl.auroramc.commons.BukkitUtils.postToMainThreadAndNextTick;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
@@ -60,7 +60,7 @@ public class VaultController {
     if (player != null) {
       messageSource
           .vaultItemReceived
-          .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(subject))
+          .with(SUBJECT_PATH, getFormattedItemStack(subject))
           .deliver(player);
     }
 
@@ -86,7 +86,7 @@ public class VaultController {
             state ->
                 messageSource
                     .vaultItemRedeemed
-                    .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(vaultItem.getSubject()))
+                    .with(SUBJECT_PATH, getFormattedItemStack(vaultItem.getSubject()))
                     .deliver(player))
         .thenAccept(
             state ->

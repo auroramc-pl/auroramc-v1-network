@@ -4,15 +4,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static java.time.Duration.between;
 import static java.time.Duration.ofSeconds;
 import static java.time.Instant.now;
-import static pl.auroramc.auctions.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MutableMessageVariableKey.CURRENT_OFFER_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MutableMessageVariableKey.CURRENT_TRADER_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MutableMessageVariableKey.MINIMAL_PRICE_PUNCTURE_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MutableMessageVariableKey.MINIMAL_PRICE_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MutableMessageVariableKey.OFFSET_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MutableMessageVariableKey.SUBJECT_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MutableMessageVariableKey.UNIQUE_ID_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MutableMessageVariableKey.VENDOR_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.CURRENCY_PATH;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.CURRENT_OFFER_PATH;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.CURRENT_TRADER_PATH;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.MINIMAL_PRICE_PUNCTURE_PATH;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.MINIMAL_PRICE_PATH;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.OFFSET_PATH;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.SUBJECT_PATH;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.UNIQUE_ID_PATH;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.VENDOR_PATH;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.item.ItemStackFormatter.getFormattedItemStack;
@@ -93,12 +93,12 @@ public class AuctionController {
                 messageFacade.deliverMessage(
                     messageSource
                         .auctionReceivedOffer
-                        .with(UNIQUE_ID_VARIABLE_KEY, auction.getAuctionUniqueId())
-                        .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
-                        .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(auction.getSubject()))
-                        .with(CURRENT_TRADER_VARIABLE_KEY, traderName)
+                        .with(UNIQUE_ID_PATH, auction.getAuctionUniqueId())
+                        .with(CURRENCY_PATH, fundsCurrency.getSymbol())
+                        .with(SUBJECT_PATH, getFormattedItemStack(auction.getSubject()))
+                        .with(CURRENT_TRADER_PATH, traderName)
                         .with(
-                            CURRENT_OFFER_VARIABLE_KEY,
+                            CURRENT_OFFER_PATH,
                             getFormattedDecimal(auction.getCurrentOffer()))))
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }
@@ -110,8 +110,8 @@ public class AuctionController {
       messageFacade.deliverMessage(
           messageSource
               .auctionHasBeenExtended
-              .with(UNIQUE_ID_VARIABLE_KEY, auction.getAuctionUniqueId())
-              .with(OFFSET_VARIABLE_KEY, AUCTION_BIDDING_OFFSET.getSeconds()));
+              .with(UNIQUE_ID_PATH, auction.getAuctionUniqueId())
+              .with(OFFSET_PATH, AUCTION_BIDDING_OFFSET.getSeconds()));
     }
   }
 
@@ -122,13 +122,13 @@ public class AuctionController {
     messageFacade.deliverMessage(
         messageSource
             .auctionHasStarted
-            .with(UNIQUE_ID_VARIABLE_KEY, auction.getAuctionUniqueId())
-            .with(VENDOR_VARIABLE_KEY, vendorName)
-            .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(auction.getSubject()))
-            .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
-            .with(MINIMAL_PRICE_VARIABLE_KEY, getFormattedDecimal(auction.getMinimalPrice()))
+            .with(UNIQUE_ID_PATH, auction.getAuctionUniqueId())
+            .with(VENDOR_PATH, vendorName)
+            .with(SUBJECT_PATH, getFormattedItemStack(auction.getSubject()))
+            .with(CURRENCY_PATH, fundsCurrency.getSymbol())
+            .with(MINIMAL_PRICE_PATH, getFormattedDecimal(auction.getMinimalPrice()))
             .with(
-                MINIMAL_PRICE_PUNCTURE_VARIABLE_KEY,
+                MINIMAL_PRICE_PUNCTURE_PATH,
                 getFormattedDecimal(auction.getMinimalPricePuncture())));
   }
 
@@ -158,12 +158,12 @@ public class AuctionController {
     messageFacade.deliverMessage(
         messageSource
             .auctionHasCompleted
-            .with(UNIQUE_ID_VARIABLE_KEY, auction.getAuctionUniqueId())
-            .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
-            .with(VENDOR_VARIABLE_KEY, vendorName)
-            .with(SUBJECT_VARIABLE_KEY, getFormattedItemStack(auction.getSubject()))
-            .with(CURRENT_OFFER_VARIABLE_KEY, getFormattedDecimal(auction.getCurrentOffer()))
-            .with(CURRENT_TRADER_VARIABLE_KEY, traderName));
+            .with(UNIQUE_ID_PATH, auction.getAuctionUniqueId())
+            .with(CURRENCY_PATH, fundsCurrency.getSymbol())
+            .with(VENDOR_PATH, vendorName)
+            .with(SUBJECT_PATH, getFormattedItemStack(auction.getSubject()))
+            .with(CURRENT_OFFER_PATH, getFormattedDecimal(auction.getCurrentOffer()))
+            .with(CURRENT_TRADER_PATH, traderName));
   }
 
   private void restoreSubject(final Auction auction, final Component vendorName) {
@@ -171,8 +171,8 @@ public class AuctionController {
     messageFacade.deliverMessage(
         messageSource
             .auctionHasCompletedWithoutOffers
-            .with(UNIQUE_ID_VARIABLE_KEY, auction.getAuctionUniqueId())
-            .with(VENDOR_VARIABLE_KEY, vendorName));
+            .with(UNIQUE_ID_PATH, auction.getAuctionUniqueId())
+            .with(VENDOR_PATH, vendorName));
   }
 
   private void getUsernameByUniqueIdAndDelegate(

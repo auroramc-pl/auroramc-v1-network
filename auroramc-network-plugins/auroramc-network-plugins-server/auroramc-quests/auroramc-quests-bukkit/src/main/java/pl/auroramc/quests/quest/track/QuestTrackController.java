@@ -2,7 +2,7 @@ package pl.auroramc.quests.quest.track;
 
 import static java.util.concurrent.CompletableFuture.runAsync;
 import static pl.auroramc.commons.BukkitUtils.postToMainThread;
-import static pl.auroramc.quests.message.MutableMessageVariableKey.QUEST_VARIABLE_KEY;
+import static pl.auroramc.quests.message.MutableMessageVariableKey.QUEST_PATH;
 import static pl.auroramc.quests.quest.QuestState.COMPLETED;
 
 import java.util.Objects;
@@ -105,7 +105,7 @@ public class QuestTrackController {
     player.sendMessage(
         messageSource
             .questHasBeenCompleted
-            .with(QUEST_VARIABLE_KEY, quest.getKey().getId())
+            .with(QUEST_PATH, quest.getKey().getId())
             .compile());
   }
 }

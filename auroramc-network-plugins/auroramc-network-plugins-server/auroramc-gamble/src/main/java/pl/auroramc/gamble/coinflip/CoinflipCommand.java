@@ -8,9 +8,9 @@ import static org.apache.commons.lang3.StringUtils.capitalize;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.gamble.gamble.GambleKey.COINFLIP;
-import static pl.auroramc.gamble.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MutableMessageVariableKey.PREDICTION_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MutableMessageVariableKey.STAKE_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.CURRENCY_PATH;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.PREDICTION_PATH;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.STAKE_PATH;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -110,9 +110,9 @@ public class CoinflipCommand {
           );
           stakeViewFacade.recalculate();
           return messageSource.stakeCreated
-              .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
-              .with(STAKE_VARIABLE_KEY, getFormattedDecimal(stake))
-              .with(PREDICTION_VARIABLE_KEY, capitalize(prediction.name().toLowerCase(ROOT)));
+              .with(CURRENCY_PATH, fundsCurrency.getSymbol())
+              .with(STAKE_PATH, getFormattedDecimal(stake))
+              .with(PREDICTION_PATH, capitalize(prediction.name().toLowerCase(ROOT)));
         })
         .exceptionally(exception -> delegateCaughtException(logger, exception));
   }

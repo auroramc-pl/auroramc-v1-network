@@ -7,7 +7,7 @@ import static dev.rollczi.litecommands.message.LiteMessages.MISSING_PERMISSIONS;
 import static moe.rafal.juliet.datasource.HikariPooledDataSourceFactory.produceHikariDataSource;
 import static pl.auroramc.cheque.ChequeConfig.PLUGIN_CONFIG_FILE_NAME;
 import static pl.auroramc.cheque.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
-import static pl.auroramc.cheque.message.MutableMessageVariableKey.SCHEMATICS_VARIABLE_KEY;
+import static pl.auroramc.cheque.message.MutableMessageVariableKey.SCHEMATICS_PATH;
 import static pl.auroramc.cheque.payment.PaymentFacade.getPaymentFacade;
 import static pl.auroramc.commons.BukkitUtils.registerListeners;
 import static pl.auroramc.commons.BukkitUtils.resolveService;
@@ -89,7 +89,7 @@ public class ChequeBukkitPlugin extends JavaPlugin {
                 INVALID_USAGE,
                 context ->
                     messageSource.availableSchematicsSuggestion.with(
-                        SCHEMATICS_VARIABLE_KEY, context.getSchematic().join(LINE_SEPARATOR)))
+                        SCHEMATICS_PATH, context.getSchematic().join(LINE_SEPARATOR)))
             .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
             .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
             .message(PLAYER_NOT_FOUND, messageSource.specifiedPlayerIsUnknown)

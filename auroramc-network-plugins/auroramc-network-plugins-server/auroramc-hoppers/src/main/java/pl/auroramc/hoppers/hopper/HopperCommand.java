@@ -3,7 +3,7 @@ package pl.auroramc.hoppers.hopper;
 import static org.bukkit.Material.HOPPER;
 import static org.bukkit.persistence.PersistentDataType.INTEGER;
 import static pl.auroramc.commons.BukkitUtils.appendItemStackOrDropBelow;
-import static pl.auroramc.hoppers.message.MutableMessageVariableKey.QUANTITY_VARIABLE_KEY;
+import static pl.auroramc.hoppers.message.MutableMessageVariableKey.QUANTITY_PATH;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -33,13 +33,13 @@ public class HopperCommand {
   @Execute
   MutableMessage hopper(final @Context Player player, final @Arg Integer transferQuantity) {
     appendItemStackOrDropBelow(player, getHopperItem(transferQuantity));
-    return messageSource.hopperHasBeenGiven.with(QUANTITY_VARIABLE_KEY, transferQuantity);
+    return messageSource.hopperHasBeenGiven.with(QUANTITY_PATH, transferQuantity);
   }
 
   private ItemStack getHopperItem(final Integer transferQuantity) {
     return ItemStackBuilder.newBuilder(HOPPER)
         .displayName(
-            messageSource.hopperDisplayName.with(QUANTITY_VARIABLE_KEY, transferQuantity).compile())
+            messageSource.hopperDisplayName.with(QUANTITY_PATH, transferQuantity).compile())
         .data(transferQuantityKey, INTEGER, transferQuantity)
         .build();
   }

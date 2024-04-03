@@ -3,11 +3,11 @@ package pl.auroramc.economy.balance.leaderboard;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.message.MutableMessage.EMPTY_DELIMITER;
 import static pl.auroramc.commons.message.MutableMessage.empty;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.BALANCE_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_ID_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.POSITION_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.USERNAME_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.BALANCE_PATH;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_ID_PATH;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_PATH;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.POSITION_PATH;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.USERNAME_PATH;
 
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
@@ -54,7 +54,7 @@ public class LeaderboardCommand {
     final Currency currency = currencyFacade.getCurrencyById(currencyIdOrDefault);
     if (currency == null) {
       return messageSource.missingCurrency
-          .with(CURRENCY_ID_VARIABLE_KEY, currencyIdOrDefault);
+          .with(CURRENCY_ID_PATH, currencyIdOrDefault);
     }
 
     return getLeaderboardView(player, currency);
@@ -86,10 +86,10 @@ public class LeaderboardCommand {
       final Currency currency, final LeaderboardEntry entry
   ) {
     return messageSource.leaderboardFooter
-        .with(CURRENCY_VARIABLE_KEY, currency.getSymbol())
-        .with(POSITION_VARIABLE_KEY, entry.position())
-        .with(USERNAME_VARIABLE_KEY, entry.username())
-        .with(BALANCE_VARIABLE_KEY, getFormattedDecimal(entry.balance()));
+        .with(CURRENCY_PATH, currency.getSymbol())
+        .with(POSITION_PATH, entry.position())
+        .with(USERNAME_PATH, entry.username())
+        .with(BALANCE_PATH, getFormattedDecimal(entry.balance()));
   }
 
   private MutableMessage getLeaderboardFooter(
@@ -117,9 +117,9 @@ public class LeaderboardCommand {
       final Currency currency, final LeaderboardEntry entry
   ) {
     return messageSource.leaderboardEntry
-        .with(CURRENCY_VARIABLE_KEY, currency.getSymbol())
-        .with(POSITION_VARIABLE_KEY, entry.position())
-        .with(USERNAME_VARIABLE_KEY, entry.username())
-        .with(BALANCE_VARIABLE_KEY, getFormattedDecimal(entry.balance()));
+        .with(CURRENCY_PATH, currency.getSymbol())
+        .with(POSITION_PATH, entry.position())
+        .with(USERNAME_PATH, entry.username())
+        .with(BALANCE_PATH, getFormattedDecimal(entry.balance()));
   }
 }

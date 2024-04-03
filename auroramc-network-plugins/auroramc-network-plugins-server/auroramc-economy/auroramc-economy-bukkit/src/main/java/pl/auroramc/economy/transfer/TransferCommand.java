@@ -6,10 +6,10 @@ import static java.util.logging.Level.SEVERE;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.lazy.Lazy.lazy;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.AMOUNT_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.SOURCE_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.TARGET_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.AMOUNT_PATH;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_PATH;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.SOURCE_PATH;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.TARGET_PATH;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -102,16 +102,16 @@ public class TransferCommand {
         .thenAccept(state -> {
           source.sendMessage(
               messageSource.transferSent
-                  .with(TARGET_VARIABLE_KEY, target.getName())
-                  .with(CURRENCY_VARIABLE_KEY, resolvedCurrency.getSymbol())
-                  .with(AMOUNT_VARIABLE_KEY, preformattedAmount)
+                  .with(TARGET_PATH, target.getName())
+                  .with(CURRENCY_PATH, resolvedCurrency.getSymbol())
+                  .with(AMOUNT_PATH, preformattedAmount)
                   .compile()
           );
           target.sendMessage(
               messageSource.transferReceived
-                  .with(SOURCE_VARIABLE_KEY, source.getName())
-                  .with(CURRENCY_VARIABLE_KEY, resolvedCurrency.getSymbol())
-                  .with(AMOUNT_VARIABLE_KEY, preformattedAmount)
+                  .with(SOURCE_PATH, source.getName())
+                  .with(CURRENCY_PATH, resolvedCurrency.getSymbol())
+                  .with(AMOUNT_PATH, preformattedAmount)
                   .compile()
           );
         })

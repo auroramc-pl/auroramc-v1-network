@@ -10,7 +10,7 @@ import static pl.auroramc.auctions.auction.AuctionFacadeFactory.getAuctionFacade
 import static pl.auroramc.auctions.audience.AudienceFacade.getAudienceFacade;
 import static pl.auroramc.auctions.message.MessageFacade.getMessageFacade;
 import static pl.auroramc.auctions.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
-import static pl.auroramc.auctions.message.MutableMessageVariableKey.SCHEMATICS_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.SCHEMATICS_PATH;
 import static pl.auroramc.auctions.vault.VaultFacade.getVaultFacade;
 import static pl.auroramc.auctions.vault.item.VaultItemFacade.getVaultItemFacade;
 import static pl.auroramc.commons.BukkitUtils.getTicksOf;
@@ -158,7 +158,7 @@ public class AuctionsBukkitPlugin extends JavaPlugin {
         )
         .message(INVALID_USAGE,
             context -> messageSource.availableSchematicsSuggestion
-                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join(LINE_SEPARATOR))
+                .with(SCHEMATICS_PATH, context.getSchematic().join(LINE_SEPARATOR))
         )
         .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
         .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)

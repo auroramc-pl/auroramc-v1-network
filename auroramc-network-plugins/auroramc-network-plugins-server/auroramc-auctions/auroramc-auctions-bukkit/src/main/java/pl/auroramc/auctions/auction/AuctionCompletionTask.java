@@ -4,8 +4,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static java.time.Duration.between;
 import static java.time.Duration.ofSeconds;
 import static java.time.Instant.now;
-import static pl.auroramc.auctions.message.MutableMessageVariableKey.PERIOD_VARIABLE_KEY;
-import static pl.auroramc.auctions.message.MutableMessageVariableKey.UNIQUE_ID_VARIABLE_KEY;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.PERIOD_PATH;
+import static pl.auroramc.auctions.message.MutableMessageVariableKey.UNIQUE_ID_PATH;
 
 import java.time.Duration;
 import pl.auroramc.auctions.message.MessageFacade;
@@ -46,8 +46,8 @@ public class AuctionCompletionTask implements Runnable {
         messageFacade.deliverMessage(
             messageSource
                 .auctionNearCompletion
-                .with(UNIQUE_ID_VARIABLE_KEY, auction.getAuctionUniqueId())
-                .with(PERIOD_VARIABLE_KEY, period.plus(ofSeconds(1)).getSeconds()));
+                .with(UNIQUE_ID_PATH, auction.getAuctionUniqueId())
+                .with(PERIOD_PATH, period.plus(ofSeconds(1)).getSeconds()));
       }
     }
   }

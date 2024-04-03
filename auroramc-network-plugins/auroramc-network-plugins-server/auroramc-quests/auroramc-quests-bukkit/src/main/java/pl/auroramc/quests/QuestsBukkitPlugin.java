@@ -15,7 +15,7 @@ import static pl.auroramc.commons.config.serdes.juliet.JulietConfig.JULIET_CONFI
 import static pl.auroramc.commons.message.MutableMessage.LINE_SEPARATOR;
 import static pl.auroramc.quests.integration.placeholderapi.PlaceholderApiIntegrationFactory.producePlaceholderApiIntegration;
 import static pl.auroramc.quests.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
-import static pl.auroramc.quests.message.MutableMessageVariableKey.SCHEMATICS_VARIABLE_KEY;
+import static pl.auroramc.quests.message.MutableMessageVariableKey.SCHEMATICS_PATH;
 import static pl.auroramc.quests.objective.progress.ObjectiveProgressFacadeFactory.getObjectiveProgressFacade;
 import static pl.auroramc.quests.quest.QuestFacadeFactory.getQuestFacade;
 import static pl.auroramc.quests.quest.QuestIndexFactory.getQuestIndex;
@@ -162,7 +162,7 @@ public class QuestsBukkitPlugin extends JavaPlugin {
         )
         .message(INVALID_USAGE,
             context -> messageSource.availableSchematicsSuggestion
-                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join(LINE_SEPARATOR))
+                .with(SCHEMATICS_PATH, context.getSchematic().join(LINE_SEPARATOR))
         )
         .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
         .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)

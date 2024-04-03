@@ -2,16 +2,12 @@ package pl.auroramc.dailyrewards.visit;
 
 import static java.time.Instant.now;
 import static java.util.Comparator.comparing;
-import static pl.auroramc.commons.period.PeriodFormatter.getFormattedPeriod;
-import static pl.auroramc.commons.period.PeriodFormatter.getFormattedPeriodShortly;
-import static pl.auroramc.commons.period.PeriodUtils.getMaximumTimeOfDay;
-import static pl.auroramc.commons.period.PeriodUtils.getMinimumTimeOfDay;
-import static pl.auroramc.dailyrewards.message.MutableMessageVariableKey.FROM_VARIABLE_KEY;
-import static pl.auroramc.dailyrewards.message.MutableMessageVariableKey.PERIOD_VARIABLE_KEY;
-import static pl.auroramc.dailyrewards.message.MutableMessageVariableKey.PLAYTIME_VARIABLE_KEY;
-import static pl.auroramc.dailyrewards.message.MutableMessageVariableKey.SESSION_DITCH_VARIABLE_KEY;
-import static pl.auroramc.dailyrewards.message.MutableMessageVariableKey.SESSION_START_VARIABLE_KEY;
-import static pl.auroramc.dailyrewards.message.MutableMessageVariableKey.TO_VARIABLE_KEY;
+import static pl.auroramc.commons.format.temporal.TemporalUtils.getMaximumTimeOfDay;
+import static pl.auroramc.commons.format.temporal.TemporalUtils.getMinimumTimeOfDay;
+import static pl.auroramc.commons.range.Between.ranged;
+import static pl.auroramc.commons.range.Between.single;
+import static pl.auroramc.dailyrewards.message.MessageSourcePaths.PERIOD_PATH;
+import static pl.auroramc.dailyrewards.message.MessageSourcePaths.VISIT_PATH;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -20,96 +16,86 @@ import dev.rollczi.litecommands.annotations.execute.Execute;
 import java.time.Instant;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
-import pl.auroramc.commons.duration.DurationFormatter;
-import pl.auroramc.commons.message.MutableMessage;
-import pl.auroramc.dailyrewards.message.MutableMessageSource;
+import pl.auroramc.commons.range.Between;
+import pl.auroramc.dailyrewards.message.MessageSource;
+import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
+import pl.auroramc.messages.message.component.ComponentCollector;
 import pl.auroramc.registry.user.User;
 import pl.auroramc.registry.user.UserFacade;
 
-@Command(
-    name = "visit",
-    aliases = {"session", "sessions"})
+@Command(name = "visit", aliases = "visits")
 public class VisitCommand {
 
-  private final MutableMessageSource messageSource;
+  private final MessageSource messageSource;
+  private final BukkitMessageCompiler messageCompiler;
   private final UserFacade userFacade;
   private final VisitFacade visitFacade;
-  private final DurationFormatter durationFormatter;
 
   public VisitCommand(
-      final MutableMessageSource messageSource,
+      final MessageSource messageSource,
+      final BukkitMessageCompiler messageCompiler,
       final UserFacade userFacade,
-      final VisitFacade visitFacade,
-      final DurationFormatter durationFormatter) {
+      final VisitFacade visitFacade) {
     this.messageSource = messageSource;
+    this.messageCompiler = messageCompiler;
     this.userFacade = userFacade;
     this.visitFacade = visitFacade;
-    this.durationFormatter = durationFormatter;
   }
 
   @Execute
-  public CompletableFuture<MutableMessage> visit(final @Context Player player) {
-    final Instant now = now();
+  public CompletableFuture<Component> visit(final @Context Player player) {
+    final Between<Instant> range = single(now());
     return userFacade
         .getUserByUniqueId(player.getUniqueId())
         .thenApply(User::getId)
-        .thenApply(
+        .thenCompose(
             userId ->
                 visitFacade.getVisitsByUserIdBetween(
-                    userId, getMinimumTimeOfDay(now), getMaximumTimeOfDay(now)))
-        .thenApply(visits -> getFormattedVisits(now, visits));
+                    userId,
+                    getMinimumTimeOfDay(range.minimum()),
+                    getMaximumTimeOfDay(range.minimum())))
+        .thenApply(visits -> getFormattedVisits(range, visits));
   }
 
   @Execute(name = "ranged")
-  public CompletableFuture<MutableMessage> visitRanged(
+  public CompletableFuture<Component> visitRanged(
       final @Context Player player, final @Arg Instant from, final @Arg Instant to) {
+    final Between<Instant> range = ranged(from, to);
     return userFacade
         .getUserByUniqueId(player.getUniqueId())
         .thenApply(User::getId)
-        .thenApply(userId -> visitFacade.getVisitsByUserIdBetween(userId, from, to))
-        .thenApply(visits -> getFormattedVisits(from, to, visits));
+        .thenCompose(userId -> visitFacade.getVisitsByUserIdBetween(userId, from, to))
+        .thenApply(visits -> getFormattedVisits(range, visits));
   }
 
-  private MutableMessage getFormattedVisitHeader(final Instant period) {
-    return messageSource.visitDailySummary.with(
-        PERIOD_VARIABLE_KEY, getFormattedPeriodShortly(period));
+  private Component getFormattedVisitHeader(final Between<Instant> period) {
+    return messageCompiler
+        .compile(
+            (period.single() ? messageSource.visitDailySummary : messageSource.visitRangeSummary)
+                .placeholder(PERIOD_PATH, period))
+        .getComponent();
   }
 
-  private MutableMessage getFormattedVisitHeader(final Instant from, final Instant to) {
-    return messageSource
-        .visitRangeSummary
-        .with(FROM_VARIABLE_KEY, getFormattedPeriodShortly(from))
-        .with(TO_VARIABLE_KEY, getFormattedPeriodShortly(to));
+  private Component getFormattedVisits(final Between<Instant> period, final Set<Visit> visits) {
+    if (visits.isEmpty()) {
+      return messageCompiler.compile(messageSource.noVisits).getComponent();
+    }
+    return getFormattedVisitHeader(period).appendNewline().append(getFormattedVisits(visits));
   }
 
-  private MutableMessage getFormattedVisits(final Instant period, final Set<Visit> visits) {
-    return getFormattedVisits(getFormattedVisitHeader(period), visits);
+  private Component getFormattedVisit(final VisitContext context) {
+    return messageCompiler
+        .compile(messageSource.visitEntry.placeholder(VISIT_PATH, context))
+        .getComponent();
   }
 
-  private MutableMessage getFormattedVisits(
-      final Instant from, final Instant to, final Set<Visit> visits) {
-    return getFormattedVisits(getFormattedVisitHeader(from, to), visits);
-  }
-
-  private MutableMessage getFormattedVisits(final MutableMessage header, final Set<Visit> visits) {
-    return visits.isEmpty() ? messageSource.noVisits : header.append(getFormattedVisits(visits));
-  }
-
-  private MutableMessage getFormattedVisit(final Visit visit) {
-    return messageSource
-        .visitEntry
-        .with(SESSION_START_VARIABLE_KEY, getFormattedPeriod(visit.getSessionStartTime()))
-        .with(SESSION_DITCH_VARIABLE_KEY, getFormattedPeriod(visit.getSessionDitchTime()))
-        .with(
-            PLAYTIME_VARIABLE_KEY,
-            durationFormatter.getFormattedDuration(visit.getSessionDuration()));
-  }
-
-  private MutableMessage getFormattedVisits(final Set<Visit> visits) {
+  private Component getFormattedVisits(final Set<Visit> visits) {
     return visits.stream()
         .sorted(comparing(Visit::getSessionStartTime).reversed())
+        .map(VisitContext::completed)
         .map(this::getFormattedVisit)
-        .collect(MutableMessage.collector());
+        .collect(ComponentCollector.collector());
   }
 }

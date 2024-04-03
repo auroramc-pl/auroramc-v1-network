@@ -1,7 +1,6 @@
 package pl.auroramc.dailyrewards.visit;
 
 import static java.time.Instant.now;
-import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -11,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import pl.auroramc.commons.CompletableFutureUtils;
 import pl.auroramc.dailyrewards.DailyRewardsConfig;
 import pl.auroramc.registry.user.UserFacade;
 
@@ -40,7 +40,7 @@ public class VisitListener implements Listener {
     userFacade
         .getUserByUniqueId(event.getPlayer().getUniqueId())
         .thenAccept(user -> visitController.startVisitTracking(user.getUniqueId()))
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
   @EventHandler
@@ -65,7 +65,7 @@ public class VisitListener implements Listener {
     userFacade
         .getUserByUniqueId(player.getUniqueId())
         .thenApply(user -> new Visit(user.getId(), visitPeriod, visitStartTime, visitDitchTime))
-        .thenAccept(visitFacade::createVisit)
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+        .thenCompose(visitFacade::createVisit)
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 }

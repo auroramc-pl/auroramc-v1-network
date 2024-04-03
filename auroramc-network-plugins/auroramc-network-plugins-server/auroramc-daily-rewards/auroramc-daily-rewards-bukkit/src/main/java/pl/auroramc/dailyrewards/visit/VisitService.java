@@ -1,36 +1,36 @@
 package pl.auroramc.dailyrewards.visit;
 
-import static java.util.concurrent.CompletableFuture.runAsync;
-import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
+import static pl.auroramc.commons.scheduler.SchedulerPoll.ASYNC;
 
 import java.time.Instant;
 import java.util.Set;
-import java.util.logging.Logger;
+import java.util.concurrent.CompletableFuture;
+import pl.auroramc.commons.scheduler.Scheduler;
 
 class VisitService implements VisitFacade {
 
-  private final Logger logger;
+  private final Scheduler scheduler;
   private final VisitRepository visitRepository;
 
-  VisitService(final Logger logger, final VisitRepository visitRepository) {
-    this.logger = logger;
+  VisitService(final Scheduler scheduler, final VisitRepository visitRepository) {
+    this.scheduler = scheduler;
     this.visitRepository = visitRepository;
   }
 
   @Override
-  public void createVisit(final Visit visit) {
-    runAsync(() -> visitRepository.createVisit(visit))
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+  public CompletableFuture<Void> createVisit(final Visit visit) {
+    return scheduler.run(ASYNC, () -> visitRepository.createVisit(visit));
   }
 
   @Override
-  public Set<Visit> getVisitsByUserId(final Long userId) {
-    return visitRepository.findVisitsByUserId(userId);
+  public CompletableFuture<Set<Visit>> getVisitsByUserId(final Long userId) {
+    return scheduler.supply(ASYNC, () -> visitRepository.findVisitsByUserId(userId));
   }
 
   @Override
-  public Set<Visit> getVisitsByUserIdBetween(
+  public CompletableFuture<Set<Visit>> getVisitsByUserIdBetween(
       final Long userId, final Instant from, final Instant to) {
-    return visitRepository.findVisitsByUserIdBetween(userId, from, to);
+    return scheduler.supply(
+        ASYNC, () -> visitRepository.findVisitsByUserIdBetween(userId, from, to));
   }
 }

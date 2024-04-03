@@ -19,7 +19,7 @@ import static pl.auroramc.commons.message.MutableMessageDecoration.NO_CURSIVE;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.BACKWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.FORWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationUtils.navigate;
-import static pl.auroramc.quests.message.MutableMessageVariableKey.QUEST_VARIABLE_KEY;
+import static pl.auroramc.quests.message.MutableMessageVariableKey.QUEST_PATH;
 import static pl.auroramc.quests.quest.QuestState.IN_PROGRESS;
 
 import com.github.stefvanschie.inventoryframework.adventuresupport.ComponentHolder;
@@ -203,7 +203,7 @@ public class QuestsView {
 
           viewer.sendMessage(
               messageSource.observingQuest
-                  .with(QUEST_VARIABLE_KEY, quest.getKey().getId())
+                  .with(QUEST_PATH, quest.getKey().getId())
                   .compile()
           );
         })

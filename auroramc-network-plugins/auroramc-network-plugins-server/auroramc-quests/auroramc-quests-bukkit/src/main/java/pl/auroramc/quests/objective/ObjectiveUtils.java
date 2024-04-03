@@ -5,10 +5,10 @@ import static java.util.Locale.ROOT;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Stream.concat;
-import static pl.auroramc.quests.message.MutableMessageVariableKey.DATA_VARIABLE_KEY;
-import static pl.auroramc.quests.message.MutableMessageVariableKey.GOAL_VARIABLE_KEY;
-import static pl.auroramc.quests.message.MutableMessageVariableKey.ITEM_VARIABLE_KEY;
-import static pl.auroramc.quests.message.MutableMessageVariableKey.TYPE_VARIABLE_KEY;
+import static pl.auroramc.quests.message.MutableMessageVariableKey.DATA_PATH;
+import static pl.auroramc.quests.message.MutableMessageVariableKey.GOAL_PATH;
+import static pl.auroramc.quests.message.MutableMessageVariableKey.ITEM_PATH;
+import static pl.auroramc.quests.message.MutableMessageVariableKey.TYPE_PATH;
 
 import java.util.List;
 import java.util.Map;
@@ -63,16 +63,16 @@ public final class ObjectiveUtils {
       final Objective<?> objective, final ObjectiveProgress objectiveProgress) {
     return objective
         .getMessage()
-        .with(TYPE_VARIABLE_KEY, getFormattedNameOfMaterial(objective.getType()))
-        .with(DATA_VARIABLE_KEY, objectiveProgress.getData())
-        .with(GOAL_VARIABLE_KEY, objectiveProgress.getGoal());
+        .with(TYPE_PATH, getFormattedNameOfMaterial(objective.getType()))
+        .with(DATA_PATH, objectiveProgress.getData())
+        .with(GOAL_PATH, objectiveProgress.getGoal());
   }
 
   private static MutableMessage getObjectiveRequirement(final ObjectiveRequirement requirement) {
     return requirement
         .getMessage()
         .with(
-            ITEM_VARIABLE_KEY,
+            ITEM_PATH,
             requirement instanceof HeldItemRequirement heldItemRequirement
                 ? getFormattedNameOfMaterial(heldItemRequirement.getRequiredMaterial())
                 : EMPTY_ARGUMENT);

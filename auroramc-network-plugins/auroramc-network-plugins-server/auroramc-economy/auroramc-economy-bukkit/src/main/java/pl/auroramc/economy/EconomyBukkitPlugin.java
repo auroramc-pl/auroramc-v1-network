@@ -16,7 +16,7 @@ import static pl.auroramc.economy.balance.leaderboard.LeaderboardFacade.getLeade
 import static pl.auroramc.economy.currency.CurrencyFacadeFactory.getCurrencyFacade;
 import static pl.auroramc.economy.integration.placeholderapi.PlaceholderApiIntegrationFactory.producePlaceholderApiIntegration;
 import static pl.auroramc.economy.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.SCHEMATICS_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.SCHEMATICS_PATH;
 import static pl.auroramc.economy.payment.PaymentFacadeFactory.getPaymentFacade;
 
 import dev.rollczi.litecommands.LiteCommands;
@@ -105,7 +105,7 @@ public class EconomyBukkitPlugin extends JavaPlugin {
         )
         .message(INVALID_USAGE,
             context -> messageSource.availableSchematicsSuggestion
-                .with(SCHEMATICS_VARIABLE_KEY, context.getSchematic().join(LINE_SEPARATOR))
+                .with(SCHEMATICS_PATH, context.getSchematic().join(LINE_SEPARATOR))
         )
         .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
         .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)

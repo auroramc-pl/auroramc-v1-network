@@ -4,10 +4,10 @@ import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_DOWN;
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.AMOUNT_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_ID_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.USERNAME_VARIABLE_KEY;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.AMOUNT_PATH;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_ID_PATH;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_PATH;
+import static pl.auroramc.economy.message.MutableMessageVariableKey.USERNAME_PATH;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -84,9 +84,9 @@ public class EconomyCommand {
             state ->
                 messageSource
                     .balanceSet
-                    .with(USERNAME_VARIABLE_KEY, player.name())
-                    .with(CURRENCY_VARIABLE_KEY, currency.getSymbol())
-                    .with(AMOUNT_VARIABLE_KEY, getFormattedDecimal(amount)))
+                    .with(USERNAME_PATH, player.name())
+                    .with(CURRENCY_PATH, currency.getSymbol())
+                    .with(AMOUNT_PATH, getFormattedDecimal(amount)))
         .exceptionally(
             exception -> {
               throw new EconomyException(
@@ -104,9 +104,9 @@ public class EconomyCommand {
             state ->
                 messageSource
                     .balanceDeposited
-                    .with(USERNAME_VARIABLE_KEY, player.name())
-                    .with(CURRENCY_VARIABLE_KEY, currency.getSymbol())
-                    .with(AMOUNT_VARIABLE_KEY, getFormattedDecimal(amount)))
+                    .with(USERNAME_PATH, player.name())
+                    .with(CURRENCY_PATH, currency.getSymbol())
+                    .with(AMOUNT_PATH, getFormattedDecimal(amount)))
         .exceptionally(
             exception -> {
               throw new EconomyException(
@@ -124,9 +124,9 @@ public class EconomyCommand {
             state ->
                 messageSource
                     .balanceWithdrawn
-                    .with(USERNAME_VARIABLE_KEY, player.name())
-                    .with(CURRENCY_VARIABLE_KEY, currency.getSymbol())
-                    .with(AMOUNT_VARIABLE_KEY, getFormattedDecimal(amount)))
+                    .with(USERNAME_PATH, player.name())
+                    .with(CURRENCY_PATH, currency.getSymbol())
+                    .with(AMOUNT_PATH, getFormattedDecimal(amount)))
         .exceptionally(
             exception -> {
               throw new EconomyException(
@@ -150,7 +150,7 @@ public class EconomyCommand {
     if (currency == null) {
       return messageSource
           .modificationFailed
-          .with(CURRENCY_ID_VARIABLE_KEY, currencyId)
+          .with(CURRENCY_ID_PATH, currencyId)
           .asCompletedFuture();
     }
 

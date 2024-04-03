@@ -2,10 +2,10 @@ package pl.auroramc.bazaars.bazaar;
 
 import static pl.auroramc.bazaars.bazaar.BazaarUtils.getEmptySlotsCount;
 import static pl.auroramc.bazaars.bazaar.BazaarUtils.getQuantityInSlots;
-import static pl.auroramc.bazaars.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.bazaars.message.MutableMessageVariableKey.MERCHANT_VARIABLE_KEY;
-import static pl.auroramc.bazaars.message.MutableMessageVariableKey.PRICE_VARIABLE_KEY;
-import static pl.auroramc.bazaars.message.MutableMessageVariableKey.PRODUCT_VARIABLE_KEY;
+import static pl.auroramc.bazaars.message.MutableMessageVariableKey.CURRENCY_PATH;
+import static pl.auroramc.bazaars.message.MutableMessageVariableKey.MERCHANT_PATH;
+import static pl.auroramc.bazaars.message.MutableMessageVariableKey.PRICE_PATH;
+import static pl.auroramc.bazaars.message.MutableMessageVariableKey.PRODUCT_PATH;
 import static pl.auroramc.commons.BukkitUtils.postToMainThread;
 import static pl.auroramc.commons.item.ItemStackFormatter.getFormattedItemStack;
 
@@ -113,7 +113,7 @@ class BazaarService implements BazaarFacade {
         .thenApply(state ->
             messageSource.productBought
                 .with(
-                    PRODUCT_VARIABLE_KEY,
+                    PRODUCT_PATH,
                     getFormattedItemStack(
                         new ItemStack(
                             parsingContext.material(),
@@ -121,9 +121,9 @@ class BazaarService implements BazaarFacade {
                         )
                     )
                 )
-                .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
-                .with(MERCHANT_VARIABLE_KEY, parsingContext.merchant())
-                .with(PRICE_VARIABLE_KEY, priceFormat.format(parsingContext.price()))
+                .with(CURRENCY_PATH, fundsCurrency.getSymbol())
+                .with(MERCHANT_PATH, parsingContext.merchant())
+                .with(PRICE_PATH, priceFormat.format(parsingContext.price()))
         );
   }
 
@@ -174,7 +174,7 @@ class BazaarService implements BazaarFacade {
         .thenApply(state ->
             messageSource.productSold
                 .with(
-                    PRODUCT_VARIABLE_KEY,
+                    PRODUCT_PATH,
                     getFormattedItemStack(
                         new ItemStack(
                             parsingContext.material(),
@@ -182,9 +182,9 @@ class BazaarService implements BazaarFacade {
                         )
                     )
                 )
-                .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
-                .with(MERCHANT_VARIABLE_KEY, parsingContext.merchant())
-                .with(PRICE_VARIABLE_KEY, priceFormat.format(parsingContext.price()))
+                .with(CURRENCY_PATH, fundsCurrency.getSymbol())
+                .with(MERCHANT_PATH, parsingContext.merchant())
+                .with(PRICE_PATH, priceFormat.format(parsingContext.price()))
         );
   }
 

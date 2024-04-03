@@ -12,7 +12,6 @@
   <artifactId>auroramc-network-shared</artifactId>
   <packaging>pom</packaging>
   <modules>
-    <module>auroramc-network-shared-global</module>
     <module>auroramc-network-shared-server</module>
   </modules>
 

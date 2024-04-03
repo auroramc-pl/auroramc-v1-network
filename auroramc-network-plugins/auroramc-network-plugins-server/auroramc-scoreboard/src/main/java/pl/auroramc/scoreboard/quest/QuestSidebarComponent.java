@@ -7,7 +7,7 @@ import static pl.auroramc.commons.message.MutableMessage.EMPTY_DELIMITER;
 import static pl.auroramc.commons.message.MutableMessage.empty;
 import static pl.auroramc.commons.message.MutableMessage.newline;
 import static pl.auroramc.quests.objective.ObjectiveUtils.getQuestObjectiveTemplate;
-import static pl.auroramc.scoreboard.message.MutableMessageVariableKey.QUEST_VARIABLE_KEY;
+import static pl.auroramc.scoreboard.message.MutableMessageVariableKey.QUEST_PATH;
 
 import java.util.Map;
 import java.util.Optional;
@@ -77,7 +77,7 @@ public class QuestSidebarComponent implements SidebarComponentKyori<Quest> {
         .append(messageSource.quest.observedQuest, EMPTY_DELIMITER)
         .append(
             messageSource.quest.observedQuestName.with(
-                QUEST_VARIABLE_KEY, quest.getKey().getName()));
+                QUEST_PATH, quest.getKey().getName()));
   }
 
   private MutableMessage renderQuestObjectiveHeader() {

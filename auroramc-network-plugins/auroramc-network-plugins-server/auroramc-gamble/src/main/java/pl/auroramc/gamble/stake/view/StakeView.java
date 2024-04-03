@@ -10,11 +10,11 @@ import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.commons.message.MutableMessageDecoration.NO_CURSIVE;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.BACKWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.FORWARD;
-import static pl.auroramc.gamble.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MutableMessageVariableKey.GAMBLE_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MutableMessageVariableKey.INITIATOR_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MutableMessageVariableKey.PREDICTION_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MutableMessageVariableKey.STAKE_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.CURRENCY_PATH;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.GAMBLE_PATH;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.INITIATOR_PATH;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.PREDICTION_PATH;
+import static pl.auroramc.gamble.message.MutableMessageVariableKey.STAKE_PATH;
 import static pl.auroramc.gamble.stake.view.StakeViewUtils.getSlotIndexOf;
 import static pl.auroramc.gamble.stake.view.StakeViewUtils.setItemAsFrame;
 
@@ -146,7 +146,7 @@ class StakeView implements InventoryHolder {
         .displayName(
             messageSource.stakeName
                 .with(
-                    GAMBLE_VARIABLE_KEY,
+                    GAMBLE_PATH,
                     capitalize(
                         stakeContext.gambleKey().id().toLowerCase(ROOT)
                     )
@@ -155,15 +155,15 @@ class StakeView implements InventoryHolder {
         )
         .lore(
             messageSource.stakeBrief
-                .with(INITIATOR_VARIABLE_KEY, stakeContext.initiator().username())
+                .with(INITIATOR_PATH, stakeContext.initiator().username())
                 .with(
-                    PREDICTION_VARIABLE_KEY,
+                    PREDICTION_PATH,
                     capitalize(
                         stakeContext.initiator().prediction().toString().toLowerCase(ROOT)
                     )
                 )
-                .with(STAKE_VARIABLE_KEY, getFormattedDecimal(stakeContext.stake()))
-                .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
+                .with(STAKE_PATH, getFormattedDecimal(stakeContext.stake()))
+                .with(CURRENCY_PATH, fundsCurrency.getSymbol())
                 .compileChildren(NO_CURSIVE)
         )
         .build();
