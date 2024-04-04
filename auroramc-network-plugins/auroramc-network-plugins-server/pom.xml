@@ -16,7 +16,7 @@
 <!--    <module>auroramc-bazaars</module>-->
 <!--    <module>auroramc-cheque</module>-->
     <module>auroramc-daily-rewards</module>
-<!--    <module>auroramc-economy</module>-->
+    <module>auroramc-economy</module>
     <module>auroramc-essentials</module>
 <!--    <module>auroramc-gamble</module>-->
     <module>auroramc-hoppers</module>

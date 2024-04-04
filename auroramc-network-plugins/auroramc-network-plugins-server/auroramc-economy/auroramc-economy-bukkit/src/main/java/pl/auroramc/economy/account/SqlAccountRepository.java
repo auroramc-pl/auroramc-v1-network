@@ -1,14 +1,14 @@
 package pl.auroramc.economy.account;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
+import static pl.auroramc.commons.CompletableFutureUtils.delegateCaughtException;
+import static pl.auroramc.commons.format.decimal.DecimalUtils.getLengthOfIntegralPart;
 import static pl.auroramc.economy.account.SqlAccountRepositoryQuery.CREATE_ACCOUNT;
 import static pl.auroramc.economy.account.SqlAccountRepositoryQuery.CREATE_ACCOUNT_INDEX_FOR_BALANCE;
 import static pl.auroramc.economy.account.SqlAccountRepositoryQuery.CREATE_ACCOUNT_SCHEMA;
 import static pl.auroramc.economy.account.SqlAccountRepositoryQuery.DELETE_ACCOUNT;
 import static pl.auroramc.economy.account.SqlAccountRepositoryQuery.FIND_ACCOUNT_BY_USER_ID_AND_CURRENCY_ID;
 import static pl.auroramc.economy.account.SqlAccountRepositoryQuery.UPDATE_ACCOUNT;
-import static pl.auroramc.economy.account.SqlAccountRepositoryUtils.getDigitCountBeforeDecimalPoint;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -86,7 +86,7 @@ class SqlAccountRepository implements AccountRepository {
 
   @Override
   public void updateAccount(final Account account) {
-    if (getDigitCountBeforeDecimalPoint(account.getBalance())
+    if (getLengthOfIntegralPart(account.getBalance())
         > MAXIMUM_BALANCE_DIGIT_COUNT_BEFORE_DECIMAL_POINT) {
       throw new AccountRepositoryException(
           "Could not update account identified by %d for %d currency, because balance overflows over table definition"
@@ -181,7 +181,7 @@ class SqlAccountRepository implements AccountRepository {
         initiatorAccount.getLock().unlockWrite(initiatorStamp);
       }
     } catch (final SQLException exception) {
-      delegateCaughtException(logger, exception);
+      delegateCaughtException(exception);
       try {
         logger.info(
             "Rolling back transaction for transfer of balance from %d to %d for %d currency with value of %.2f"

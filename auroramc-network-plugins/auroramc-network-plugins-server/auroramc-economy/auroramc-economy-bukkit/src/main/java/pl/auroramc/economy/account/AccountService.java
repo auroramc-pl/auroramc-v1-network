@@ -3,89 +3,74 @@ package pl.auroramc.economy.account;
 import static java.math.BigDecimal.ZERO;
 import static java.time.Duration.ofSeconds;
 import static java.util.concurrent.CompletableFuture.completedFuture;
-import static java.util.concurrent.CompletableFuture.runAsync;
-import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
+import static pl.auroramc.commons.scheduler.SchedulerPoll.ASYNC;
 
 import com.github.benmanes.caffeine.cache.AsyncLoadingCache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
-import java.util.logging.Logger;
+import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.commons.scheduler.Scheduler;
+import pl.auroramc.commons.scheduler.caffeine.CaffeineExecutor;
 
 class AccountService implements AccountFacade {
 
   private static final BigDecimal INITIAL_ACCOUNT_BALANCE = ZERO;
-  private final Logger logger;
+  private final Scheduler scheduler;
   private final AccountRepository accountRepository;
-  private final AsyncLoadingCache<AccountKey, Account> accountCache;
+  private final AsyncLoadingCache<AccountCompositeKey, Account> accountByUserIdAndCurrencyId;
 
-  AccountService(final Logger logger, final AccountRepository accountRepository) {
-    this.logger = logger;
+  AccountService(final Scheduler scheduler, final AccountRepository accountRepository) {
+    this.scheduler = scheduler;
     this.accountRepository = accountRepository;
-    this.accountCache =
+    this.accountByUserIdAndCurrencyId =
         Caffeine.newBuilder()
+            .executor(new CaffeineExecutor(scheduler))
             .expireAfterWrite(ofSeconds(30))
             .buildAsync(
-                accountKey ->
+                key ->
                     accountRepository.findAccountByUserIdAndCurrencyId(
-                        accountKey.userId(), accountKey.currencyId()));
+                        key.userId(), key.currencyId()));
   }
 
   @Override
   public CompletableFuture<Account> getAccount(final Long userId, final Long currencyId) {
-    return accountCache
-        .get(new AccountKey(userId, currencyId))
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+    return accountByUserIdAndCurrencyId
+        .get(new AccountCompositeKey(userId, currencyId))
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
   @Override
-  public CompletableFuture<Void> createAccount(final Account account) {
-    return runAsync(() -> accountRepository.createAccount(account))
+  public CompletableFuture<Account> createAccount(final Account account) {
+    return scheduler
+        .run(ASYNC, () -> accountRepository.createAccount(account))
         .thenAccept(
             state ->
-                accountCache.put(
-                    new AccountKey(account.getUserId(), account.getCurrencyId()),
-                    completedFuture(account)))
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+                accountByUserIdAndCurrencyId.put(
+                    AccountCompositeKey.toCompositeKey(account), completedFuture(account)))
+        .thenCompose(state -> getAccount(account.getUserId(), account.getCurrencyId()));
   }
 
   @Override
   public CompletableFuture<Void> updateAccount(final Account account) {
-    return runAsync(() -> accountRepository.updateAccount(account))
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+    return scheduler.run(ASYNC, () -> accountRepository.updateAccount(account));
   }
 
   @Override
   public CompletableFuture<Void> deleteAccount(final Account account) {
-    return runAsync(() -> accountRepository.deleteAccount(account))
+    return scheduler
+        .run(ASYNC, () -> accountRepository.deleteAccount(account))
         .thenAccept(
             state ->
-                accountCache
+                accountByUserIdAndCurrencyId
                     .synchronous()
-                    .invalidate(new AccountKey(account.getUserId(), account.getCurrencyId())))
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+                    .invalidate(AccountCompositeKey.toCompositeKey(account)));
   }
 
   @Override
   public CompletableFuture<Account> retrieveAccount(final Long userId, final Long currencyId) {
     return getAccount(userId, currencyId)
-        .thenApply(account -> createAccountIfNotExists(userId, currencyId, account))
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
-  }
-
-  private Account createAccountIfNotExists(
-      final Long userId, final Long currencyId, Account account) {
-    if (account == null) {
-      account =
-          AccountBuilder.newBuilder()
-              .withUserId(userId)
-              .withCurrencyId(currencyId)
-              .withBalance(INITIAL_ACCOUNT_BALANCE)
-              .build();
-      createAccount(account);
-    }
-
-    return account;
+        .thenCompose(account -> createAccountIfNotExists(userId, currencyId, account));
   }
 
   @Override
@@ -94,10 +79,32 @@ class AccountService implements AccountFacade {
       final Account receivingAccount,
       final Long currencyId,
       final BigDecimal amount) {
-    return runAsync(
-            () ->
-                accountRepository.transferOfBalance(
-                    initiatorAccount, receivingAccount, currencyId, amount))
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+    return scheduler.run(
+        ASYNC,
+        () ->
+            accountRepository.transferOfBalance(
+                initiatorAccount, receivingAccount, currencyId, amount));
+  }
+
+  private CompletableFuture<Account> createAccountIfNotExists(
+      final Long userId, final Long currencyId, Account account) {
+    if (account == null) {
+      account =
+          AccountBuilder.newBuilder()
+              .withUserId(userId)
+              .withCurrencyId(currencyId)
+              .withBalance(INITIAL_ACCOUNT_BALANCE)
+              .build();
+      return createAccount(account);
+    }
+
+    return completedFuture(account);
+  }
+
+  private record AccountCompositeKey(Long userId, Long currencyId) {
+
+    static AccountCompositeKey toCompositeKey(final Account account) {
+      return new AccountCompositeKey(account.getUserId(), account.getCurrencyId());
+    }
   }
 }
