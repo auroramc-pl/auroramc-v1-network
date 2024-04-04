@@ -88,7 +88,7 @@ public class TransferCommand {
     return economyFacade
         .transfer(initiator.getUniqueId(), receiver.getUniqueId(), currency, amount)
         .thenApply(
-            state ->
+            _ ->
                 grouping()
                     .message(
                         messageSource.transferSent.placeholder(CONTEXT_PATH, initiatorContext),

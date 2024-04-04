@@ -46,7 +46,7 @@ public final class Quest extends Resource {
   }
 
   public <T extends Objective<?>> List<T> getObjectives(final Class<T> objectiveType) {
-    objectivesByType.computeIfAbsent(objectiveType, ignored -> getObjectivesRaw(objectiveType));
+    objectivesByType.computeIfAbsent(objectiveType, _ -> getObjectivesRaw(objectiveType));
     // noinspection unchecked
     return (List<T>) objectivesByType.get(objectiveType);
   }

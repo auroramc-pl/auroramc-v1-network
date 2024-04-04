@@ -34,21 +34,21 @@ public class EconomyCommand {
   public CompletableFuture<MutableMessage> set(
       final @Arg Player target, final @Arg Currency currency, final @Arg BigDecimal amount) {
     return processIncomingModification(
-        currency, amount, (ignored, fixedAmount) -> balance(target, currency, fixedAmount), false);
+        currency, amount, (_, fixedAmount) -> balance(target, currency, fixedAmount), false);
   }
 
   @Execute(name = "add")
   public CompletableFuture<MutableMessage> add(
       final @Arg Player target, final @Arg Currency currency, final @Arg BigDecimal amount) {
     return processIncomingModification(
-        currency, amount, (ignored, fixedAmount) -> deposit(target, currency, fixedAmount), true);
+        currency, amount, (_, fixedAmount) -> deposit(target, currency, fixedAmount), true);
   }
 
   @Execute(name = "take")
   public CompletableFuture<MutableMessage> take(
       final @Arg Player target, final @Arg Currency currency, final @Arg BigDecimal amount) {
     return processIncomingModification(
-        currency, amount, (ignored, fixedAmount) -> withdraw(target, currency, fixedAmount), true);
+        currency, amount, (_, fixedAmount) -> withdraw(target, currency, fixedAmount), true);
   }
 
   private CompletableFuture<MutableMessage> balance(
@@ -56,7 +56,7 @@ public class EconomyCommand {
     return economyFacade
         .balance(player.getUniqueId(), currency, amount)
         .thenApply(
-            state ->
+            _ ->
                 messageSource.balanceSet.placeholder(
                     CONTEXT_PATH, new EconomyContext(player, currency, amount)));
   }
@@ -66,7 +66,7 @@ public class EconomyCommand {
     return economyFacade
         .deposit(player.getUniqueId(), currency, amount)
         .thenApply(
-            state ->
+            _ ->
                 messageSource.balanceDeposited.placeholder(
                     CONTEXT_PATH, new EconomyContext(player, currency, amount)));
   }
@@ -76,7 +76,7 @@ public class EconomyCommand {
     return economyFacade
         .withdraw(player.getUniqueId(), currency, amount)
         .thenApply(
-            state ->
+            _ ->
                 messageSource.balanceWithdrawn.placeholder(
                     CONTEXT_PATH, new EconomyContext(player, currency, amount)));
   }
