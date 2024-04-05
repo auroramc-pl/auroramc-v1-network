@@ -112,11 +112,11 @@ public class CommandListener implements Listener {
     final Player player = (Player) invoker;
     return suggestedCommandsByCompositeKey.get(
         new SuggestionCompositeKey(player.getUniqueId(), invokedCommand),
-        _ ->
+        ignored ->
             fuzzySearch.getMostSimilarString(
                 invokedCommand,
                 availableCommandsByName.get(
-                    player.getUniqueId(), _ -> getAvailableCommands(player)),
+                    player.getUniqueId(), name -> getAvailableCommands(player)),
                 essentialsConfig.minimalScoreForCommandSuggestion));
   }
 

@@ -40,6 +40,8 @@ import pl.auroramc.commons.config.serdes.SerdesCommons;
 import pl.auroramc.commons.config.serdes.juliet.JulietConfig;
 import pl.auroramc.commons.config.serdes.juliet.SerdesJuliet;
 import pl.auroramc.commons.config.serdes.message.SerdesMessages;
+import pl.auroramc.commons.integration.litecommands.cooldown.CooldownAnnotationResolver;
+import pl.auroramc.commons.integration.litecommands.cooldown.CooldownValidator;
 import pl.auroramc.commons.integration.litecommands.message.MutableMessageHandler;
 import pl.auroramc.commons.integration.litecommands.message.group.MutableMessageGroupHandler;
 import pl.auroramc.commons.scheduler.Scheduler;
@@ -108,6 +110,7 @@ public class EconomyBukkitPlugin extends JavaPlugin {
 
     commands =
         LiteBukkitFactory.builder(getName(), this)
+            .annotations(annotations -> annotations.processor(new CooldownAnnotationResolver<>()))
             .extension(new LiteAdventureExtension<>(), configurer -> configurer.miniMessage(true))
             .message(
                 INVALID_USAGE,
@@ -145,6 +148,7 @@ public class EconomyBukkitPlugin extends JavaPlugin {
                         economyConfig.leaderboard)))
             .result(MutableMessage.class, new MutableMessageHandler<>(messageCompiler))
             .result(MutableMessageGroup.class, new MutableMessageGroupHandler<>(messageCompiler))
+            .validatorGlobal(new CooldownValidator<>(messageSource.commandOnCooldown))
             .build();
   }
 

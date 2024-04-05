@@ -5,7 +5,7 @@ import static dev.rollczi.litecommands.bukkit.LiteBukkitMessages.PLAYER_ONLY;
 import static dev.rollczi.litecommands.message.LiteMessages.INVALID_USAGE;
 import static dev.rollczi.litecommands.message.LiteMessages.MISSING_PERMISSIONS;
 import static moe.rafal.juliet.datasource.HikariPooledDataSourceFactory.produceHikariDataSource;
-import static pl.auroramc.cheque.ChequeConfig.PLUGIN_CONFIG_FILE_NAME;
+import static pl.auroramc.cheque.ChequeConfig.CHEQUE_CONFIG_FILE_NAME;
 import static pl.auroramc.cheque.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
 import static pl.auroramc.cheque.message.MutableMessageVariableKey.SCHEMATICS_PATH;
 import static pl.auroramc.cheque.payment.PaymentFacade.getPaymentFacade;
@@ -48,7 +48,7 @@ public class ChequeBukkitPlugin extends JavaPlugin {
         new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
 
     final ChequeConfig chequeConfig =
-        configFactory.produceConfig(ChequeConfig.class, PLUGIN_CONFIG_FILE_NAME);
+        configFactory.produceConfig(ChequeConfig.class, CHEQUE_CONFIG_FILE_NAME);
 
     final Logger logger = getLogger();
 

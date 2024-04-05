@@ -48,7 +48,6 @@
           <target>21</target>
           <compilerArgs>
             <arg>-parameters</arg>
-            <arg>--enable-preview</arg>
           </compilerArgs>
         </configuration>
       </plugin>

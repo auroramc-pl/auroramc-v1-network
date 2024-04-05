@@ -7,7 +7,7 @@ import static java.time.Duration.ofSeconds;
 import static pl.auroramc.commons.bukkit.BukkitUtils.registerListeners;
 import static pl.auroramc.commons.bukkit.scheduler.BukkitSchedulerFactory.getBukkitScheduler;
 import static pl.auroramc.commons.scheduler.SchedulerPoll.SYNC;
-import static pl.auroramc.lobby.LobbyConfig.PLUGIN_CONFIG_FILE_NAME;
+import static pl.auroramc.lobby.LobbyConfig.LOBBY_CONFIG_FILE_NAME;
 import static pl.auroramc.lobby.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
 import static pl.auroramc.lobby.message.MessageSourcePaths.SCHEMATICS_PATH;
 import static pl.auroramc.messages.message.MutableMessage.LINE_DELIMITER;
@@ -40,7 +40,7 @@ public class LobbyBukkitPlugin extends JavaPlugin {
         new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
 
     final LobbyConfig lobbyConfig =
-        configFactory.produceConfig(LobbyConfig.class, PLUGIN_CONFIG_FILE_NAME, new SerdesBukkit());
+        configFactory.produceConfig(LobbyConfig.class, LOBBY_CONFIG_FILE_NAME, new SerdesBukkit());
 
     final MessageSource messageSource =
         configFactory.produceConfig(

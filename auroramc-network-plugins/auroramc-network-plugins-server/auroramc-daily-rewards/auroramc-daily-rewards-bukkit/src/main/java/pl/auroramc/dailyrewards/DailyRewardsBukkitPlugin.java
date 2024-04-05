@@ -11,7 +11,7 @@ import static pl.auroramc.commons.bukkit.BukkitUtils.resolveService;
 import static pl.auroramc.commons.bukkit.scheduler.BukkitSchedulerFactory.getBukkitScheduler;
 import static pl.auroramc.commons.config.serdes.juliet.JulietConfig.JULIET_CONFIG_FILE_NAME;
 import static pl.auroramc.commons.scheduler.SchedulerPoll.ASYNC;
-import static pl.auroramc.dailyrewards.DailyRewardsConfig.PLUGIN_CONFIG_FILE_NAME;
+import static pl.auroramc.dailyrewards.DailyRewardsConfig.DAILY_REWARDS_CONFIG_FILE_NAME;
 import static pl.auroramc.dailyrewards.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
 import static pl.auroramc.dailyrewards.message.MessageSourcePaths.SCHEMATICS_PATH;
 import static pl.auroramc.dailyrewards.visit.VisitFacadeFactory.getVisitFacade;
@@ -61,7 +61,7 @@ public class DailyRewardsBukkitPlugin extends JavaPlugin {
 
     final DailyRewardsConfig dailyRewardsConfig =
         configFactory.produceConfig(
-            DailyRewardsConfig.class, PLUGIN_CONFIG_FILE_NAME, new SerdesCommons());
+            DailyRewardsConfig.class, DAILY_REWARDS_CONFIG_FILE_NAME, new SerdesCommons());
 
     final MessageSource messageSource =
         configFactory.produceConfig(

@@ -23,6 +23,10 @@ public class MessageSource extends OkaeriConfig {
 
   public TransferMessageSource transfer = new TransferMessageSource();
 
+  public MutableMessage commandOnCooldown =
+      MutableMessage.of(
+          "<red>Musisz odczekać jeszcze <yellow>{period}<red>, zanim ponownie użyjesz tej komendy.");
+
   public MutableMessage availableSchematicsSuggestion =
       MutableMessage.of("<red>Poprawne użycie: <yellow><newline>{schematics}");
 

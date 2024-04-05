@@ -5,7 +5,7 @@ import static dev.rollczi.litecommands.message.LiteMessages.INVALID_USAGE;
 import static dev.rollczi.litecommands.message.LiteMessages.MISSING_PERMISSIONS;
 import static java.time.Duration.ofSeconds;
 import static moe.rafal.juliet.datasource.HikariPooledDataSourceFactory.produceHikariDataSource;
-import static pl.auroramc.auctions.AuctionsConfig.PLUGIN_CONFIG_FILE_NAME;
+import static pl.auroramc.auctions.AuctionsConfig.AUCTIONS_CONFIG_FILE_NAME;
 import static pl.auroramc.auctions.auction.AuctionFacadeFactory.getAuctionFacade;
 import static pl.auroramc.auctions.audience.AudienceFacade.getAudienceFacade;
 import static pl.auroramc.auctions.message.MessageFacade.getMessageFacade;
@@ -77,7 +77,7 @@ public class AuctionsBukkitPlugin extends JavaPlugin {
         .build();
 
     final AuctionsConfig auctionsConfig = configFactory.produceConfig(
-        AuctionsConfig.class, PLUGIN_CONFIG_FILE_NAME, new SerdesCommons()
+        AuctionsConfig.class, AUCTIONS_CONFIG_FILE_NAME, new SerdesCommons()
     );
     final AuctionFacade auctionFacade = getAuctionFacade();
 

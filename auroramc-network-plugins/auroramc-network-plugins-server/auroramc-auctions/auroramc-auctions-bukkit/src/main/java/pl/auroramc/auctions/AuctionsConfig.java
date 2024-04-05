@@ -8,7 +8,7 @@ import java.time.Duration;
 
 public class AuctionsConfig extends OkaeriConfig {
 
-  public static final @Exclude String PLUGIN_CONFIG_FILE_NAME = "config.yml";
+  public static final @Exclude String AUCTIONS_CONFIG_FILE_NAME = "config.yml";
 
   public Long fundsCurrencyId = 1L;
 

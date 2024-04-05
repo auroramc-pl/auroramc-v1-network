@@ -17,6 +17,7 @@ import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
 import org.bukkit.entity.Player;
+import pl.auroramc.commons.integration.litecommands.cooldown.Cooldown;
 import pl.auroramc.commons.lazy.Lazy;
 import pl.auroramc.economy.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
@@ -25,6 +26,7 @@ import pl.auroramc.messages.message.group.MutableMessageGroup;
 
 @Permission("auroramc.economy.transfer")
 @Command(name = "transfer", aliases = "pay")
+@Cooldown(key = "transfer", period = 30)
 public class TransferCommand {
 
   private final EconomyFacade economyFacade;
@@ -88,7 +90,7 @@ public class TransferCommand {
     return economyFacade
         .transfer(initiator.getUniqueId(), receiver.getUniqueId(), currency, amount)
         .thenApply(
-            _ ->
+            ignored ->
                 grouping()
                     .message(
                         messageSource.transferSent.placeholder(CONTEXT_PATH, initiatorContext),
