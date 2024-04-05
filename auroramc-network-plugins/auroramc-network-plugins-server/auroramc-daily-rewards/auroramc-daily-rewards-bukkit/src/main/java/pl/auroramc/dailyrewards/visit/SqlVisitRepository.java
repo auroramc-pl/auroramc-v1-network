@@ -40,9 +40,9 @@ class SqlVisitRepository implements VisitRepository {
     try (final Connection connection = juliet.borrowConnection();
         final PreparedStatement statement = connection.prepareStatement(CREATE_VISIT)) {
       statement.setLong(1, visit.getUserId().intValue());
-      statement.setLong(2, visit.getSessionDuration().toSeconds());
-      statement.setTimestamp(3, Timestamp.from(visit.getSessionStartTime()));
-      statement.setTimestamp(4, Timestamp.from(visit.getSessionDitchTime()));
+      statement.setLong(2, visit.getDuration().toSeconds());
+      statement.setTimestamp(3, Timestamp.from(visit.getStartTime()));
+      statement.setTimestamp(4, Timestamp.from(visit.getDitchTime()));
       statement.executeUpdate();
     } catch (final SQLException exception) {
       throw new VisitRepositoryException(
@@ -71,7 +71,7 @@ class SqlVisitRepository implements VisitRepository {
   }
 
   @Override
-  public Set<Visit> findVisitsByUserIdBetween(
+  public Set<Visit> findVisitsByUserIdInTimeframe(
       final Long userId, final Instant from, final Instant to) {
     try (final Connection connection = juliet.borrowConnection();
         final PreparedStatement statement =
@@ -96,8 +96,8 @@ class SqlVisitRepository implements VisitRepository {
   private Visit mapResultSetToVisit(final ResultSet resultSet) throws SQLException {
     return new Visit(
         resultSet.getLong("user_id"),
-        ofSeconds(resultSet.getLong("session_duration")),
-        resultSet.getTimestamp("session_start_time").toInstant(),
-        resultSet.getTimestamp("session_ditch_time").toInstant());
+        ofSeconds(resultSet.getLong("duration")),
+        resultSet.getTimestamp("start_time").toInstant(),
+        resultSet.getTimestamp("ditch_time").toInstant());
   }
 }

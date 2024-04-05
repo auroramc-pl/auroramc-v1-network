@@ -85,8 +85,8 @@ public class DailyRewardsBukkitPlugin extends JavaPlugin {
 
     registerListeners(
         this,
-        new VisitListener(logger, userFacade, visitFacade, visitController, dailyRewardsConfig),
-        new NametagListener(nametagFacade));
+        new NametagListener(nametagFacade),
+        new VisitListener(logger, userFacade, visitFacade, visitController, dailyRewardsConfig));
 
     scheduler.schedule(
         ASYNC,

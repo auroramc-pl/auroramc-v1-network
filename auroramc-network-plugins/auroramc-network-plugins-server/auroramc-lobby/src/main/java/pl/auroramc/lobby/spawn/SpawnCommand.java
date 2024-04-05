@@ -1,7 +1,10 @@
 package pl.auroramc.lobby.spawn;
 
+import static java.time.temporal.ChronoUnit.SECONDS;
+
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.cooldown.Cooldown;
 import dev.rollczi.litecommands.annotations.execute.Execute;
 import java.util.concurrent.CompletableFuture;
 import org.bukkit.entity.Player;
@@ -11,6 +14,7 @@ import pl.auroramc.lobby.message.MessageSource;
 import pl.auroramc.messages.message.MutableMessage;
 
 @Command(name = "spawn")
+@Cooldown(key = "spawn-cooldown", count = 5, unit = SECONDS)
 public class SpawnCommand {
 
   private final LobbyConfig lobbyConfig;

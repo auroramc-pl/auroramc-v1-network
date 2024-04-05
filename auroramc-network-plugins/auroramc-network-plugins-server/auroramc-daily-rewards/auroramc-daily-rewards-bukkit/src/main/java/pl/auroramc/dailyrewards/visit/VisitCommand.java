@@ -6,7 +6,7 @@ import static pl.auroramc.commons.format.temporal.TemporalUtils.getMaximumTimeOf
 import static pl.auroramc.commons.format.temporal.TemporalUtils.getMinimumTimeOfDay;
 import static pl.auroramc.commons.range.Between.ranged;
 import static pl.auroramc.commons.range.Between.single;
-import static pl.auroramc.dailyrewards.message.MessageSourcePaths.PERIOD_PATH;
+import static pl.auroramc.dailyrewards.message.MessageSourcePaths.TIMEFRAME_PATH;
 import static pl.auroramc.dailyrewards.message.MessageSourcePaths.VISIT_PATH;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;
@@ -46,55 +46,54 @@ public class VisitCommand {
 
   @Execute
   public CompletableFuture<Component> visit(final @Context Player player) {
-    final Between<Instant> range = single(now());
+    final Between<Instant> timeframe = single(now());
     return userFacade
         .getUserByUniqueId(player.getUniqueId())
         .thenApply(User::getId)
         .thenCompose(
             userId ->
-                visitFacade.getVisitsByUserIdBetween(
+                visitFacade.getVisitsByUserIdInTimeframe(
                     userId,
-                    getMinimumTimeOfDay(range.minimum()),
-                    getMaximumTimeOfDay(range.minimum())))
-        .thenApply(visits -> getFormattedVisits(range, visits));
+                    getMinimumTimeOfDay(timeframe.minimum()),
+                    getMaximumTimeOfDay(timeframe.minimum())))
+        .thenApply(visits -> getFormattedVisits(timeframe, visits));
   }
 
   @Execute(name = "ranged")
   public CompletableFuture<Component> visitRanged(
       final @Context Player player, final @Arg Instant from, final @Arg Instant to) {
-    final Between<Instant> range = ranged(from, to);
+    final Between<Instant> timeframe = ranged(from, to);
     return userFacade
         .getUserByUniqueId(player.getUniqueId())
         .thenApply(User::getId)
-        .thenCompose(userId -> visitFacade.getVisitsByUserIdBetween(userId, from, to))
-        .thenApply(visits -> getFormattedVisits(range, visits));
+        .thenCompose(userId -> visitFacade.getVisitsByUserIdInTimeframe(userId, from, to))
+        .thenApply(visits -> getFormattedVisits(timeframe, visits));
   }
 
-  private Component getFormattedVisitHeader(final Between<Instant> period) {
+  private Component getFormattedVisitHeader(final Between<Instant> timeframe) {
     return messageCompiler
         .compile(
-            (period.single() ? messageSource.visitDailySummary : messageSource.visitRangeSummary)
-                .placeholder(PERIOD_PATH, period))
+            (timeframe.single() ? messageSource.visitDailySummary : messageSource.visitRangeSummary)
+                .placeholder(TIMEFRAME_PATH, timeframe))
         .getComponent();
   }
 
-  private Component getFormattedVisits(final Between<Instant> period, final Set<Visit> visits) {
+  private Component getFormattedVisits(final Between<Instant> timeframe, final Set<Visit> visits) {
     if (visits.isEmpty()) {
       return messageCompiler.compile(messageSource.noVisits).getComponent();
     }
-    return getFormattedVisitHeader(period).appendNewline().append(getFormattedVisits(visits));
+    return getFormattedVisitHeader(timeframe).appendNewline().append(getFormattedVisits(visits));
   }
 
-  private Component getFormattedVisit(final VisitContext context) {
+  private Component getFormattedVisit(final Visit visit) {
     return messageCompiler
-        .compile(messageSource.visitEntry.placeholder(VISIT_PATH, context))
+        .compile(messageSource.visitEntry.placeholder(VISIT_PATH, visit))
         .getComponent();
   }
 
   private Component getFormattedVisits(final Set<Visit> visits) {
     return visits.stream()
-        .sorted(comparing(Visit::getSessionStartTime).reversed())
-        .map(VisitContext::completed)
+        .sorted(comparing(Visit::getStartTime).reversed())
         .map(this::getFormattedVisit)
         .collect(ComponentCollector.collector());
   }

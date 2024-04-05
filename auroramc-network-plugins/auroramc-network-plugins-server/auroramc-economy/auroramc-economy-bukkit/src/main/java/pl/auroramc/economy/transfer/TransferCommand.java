@@ -2,6 +2,7 @@ package pl.auroramc.economy.transfer;
 
 import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_DOWN;
+import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static pl.auroramc.commons.CompletableFutureUtils.delegateCaughtException;
 import static pl.auroramc.commons.lazy.Lazy.lazy;
@@ -12,12 +13,12 @@ import static pl.auroramc.messages.message.group.MutableMessageGroup.grouping;
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.cooldown.Cooldown;
 import dev.rollczi.litecommands.annotations.execute.Execute;
 import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
 import org.bukkit.entity.Player;
-import pl.auroramc.commons.integration.litecommands.cooldown.Cooldown;
 import pl.auroramc.commons.lazy.Lazy;
 import pl.auroramc.economy.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
@@ -26,7 +27,7 @@ import pl.auroramc.messages.message.group.MutableMessageGroup;
 
 @Permission("auroramc.economy.transfer")
 @Command(name = "transfer", aliases = "pay")
-@Cooldown(key = "transfer", period = 30)
+@Cooldown(key = "transfer-cooldown", count = 30, unit = SECONDS)
 public class TransferCommand {
 
   private final EconomyFacade economyFacade;

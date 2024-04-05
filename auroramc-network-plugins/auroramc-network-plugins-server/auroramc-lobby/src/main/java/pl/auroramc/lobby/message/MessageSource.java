@@ -8,6 +8,10 @@ public class MessageSource extends OkaeriConfig {
 
   public static final @Exclude String MESSAGE_SOURCE_FILE_NAME = "messages.yml";
 
+  public MutableMessage commandOnCooldown =
+      MutableMessage.of(
+          "<red>Musisz odczekać jeszcze <yellow>{duration}<red>, zanim ponownie użyjesz tej komendy.");
+
   public MutableMessage availableSchematicsSuggestion =
       MutableMessage.of("<gray>Dostępne schematy: <white>{schematics}");
 

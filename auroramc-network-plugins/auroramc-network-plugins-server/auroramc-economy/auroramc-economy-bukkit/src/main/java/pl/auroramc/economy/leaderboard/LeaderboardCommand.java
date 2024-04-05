@@ -1,7 +1,10 @@
 package pl.auroramc.economy.leaderboard;
 
+import static java.time.temporal.ChronoUnit.SECONDS;
+
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.cooldown.Cooldown;
 import dev.rollczi.litecommands.annotations.execute.Execute;
 import dev.rollczi.litecommands.annotations.optional.OptionalArg;
 import dev.rollczi.litecommands.annotations.permission.Permission;
@@ -16,6 +19,7 @@ import pl.auroramc.messages.message.component.ComponentCollector;
 
 @Permission("auroramc.economy.leaderboard")
 @Command(name = "leaderboard", aliases = "baltop")
+@Cooldown(key = "leaderboard-cooldown", count = 10, unit = SECONDS)
 public class LeaderboardCommand {
 
   private final CurrencyFacade currencyFacade;
@@ -44,11 +48,15 @@ public class LeaderboardCommand {
   }
 
   private Component getLeaderboardView(final Player player, final Currency currency) {
+    final List<LeaderboardEntry> entries =
+        leaderboardFacade.getLeaderboardEntriesByCurrencyId(currency.getId());
+    if (entries.isEmpty()) {
+      return messageCompiler.compile(messageSource.leaderboardEmpty).getComponent();
+    }
+
     return getLeaderboardHeader()
         .appendNewline()
-        .append(
-            getLeaderboardLines(
-                currency, leaderboardFacade.getLeaderboardEntriesByCurrencyId(currency.getId())))
+        .append(getLeaderboardLines(currency, entries))
         .appendNewline()
         .append(getLeaderboardFooter(player, currency));
   }

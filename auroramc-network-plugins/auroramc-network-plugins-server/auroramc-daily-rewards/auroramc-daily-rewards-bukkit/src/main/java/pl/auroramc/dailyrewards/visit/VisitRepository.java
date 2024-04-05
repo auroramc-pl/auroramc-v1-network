@@ -9,5 +9,5 @@ interface VisitRepository {
 
   Set<Visit> findVisitsByUserId(final Long userId);
 
-  Set<Visit> findVisitsByUserIdBetween(final Long userId, final Instant from, final Instant to);
+  Set<Visit> findVisitsByUserIdInTimeframe(final Long userId, final Instant from, final Instant to);
 }

@@ -1,6 +1,6 @@
 package pl.auroramc.registry.user;
 
-import static java.util.concurrent.CompletableFuture.completedFuture;
+import static pl.auroramc.commons.CompletableFutureUtils.NIL;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -11,7 +11,6 @@ import pl.auroramc.commons.CompletableFutureUtils;
 
 public class UserListener implements Listener {
 
-  private static final CompletableFuture<Void> EMPTY_FUTURE = completedFuture(null);
   private final UserFacade userFacade;
 
   public UserListener(final UserFacade userFacade) {
@@ -35,7 +34,7 @@ public class UserListener implements Listener {
     }
 
     if (context.username().equals(user.getUsername())) {
-      return EMPTY_FUTURE;
+      return NIL;
     }
 
     user.setUsername(context.username());

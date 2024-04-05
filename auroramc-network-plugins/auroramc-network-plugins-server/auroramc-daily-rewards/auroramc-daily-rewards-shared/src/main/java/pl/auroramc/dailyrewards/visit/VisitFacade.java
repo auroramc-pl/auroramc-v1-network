@@ -10,5 +10,6 @@ public interface VisitFacade {
 
   CompletableFuture<Set<Visit>> getVisitsByUserId(final Long userId);
 
-  CompletableFuture<Set<Visit>> getVisitsByUserIdBetween(final Long userId, final Instant from, final Instant to);
+  CompletableFuture<Set<Visit>> getVisitsByUserIdInTimeframe(
+      final Long userId, final Instant from, final Instant to);
 }

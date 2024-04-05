@@ -1,6 +1,7 @@
 package pl.auroramc.lobby;
 
 import static dev.rollczi.litecommands.bukkit.LiteBukkitMessages.PLAYER_ONLY;
+import static dev.rollczi.litecommands.message.LiteMessages.COMMAND_COOLDOWN;
 import static dev.rollczi.litecommands.message.LiteMessages.INVALID_USAGE;
 import static dev.rollczi.litecommands.message.LiteMessages.MISSING_PERMISSIONS;
 import static java.time.Duration.ofSeconds;
@@ -9,6 +10,7 @@ import static pl.auroramc.commons.bukkit.scheduler.BukkitSchedulerFactory.getBuk
 import static pl.auroramc.commons.scheduler.SchedulerPoll.SYNC;
 import static pl.auroramc.lobby.LobbyConfig.LOBBY_CONFIG_FILE_NAME;
 import static pl.auroramc.lobby.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
+import static pl.auroramc.lobby.message.MessageSourcePaths.DURATION_PATH;
 import static pl.auroramc.lobby.message.MessageSourcePaths.SCHEMATICS_PATH;
 import static pl.auroramc.messages.message.MutableMessage.LINE_DELIMITER;
 import static pl.auroramc.messages.message.compiler.BukkitMessageCompiler.getBukkitMessageCompiler;
@@ -61,6 +63,11 @@ public class LobbyBukkitPlugin extends JavaPlugin {
                 context ->
                     messageSource.availableSchematicsSuggestion.placeholder(
                         SCHEMATICS_PATH, context.getSchematic().join(LINE_DELIMITER)))
+            .message(
+                COMMAND_COOLDOWN,
+                context ->
+                    messageSource.commandOnCooldown.placeholder(
+                        DURATION_PATH, context.getRemainingDuration()))
             .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
             .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
             .commands(LiteCommandsAnnotations.of(new SpawnCommand(lobbyConfig, messageSource)))

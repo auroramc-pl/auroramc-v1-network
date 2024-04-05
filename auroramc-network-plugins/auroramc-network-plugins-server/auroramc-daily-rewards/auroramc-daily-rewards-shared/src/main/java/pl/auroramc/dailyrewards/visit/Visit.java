@@ -6,19 +6,19 @@ import java.time.Instant;
 public class Visit {
 
   private Long userId;
-  private Duration sessionDuration;
-  private Instant sessionStartTime;
-  private Instant sessionDitchTime;
+  private Duration duration;
+  private Instant startTime;
+  private Instant ditchTime;
 
   public Visit(
       final Long userId,
-      final Duration sessionDuration,
-      final Instant sessionStartTime,
-      final Instant sessionDitchTime) {
+      final Duration duration,
+      final Instant startTime,
+      final Instant ditchTime) {
     this.userId = userId;
-    this.sessionDuration = sessionDuration;
-    this.sessionStartTime = sessionStartTime;
-    this.sessionDitchTime = sessionDitchTime;
+    this.duration = duration;
+    this.startTime = startTime;
+    this.ditchTime = ditchTime;
   }
 
   public Long getUserId() {
@@ -29,27 +29,27 @@ public class Visit {
     this.userId = userId;
   }
 
-  public Duration getSessionDuration() {
-    return sessionDuration;
+  public Duration getDuration() {
+    return duration;
   }
 
-  public void setSessionDuration(final Duration sessionDuration) {
-    this.sessionDuration = sessionDuration;
+  public void setDuration(final Duration duration) {
+    this.duration = duration;
   }
 
-  public Instant getSessionStartTime() {
-    return sessionStartTime;
+  public Instant getStartTime() {
+    return startTime;
   }
 
-  public void setSessionStartTime(final Instant sessionStartTime) {
-    this.sessionStartTime = sessionStartTime;
+  public void setStartTime(final Instant startTime) {
+    this.startTime = startTime;
   }
 
-  public Instant getSessionDitchTime() {
-    return sessionDitchTime;
+  public Instant getDitchTime() {
+    return ditchTime;
   }
 
-  public void setSessionDitchTime(final Instant sessionDitchTime) {
-    this.sessionDitchTime = sessionDitchTime;
+  public void setDitchTime(final Instant ditchTime) {
+    this.ditchTime = ditchTime;
   }
 }

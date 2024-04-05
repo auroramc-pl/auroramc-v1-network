@@ -21,18 +21,18 @@ public class MessageSource extends OkaeriConfig {
       MutableMessage.of("<red>Wskazany przez ciebie gracz nie istnieje, lub jest Offline.");
 
   public MutableMessage belowName =
-      MutableMessage.of("<dark_gray>[ <gradient:white:gray>{visit.period} <dark_gray>]");
+      MutableMessage.of("<dark_gray>[ <gradient:white:gray>{duration} <dark_gray>]");
 
   public MutableMessage visitDailySummary =
-      MutableMessage.of("<gray>Wykaz sesji z dnia <white>{period.minimum}<gray>:");
+      MutableMessage.of("<gray>Wykaz sesji z dnia <white>{timeframe.minimum}<gray>:");
 
   public MutableMessage visitRangeSummary =
       MutableMessage.of(
-          "<gray>Wykaz sesji z okresu <white>{period.minimum} <gray>- <white>{period.maximum}<gray>:");
+          "<gray>Wykaz sesji z okresu <white>{timeframe.minimum} <gray>- <white>{timeframe.maximum}<gray>:");
 
   public MutableMessage visitEntry =
       MutableMessage.of(
-          "<dark_gray>► (<white>{visit.startTime} <dark_gray>- <white>{visit.ditchTime}<dark_gray>) <dark_gray>- <gray>{visit.period}");
+          "<dark_gray>► (<white>{visit.startTime} <dark_gray>- <white>{visit.ditchTime}<dark_gray>) <dark_gray>- <gray>{visit.duration}");
 
   public MutableMessage noVisits = MutableMessage.of("<gray>Brak sesji w podanym okresie.");
 }

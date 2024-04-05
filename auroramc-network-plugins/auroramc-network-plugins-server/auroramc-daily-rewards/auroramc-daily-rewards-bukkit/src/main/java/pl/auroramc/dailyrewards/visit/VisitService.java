@@ -28,9 +28,9 @@ class VisitService implements VisitFacade {
   }
 
   @Override
-  public CompletableFuture<Set<Visit>> getVisitsByUserIdBetween(
+  public CompletableFuture<Set<Visit>> getVisitsByUserIdInTimeframe(
       final Long userId, final Instant from, final Instant to) {
     return scheduler.supply(
-        ASYNC, () -> visitRepository.findVisitsByUserIdBetween(userId, from, to));
+        ASYNC, () -> visitRepository.findVisitsByUserIdInTimeframe(userId, from, to));
   }
 }

@@ -1,12 +1,14 @@
 package pl.auroramc.economy.balance;
 
 import static com.spotify.futures.CompletableFutures.joinList;
+import static java.time.temporal.ChronoUnit.SECONDS;
 import static pl.auroramc.economy.balance.BalanceMessageSourcePaths.CONTEXT_PATH;
 import static pl.auroramc.economy.balance.BalanceMessageSourcePaths.PLAYER_PATH;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.cooldown.Cooldown;
 import dev.rollczi.litecommands.annotations.execute.Execute;
 import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.util.UUID;
@@ -21,9 +23,8 @@ import pl.auroramc.messages.message.compiler.CompiledMessage;
 import pl.auroramc.messages.message.component.ComponentCollector;
 
 @Permission("auroramc.economy.balance")
-@Command(
-    name = "balance",
-    aliases = {"bal", "saldo"})
+@Command(name = "balance", aliases = "bal")
+@Cooldown(key = "balance-cooldown", count = 5, unit = SECONDS)
 public class BalanceCommand {
 
   private final EconomyFacade economyFacade;

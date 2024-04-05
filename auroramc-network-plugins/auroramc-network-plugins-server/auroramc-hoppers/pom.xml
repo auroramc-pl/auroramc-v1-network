@@ -25,13 +25,13 @@
     <dependency>
       <groupId>dev.rollczi</groupId>
       <artifactId>litecommands-bukkit</artifactId>
-      <version>3.4.0</version>
+      <version>3.4.1</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>dev.rollczi</groupId>
       <artifactId>litecommands-adventure-platform</artifactId>
-      <version>3.4.0</version>
+      <version>3.4.1</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

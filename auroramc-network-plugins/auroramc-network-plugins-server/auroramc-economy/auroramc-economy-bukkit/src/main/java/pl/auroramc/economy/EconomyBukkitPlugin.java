@@ -2,6 +2,7 @@ package pl.auroramc.economy;
 
 import static dev.rollczi.litecommands.bukkit.LiteBukkitMessages.PLAYER_NOT_FOUND;
 import static dev.rollczi.litecommands.bukkit.LiteBukkitMessages.PLAYER_ONLY;
+import static dev.rollczi.litecommands.message.LiteMessages.COMMAND_COOLDOWN;
 import static dev.rollczi.litecommands.message.LiteMessages.INVALID_USAGE;
 import static dev.rollczi.litecommands.message.LiteMessages.MISSING_PERMISSIONS;
 import static moe.rafal.juliet.datasource.hikari.HikariPooledDataSourceFactory.getHikariDataSource;
@@ -16,6 +17,7 @@ import static pl.auroramc.economy.leaderboard.LeaderboardFacade.getLeaderboardFa
 import static pl.auroramc.economy.currency.CurrencyFacadeFactory.getCurrencyFacade;
 import static pl.auroramc.economy.integration.placeholderapi.PlaceholderApiIntegrationFactory.getPlaceholderApiIntegration;
 import static pl.auroramc.economy.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
+import static pl.auroramc.economy.message.MessageSourcePaths.DURATION_PATH;
 import static pl.auroramc.economy.message.MessageSourcePaths.SCHEMATICS_PATH;
 import static pl.auroramc.economy.payment.PaymentFacadeFactory.getPaymentFacade;
 import static pl.auroramc.messages.message.MutableMessage.LINE_DELIMITER;
@@ -40,8 +42,6 @@ import pl.auroramc.commons.config.serdes.SerdesCommons;
 import pl.auroramc.commons.config.serdes.juliet.JulietConfig;
 import pl.auroramc.commons.config.serdes.juliet.SerdesJuliet;
 import pl.auroramc.commons.config.serdes.message.SerdesMessages;
-import pl.auroramc.commons.integration.litecommands.cooldown.CooldownAnnotationResolver;
-import pl.auroramc.commons.integration.litecommands.cooldown.CooldownValidator;
 import pl.auroramc.commons.integration.litecommands.message.MutableMessageHandler;
 import pl.auroramc.commons.integration.litecommands.message.group.MutableMessageGroupHandler;
 import pl.auroramc.commons.scheduler.Scheduler;
@@ -94,7 +94,7 @@ public class EconomyBukkitPlugin extends JavaPlugin {
     final UserFacade userFacade = resolveService(getServer(), UserFacade.class);
     final CurrencyFacade currencyFacade = getCurrencyFacade(scheduler, juliet);
     final AccountFacade accountFacade = getAccountFacade(scheduler, logger, juliet);
-    final PaymentFacade paymentFacade = getPaymentFacade(scheduler, juliet, economyConfig.payment);
+    final PaymentFacade paymentFacade = getPaymentFacade(scheduler, logger, juliet, economyConfig.payment);
     final EconomyFacade economyFacade =
         getEconomyFacade(logger, userFacade, accountFacade, paymentFacade);
     registerServices(this, Set.of(currencyFacade, accountFacade, paymentFacade, economyFacade));
@@ -110,7 +110,6 @@ public class EconomyBukkitPlugin extends JavaPlugin {
 
     commands =
         LiteBukkitFactory.builder(getName(), this)
-            .annotations(annotations -> annotations.processor(new CooldownAnnotationResolver<>()))
             .extension(new LiteAdventureExtension<>(), configurer -> configurer.miniMessage(true))
             .message(
                 INVALID_USAGE,
@@ -120,6 +119,11 @@ public class EconomyBukkitPlugin extends JavaPlugin {
             .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
             .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
             .message(PLAYER_NOT_FOUND, messageSource.specifiedPlayerIsUnknown)
+            .message(
+                COMMAND_COOLDOWN,
+                context ->
+                    messageSource.commandOnCooldown.placeholder(
+                        DURATION_PATH, context.getRemainingDuration()))
             .argument(
                 Currency.class,
                 new CurrencyArgumentResolver<>(
@@ -148,7 +152,6 @@ public class EconomyBukkitPlugin extends JavaPlugin {
                         economyConfig.leaderboard)))
             .result(MutableMessage.class, new MutableMessageHandler<>(messageCompiler))
             .result(MutableMessageGroup.class, new MutableMessageGroupHandler<>(messageCompiler))
-            .validatorGlobal(new CooldownValidator<>(messageSource.commandOnCooldown))
             .build();
   }
 
