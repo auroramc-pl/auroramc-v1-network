@@ -2,27 +2,12 @@ package pl.auroramc.cheque.message;
 
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Exclude;
+import pl.auroramc.commons.config.command.CommandMessageSource;
 import pl.auroramc.messages.message.MutableMessage;
 
 public class MessageSource extends OkaeriConfig {
 
   public static final @Exclude String MESSAGE_SOURCE_FILE_NAME = "messages.yml";
-
-  public MutableMessage commandOnCooldown =
-      MutableMessage.of(
-          "<red>Musisz odczekać jeszcze <yellow>{duration}<red>, zanim ponownie użyjesz tej komendy.");
-
-  public MutableMessage specifiedPlayerIsUnknown =
-      MutableMessage.of("<red>Gracz o wskazanej przez ciebie nazwie jest Offline.");
-
-  public MutableMessage availableSchematicsSuggestion =
-      MutableMessage.of("<red>Poprawne użycie: <yellow><newline>{schematics}");
-
-  public MutableMessage executionOfCommandIsNotPermitted =
-      MutableMessage.of("<red>Nie posiadasz wystarczających uprawnień aby użyć tej komendy.");
-
-  public MutableMessage executionFromConsoleIsUnsupported =
-      MutableMessage.of("<red>Nie możesz użyć tej konsoli z poziomu konsoli.");
 
   public MutableMessage chequeIssued =
       MutableMessage.of("<gray>Wystawiłeś czek o wartości <white>{context.currency.@symbol}{context.amount}<gray>.");
@@ -47,4 +32,6 @@ public class MessageSource extends OkaeriConfig {
       MutableMessage.of("<gray>Czek <dark_gray>(<white>{context.currency.@symbol}{context.amount}<dark_gray>)");
 
   public MutableMessage linesOfCheque = MutableMessage.of("<gray>Wystawiający: <white>{context.issuer.username}");
+
+  public CommandMessageSource command = new CommandMessageSource();
 }

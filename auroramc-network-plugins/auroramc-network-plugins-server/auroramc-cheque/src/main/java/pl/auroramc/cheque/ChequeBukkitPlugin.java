@@ -1,21 +1,13 @@
 package pl.auroramc.cheque;
 
-import static dev.rollczi.litecommands.bukkit.LiteBukkitMessages.PLAYER_NOT_FOUND;
-import static dev.rollczi.litecommands.bukkit.LiteBukkitMessages.PLAYER_ONLY;
-import static dev.rollczi.litecommands.message.LiteMessages.COMMAND_COOLDOWN;
-import static dev.rollczi.litecommands.message.LiteMessages.INVALID_USAGE;
-import static dev.rollczi.litecommands.message.LiteMessages.MISSING_PERMISSIONS;
 import static moe.rafal.juliet.datasource.hikari.HikariPooledDataSourceFactory.getHikariDataSource;
 import static pl.auroramc.cheque.ChequeConfig.CHEQUE_CONFIG_FILE_NAME;
 import static pl.auroramc.cheque.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
-import static pl.auroramc.cheque.message.MessageSourcePaths.DURATION_PATH;
-import static pl.auroramc.cheque.message.MessageSourcePaths.SCHEMATICS_PATH;
 import static pl.auroramc.cheque.payment.PaymentFacade.getPaymentFacade;
 import static pl.auroramc.commons.bukkit.BukkitUtils.registerListeners;
 import static pl.auroramc.commons.bukkit.BukkitUtils.resolveService;
 import static pl.auroramc.commons.bukkit.scheduler.BukkitSchedulerFactory.getBukkitScheduler;
-import static pl.auroramc.commons.config.serdes.juliet.JulietConfig.JULIET_CONFIG_FILE_NAME;
-import static pl.auroramc.messages.message.MutableMessage.LINE_DELIMITER;
+import static pl.auroramc.commons.config.juliet.JulietConfig.JULIET_CONFIG_FILE_NAME;
 import static pl.auroramc.messages.message.compiler.BukkitMessageCompiler.getBukkitMessageCompiler;
 
 import dev.rollczi.litecommands.LiteCommands;
@@ -31,20 +23,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.auroramc.cheque.message.MessageSource;
 import pl.auroramc.cheque.payment.PaymentFacade;
+import pl.auroramc.commons.bukkit.integration.litecommands.BukkitCommandsBuilderProcessor;
 import pl.auroramc.commons.config.ConfigFactory;
+import pl.auroramc.commons.config.juliet.JulietConfig;
 import pl.auroramc.commons.config.serdes.SerdesCommons;
-import pl.auroramc.commons.config.serdes.juliet.JulietConfig;
 import pl.auroramc.commons.config.serdes.juliet.SerdesJuliet;
 import pl.auroramc.commons.config.serdes.message.SerdesMessages;
-import pl.auroramc.commons.integration.litecommands.message.MutableMessageHandler;
-import pl.auroramc.commons.integration.litecommands.message.group.MutableMessageGroupHandler;
 import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
 import pl.auroramc.economy.economy.EconomyFacade;
-import pl.auroramc.messages.message.MutableMessage;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
-import pl.auroramc.messages.message.group.MutableMessageGroup;
 import pl.auroramc.registry.user.UserFacade;
 
 public class ChequeBukkitPlugin extends JavaPlugin {
@@ -106,24 +95,11 @@ public class ChequeBukkitPlugin extends JavaPlugin {
     commands =
         LiteBukkitFactory.builder(getName(), this)
             .extension(new LiteAdventureExtension<>(), configurer -> configurer.miniMessage(true))
-            .message(
-                INVALID_USAGE,
-                context ->
-                    messageSource.availableSchematicsSuggestion.placeholder(
-                        SCHEMATICS_PATH, context.getSchematic().join(LINE_DELIMITER)))
-            .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
-            .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
-            .message(PLAYER_NOT_FOUND, messageSource.specifiedPlayerIsUnknown)
-            .message(
-                COMMAND_COOLDOWN,
-                context ->
-                    messageSource.commandOnCooldown.placeholder(
-                        DURATION_PATH, context.getRemainingDuration()))
             .commands(
                 LiteCommandsAnnotations.of(
                     new ChequeCommand(messageSource, chequeFacade, fundsCurrency, economyFacade)))
-            .result(MutableMessage.class, new MutableMessageHandler<>(messageCompiler))
-            .result(MutableMessageGroup.class, new MutableMessageGroupHandler<>(messageCompiler))
+            .selfProcessor(
+                new BukkitCommandsBuilderProcessor(messageSource.command, messageCompiler))
             .build();
   }
 

@@ -2,7 +2,7 @@ package pl.auroramc.essentials;
 
 import static moe.rafal.juliet.datasource.hikari.HikariPooledDataSourceFactory.getHikariDataSource;
 import static pl.auroramc.commons.bukkit.BukkitUtils.registerListeners;
-import static pl.auroramc.commons.config.serdes.juliet.JulietConfig.JULIET_CONFIG_FILE_NAME;
+import static pl.auroramc.commons.config.juliet.JulietConfig.JULIET_CONFIG_FILE_NAME;
 import static pl.auroramc.commons.search.FuzzySearch.getFuzzySearch;
 import static pl.auroramc.commons.search.StringMetric.getStringMetric;
 import static pl.auroramc.essentials.EssentialsConfig.ESSENTIALS_CONFIG_FILE_NAME;
@@ -14,8 +14,8 @@ import moe.rafal.juliet.Juliet;
 import moe.rafal.juliet.JulietBuilder;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.auroramc.commons.config.ConfigFactory;
+import pl.auroramc.commons.config.juliet.JulietConfig;
 import pl.auroramc.commons.config.serdes.SerdesCommons;
-import pl.auroramc.commons.config.serdes.juliet.JulietConfig;
 import pl.auroramc.commons.config.serdes.juliet.SerdesJuliet;
 import pl.auroramc.commons.config.serdes.message.SerdesMessages;
 import pl.auroramc.commons.search.FuzzySearch;

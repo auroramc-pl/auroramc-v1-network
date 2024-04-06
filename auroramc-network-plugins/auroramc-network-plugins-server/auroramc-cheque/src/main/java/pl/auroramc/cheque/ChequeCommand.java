@@ -67,7 +67,7 @@ class ChequeCommand {
       return completedFuture(
           messageSource
               .validationRequiresAmountInBounds
-              .placeholder(CURRENCY_PATH, fundsCurrency.getSymbol())
+              .placeholder(CURRENCY_PATH, fundsCurrency)
               .placeholder(MINIMUM_CHEQUE_WORTH_PATH, MINIMUM_CHEQUE_WORTH)
               .placeholder(MAXIMUM_CHEQUE_WORTH_PATH, MAXIMUM_CHEQUE_WORTH));
     }
