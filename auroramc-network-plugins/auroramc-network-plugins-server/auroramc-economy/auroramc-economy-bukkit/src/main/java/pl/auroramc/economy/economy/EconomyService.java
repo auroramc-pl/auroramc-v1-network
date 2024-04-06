@@ -13,6 +13,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BinaryOperator;
 import java.util.logging.Logger;
+import pl.auroramc.commons.CompletableFutureUtils;
 import pl.auroramc.economy.account.Account;
 import pl.auroramc.economy.account.AccountFacade;
 import pl.auroramc.economy.currency.Currency;
@@ -44,12 +45,7 @@ class EconomyService implements EconomyFacade {
   public CompletableFuture<BigDecimal> balance(final UUID uniqueId, final Currency currency) {
     return retrieveAccountOf(uniqueId, currency)
         .thenApply(this::balanceOrZero)
-        .exceptionally(
-            exception -> {
-              throw new EconomyException(
-                  "Could not retrieve balance of %s for %d.".formatted(uniqueId, currency.getId()),
-                  exception);
-            });
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
   @Override
@@ -57,13 +53,7 @@ class EconomyService implements EconomyFacade {
       final UUID uniqueId, final Currency currency, final BigDecimal amount) {
     return retrieveAccountOf(uniqueId, currency)
         .thenCompose(account -> mutateBalanceOfAccount(account, amount, (a, b) -> amount))
-        .exceptionally(
-            exception -> {
-              throw new EconomyException(
-                  "Could not set balance of %s for %d to %.2f."
-                      .formatted(uniqueId, currency.getId(), amount),
-                  exception);
-            });
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
   @Override
@@ -71,13 +61,7 @@ class EconomyService implements EconomyFacade {
       final UUID uniqueId, final Currency currency, final BigDecimal amount) {
     return retrieveAccountOf(uniqueId, currency)
         .thenCompose(account -> mutateBalanceOfAccount(account, amount, BigDecimal::add))
-        .exceptionally(
-            exception -> {
-              throw new EconomyException(
-                  "Could not deposit %.2f for %d to %s."
-                      .formatted(amount, currency.getId(), uniqueId),
-                  exception);
-            });
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
   @Override
@@ -85,13 +69,7 @@ class EconomyService implements EconomyFacade {
       final UUID uniqueId, final Currency currency, final BigDecimal amount) {
     return retrieveAccountOf(uniqueId, currency)
         .thenCompose(account -> mutateBalanceOfAccount(account, amount, BigDecimal::subtract))
-        .exceptionally(
-            exception -> {
-              throw new EconomyException(
-                  "Could not withdraw %.2f for %d from %s."
-                      .formatted(amount, currency.getId(), uniqueId),
-                  exception);
-            });
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
   @Override
@@ -117,13 +95,7 @@ class EconomyService implements EconomyFacade {
                                     .withAmount(amount)
                                     .withTransactionTime(Instant.now())
                                     .build())))
-        .exceptionally(
-            exception -> {
-              throw new EconomyException(
-                  "Could not finalize transfer of %.2f from %s to %s."
-                      .formatted(amount, initiatorUniqueId, receiverUniqueId),
-                  exception);
-            })
+        .exceptionally(CompletableFutureUtils::delegateCaughtException)
         .toCompletableFuture();
   }
 
@@ -133,13 +105,7 @@ class EconomyService implements EconomyFacade {
     return retrieveAccountOf(uniqueId, currency)
         .thenApply(Preconditions::checkNotNull)
         .thenApply(account -> account.getBalance().compareTo(amount) >= 0)
-        .exceptionally(
-            exception -> {
-              throw new EconomyException(
-                  "Could not check if %s has %.2f for %d."
-                      .formatted(uniqueId, amount, currency.getId()),
-                  exception);
-            });
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
   private CompletableFuture<Void> mutateBalanceOfAccount(

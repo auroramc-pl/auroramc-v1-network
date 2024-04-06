@@ -13,16 +13,6 @@ public class MessageSource extends OkaeriConfig {
 
   public static final @Exclude String MESSAGE_SOURCE_FILE_NAME = "messages.yml";
 
-  public BalanceMessageSource balance = new BalanceMessageSource();
-
-  public EconomyMessageSource economy = new EconomyMessageSource();
-
-  public LeaderboardMessageSource leaderboard = new LeaderboardMessageSource();
-
-  public PaymentMessageSource payment = new PaymentMessageSource();
-
-  public TransferMessageSource transfer = new TransferMessageSource();
-
   public MutableMessage commandOnCooldown =
       MutableMessage.of(
           "<red>Musisz odczekać jeszcze <yellow>{duration}<red>, zanim ponownie użyjesz tej komendy.");
@@ -42,4 +32,14 @@ public class MessageSource extends OkaeriConfig {
   public MutableMessage validationRequiresExistingCurrency =
       MutableMessage.of(
           "<red>Wprowadzona przez ciebie waluta <dark_gray>(<yellow>{currency.id}<dark_gray>) <red>nie została odnaleziona, upewnij się, czy jest ona poprawna.");
+
+  public BalanceMessageSource balance = new BalanceMessageSource();
+
+  public EconomyMessageSource economy = new EconomyMessageSource();
+
+  public LeaderboardMessageSource leaderboard = new LeaderboardMessageSource();
+
+  public PaymentMessageSource payment = new PaymentMessageSource();
+
+  public TransferMessageSource transfer = new TransferMessageSource();
 }

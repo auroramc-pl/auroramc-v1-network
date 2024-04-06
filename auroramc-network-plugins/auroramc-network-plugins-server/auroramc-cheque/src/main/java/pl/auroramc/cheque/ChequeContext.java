@@ -1,5 +1,6 @@
 package pl.auroramc.cheque;
 
 import java.math.BigDecimal;
+import pl.auroramc.economy.currency.Currency;
 
-public record ChequeContext(ChequeIssuer issuer, BigDecimal amount) {}
+record ChequeContext(ChequeIssuer issuer, Currency currency, BigDecimal amount) {}
