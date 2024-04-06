@@ -78,6 +78,12 @@ class EconomyService implements EconomyFacade {
       final UUID receiverUniqueId,
       final Currency currency,
       final BigDecimal amount) {
+    if (initiatorUniqueId.equals(receiverUniqueId)) {
+      throw new EconomyException(
+          "Could not transfer funds to the same account, unique id: %s."
+              .formatted(initiatorUniqueId));
+    }
+
     checkNotNull(currency.getId());
     return combineFutures(
             retrieveAccountOf(initiatorUniqueId, currency).thenApply(Preconditions::checkNotNull),
