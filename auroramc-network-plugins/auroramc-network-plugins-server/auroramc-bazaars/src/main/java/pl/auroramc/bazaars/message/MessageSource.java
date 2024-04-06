@@ -2,9 +2,9 @@ package pl.auroramc.bazaars.message;
 
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Exclude;
-import pl.auroramc.commons.message.MutableMessage;
+import pl.auroramc.messages.message.MutableMessage;
 
-public class MutableMessageSource extends OkaeriConfig {
+public class MessageSource extends OkaeriConfig {
 
   public static final @Exclude String MESSAGE_SOURCE_FILE_NAME = "messages.yml";
 
@@ -17,6 +17,9 @@ public class MutableMessageSource extends OkaeriConfig {
 
   public MutableMessage invalidPrice =
       MutableMessage.of("<red>Wskazana przez ciebie cena jest nieprawidłowa.");
+
+  public MutableMessage bazaarSelfInteraction =
+      MutableMessage.of("<red>Nie możesz korzystać z własnego bazaru.");
 
   public MutableMessage bazaarOutOfStock =
       MutableMessage.of(
@@ -42,9 +45,9 @@ public class MutableMessageSource extends OkaeriConfig {
 
   public MutableMessage productBought =
       MutableMessage.of(
-          "<gray>Zakupiłeś <white>{product} <gray>od <white>{merchant} <gray>za <white>{currency}{price}<gray>, które zostały pobrane z twojego konta.");
+          "<gray>Zakupiłeś <white>{product} <gray>od <white>{context.merchant} <gray>za <white>{currency.@symbol}{context.price}<gray>, które zostały pobrane z twojego konta.");
 
   public MutableMessage productSold =
       MutableMessage.of(
-          "<gray>Sprzedałeś <white>{product} <gray>od <white>{merchant} <gray>za <white>{currency}{price}<gray>, które zostały dodane do twojego konta.");
+          "<gray>Sprzedałeś <white>{product} <gray>od <white>{context.merchant} <gray>za <white>{currency.@symbol}{context.price}<gray>, które zostały dodane do twojego konta.");
 }

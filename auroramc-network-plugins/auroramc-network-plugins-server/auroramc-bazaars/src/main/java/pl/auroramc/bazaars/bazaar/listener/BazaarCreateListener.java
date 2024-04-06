@@ -10,9 +10,9 @@ import static pl.auroramc.bazaars.bazaar.BazaarUtils.resolveSignProp;
 import static pl.auroramc.bazaars.bazaar.BazaarUtils.whetherSignHasInvalidProp;
 import static pl.auroramc.bazaars.bazaar.parser.BazaarParserToken.MERCHANT;
 import static pl.auroramc.bazaars.bazaar.parser.BazaarParserToken.PRICE;
-import static pl.auroramc.bazaars.sign.SignDelegateFactory.produceSignDelegate;
+import static pl.auroramc.bazaars.sign.SignDelegateFactory.getSignDelegate;
+import static pl.auroramc.commons.format.decimal.DecimalFormatter.getFormattedDecimal;
 
-import java.text.DecimalFormat;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.type.WallSign;
@@ -22,22 +22,23 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import pl.auroramc.bazaars.bazaar.parser.BazaarParser;
 import pl.auroramc.bazaars.bazaar.parser.BazaarParsingContext;
-import pl.auroramc.bazaars.message.MutableMessageSource;
-import pl.auroramc.commons.message.MutableMessage;
+import pl.auroramc.bazaars.message.MessageSource;
+import pl.auroramc.messages.message.MutableMessage;
+import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 
 public class BazaarCreateListener implements Listener {
 
   private static final int PLAYER_INVENTORY_CAPACITY = 2304;
-  private final MutableMessageSource messageSource;
-  private final DecimalFormat priceFormat;
+  private final MessageSource messageSource;
+  private final BukkitMessageCompiler messageCompiler;
   private final BazaarParser bazaarParser;
 
   public BazaarCreateListener(
-      final MutableMessageSource messageSource,
-      final DecimalFormat priceFormat,
+      final MessageSource messageSource,
+      final BukkitMessageCompiler messageCompiler,
       final BazaarParser bazaarParser) {
     this.messageSource = messageSource;
-    this.priceFormat = priceFormat;
+    this.messageCompiler = messageCompiler;
     this.bazaarParser = bazaarParser;
   }
 
@@ -54,7 +55,7 @@ public class BazaarCreateListener implements Listener {
       }
 
       final BazaarParsingContext parsingContext =
-          bazaarParser.parseContextOrNull(produceSignDelegate(event));
+          bazaarParser.parseContextOrNull(getSignDelegate(event));
       if (parsingContext == null) {
         return;
       }
@@ -80,12 +81,12 @@ public class BazaarCreateListener implements Listener {
           empty()
               .append(text(parsingContext.type().getShortcut()))
               .append(text(" "))
-              .append(text(priceFormat.format(parsingContext.price()))));
+              .append(text(getFormattedDecimal(parsingContext.price()))));
     }
   }
 
   private void destroySign(final Player player, final Block block, final MutableMessage cause) {
     block.breakNaturally();
-    player.sendMessage(cause.compile());
+    player.sendMessage(messageCompiler.compile(cause).getComponent());
   }
 }
