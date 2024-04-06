@@ -1,4 +1,4 @@
-package pl.auroramc.gamble.gamble;
+package pl.auroramc.gamble.participant;
 
 import static org.bukkit.Bukkit.getPlayer;
 

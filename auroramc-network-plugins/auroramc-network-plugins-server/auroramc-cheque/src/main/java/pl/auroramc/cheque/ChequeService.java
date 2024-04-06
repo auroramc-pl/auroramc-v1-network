@@ -1,20 +1,19 @@
 package pl.auroramc.cheque;
 
 import static com.spotify.futures.CompletableFutures.combineFutures;
-import static java.util.Arrays.stream;
 import static java.util.Objects.requireNonNull;
 import static org.bukkit.Bukkit.getPlayer;
 import static org.bukkit.Material.PAPER;
 import static org.bukkit.persistence.PersistentDataType.STRING;
 import static pl.auroramc.cheque.message.MessageSourcePaths.CONTEXT_PATH;
 import static pl.auroramc.commons.bukkit.BukkitUtils.decreaseQuantityOfHeldItem;
+import static pl.auroramc.commons.message.compiler.CompiledMessageUtils.resolveComponent;
 import static pl.auroramc.messages.message.decoration.MessageDecorations.NO_CURSIVE;
 
 import com.jeff_media.morepersistentdatatypes.DataType;
 import java.math.BigDecimal;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import net.kyori.adventure.text.Component;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -27,7 +26,6 @@ import pl.auroramc.commons.bukkit.item.ItemStackBuilder;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.economy.EconomyFacade;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
-import pl.auroramc.messages.message.compiler.CompiledMessage;
 import pl.auroramc.registry.user.User;
 import pl.auroramc.registry.user.UserFacade;
 
@@ -83,18 +81,15 @@ class ChequeService implements ChequeFacade {
     final ItemStack renderOfItemStack =
         ItemStackBuilder.newBuilder(PAPER)
             .displayName(
-                messageCompiler
-                    .compile(
+                resolveComponent(
+                    messageCompiler.compile(
                         messageSource.titleOfCheque.placeholder(CONTEXT_PATH, chequeContext),
-                        NO_CURSIVE)
-                    .getComponent())
+                        NO_CURSIVE)))
             .lore(
-                stream(
-                        messageCompiler.compileChildren(
-                            messageSource.linesOfCheque.placeholder(CONTEXT_PATH, chequeContext),
-                            NO_CURSIVE))
-                    .map(CompiledMessage::getComponent)
-                    .toArray(Component[]::new))
+                resolveComponent(
+                    messageCompiler.compileChildren(
+                        messageSource.linesOfCheque.placeholder(CONTEXT_PATH, chequeContext),
+                        NO_CURSIVE)))
             .build();
     return attachChequeTags(renderOfItemStack, chequeContext);
   }

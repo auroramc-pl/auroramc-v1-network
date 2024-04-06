@@ -1,6 +1,7 @@
 package pl.auroramc.economy.leaderboard;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
+import static pl.auroramc.commons.message.compiler.CompiledMessageUtils.resolveComponent;
 
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
@@ -51,7 +52,7 @@ public class LeaderboardCommand {
     final List<LeaderboardEntry> entries =
         leaderboardFacade.getLeaderboardEntriesByCurrencyId(currency.getId());
     if (entries.isEmpty()) {
-      return messageCompiler.compile(messageSource.leaderboardEmpty).getComponent();
+      return resolveComponent(messageCompiler.compile(messageSource.leaderboardEmpty));
     }
 
     return getLeaderboardHeader()
@@ -62,17 +63,16 @@ public class LeaderboardCommand {
   }
 
   private Component getLeaderboardHeader() {
-    return messageCompiler.compile(messageSource.leaderboardHeader).getComponent();
+    return resolveComponent(messageCompiler.compile(messageSource.leaderboardHeader));
   }
 
   private Component getLeaderboardFooter(final Currency currency, final LeaderboardEntry entry) {
-    return messageCompiler
-        .compile(
+    return resolveComponent(
+        messageCompiler.compile(
             messageSource.leaderboardFooter.placeholder(
                 LeaderboardMessageSourcePaths.CONTEXT_PATH,
                 new LeaderboardContext(
-                    entry.position(), entry.username(), currency, entry.balance())))
-        .getComponent();
+                    entry.position(), entry.username(), currency, entry.balance()))));
   }
 
   private Component getLeaderboardFooter(final Player player, final Currency currency) {
@@ -94,13 +94,12 @@ public class LeaderboardCommand {
   }
 
   private Component getLeaderboardLine(final Currency currency, final LeaderboardEntry entry) {
-    return messageCompiler
-        .compile(
+    return resolveComponent(
+        messageCompiler.compile(
             messageSource.leaderboardEntry.placeholder(
                 LeaderboardMessageSourcePaths.CONTEXT_PATH,
                 new LeaderboardContext(
-                    entry.position(), entry.username(), currency, entry.balance())))
-        .getComponent();
+                    entry.position(), entry.username(), currency, entry.balance()))));
   }
 
   private Currency getDefaultCurrency() {

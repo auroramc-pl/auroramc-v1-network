@@ -1,7 +1,6 @@
 package pl.auroramc.economy.transfer;
 
 import static java.math.BigDecimal.ZERO;
-import static java.math.RoundingMode.HALF_DOWN;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static pl.auroramc.commons.CompletableFutureUtils.delegateCaughtException;
@@ -48,8 +47,7 @@ public class TransferCommand {
   @Execute
   public CompletableFuture<MutableMessageGroup> transfer(
       final @Context Player source, final @Arg Player target, final @Arg BigDecimal amount) {
-    final BigDecimal fixedAmount = amount.setScale(2, HALF_DOWN);
-    if (fixedAmount.compareTo(ZERO) <= 0) {
+    if (amount.compareTo(ZERO) <= 0) {
       return completedFuture(
           grouping().message(messageSource.validationRequiresAmountGreaterThanZero, source));
     }
@@ -61,10 +59,10 @@ public class TransferCommand {
 
     final Currency currency = transferCurrency.get();
     return economyFacade
-        .has(source.getUniqueId(), currency, fixedAmount)
+        .has(source.getUniqueId(), currency, amount)
         .thenCompose(
             hasEnoughMoney ->
-                processTransfer(currency, source, target, fixedAmount, hasEnoughMoney))
+                processTransfer(currency, source, target, amount, hasEnoughMoney))
         .exceptionally(
             exception -> {
               delegateCaughtException(exception);

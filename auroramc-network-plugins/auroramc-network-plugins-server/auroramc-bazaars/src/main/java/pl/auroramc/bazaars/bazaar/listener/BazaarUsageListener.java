@@ -5,6 +5,7 @@ import static org.bukkit.event.EventPriority.HIGHEST;
 import static org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK;
 import static pl.auroramc.bazaars.bazaar.BazaarType.BUY;
 import static pl.auroramc.bazaars.bazaar.BazaarUtils.resolveSignProp;
+import static pl.auroramc.commons.message.compiler.CompiledMessageUtils.resolveComponent;
 
 import java.util.Optional;
 import org.bukkit.block.Block;
@@ -77,7 +78,7 @@ public class BazaarUsageListener implements Listener {
       final Player customer = event.getPlayer();
       if (customer.getName().equalsIgnoreCase(parsingContext.merchant())) {
         customer.sendMessage(
-            messageCompiler.compile(messageSource.bazaarSelfInteraction).getComponent());
+            resolveComponent(messageCompiler.compile(messageSource.bazaarSelfInteraction)));
         return;
       }
 
@@ -86,7 +87,7 @@ public class BazaarUsageListener implements Listener {
       // loaded yet and the check will always return false if not warmed up.
       if (parsingContext.type() == BUY && whetherMagazineIsOutOfStock(magazine, parsingContext)) {
         customer.sendMessage(
-            messageCompiler.compile(messageSource.bazaarOutOfStock).getComponent());
+            resolveComponent(messageCompiler.compile(messageSource.bazaarOutOfStock)));
         return;
       }
 

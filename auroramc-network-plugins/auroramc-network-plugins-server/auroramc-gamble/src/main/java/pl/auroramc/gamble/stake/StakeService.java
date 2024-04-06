@@ -1,10 +1,11 @@
 package pl.auroramc.gamble.stake;
 
-import static pl.auroramc.commons.mutex.Mutex.mutex;
+import static pl.auroramc.commons.concurrent.Mutex.mutex;
 
 import java.util.ArrayList;
 import java.util.List;
-import pl.auroramc.commons.mutex.Mutex;
+import pl.auroramc.commons.concurrent.Mutex;
+import pl.auroramc.gamble.stake.context.StakeContext;
 
 class StakeService implements StakeFacade {
 

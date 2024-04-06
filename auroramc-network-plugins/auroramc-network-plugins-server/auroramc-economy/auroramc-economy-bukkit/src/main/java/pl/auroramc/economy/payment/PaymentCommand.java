@@ -1,5 +1,6 @@
 package pl.auroramc.economy.payment;
 
+import static pl.auroramc.commons.message.compiler.CompiledMessageUtils.resolveComponent;
 import static pl.auroramc.economy.payment.PaymentDirection.INCOMING;
 import static pl.auroramc.economy.payment.PaymentMessageSourcePaths.PAYMENT_PATH;
 import static pl.auroramc.economy.payment.PaymentMessageSourcePaths.PLAYER_PATH;
@@ -44,13 +45,12 @@ public class PaymentCommand {
         .thenApply(
             payments -> {
               if (payments.isEmpty()) {
-                return messageCompiler
-                    .compile(
+                return resolveComponent(
+                    messageCompiler.compile(
                         (direction == INCOMING
                                 ? messageSource.noIncomingPayments
                                 : messageSource.noOutgoingPayments)
-                            .placeholder(PLAYER_PATH, target))
-                    .getComponent();
+                            .placeholder(PLAYER_PATH, target)));
               }
 
               return getPaymentHeader(target, direction)
@@ -60,13 +60,12 @@ public class PaymentCommand {
   }
 
   private Component getPaymentHeader(final Player player, final PaymentDirection direction) {
-    return messageCompiler
-        .compile(
+    return resolveComponent(
+        messageCompiler.compile(
             (direction == INCOMING
                     ? messageSource.incomingPaymentsHeader
                     : messageSource.outgoingPaymentsHeader)
-                .placeholder(PLAYER_PATH, player))
-        .getComponent();
+                .placeholder(PLAYER_PATH, player)));
   }
 
   private Component getPaymentEntries(final List<PaymentSummary> paymentSummaries) {
@@ -76,9 +75,9 @@ public class PaymentCommand {
   }
 
   private Component getPaymentEntry(final PaymentSummary paymentSummary) {
-    return messageCompiler
-        .compile(messageSource.paymentEntry.placeholder(PAYMENT_PATH, paymentSummary))
-        .getComponent();
+    return resolveComponent(
+        messageCompiler.compile(
+            messageSource.paymentEntry.placeholder(PAYMENT_PATH, paymentSummary)));
   }
 
   private CompletableFuture<List<PaymentSummary>> getPayments(

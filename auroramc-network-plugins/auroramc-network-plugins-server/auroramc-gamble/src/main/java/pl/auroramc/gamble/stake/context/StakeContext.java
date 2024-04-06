@@ -1,10 +1,10 @@
-package pl.auroramc.gamble.stake;
+package pl.auroramc.gamble.stake.context;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;
 import pl.auroramc.gamble.gamble.GambleKey;
-import pl.auroramc.gamble.gamble.Participant;
+import pl.auroramc.gamble.participant.Participant;
 
 public record StakeContext(
     GambleKey gambleKey, UUID stakeUniqueId, BigDecimal stake, Participant initiator) {

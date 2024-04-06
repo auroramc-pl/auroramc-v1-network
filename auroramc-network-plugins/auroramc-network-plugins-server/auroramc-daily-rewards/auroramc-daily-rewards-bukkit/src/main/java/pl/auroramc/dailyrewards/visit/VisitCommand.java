@@ -4,6 +4,7 @@ import static java.time.Instant.now;
 import static java.util.Comparator.comparing;
 import static pl.auroramc.commons.format.temporal.TemporalUtils.getMaximumTimeOfDay;
 import static pl.auroramc.commons.format.temporal.TemporalUtils.getMinimumTimeOfDay;
+import static pl.auroramc.commons.message.compiler.CompiledMessageUtils.resolveComponent;
 import static pl.auroramc.commons.range.Between.ranged;
 import static pl.auroramc.commons.range.Between.single;
 import static pl.auroramc.dailyrewards.message.MessageSourcePaths.TIMEFRAME_PATH;
@@ -71,24 +72,22 @@ public class VisitCommand {
   }
 
   private Component getFormattedVisitHeader(final Between<Instant> timeframe) {
-    return messageCompiler
-        .compile(
+    return resolveComponent(
+        messageCompiler.compile(
             (timeframe.single() ? messageSource.visitDailySummary : messageSource.visitRangeSummary)
-                .placeholder(TIMEFRAME_PATH, timeframe))
-        .getComponent();
+                .placeholder(TIMEFRAME_PATH, timeframe)));
   }
 
   private Component getFormattedVisits(final Between<Instant> timeframe, final Set<Visit> visits) {
     if (visits.isEmpty()) {
-      return messageCompiler.compile(messageSource.noVisits).getComponent();
+      return resolveComponent(messageCompiler.compile(messageSource.noVisits));
     }
     return getFormattedVisitHeader(timeframe).appendNewline().append(getFormattedVisits(visits));
   }
 
   private Component getFormattedVisit(final Visit visit) {
-    return messageCompiler
-        .compile(messageSource.visitEntry.placeholder(VISIT_PATH, visit))
-        .getComponent();
+    return resolveComponent(
+        messageCompiler.compile(messageSource.visitEntry.placeholder(VISIT_PATH, visit)));
   }
 
   private Component getFormattedVisits(final Set<Visit> visits) {

@@ -1,6 +1,7 @@
 package pl.auroramc.gamble.stake;
 
 import java.util.List;
+import pl.auroramc.gamble.stake.context.StakeContext;
 
 public interface StakeFacade {
 

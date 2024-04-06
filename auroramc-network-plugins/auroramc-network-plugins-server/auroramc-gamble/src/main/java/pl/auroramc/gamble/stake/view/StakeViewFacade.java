@@ -3,19 +3,22 @@ package pl.auroramc.gamble.stake.view;
 import java.util.Collection;
 import java.util.Optional;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.plugin.Plugin;
+import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.economy.currency.Currency;
-import pl.auroramc.gamble.message.MutableMessageSource;
+import pl.auroramc.gamble.message.MessageSource;
 import pl.auroramc.gamble.stake.StakeFacade;
+import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 
 public interface StakeViewFacade {
 
   static StakeViewFacade getStakeViewFacade(
-      final Plugin plugin,
+      final Scheduler scheduler,
       final StakeFacade stakeFacade,
       final Currency fundsCurrency,
-      final MutableMessageSource messageSource) {
-    return new StakeViewService(plugin, stakeFacade, fundsCurrency, messageSource);
+      final MessageSource messageSource,
+      final BukkitMessageCompiler messageCompiler) {
+    return new StakeViewService(
+        scheduler, stakeFacade, fundsCurrency, messageSource, messageCompiler);
   }
 
   void recalculate();

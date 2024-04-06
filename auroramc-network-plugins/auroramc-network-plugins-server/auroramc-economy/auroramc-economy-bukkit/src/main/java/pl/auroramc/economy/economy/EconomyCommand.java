@@ -1,7 +1,6 @@
 package pl.auroramc.economy.economy;
 
 import static java.math.BigDecimal.ZERO;
-import static java.math.RoundingMode.HALF_DOWN;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static pl.auroramc.economy.economy.EconomyMessageSourcePaths.CONTEXT_PATH;
 
@@ -84,12 +83,11 @@ public class EconomyCommand {
       final Currency currency,
       final BigDecimal amount,
       final BiFunction<Currency, BigDecimal, CompletableFuture<MutableMessage>> modifier,
-      final boolean requiresAmountValidation) {
-    final BigDecimal fixedAmount = amount.setScale(2, HALF_DOWN);
-    if (requiresAmountValidation && fixedAmount.compareTo(ZERO) <= 0) {
+      final boolean isPositiveRequired) {
+    if (isPositiveRequired && amount.compareTo(ZERO) <= 0) {
       return completedFuture(messageSource.validationRequiresAmountGreaterThanZero);
     }
 
-    return modifier.apply(currency, fixedAmount);
+    return modifier.apply(currency, amount);
   }
 }

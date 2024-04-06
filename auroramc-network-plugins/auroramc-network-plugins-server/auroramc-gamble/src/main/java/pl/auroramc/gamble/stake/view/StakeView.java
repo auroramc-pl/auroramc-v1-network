@@ -1,22 +1,17 @@
 package pl.auroramc.gamble.stake.view;
 
-import static java.util.Locale.ROOT;
-import static org.apache.commons.lang3.StringUtils.capitalize;
 import static org.bukkit.Bukkit.createInventory;
 import static org.bukkit.Material.ARROW;
 import static org.bukkit.Material.BLACK_STAINED_GLASS_PANE;
 import static org.bukkit.Material.PAPER;
-import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
-import static pl.auroramc.commons.message.MutableMessageDecoration.NO_CURSIVE;
-import static pl.auroramc.commons.page.navigation.PageNavigationDirection.BACKWARD;
-import static pl.auroramc.commons.page.navigation.PageNavigationDirection.FORWARD;
-import static pl.auroramc.gamble.message.MutableMessageVariableKey.CURRENCY_PATH;
-import static pl.auroramc.gamble.message.MutableMessageVariableKey.GAMBLE_PATH;
-import static pl.auroramc.gamble.message.MutableMessageVariableKey.INITIATOR_PATH;
-import static pl.auroramc.gamble.message.MutableMessageVariableKey.PREDICTION_PATH;
-import static pl.auroramc.gamble.message.MutableMessageVariableKey.STAKE_PATH;
+import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationDirection.BACKWARD;
+import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationDirection.FORWARD;
+import static pl.auroramc.commons.message.compiler.CompiledMessageUtils.resolveComponent;
+import static pl.auroramc.gamble.message.MessageSourcePaths.CONTEXT_PATH;
+import static pl.auroramc.gamble.message.MessageSourcePaths.CURRENCY_PATH;
 import static pl.auroramc.gamble.stake.view.StakeViewUtils.getSlotIndexOf;
 import static pl.auroramc.gamble.stake.view.StakeViewUtils.setItemAsFrame;
+import static pl.auroramc.messages.message.decoration.MessageDecorations.NO_CURSIVE;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,11 +22,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import pl.auroramc.commons.item.ItemStackBuilder;
-import pl.auroramc.commons.page.navigation.PageNavigator;
+import pl.auroramc.commons.bukkit.item.ItemStackBuilder;
+import pl.auroramc.commons.bukkit.page.navigation.PageNavigator;
 import pl.auroramc.economy.currency.Currency;
-import pl.auroramc.gamble.message.MutableMessageSource;
-import pl.auroramc.gamble.stake.StakeContext;
+import pl.auroramc.gamble.message.MessageSource;
+import pl.auroramc.gamble.stake.context.StakeContext;
+import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 
 class StakeView implements InventoryHolder {
 
@@ -39,30 +35,31 @@ class StakeView implements InventoryHolder {
   private static final int INITIAL_Y_OF_FILLING_AREA = 2;
   private static final int CLOSING_X_OF_FILLING_AREA = 8;
   private static final int CLOSING_Y_OF_FILLING_AREA = 5;
-
   private static final int STAKE_ROW_COUNT = 6;
   private static final int ELEMENTS_PER_ROW = 9;
   private final Map<Integer, StakeContext> stakeContextBySlot;
   private final Map<Integer, PageNavigator> navigatorBySlot;
   private final int pageIndex;
   private final Currency fundsCurrency;
-  private final MutableMessageSource messageSource;
+  private final MessageSource messageSource;
+  private final BukkitMessageCompiler messageCompiler;
   private final List<StakeContext> stakes;
   private final Inventory stakeInventory;
 
   StakeView(
       final int pageIndex,
       final Currency fundsCurrency,
-      final MutableMessageSource messageSource,
-      final List<StakeContext> stakes
-  ) {
+      final MessageSource messageSource,
+      final BukkitMessageCompiler messageCompiler,
+      final List<StakeContext> stakes) {
     this.pageIndex = pageIndex;
     this.fundsCurrency = fundsCurrency;
     this.messageSource = messageSource;
-    this.navigatorBySlot = Map.of(
-        48, new PageNavigator(BACKWARD, getNavigatorIconPointingBackward()),
-        50, new PageNavigator(FORWARD, getNavigatorIconPointingForward())
-    );
+    this.messageCompiler = messageCompiler;
+    this.navigatorBySlot =
+        Map.of(
+            48, new PageNavigator(BACKWARD, getNavigatorIconPointingBackward()),
+            50, new PageNavigator(FORWARD, getNavigatorIconPointingForward()));
     this.stakeContextBySlot = new HashMap<>();
     this.stakes = stakes;
     this.stakeInventory = createStakeInventory();
@@ -78,18 +75,17 @@ class StakeView implements InventoryHolder {
   }
 
   private Inventory createStakeInventory() {
-    final Inventory inventory = createInventory(
-        this,
-        STAKE_ROW_COUNT * ELEMENTS_PER_ROW,
-        messageSource.stakesTitle.compile()
-    );
+    final Inventory inventory =
+        createInventory(
+            this,
+            STAKE_ROW_COUNT * ELEMENTS_PER_ROW,
+            resolveComponent(messageCompiler.compile(messageSource.stakesTitle)));
 
     setItemAsFrame(
         inventory,
         ItemStackBuilder.newBuilder(BLACK_STAINED_GLASS_PANE)
             .displayName(Component.empty())
-            .build()
-    );
+            .build());
 
     int currentIndex = 0;
     int closingIndex = stakes.size() - 1;
@@ -118,54 +114,39 @@ class StakeView implements InventoryHolder {
   private ItemStack getNavigatorIconPointingForward() {
     return ItemStackBuilder.newBuilder(ARROW)
         .displayName(
-            messageSource.navigateForward
-                .compile(NO_CURSIVE)
-        )
+            resolveComponent(messageCompiler.compile(messageSource.navigateForward, NO_CURSIVE)))
         .lore(
-            messageSource.navigateForwardSuggestion
-                .compile(NO_CURSIVE)
-        )
+            resolveComponent(
+                messageCompiler.compileChildren(
+                    messageSource.navigateForwardSuggestion, NO_CURSIVE)))
         .build();
   }
 
   private ItemStack getNavigatorIconPointingBackward() {
     return ItemStackBuilder.newBuilder(ARROW)
         .displayName(
-            messageSource.navigateBackward
-                .compile(NO_CURSIVE)
-        )
+            resolveComponent(messageCompiler.compile(messageSource.navigateBackward, NO_CURSIVE)))
         .lore(
-            messageSource.navigateBackwardSuggestion
-                .compile(NO_CURSIVE)
-        )
+            resolveComponent(
+                messageCompiler.compileChildren(
+                    messageSource.navigateBackwardSuggestion, NO_CURSIVE)))
         .build();
   }
 
   private ItemStack getStakeItemOfStakeContext(final StakeContext stakeContext) {
     return ItemStackBuilder.newBuilder(new ItemStack(PAPER))
         .displayName(
-            messageSource.stakeName
-                .with(
-                    GAMBLE_PATH,
-                    capitalize(
-                        stakeContext.gambleKey().id().toLowerCase(ROOT)
-                    )
-                )
-                .compile(NO_CURSIVE)
-        )
+            resolveComponent(
+                messageCompiler.compile(
+                    messageSource.stakeName.placeholder(CONTEXT_PATH, stakeContext), NO_CURSIVE)))
         .lore(
-            messageSource.stakeBrief
-                .with(INITIATOR_PATH, stakeContext.initiator().username())
-                .with(
-                    PREDICTION_PATH,
-                    capitalize(
-                        stakeContext.initiator().prediction().toString().toLowerCase(ROOT)
-                    )
-                )
-                .with(STAKE_PATH, getFormattedDecimal(stakeContext.stake()))
-                .with(CURRENCY_PATH, fundsCurrency.getSymbol())
-                .compileChildren(NO_CURSIVE)
-        )
+            resolveComponent(
+                messageCompiler.compileChildren(
+                    messageSource
+                        .stakeBrief
+                        .placeholder(CONTEXT_PATH, stakeContext)
+                        .placeholder(CURRENCY_PATH, fundsCurrency),
+                    NO_CURSIVE)))
         .build();
   }
 

@@ -1,18 +1,18 @@
 package pl.auroramc.gamble.gamble;
 
-import java.util.logging.Logger;
-import pl.auroramc.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
-import pl.auroramc.gamble.message.MutableMessageSource;
+import pl.auroramc.economy.economy.EconomyFacade;
+import pl.auroramc.gamble.message.MessageSource;
+import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 
 public interface GambleFacade {
 
   static GambleFacade getGambleFacade(
-      final Logger logger,
       final Currency fundsCurrency,
-      final MutableMessageSource messageSource,
+      final MessageSource messageSource,
+      final BukkitMessageCompiler messageCompiler,
       final EconomyFacade economyFacade) {
-    return new GambleService(logger, fundsCurrency, messageSource, economyFacade);
+    return new GambleService(fundsCurrency, messageSource, messageCompiler, economyFacade);
   }
 
   void settleGamble(final Gamble gamble);

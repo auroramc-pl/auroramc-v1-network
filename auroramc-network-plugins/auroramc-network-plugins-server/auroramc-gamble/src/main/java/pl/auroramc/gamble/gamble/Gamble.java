@@ -1,5 +1,8 @@
 package pl.auroramc.gamble.gamble;
 
+import pl.auroramc.gamble.gamble.context.GambleContext;
+import pl.auroramc.gamble.participant.Participant;
+
 public abstract class Gamble {
 
   private final GambleContext gambleContext;

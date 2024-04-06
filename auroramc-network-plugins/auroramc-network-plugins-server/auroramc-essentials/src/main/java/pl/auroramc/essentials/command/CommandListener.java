@@ -9,6 +9,7 @@ import static net.kyori.adventure.text.event.ClickEvent.suggestCommand;
 import static org.bukkit.event.EventPriority.HIGHEST;
 import static pl.auroramc.commons.command.CommandUtils.resolveCommand;
 import static pl.auroramc.commons.lazy.Lazy.lazy;
+import static pl.auroramc.commons.message.compiler.CompiledMessageUtils.resolveComponent;
 import static pl.auroramc.essentials.message.MessageSourcePaths.PERCENTAGE_PATH;
 import static pl.auroramc.essentials.message.MessageSourcePaths.PLUGIN_NAME_PATH;
 import static pl.auroramc.essentials.message.MessageSourcePaths.SEPARATOR_PATH;
@@ -83,7 +84,7 @@ public class CommandListener implements Listener {
     final String suggestedCommand =
         getPotentialSuggestionForCommand(event.getSender(), performedCommand);
     if (suggestedCommand == null) {
-      event.message(messageCompiler.compile(messageSource.unknownCommand).getComponent());
+      event.message(resolveComponent(messageCompiler.compile(messageSource.unknownCommand)));
       return;
     }
 
@@ -121,17 +122,15 @@ public class CommandListener implements Listener {
   }
 
   private Component getPotentialSuggestion(final String suggestedCommand, final String arguments) {
-    return messageCompiler
-        .compile(
+    return resolveComponent(
+        messageCompiler.compile(
             messageSource.unknownCommandWithPotentialSuggestion.placeholder(
                 SUGGESTION_PATH,
                 text(suggestedCommand)
                     .hoverEvent(
-                        messageCompiler
-                            .compile(messageSource.potentialSuggestionHover)
-                            .getComponent())
-                    .clickEvent(suggestCommand("/%s%s".formatted(suggestedCommand, arguments)))))
-        .getComponent();
+                        resolveComponent(
+                            messageCompiler.compile(messageSource.potentialSuggestionHover)))
+                    .clickEvent(suggestCommand("/%s%s".formatted(suggestedCommand, arguments))))));
   }
 
   private String getArgumentsIfExists(final String performedCommand, final String input) {
@@ -170,10 +169,9 @@ public class CommandListener implements Listener {
   }
 
   private Component getTitleOfPluginSummary(final int percentageOfCustomPlugins) {
-    return messageCompiler
-        .compile(
-            messageSource.titleOfSummary.placeholder(PERCENTAGE_PATH, percentageOfCustomPlugins))
-        .getComponent();
+    return resolveComponent(
+        messageCompiler.compile(
+            messageSource.titleOfSummary.placeholder(PERCENTAGE_PATH, percentageOfCustomPlugins)));
   }
 
   private Component getEntriesOfPluginSummary(final List<Plugin> plugins) {
@@ -187,15 +185,14 @@ public class CommandListener implements Listener {
 
   private Component getEntryOfPluginSummary(
       final Plugin plugin, final boolean whetherIsClosingEntry) {
-    return messageCompiler
-        .compile(
+    return resolveComponent(
+        messageCompiler.compile(
             messageSource
                 .entryOfSummary
                 .placeholder(PLUGIN_NAME_PATH, plugin.getName())
                 .placeholder(
                     SEPARATOR_PATH,
-                    whetherIsClosingEntry ? PLUGIN_SEPARATOR_CLOSING : PLUGIN_SEPARATOR))
-        .getComponent();
+                    whetherIsClosingEntry ? PLUGIN_SEPARATOR_CLOSING : PLUGIN_SEPARATOR)));
   }
 
   private boolean isSpecialCommand(final String commandName) {

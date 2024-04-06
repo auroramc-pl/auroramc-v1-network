@@ -1,6 +1,7 @@
 package pl.auroramc.dailyrewards.nametag;
 
 import static org.bukkit.Bukkit.getOnlinePlayers;
+import static pl.auroramc.commons.message.compiler.CompiledMessageUtils.resolveComponent;
 import static pl.auroramc.dailyrewards.message.MessageSourcePaths.DURATION_PATH;
 
 import org.bukkit.entity.Player;
@@ -38,10 +39,9 @@ public class NametagUpdateScheduler implements Runnable {
   private void updateNameTag(final Player player) {
     nametagFacade.belowName(
         player,
-        messageCompiler
-            .compile(
+        resolveComponent(
+            messageCompiler.compile(
                 messageSource.belowName.placeholder(
-                    DURATION_PATH, visitController.getVisitDuration(player.getUniqueId())))
-            .getComponent());
+                    DURATION_PATH, visitController.getVisitDuration(player.getUniqueId())))));
   }
 }

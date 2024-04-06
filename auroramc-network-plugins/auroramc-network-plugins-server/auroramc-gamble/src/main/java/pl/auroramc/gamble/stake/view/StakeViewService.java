@@ -2,8 +2,8 @@ package pl.auroramc.gamble.stake.view;
 
 import static java.util.List.copyOf;
 import static java.util.stream.Collectors.toMap;
-import static pl.auroramc.commons.BukkitUtils.postToMainThread;
 import static pl.auroramc.commons.collection.CollectionUtils.partition;
+import static pl.auroramc.commons.scheduler.SchedulerPoll.SYNC;
 
 import java.util.Collection;
 import java.util.List;
@@ -15,11 +15,12 @@ import java.util.concurrent.locks.StampedLock;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.plugin.Plugin;
+import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.economy.currency.Currency;
-import pl.auroramc.gamble.message.MutableMessageSource;
-import pl.auroramc.gamble.stake.StakeContext;
+import pl.auroramc.gamble.message.MessageSource;
+import pl.auroramc.gamble.stake.context.StakeContext;
 import pl.auroramc.gamble.stake.StakeFacade;
+import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 
 class StakeViewService implements StakeViewFacade {
 
@@ -27,21 +28,24 @@ class StakeViewService implements StakeViewFacade {
   private static final int STAKES_PER_PAGE = 4 * 7;
   private final StampedLock lock = new StampedLock();
   private final Map<Integer, StakeView> stakeViewByPageIndex;
-  private final Plugin plugin;
+  private final Scheduler scheduler;
   private final StakeFacade stakeFacade;
   private final Currency fundsCurrency;
-  private final MutableMessageSource messageSource;
+  private final MessageSource messageSource;
+  private final BukkitMessageCompiler messageCompiler;
 
   StakeViewService(
-      final Plugin plugin,
+      final Scheduler scheduler,
       final StakeFacade stakeFacade,
       final Currency fundsCurrency,
-      final MutableMessageSource messageSource) {
-    this.plugin = plugin;
+      final MessageSource messageSource,
+      final BukkitMessageCompiler messageCompiler) {
+    this.scheduler = scheduler;
     this.stakeViewByPageIndex = new ConcurrentHashMap<>();
     this.stakeFacade = stakeFacade;
     this.fundsCurrency = fundsCurrency;
     this.messageSource = messageSource;
+    this.messageCompiler = messageCompiler;
   }
 
   @Override
@@ -71,7 +75,8 @@ class StakeViewService implements StakeViewFacade {
     for (final List<StakeContext> partition : partitions) {
       final int pageIndex = partitions.indexOf(partition);
       stakeViewByPageIndex.put(
-          pageIndex, new StakeView(pageIndex, fundsCurrency, messageSource, partition));
+          pageIndex,
+          new StakeView(pageIndex, fundsCurrency, messageSource, messageCompiler, partition));
     }
   }
 
@@ -83,9 +88,9 @@ class StakeViewService implements StakeViewFacade {
           .or(() -> getStakeView(INITIAL_STAKE_PAGE_INDEX))
           .ifPresentOrElse(
               inventory ->
-                  postToMainThread(
-                      plugin, () -> viewers.forEach(viewer -> viewer.openInventory(inventory))),
-              () -> postToMainThread(plugin, () -> viewers.forEach(HumanEntity::closeInventory)));
+                  scheduler.run(
+                      SYNC, () -> viewers.forEach(viewer -> viewer.openInventory(inventory))),
+              () -> scheduler.run(SYNC, () -> viewers.forEach(HumanEntity::closeInventory)));
     }
   }
 

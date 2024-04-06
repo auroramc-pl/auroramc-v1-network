@@ -2,23 +2,12 @@ package pl.auroramc.gamble.message;
 
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Exclude;
-import pl.auroramc.commons.message.MutableMessage;
+import pl.auroramc.commons.config.command.CommandMessageSource;
+import pl.auroramc.messages.message.MutableMessage;
 
-public class MutableMessageSource extends OkaeriConfig {
+public class MessageSource extends OkaeriConfig {
 
   public static final @Exclude String MESSAGE_SOURCE_FILE_NAME = "messages.yml";
-
-  public MutableMessage availableSchematicsSuggestion =
-      MutableMessage.of("<red>Poprawne użycie: <yellow><newline>{schematics}");
-
-  public MutableMessage executionOfCommandIsNotPermitted =
-      MutableMessage.of("<red>Nie posiadasz wystarczających uprawnień aby użyć tej komendy.");
-
-  public MutableMessage executionFromConsoleIsUnsupported =
-      MutableMessage.of("<red>Nie możesz użyć tej konsoli z poziomu konsoli.");
-
-  public MutableMessage specifiedPlayerIsUnknown =
-      MutableMessage.of("<red>Wskazany przez ciebie gracz nie istnieje, lub jest Offline.");
 
   public MutableMessage missingStakes =
       MutableMessage.of(
@@ -40,15 +29,15 @@ public class MutableMessageSource extends OkaeriConfig {
 
   public MutableMessage stakeCreated =
       MutableMessage.of(
-          "<gray>Zakład o stawce <white>{currency}{stake} <gray>na <white>{prediction} <gray>został utworzony i oczekuje na przeciwnika.");
+          "<gray>Zakład o stawce <white>{currency.@symbol}{context.stake} <gray>na <white>{prediction} <gray>został utworzony i oczekuje na przeciwnika.");
 
   public MutableMessage stakeWon =
       MutableMessage.of(
-          "<gray>Wygrałeś <hover:show_text:'<gray>Unikalny identyfikator: <white>{uniqueId}'>zakład</hover> <gray>o stawce <white>{currency}{stake} <gray>mierząc się z <white>{competitor}<gray>.");
+          "<gray>Wygrałeś <hover:show_text:'<gray>Unikalny identyfikator: <white>{context.gambleUniqueId}'>zakład</hover> <gray>o stawce <white>{currency.@symbol}{context.stake} <gray>mierząc się z <white>{competitor.username}<gray>.");
 
   public MutableMessage stakeLost =
       MutableMessage.of(
-          "<gray>Przegrałeś <hover:show_text:'<gray>Unikalny identyfikator: <white>{uniqueId}'>zakład</hover> <gray>o stawce <white>{currency}{stake} <gray>mierząc się z <white>{competitor}<gray>.");
+          "<gray>Przegrałeś <hover:show_text:'<gray>Unikalny identyfikator: <white>{context.gambleUniqueId}'>zakład</hover> <gray>o stawce <white>{currency.@symbol}{context.stake} <gray>mierząc się z <white>{competitor.username}<gray>.");
 
   public MutableMessage stakeFinalizationSelf =
       MutableMessage.of("<red>Nie możesz dołączyć do własnego zakładu.");
@@ -59,13 +48,13 @@ public class MutableMessageSource extends OkaeriConfig {
   public MutableMessage stakesTitle = MutableMessage.of("Oczekujące zakłady");
 
   public MutableMessage stakeName =
-      MutableMessage.of("<gray>Zakład <dark_gray>(<white>{gamble}<dark_gray>)");
+      MutableMessage.of("<gray>Zakład <dark_gray>(<white>{context.gambleKey}<dark_gray>)");
 
   public MutableMessage stakeBrief =
       MutableMessage.empty()
-          .append(MutableMessage.of("<gray>Gracz: <white>{initiator}"))
-          .append(MutableMessage.of("<gray>Wybór: <white>{prediction}"))
-          .append(MutableMessage.of("<gray>Stawka: <white>{currency}{stake}"))
+          .append(MutableMessage.of("<gray>Gracz: <white>{context.initiator.username}"))
+          .append(MutableMessage.of("<gray>Wybór: <white>{context.initiator.prediction}"))
+          .append(MutableMessage.of("<gray>Stawka: <white>{currency.@symbol}{context.stake}"))
           .append(MutableMessage.of("<gray>Naciśnij aby dołączyć do zakładu."));
 
   public MutableMessage navigateForward = MutableMessage.of("<gray>Następna strona");
@@ -77,4 +66,6 @@ public class MutableMessageSource extends OkaeriConfig {
 
   public MutableMessage navigateBackwardSuggestion =
       MutableMessage.of("<gray>Naciśnij aby przejść do poprzedniej strony.");
+
+  public CommandMessageSource command = new CommandMessageSource();
 }

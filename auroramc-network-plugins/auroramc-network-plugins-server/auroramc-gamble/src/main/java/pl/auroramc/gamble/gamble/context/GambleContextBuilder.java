@@ -1,7 +1,8 @@
-package pl.auroramc.gamble.gamble;
+package pl.auroramc.gamble.gamble.context;
 
 import java.math.BigDecimal;
 import java.util.UUID;
+import pl.auroramc.gamble.participant.Participant;
 
 public class GambleContextBuilder {
 

@@ -2,6 +2,7 @@ package pl.auroramc.economy.balance;
 
 import static com.spotify.futures.CompletableFutures.joinList;
 import static java.time.temporal.ChronoUnit.SECONDS;
+import static pl.auroramc.commons.message.compiler.CompiledMessageUtils.resolveComponent;
 import static pl.auroramc.economy.balance.BalanceMessageSourcePaths.CONTEXT_PATH;
 import static pl.auroramc.economy.balance.BalanceMessageSourcePaths.PLAYER_PATH;
 
@@ -51,9 +52,7 @@ public class BalanceCommand {
     return retrieveBalanceSummaries(player.getUniqueId())
         .thenApply(
             balanceSummaries ->
-                messageCompiler
-                    .compile(messageSource.balanceSummaryHeader)
-                    .getComponent()
+                resolveComponent(messageCompiler.compile(messageSource.balanceSummaryHeader))
                     .appendNewline()
                     .append(balanceSummaries));
   }
@@ -65,11 +64,10 @@ public class BalanceCommand {
     return retrieveBalanceSummaries(target.getUniqueId())
         .thenApply(
             balanceSummaries ->
-                messageCompiler
-                    .compile(
-                        messageSource.balanceSummaryHeaderTargeted.placeholder(
-                            PLAYER_PATH, target.getName()))
-                    .getComponent()
+                resolveComponent(
+                        messageCompiler.compile(
+                            messageSource.balanceSummaryHeaderTargeted.placeholder(
+                                PLAYER_PATH, target)))
                     .appendNewline()
                     .append(balanceSummaries));
   }
