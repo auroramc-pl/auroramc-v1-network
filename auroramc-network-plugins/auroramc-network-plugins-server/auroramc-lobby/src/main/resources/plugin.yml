@@ -1,6 +1,6 @@
 main: pl.auroramc.lobby.LobbyBukkitPlugin
 name: auroramc-lobby
-version: ${project.version}
+version: ${project.version}-${git.commit.id.abbrev}
 authors: [ shitzuu <hello@rafal.moe> ]
 api-version: 1.20
 libraries:
