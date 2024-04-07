@@ -109,11 +109,17 @@ public class StakeViewListener implements Listener {
 
     stakeFacade.deleteStakeContext(stakeContext);
 
+    // Until we have only two sides of a coin, we can assume that the opposite side of the
+    // initiator's prediction is the competitor's prediction.
+    final Object prediction = ((CoinSide) stakeContext.initiator().prediction()).opposite();
     gambleFacade.settleGamble(
-        getGamble(getGambleContext((Player) event.getWhoClicked(), stakeContext), stakeContext));
+        getGamble(
+            getGambleContext((Player) event.getWhoClicked(), stakeContext, prediction),
+            stakeContext));
   }
 
-  private GambleContext getGambleContext(final Player player, final StakeContext stakeContext) {
+  private GambleContext getGambleContext(
+      final Player player, final StakeContext stakeContext, final Object prediction) {
     return GambleContext.newBuilder()
         .gambleUniqueId(UUID.randomUUID())
         .stake(stakeContext.stake())
@@ -122,7 +128,7 @@ public class StakeViewListener implements Listener {
             Participant.newBuilder()
                 .uniqueId(player.getUniqueId())
                 .username(player.getName())
-                .prediction(((CoinSide) stakeContext.initiator().prediction()).opposite())
+                .prediction(prediction)
                 .build())
         .build();
   }
