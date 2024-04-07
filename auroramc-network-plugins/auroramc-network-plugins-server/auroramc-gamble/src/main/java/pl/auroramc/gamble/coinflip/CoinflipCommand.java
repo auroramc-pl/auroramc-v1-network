@@ -1,6 +1,7 @@
 package pl.auroramc.gamble.coinflip;
 
 import static java.math.BigDecimal.ZERO;
+import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static pl.auroramc.gamble.gamble.GambleKey.COINFLIP;
 import static pl.auroramc.gamble.message.MessageSourcePaths.CONTEXT_PATH;
@@ -10,6 +11,7 @@ import static pl.auroramc.gamble.message.MessageSourcePaths.PREDICTION_PATH;
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.cooldown.Cooldown;
 import dev.rollczi.litecommands.annotations.execute.Execute;
 import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.math.BigDecimal;
@@ -28,6 +30,7 @@ import pl.auroramc.messages.message.MutableMessage;
 
 @Permission("auroramc.gamble.coinflip")
 @Command(name = "coinflip", aliases = "coin")
+@Cooldown(key = "coinflip-cooldown", count = 30, unit = SECONDS)
 public class CoinflipCommand {
 
   private final StakeFacade stakeFacade;
