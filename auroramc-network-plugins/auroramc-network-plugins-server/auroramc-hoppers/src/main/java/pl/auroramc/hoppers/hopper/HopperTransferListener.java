@@ -19,6 +19,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import pl.auroramc.commons.scheduler.Scheduler;
+import pl.auroramc.commons.scheduler.caffeine.CaffeineExecutor;
 
 public class HopperTransferListener implements Listener {
 
@@ -34,7 +35,10 @@ public class HopperTransferListener implements Listener {
     this.scheduler = scheduler;
     this.transferQuantityKey = transferQuantityKey;
     this.transferQuantityByPositionCache =
-        Caffeine.newBuilder().expireAfterWrite(ofSeconds(20)).build();
+        Caffeine.newBuilder()
+            .executor(new CaffeineExecutor(scheduler))
+            .expireAfterWrite(ofSeconds(20))
+            .build();
   }
 
   @EventHandler(priority = HIGHEST, ignoreCancelled = true)

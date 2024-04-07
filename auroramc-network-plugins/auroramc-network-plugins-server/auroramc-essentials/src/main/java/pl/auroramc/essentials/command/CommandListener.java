@@ -34,6 +34,8 @@ import org.bukkit.event.command.UnknownCommandEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.Plugin;
 import pl.auroramc.commons.lazy.Lazy;
+import pl.auroramc.commons.scheduler.Scheduler;
+import pl.auroramc.commons.scheduler.caffeine.CaffeineExecutor;
 import pl.auroramc.commons.search.FuzzySearch;
 import pl.auroramc.essentials.EssentialsConfig;
 import pl.auroramc.essentials.message.MessageSource;
@@ -61,6 +63,7 @@ public class CommandListener implements Listener {
 
   public CommandListener(
       final Server server,
+      final Scheduler scheduler,
       final FuzzySearch fuzzySearch,
       final MessageSource messageSource,
       final BukkitMessageCompiler messageCompiler,
@@ -71,8 +74,15 @@ public class CommandListener implements Listener {
     this.messageCompiler = messageCompiler;
     this.essentialsConfig = essentialsConfig;
     this.suggestedCommandsByCompositeKey =
-        Caffeine.newBuilder().expireAfterWrite(ofSeconds(10)).build();
-    this.availableCommandsByName = Caffeine.newBuilder().expireAfterWrite(ofSeconds(30)).build();
+        Caffeine.newBuilder()
+            .executor(new CaffeineExecutor(scheduler))
+            .expireAfterWrite(ofSeconds(10))
+            .build();
+    this.availableCommandsByName =
+        Caffeine.newBuilder()
+            .executor(new CaffeineExecutor(scheduler))
+            .expireAfterWrite(ofSeconds(30))
+            .build();
     this.overviewOfPluginSummaries = lazy(this::getOverviewOfPluginSummaries);
   }
 

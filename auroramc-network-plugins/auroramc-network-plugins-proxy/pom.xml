@@ -12,8 +12,8 @@
   <artifactId>auroramc-network-plugins-proxy</artifactId>
   <packaging>pom</packaging>
   <modules>
-    <module>auroramc-punishments</module>
-    <module>auroramc-auth</module>
+<!--    <module>auroramc-auth</module>-->
+<!--    <module>auroramc-punishments</module>-->
   </modules>
 
   <properties>

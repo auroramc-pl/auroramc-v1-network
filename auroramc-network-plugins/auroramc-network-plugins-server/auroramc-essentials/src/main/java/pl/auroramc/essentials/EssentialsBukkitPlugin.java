@@ -58,7 +58,7 @@ public class EssentialsBukkitPlugin extends JavaPlugin {
     registerListeners(
         this,
         new CommandListener(
-            getServer(), fuzzySearch, messageSource, messageCompiler, essentialsConfig));
+            getServer(), scheduler, fuzzySearch, messageSource, messageCompiler, essentialsConfig));
   }
 
   @Override

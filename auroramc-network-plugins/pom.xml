@@ -13,7 +13,7 @@
   <packaging>pom</packaging>
   <modules>
     <module>auroramc-network-plugins-server</module>
-<!--    <module>auroramc-network-plugins-proxy</module>-->
+    <module>auroramc-network-plugins-proxy</module>
   </modules>
 
   <properties>

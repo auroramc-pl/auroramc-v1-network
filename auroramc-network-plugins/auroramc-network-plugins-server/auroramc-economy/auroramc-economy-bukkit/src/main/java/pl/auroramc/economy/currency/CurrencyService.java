@@ -6,6 +6,7 @@ import static pl.auroramc.commons.scheduler.SchedulerPoll.SYNC;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import pl.auroramc.commons.scheduler.Scheduler;
+import pl.auroramc.commons.scheduler.caffeine.CaffeineExecutor;
 
 class CurrencyService implements CurrencyFacade {
 
@@ -18,6 +19,7 @@ class CurrencyService implements CurrencyFacade {
     this.currencyRepository = currencyRepository;
     this.currencyCache =
         Caffeine.newBuilder()
+            .executor(new CaffeineExecutor(scheduler))
             .expireAfterWrite(ofSeconds(90))
             .build(currencyRepository::findCurrencyById);
   }
