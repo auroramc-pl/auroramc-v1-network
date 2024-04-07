@@ -34,12 +34,12 @@ public class BazaarsBukkitPlugin extends JavaPlugin {
     final BazaarsConfig bazaarsConfig =
         configFactory.produceConfig(BazaarsConfig.class, BAZAARS_CONFIG_FILE_NAME);
 
+    final Scheduler scheduler = getBukkitScheduler(this);
+
     final MessageSource messageSource =
         configFactory.produceConfig(
             MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessages());
-    final BukkitMessageCompiler messageCompiler = getBukkitMessageCompiler();
-
-    final Scheduler scheduler = getBukkitScheduler(this);
+    final BukkitMessageCompiler messageCompiler = getBukkitMessageCompiler(scheduler);
 
     final UserFacade userFacade = resolveService(getServer(), UserFacade.class);
 

@@ -52,18 +52,18 @@ public class ChequeBukkitPlugin extends JavaPlugin {
         configFactory.produceConfig(
             ChequeConfig.class, CHEQUE_CONFIG_FILE_NAME, new SerdesCommons());
 
+    final Scheduler scheduler = getBukkitScheduler(this);
+
+    final MessageSource messageSource =
+        configFactory.produceConfig(
+            MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessages());
+    final BukkitMessageCompiler messageCompiler = getBukkitMessageCompiler(scheduler);
+
     final JulietConfig julietConfig =
         configFactory.produceConfig(
             JulietConfig.class, JULIET_CONFIG_FILE_NAME, new SerdesJuliet());
     juliet =
         JulietBuilder.newBuilder().withDataSource(getHikariDataSource(julietConfig.hikari)).build();
-
-    final MessageSource messageSource =
-        configFactory.produceConfig(
-            MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessages());
-    final BukkitMessageCompiler messageCompiler = getBukkitMessageCompiler();
-
-    final Scheduler scheduler = getBukkitScheduler(this);
 
     final NamespacedKey amountKey = new NamespacedKey(this, AMOUNT_KEY_ID);
     final NamespacedKey issuerUniqueIdKey = new NamespacedKey(this, ISSUER_UNIQUE_ID_KEY_ID);

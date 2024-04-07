@@ -34,12 +34,12 @@ public class HoppersBukkitPlugin extends JavaPlugin {
     final ConfigFactory configFactory =
         new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
 
+    final Scheduler scheduler = getBukkitScheduler(this);
+
     final MessageSource messageSource =
         configFactory.produceConfig(
             MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessages());
-    final BukkitMessageCompiler messageCompiler = getBukkitMessageCompiler();
-
-    final Scheduler scheduler = getBukkitScheduler(this);
+    final BukkitMessageCompiler messageCompiler = getBukkitMessageCompiler(scheduler);
 
     final NamespacedKey transferQuantityKey = new NamespacedKey(this, TRANSFER_QUANTITY_KEY_ID);
     CustomBlockData.registerListener(this);

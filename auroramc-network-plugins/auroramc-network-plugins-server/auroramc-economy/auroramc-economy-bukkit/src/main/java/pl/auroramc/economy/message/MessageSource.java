@@ -24,9 +24,9 @@ public class MessageSource extends OkaeriConfig {
 
   public EconomyMessageSource economy = new EconomyMessageSource();
 
-  public LeaderboardMessageSource leaderboard = new LeaderboardMessageSource();
-
   public PaymentMessageSource payment = new PaymentMessageSource();
 
   public TransferMessageSource transfer = new TransferMessageSource();
+
+  public LeaderboardMessageSource leaderboard = new LeaderboardMessageSource();
 }

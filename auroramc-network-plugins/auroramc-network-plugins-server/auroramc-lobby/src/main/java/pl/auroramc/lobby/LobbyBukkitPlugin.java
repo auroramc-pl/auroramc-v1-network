@@ -32,16 +32,16 @@ public class LobbyBukkitPlugin extends JavaPlugin {
   public void onEnable() {
     final ConfigFactory configFactory =
         new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
-
     final LobbyConfig lobbyConfig =
         configFactory.produceConfig(LobbyConfig.class, LOBBY_CONFIG_FILE_NAME, new SerdesBukkit());
+
+    final Scheduler scheduler = getBukkitScheduler(this);
 
     final MessageSource messageSource =
         configFactory.produceConfig(
             MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessages());
-    final BukkitMessageCompiler messageCompiler = getBukkitMessageCompiler();
+    final BukkitMessageCompiler messageCompiler = getBukkitMessageCompiler(scheduler);
 
-    final Scheduler scheduler = getBukkitScheduler(this);
     scheduler.schedule(
         SYNC, new VoidTeleportationTask(lobbyConfig, messageSource, messageCompiler), ofSeconds(1));
 

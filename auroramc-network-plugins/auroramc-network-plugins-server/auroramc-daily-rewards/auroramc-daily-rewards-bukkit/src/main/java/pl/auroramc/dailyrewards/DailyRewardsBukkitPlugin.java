@@ -51,17 +51,16 @@ public class DailyRewardsBukkitPlugin extends JavaPlugin {
   public void onEnable() {
     final ConfigFactory configFactory =
         new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
-
     final DailyRewardsConfig dailyRewardsConfig =
         configFactory.produceConfig(
             DailyRewardsConfig.class, DAILY_REWARDS_CONFIG_FILE_NAME, new SerdesCommons());
 
+    final Scheduler scheduler = getBukkitScheduler(this);
+
     final MessageSource messageSource =
         configFactory.produceConfig(
             MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessages());
-    final BukkitMessageCompiler messageCompiler = getBukkitMessageCompiler();
-
-    final Scheduler scheduler = getBukkitScheduler(this);
+    final BukkitMessageCompiler messageCompiler = getBukkitMessageCompiler(scheduler);
 
     final JulietConfig julietConfig =
         configFactory.produceConfig(

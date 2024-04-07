@@ -43,17 +43,16 @@ public class GambleBukkitPlugin extends JavaPlugin {
   public void onEnable() {
     final ConfigFactory configFactory =
         new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
-
     final GambleConfig gambleConfig =
         configFactory.produceConfig(GambleConfig.class, GAMBLING_CONFIG_FILE_NAME);
+
+    final Scheduler scheduler = getBukkitScheduler(this);
 
     final MessageSource messageSource =
         configFactory.produceConfig(
             MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessages());
     final BukkitMessageCompiler messageCompiler =
-        getBukkitMessageCompiler(new GambleObjectTransformerPack());
-
-    final Scheduler scheduler = getBukkitScheduler(this);
+        getBukkitMessageCompiler(scheduler, new GambleObjectTransformerPack());
 
     final CurrencyFacade currencyFacade = resolveService(getServer(), CurrencyFacade.class);
     final Currency fundsCurrency = getFundsCurrency(currencyFacade, gambleConfig.fundsCurrencyId);

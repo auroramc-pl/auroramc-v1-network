@@ -2,6 +2,7 @@ package pl.auroramc.essentials;
 
 import static moe.rafal.juliet.datasource.hikari.HikariPooledDataSourceFactory.getHikariDataSource;
 import static pl.auroramc.commons.bukkit.BukkitUtils.registerListeners;
+import static pl.auroramc.commons.bukkit.scheduler.BukkitSchedulerFactory.getBukkitScheduler;
 import static pl.auroramc.commons.config.juliet.JulietConfig.JULIET_CONFIG_FILE_NAME;
 import static pl.auroramc.commons.search.FuzzySearch.getFuzzySearch;
 import static pl.auroramc.commons.search.StringMetric.getStringMetric;
@@ -18,6 +19,7 @@ import pl.auroramc.commons.config.juliet.JulietConfig;
 import pl.auroramc.commons.config.serdes.SerdesCommons;
 import pl.auroramc.commons.config.serdes.juliet.SerdesJuliet;
 import pl.auroramc.commons.config.serdes.message.SerdesMessages;
+import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.commons.search.FuzzySearch;
 import pl.auroramc.commons.search.StringMetric;
 import pl.auroramc.essentials.command.CommandListener;
@@ -32,15 +34,16 @@ public class EssentialsBukkitPlugin extends JavaPlugin {
   public void onEnable() {
     final ConfigFactory configFactory =
         new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
-
     final EssentialsConfig essentialsConfig =
         configFactory.produceConfig(
             EssentialsConfig.class, ESSENTIALS_CONFIG_FILE_NAME, new SerdesCommons());
 
+    final Scheduler scheduler = getBukkitScheduler(this);
+
     final MessageSource messageSource =
         configFactory.produceConfig(
             MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessages());
-    final BukkitMessageCompiler messageCompiler = getBukkitMessageCompiler();
+    final BukkitMessageCompiler messageCompiler = getBukkitMessageCompiler(scheduler);
 
     final StringMetric stringMetric =
         getStringMetric(essentialsConfig.prefixScale, essentialsConfig.prefixLength);
