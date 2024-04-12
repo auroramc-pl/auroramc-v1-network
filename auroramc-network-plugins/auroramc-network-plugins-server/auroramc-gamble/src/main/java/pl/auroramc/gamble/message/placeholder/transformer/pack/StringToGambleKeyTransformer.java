@@ -14,7 +14,7 @@ public class StringToGambleKeyTransformer implements ObjectTransformer<GambleKey
   }
 
   @Override
-  public Class<?> getType() {
+  public Class<?> type() {
     return GambleKey.class;
   }
 }

@@ -8,7 +8,9 @@ public interface NametagContextFacade {
     return new NametagContextService();
   }
 
-  NametagContext findNameTagContextByUniqueId(final UUID uniqueId);
+  NametagContext findNametagContextByUniqueId(final UUID uniqueId);
 
-  void saveNameTagContext(final UUID uniqueId, final NametagContext nametagContext);
+  void createNametagContext(final UUID uniqueId, final NametagContext context);
+
+  void deleteNametagContext(final UUID uniqueId);
 }

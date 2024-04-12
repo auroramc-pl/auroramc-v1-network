@@ -4,7 +4,6 @@ import static java.time.Instant.now;
 import static java.util.Comparator.comparing;
 import static pl.auroramc.commons.format.temporal.TemporalUtils.getMaximumTimeOfDay;
 import static pl.auroramc.commons.format.temporal.TemporalUtils.getMinimumTimeOfDay;
-import static pl.auroramc.commons.message.compiler.CompiledMessageUtils.resolveComponent;
 import static pl.auroramc.commons.range.Between.ranged;
 import static pl.auroramc.commons.range.Between.single;
 import static pl.auroramc.dailyrewards.message.MessageSourcePaths.TIMEFRAME_PATH;
@@ -17,12 +16,13 @@ import dev.rollczi.litecommands.annotations.execute.Execute;
 import java.time.Instant;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import pl.auroramc.commons.range.Between;
 import pl.auroramc.dailyrewards.message.MessageSource;
+import pl.auroramc.messages.message.MutableMessage;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
-import pl.auroramc.messages.message.component.ComponentCollector;
+import pl.auroramc.messages.message.compiler.CompiledMessage;
+import pl.auroramc.messages.message.compiler.CompiledMessageCollector;
 import pl.auroramc.registry.user.User;
 import pl.auroramc.registry.user.UserFacade;
 
@@ -46,7 +46,7 @@ public class VisitCommand {
   }
 
   @Execute
-  public CompletableFuture<Component> visit(final @Context Player player) {
+  public CompletableFuture<CompiledMessage> visit(final @Context Player player) {
     final Between<Instant> timeframe = single(now());
     return userFacade
         .getUserByUniqueId(player.getUniqueId())
@@ -61,7 +61,7 @@ public class VisitCommand {
   }
 
   @Execute(name = "ranged")
-  public CompletableFuture<Component> visitRanged(
+  public CompletableFuture<CompiledMessage> visitRanged(
       final @Context Player player, final @Arg Instant from, final @Arg Instant to) {
     final Between<Instant> timeframe = ranged(from, to);
     return userFacade
@@ -71,29 +71,29 @@ public class VisitCommand {
         .thenApply(visits -> getFormattedVisits(timeframe, visits));
   }
 
-  private Component getFormattedVisitHeader(final Between<Instant> timeframe) {
-    return resolveComponent(
-        messageCompiler.compile(
-            (timeframe.single() ? messageSource.visitDailySummary : messageSource.visitRangeSummary)
-                .placeholder(TIMEFRAME_PATH, timeframe)));
-  }
-
-  private Component getFormattedVisits(final Between<Instant> timeframe, final Set<Visit> visits) {
+  private CompiledMessage getFormattedVisits(
+      final Between<Instant> timeframe, final Set<Visit> visits) {
     if (visits.isEmpty()) {
-      return resolveComponent(messageCompiler.compile(messageSource.noVisits));
+      return messageCompiler.compile(messageSource.noVisits);
     }
-    return getFormattedVisitHeader(timeframe).appendNewline().append(getFormattedVisits(visits));
+
+    return getFormattedVisitHeader(timeframe).append(getFormattedVisits(visits));
   }
 
-  private Component getFormattedVisit(final Visit visit) {
-    return resolveComponent(
-        messageCompiler.compile(messageSource.visitEntry.placeholder(VISIT_PATH, visit)));
-  }
-
-  private Component getFormattedVisits(final Set<Visit> visits) {
+  private CompiledMessage getFormattedVisits(final Set<Visit> visits) {
     return visits.stream()
         .sorted(comparing(Visit::getStartTime).reversed())
         .map(this::getFormattedVisit)
-        .collect(ComponentCollector.collector());
+        .collect(CompiledMessageCollector.collector());
+  }
+
+  private CompiledMessage getFormattedVisit(final Visit visit) {
+    return messageCompiler.compile(messageSource.visitEntry.placeholder(VISIT_PATH, visit));
+  }
+
+  private CompiledMessage getFormattedVisitHeader(final Between<Instant> timeframe) {
+    final MutableMessage visitHeader =
+        timeframe.single() ? messageSource.visitDailySummary : messageSource.visitRangeSummary;
+    return messageCompiler.compile(visitHeader.placeholder(TIMEFRAME_PATH, timeframe));
   }
 }

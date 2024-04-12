@@ -16,7 +16,7 @@ class StringToCoinSideTransformer implements ObjectTransformer<CoinSide, String>
   }
 
   @Override
-  public Class<?> getType() {
+  public Class<?> type() {
     return CoinSide.class;
   }
 }

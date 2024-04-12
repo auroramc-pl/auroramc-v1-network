@@ -12,7 +12,6 @@ import static pl.auroramc.bazaars.bazaar.parser.BazaarParserToken.MERCHANT;
 import static pl.auroramc.bazaars.bazaar.parser.BazaarParserToken.PRICE;
 import static pl.auroramc.bazaars.sign.SignDelegateFactory.getSignDelegate;
 import static pl.auroramc.commons.format.decimal.DecimalFormatter.getFormattedDecimal;
-import static pl.auroramc.commons.message.compiler.CompiledMessageUtils.resolveComponent;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -88,6 +87,6 @@ public class BazaarCreateListener implements Listener {
 
   private void destroySign(final Player player, final Block block, final MutableMessage cause) {
     block.breakNaturally();
-    player.sendMessage(resolveComponent(messageCompiler.compile(cause)));
+    player.sendMessage(messageCompiler.compile(cause).getComponent());
   }
 }

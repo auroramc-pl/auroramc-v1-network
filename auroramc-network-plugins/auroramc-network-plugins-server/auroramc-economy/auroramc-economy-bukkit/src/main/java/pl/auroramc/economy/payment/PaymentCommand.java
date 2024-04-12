@@ -1,6 +1,5 @@
 package pl.auroramc.economy.payment;
 
-import static pl.auroramc.commons.message.compiler.CompiledMessageUtils.resolveComponent;
 import static pl.auroramc.economy.payment.PaymentDirection.INCOMING;
 import static pl.auroramc.economy.payment.PaymentMessageSourcePaths.PAYMENT_PATH;
 import static pl.auroramc.economy.payment.PaymentMessageSourcePaths.PLAYER_PATH;
@@ -11,10 +10,10 @@ import dev.rollczi.litecommands.annotations.execute.Execute;
 import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
-import pl.auroramc.messages.message.component.ComponentCollector;
+import pl.auroramc.messages.message.compiler.CompiledMessage;
+import pl.auroramc.messages.message.compiler.CompiledMessageCollector;
 import pl.auroramc.registry.user.User;
 import pl.auroramc.registry.user.UserFacade;
 
@@ -39,45 +38,40 @@ public class PaymentCommand {
   }
 
   @Execute
-  public CompletableFuture<Component> payments(
+  public CompletableFuture<CompiledMessage> payments(
       final @Arg Player target, final @Arg PaymentDirection direction) {
     return getPayments(target, direction)
         .thenApply(
             payments -> {
               if (payments.isEmpty()) {
-                return resolveComponent(
-                    messageCompiler.compile(
-                        (direction == INCOMING
-                                ? messageSource.noIncomingPayments
-                                : messageSource.noOutgoingPayments)
-                            .placeholder(PLAYER_PATH, target)));
+                return messageCompiler.compile(
+                    (direction == INCOMING
+                            ? messageSource.noIncomingPayments
+                            : messageSource.noOutgoingPayments)
+                        .placeholder(PLAYER_PATH, target));
               }
 
-              return getPaymentHeader(target, direction)
-                  .appendNewline()
-                  .append(getPaymentEntries(payments));
+              return getPaymentHeader(target, direction).append(getPaymentEntries(payments));
             });
   }
 
-  private Component getPaymentHeader(final Player player, final PaymentDirection direction) {
-    return resolveComponent(
-        messageCompiler.compile(
-            (direction == INCOMING
-                    ? messageSource.incomingPaymentsHeader
-                    : messageSource.outgoingPaymentsHeader)
-                .placeholder(PLAYER_PATH, player)));
+  private CompiledMessage getPaymentHeader(final Player player, final PaymentDirection direction) {
+    return messageCompiler.compile(
+        (direction == INCOMING
+                ? messageSource.incomingPaymentsHeader
+                : messageSource.outgoingPaymentsHeader)
+            .placeholder(PLAYER_PATH, player));
   }
 
-  private Component getPaymentEntries(final List<PaymentSummary> paymentSummaries) {
+  private CompiledMessage getPaymentEntries(final List<PaymentSummary> paymentSummaries) {
     return paymentSummaries.stream()
         .map(this::getPaymentEntry)
-        .collect(ComponentCollector.collector());
+        .collect(CompiledMessageCollector.collector());
   }
 
-  private Component getPaymentEntry(final PaymentSummary paymentSummary) {
-    return resolveComponent(
-        messageCompiler.compile(
-            messageSource.paymentEntry.placeholder(PAYMENT_PATH, paymentSummary)));
+  private CompiledMessage getPaymentEntry(final PaymentSummary paymentSummary) {
+    return messageCompiler.compile(
+        messageSource.paymentEntry.placeholder(PAYMENT_PATH, paymentSummary));
   }
 
   private CompletableFuture<List<PaymentSummary>> getPayments(

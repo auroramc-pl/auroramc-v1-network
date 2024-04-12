@@ -13,12 +13,17 @@ class NametagContextService implements NametagContextFacade {
   }
 
   @Override
-  public NametagContext findNameTagContextByUniqueId(final UUID uniqueId) {
+  public NametagContext findNametagContextByUniqueId(final UUID uniqueId) {
     return nametagContextByUniqueId.get(uniqueId);
   }
 
   @Override
-  public void saveNameTagContext(final UUID uniqueId, final NametagContext nametagContext) {
-    nametagContextByUniqueId.put(uniqueId, nametagContext);
+  public void createNametagContext(final UUID uniqueId, final NametagContext context) {
+    nametagContextByUniqueId.put(uniqueId, context);
+  }
+
+  @Override
+  public void deleteNametagContext(final UUID uniqueId) {
+    nametagContextByUniqueId.remove(uniqueId);
   }
 }

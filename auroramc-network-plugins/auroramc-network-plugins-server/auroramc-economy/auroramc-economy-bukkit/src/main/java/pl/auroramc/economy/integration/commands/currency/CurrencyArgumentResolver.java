@@ -1,4 +1,4 @@
-package pl.auroramc.economy.integration.litecommands.currency;
+package pl.auroramc.economy.integration.commands.currency;
 
 import static com.pivovarit.function.ThrowingSupplier.lifted;
 import static dev.rollczi.litecommands.argument.parser.ParseResult.failure;

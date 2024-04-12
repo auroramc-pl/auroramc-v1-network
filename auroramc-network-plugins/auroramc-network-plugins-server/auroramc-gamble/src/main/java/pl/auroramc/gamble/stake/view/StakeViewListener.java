@@ -1,6 +1,5 @@
 package pl.auroramc.gamble.stake.view;
 
-import static pl.auroramc.commons.message.compiler.CompiledMessageUtils.resolveComponent;
 import static pl.auroramc.commons.scheduler.SchedulerPoll.SYNC;
 import static pl.auroramc.gamble.gamble.GambleFactory.getGamble;
 
@@ -22,6 +21,8 @@ import pl.auroramc.gamble.message.MessageSource;
 import pl.auroramc.gamble.stake.context.StakeContext;
 import pl.auroramc.gamble.stake.StakeFacade;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
+import pl.auroramc.messages.viewer.BukkitViewer;
+import pl.auroramc.messages.viewer.Viewer;
 
 public class StakeViewListener implements Listener {
 
@@ -80,9 +81,9 @@ public class StakeViewListener implements Listener {
   public void requestStakeFinalizing(
       final InventoryClickEvent event, final StakeContext stakeContext) {
     final Player player = (Player) event.getWhoClicked();
+    final Viewer viewer = BukkitViewer.wrap(player);
     if (stakeContext.initiator().uniqueId().equals(player.getUniqueId())) {
-      player.sendMessage(
-          resolveComponent(messageCompiler.compile(messageSource.stakeFinalizationSelf)));
+      viewer.deliver(messageCompiler.compile(messageSource.stakeFinalizationSelf));
       return;
     }
 
@@ -101,9 +102,9 @@ public class StakeViewListener implements Listener {
       final StakeContext stakeContext,
       final boolean whetherPlayerHasEnoughFunds) {
     final Player player = (Player) event.getWhoClicked();
+    final Viewer viewer = BukkitViewer.wrap(player);
     if (!whetherPlayerHasEnoughFunds) {
-      player.sendMessage(
-          resolveComponent(messageCompiler.compile(messageSource.stakeFinalizationMissingBalance)));
+      viewer.deliver(messageCompiler.compile(messageSource.stakeFinalizationMissingBalance));
       return;
     }
 

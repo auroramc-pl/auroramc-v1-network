@@ -10,7 +10,6 @@ public final class StakeContextBuilder {
   private GambleKey gambleKey;
   private UUID stakeUniqueId;
   private BigDecimal stake;
-
   private Participant participant;
 
   StakeContextBuilder() {}

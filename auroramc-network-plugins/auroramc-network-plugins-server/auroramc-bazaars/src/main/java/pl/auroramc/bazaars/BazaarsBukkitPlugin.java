@@ -16,8 +16,8 @@ import pl.auroramc.bazaars.bazaar.BazaarFacade;
 import pl.auroramc.bazaars.bazaar.listener.BazaarCreateListener;
 import pl.auroramc.bazaars.bazaar.listener.BazaarUsageListener;
 import pl.auroramc.bazaars.message.MessageSource;
-import pl.auroramc.commons.config.ConfigFactory;
-import pl.auroramc.commons.config.serdes.message.SerdesMessages;
+import pl.auroramc.commons.integration.configs.ConfigFactory;
+import pl.auroramc.commons.integration.configs.serdes.message.SerdesMessages;
 import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
@@ -48,7 +48,7 @@ public class BazaarsBukkitPlugin extends JavaPlugin {
     final EconomyFacade economyFacade = resolveService(getServer(), EconomyFacade.class);
 
     final BazaarFacade bazaarFacade =
-        getBazaarFacade(scheduler, messageSource, economyFacade, fundsCurrency);
+        getBazaarFacade(scheduler, messageSource, messageCompiler, economyFacade, fundsCurrency);
 
     registerListeners(
         this,

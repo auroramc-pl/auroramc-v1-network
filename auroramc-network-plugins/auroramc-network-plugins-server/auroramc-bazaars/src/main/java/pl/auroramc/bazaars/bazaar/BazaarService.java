@@ -10,7 +10,6 @@ import static pl.auroramc.commons.scheduler.SchedulerPoll.SYNC;
 
 import java.util.concurrent.CompletableFuture;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import pl.auroramc.bazaars.bazaar.parser.BazaarParsingContext;
 import pl.auroramc.bazaars.bazaar.transaction.context.BazaarTransactionContext;
 import pl.auroramc.bazaars.message.MessageSource;
@@ -18,61 +17,62 @@ import pl.auroramc.commons.CompletableFutureUtils;
 import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.economy.EconomyFacade;
-import pl.auroramc.messages.message.MutableMessage;
+import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
+import pl.auroramc.messages.message.compiler.CompiledMessage;
 
 class BazaarService implements BazaarFacade {
 
   private final Scheduler scheduler;
   private final MessageSource messageSource;
+  private final BukkitMessageCompiler messageCompiler;
   private final EconomyFacade economyFacade;
   private final Currency fundsCurrency;
 
   BazaarService(
       final Scheduler scheduler,
       final MessageSource messageSource,
+      final BukkitMessageCompiler messageCompiler,
       final EconomyFacade economyFacade,
       final Currency fundsCurrency) {
     this.scheduler = scheduler;
     this.messageSource = messageSource;
+    this.messageCompiler = messageCompiler;
     this.economyFacade = economyFacade;
     this.fundsCurrency = fundsCurrency;
   }
 
   @Override
-  public CompletableFuture<MutableMessage> handleItemTransaction(
+  public CompletableFuture<CompiledMessage> handleItemTransaction(
       final BazaarTransactionContext transactionContext) {
-    switch (transactionContext.parsingContext().type()) {
-      case BUY -> {
-        return economyFacade
-            .has(
-                transactionContext.customerUniqueId(),
-                fundsCurrency,
-                transactionContext.parsingContext().price())
-            .thenCompose(
-                whetherCustomerHasEnoughFunds ->
-                    handleItemPurchase(transactionContext, whetherCustomerHasEnoughFunds));
-      }
-      case SELL -> {
-        return economyFacade
-            .has(
-                transactionContext.merchantUniqueId(),
-                fundsCurrency,
-                transactionContext.parsingContext().price())
-            .thenCompose(
-                whetherMerchantHasEnoughFunds ->
-                    handleItemSale(transactionContext, whetherMerchantHasEnoughFunds));
-      }
-      default ->
-          throw new IllegalStateException("Could not parse bazaar, because of malformed type.");
-    }
+    return (switch (transactionContext.parsingContext().type()) {
+          case BUY ->
+              economyFacade
+                  .has(
+                      transactionContext.customerUniqueId(),
+                      fundsCurrency,
+                      transactionContext.parsingContext().price())
+                  .thenCompose(
+                      whetherCustomerHasEnoughFunds ->
+                          handleItemPurchase(transactionContext, whetherCustomerHasEnoughFunds));
+          case SELL ->
+              economyFacade
+                  .has(
+                      transactionContext.merchantUniqueId(),
+                      fundsCurrency,
+                      transactionContext.parsingContext().price())
+                  .thenCompose(
+                      whetherMerchantHasEnoughFunds ->
+                          handleItemSale(transactionContext, whetherMerchantHasEnoughFunds));
+        })
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
   @Override
-  public CompletableFuture<MutableMessage> handleItemPurchase(
+  public CompletableFuture<CompiledMessage> handleItemPurchase(
       final BazaarTransactionContext transactionContext,
       final boolean whetherCustomerHasEnoughFunds) {
     if (!whetherCustomerHasEnoughFunds) {
-      return completedFuture(messageSource.customerOutOfBalance);
+      return completedFuture(messageCompiler.compile(messageSource.customerOutOfBalance));
     }
 
     final BazaarParsingContext parsingContext = transactionContext.parsingContext();
@@ -82,7 +82,7 @@ class BazaarService implements BazaarFacade {
     final int obtainedSlots =
         getEmptySlotsCount(transactionContext.customer().getInventory(), parsingContext.material());
     if (requiredSlots > obtainedSlots) {
-      return completedFuture(messageSource.customerOutOfSpace);
+      return completedFuture(messageCompiler.compile(messageSource.customerOutOfSpace));
     }
 
     return economyFacade
@@ -101,11 +101,13 @@ class BazaarService implements BazaarFacade {
                     .placeholder(CONTEXT_PATH, parsingContext)
                     .placeholder(
                         PRODUCT_PATH,
-                        new ItemStack(parsingContext.material(), parsingContext.quantity())));
+                        new ItemStack(parsingContext.material(), parsingContext.quantity())))
+        .thenApply(messageCompiler::compile)
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
   @Override
-  public CompletableFuture<MutableMessage> handleItemSale(
+  public CompletableFuture<CompiledMessage> handleItemSale(
       final BazaarTransactionContext transactionContext,
       final boolean whetherMerchantHasEnoughFunds) {
     final BazaarParsingContext parsingContext = transactionContext.parsingContext();
@@ -116,11 +118,11 @@ class BazaarService implements BazaarFacade {
             .getInventory()
             .containsAtLeast(new ItemStack(parsingContext.material()), parsingContext.quantity());
     if (!whetherCustomerHasEnoughStock) {
-      return completedFuture(messageSource.customerOutOfProduct);
+      return completedFuture(messageCompiler.compile(messageSource.customerOutOfProduct));
     }
 
     if (!whetherMerchantHasEnoughFunds) {
-      return completedFuture(messageSource.merchantOutOfBalance);
+      return completedFuture(messageCompiler.compile(messageSource.merchantOutOfBalance));
     }
 
     final int requiredSlots =
@@ -128,7 +130,7 @@ class BazaarService implements BazaarFacade {
     final int obtainedSlots =
         getEmptySlotsCount(transactionContext.magazine().getInventory(), parsingContext.material());
     if (requiredSlots > obtainedSlots) {
-      return completedFuture(messageSource.bazaarOutOfSpace);
+      return completedFuture(messageCompiler.compile(messageSource.bazaarOutOfSpace));
     }
 
     return economyFacade
@@ -148,10 +150,11 @@ class BazaarService implements BazaarFacade {
                     .placeholder(
                         PRODUCT_PATH,
                         new ItemStack(parsingContext.material(), parsingContext.quantity())))
+        .thenApply(messageCompiler::compile)
         .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
-  private void handleItemTransferForPurchase(final @NotNull BazaarTransactionContext transactionContext) {
+  private void handleItemTransferForPurchase(final BazaarTransactionContext transactionContext) {
     final BazaarParsingContext parsingContext = transactionContext.parsingContext();
     final ItemStack productItemStack =
         new ItemStack(parsingContext.material(), parsingContext.quantity());

@@ -7,6 +7,8 @@ import pl.auroramc.commons.CompletableFutureUtils;
 import pl.auroramc.lobby.message.MessageSource;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 import pl.auroramc.messages.message.compiler.CompiledMessage;
+import pl.auroramc.messages.viewer.BukkitViewer;
+import pl.auroramc.messages.viewer.Viewer;
 
 class VoidTeleportationTask implements Runnable {
 
@@ -32,9 +34,10 @@ class VoidTeleportationTask implements Runnable {
         continue;
       }
 
+      final Viewer viewer = BukkitViewer.wrap(player);
       player
           .teleportAsync(lobbyConfig.spawn)
-          .thenAccept(state -> message.render(player))
+          .thenAccept(state -> viewer.deliver(message))
           .exceptionally(CompletableFutureUtils::delegateCaughtException);
     }
   }

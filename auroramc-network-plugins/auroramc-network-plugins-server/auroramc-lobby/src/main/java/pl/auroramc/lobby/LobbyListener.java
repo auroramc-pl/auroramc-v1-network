@@ -7,6 +7,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import pl.auroramc.commons.CompletableFutureUtils;
 import pl.auroramc.lobby.message.MessageSource;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
+import pl.auroramc.messages.viewer.BukkitViewer;
+import pl.auroramc.messages.viewer.Viewer;
 
 class LobbyListener implements Listener {
 
@@ -26,10 +28,11 @@ class LobbyListener implements Listener {
   @EventHandler
   public void onLobbyJoin(final PlayerJoinEvent event) {
     final Player player = event.getPlayer();
+    final Viewer viewer = BukkitViewer.wrap(player);
     player
         .teleportAsync(lobbyConfig.spawn)
         .thenApply(state -> messageCompiler.compile(messageSource.lobbyClarification))
-        .thenAccept(message -> message.render(player))
+        .thenAccept(viewer::deliver)
         .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 }

@@ -3,7 +3,6 @@ package pl.auroramc.hoppers.hopper;
 import static org.bukkit.Material.HOPPER;
 import static org.bukkit.persistence.PersistentDataType.INTEGER;
 import static pl.auroramc.commons.bukkit.BukkitUtils.giveOrDropItemStack;
-import static pl.auroramc.commons.message.compiler.CompiledMessageUtils.resolveComponent;
 import static pl.auroramc.hoppers.message.MessageSourcePaths.QUANTITY_PATH;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;
@@ -45,9 +44,8 @@ public class HopperCommand {
   private ItemStack getHopperItem(final int transferQuantity) {
     return ItemStackBuilder.newBuilder(HOPPER)
         .displayName(
-            resolveComponent(
-                messageCompiler.compile(
-                    messageSource.hopperDisplayName.placeholder(QUANTITY_PATH, transferQuantity))))
+            messageCompiler.compile(
+                messageSource.hopperDisplayName.placeholder(QUANTITY_PATH, transferQuantity)))
         .data(transferQuantityKey, INTEGER, transferQuantity)
         .build();
   }

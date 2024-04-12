@@ -7,7 +7,6 @@ import static org.bukkit.Material.PAPER;
 import static org.bukkit.persistence.PersistentDataType.STRING;
 import static pl.auroramc.cheque.message.MessageSourcePaths.CONTEXT_PATH;
 import static pl.auroramc.commons.bukkit.BukkitUtils.decreaseQuantityOfHeldItem;
-import static pl.auroramc.commons.message.compiler.CompiledMessageUtils.resolveComponent;
 import static pl.auroramc.messages.message.decoration.MessageDecorations.NO_CURSIVE;
 
 import com.jeff_media.morepersistentdatatypes.DataType;
@@ -81,15 +80,13 @@ class ChequeService implements ChequeFacade {
     final ItemStack renderOfItemStack =
         ItemStackBuilder.newBuilder(PAPER)
             .displayName(
-                resolveComponent(
-                    messageCompiler.compile(
-                        messageSource.titleOfCheque.placeholder(CONTEXT_PATH, chequeContext),
-                        NO_CURSIVE)))
+                messageCompiler.compile(
+                    messageSource.titleOfCheque.placeholder(CONTEXT_PATH, chequeContext),
+                    NO_CURSIVE))
             .lore(
-                resolveComponent(
-                    messageCompiler.compileChildren(
-                        messageSource.linesOfCheque.placeholder(CONTEXT_PATH, chequeContext),
-                        NO_CURSIVE)))
+                messageCompiler.compileChildren(
+                    messageSource.linesOfCheque.placeholder(CONTEXT_PATH, chequeContext),
+                    NO_CURSIVE))
             .build();
     return attachChequeTags(renderOfItemStack, chequeContext);
   }

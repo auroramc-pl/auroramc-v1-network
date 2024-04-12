@@ -2,7 +2,6 @@ package pl.auroramc.economy.balance;
 
 import static com.spotify.futures.CompletableFutures.joinList;
 import static java.time.temporal.ChronoUnit.SECONDS;
-import static pl.auroramc.commons.message.compiler.CompiledMessageUtils.resolveComponent;
 import static pl.auroramc.economy.balance.BalanceMessageSourcePaths.CONTEXT_PATH;
 import static pl.auroramc.economy.balance.BalanceMessageSourcePaths.PLAYER_PATH;
 
@@ -14,14 +13,13 @@ import dev.rollczi.litecommands.annotations.execute.Execute;
 import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import pl.auroramc.economy.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 import pl.auroramc.messages.message.compiler.CompiledMessage;
-import pl.auroramc.messages.message.component.ComponentCollector;
+import pl.auroramc.messages.message.compiler.CompiledMessageCollector;
 
 @Permission("auroramc.economy.balance")
 @Command(name = "balance", aliases = "bal")
@@ -48,39 +46,38 @@ public class BalanceCommand {
   }
 
   @Execute
-  public CompletableFuture<Component> balance(final @Context Player player) {
+  public CompletableFuture<CompiledMessage> balance(final @Context Player player) {
     return retrieveBalanceSummaries(player.getUniqueId())
         .thenApply(
             balanceSummaries ->
-                resolveComponent(messageCompiler.compile(messageSource.balanceSummaryHeader))
-                    .appendNewline()
+                messageCompiler
+                    .compile(messageSource.balanceSummaryHeader)
                     .append(balanceSummaries));
   }
 
   @Permission("auroramc.economy.balance.other")
   @Execute
-  public CompletableFuture<Component> balanceOther(
+  public CompletableFuture<CompiledMessage> balanceOther(
       final @Context Player player, final @Arg Player target) {
     return retrieveBalanceSummaries(target.getUniqueId())
         .thenApply(
             balanceSummaries ->
-                resolveComponent(
-                        messageCompiler.compile(
-                            messageSource.balanceSummaryHeaderTargeted.placeholder(
-                                PLAYER_PATH, target)))
-                    .appendNewline()
+                messageCompiler
+                    .compile(
+                        messageSource.balanceSummaryHeaderTargeted.placeholder(PLAYER_PATH, target))
                     .append(balanceSummaries));
   }
 
-  private CompletableFuture<Component> retrieveBalanceSummaries(final UUID uniqueId) {
+  private CompletableFuture<CompiledMessage> retrieveBalanceSummaries(final UUID uniqueId) {
     return balanceConfig.summarizeCurrencyIds.stream()
         .map(currencyId -> retrieveBalanceSummary(uniqueId, currencyId))
         .collect(joinList())
         .thenApply(
-            balanceSummaries -> balanceSummaries.stream().collect(ComponentCollector.collector()));
+            balanceSummaries ->
+                balanceSummaries.stream().collect(CompiledMessageCollector.collector()));
   }
 
-  private CompletableFuture<Component> retrieveBalanceSummary(
+  private CompletableFuture<CompiledMessage> retrieveBalanceSummary(
       final UUID uniqueId, final Long currencyId) {
     final Currency currency = currencyFacade.getCurrencyById(currencyId);
     if (currency == null) {
@@ -95,7 +92,6 @@ public class BalanceCommand {
             balance ->
                 messageSource.balanceSummaryEntry.placeholder(
                     CONTEXT_PATH, new BalanceContext(currency, balance)))
-        .thenApply(messageCompiler::compile)
-        .thenApply(CompiledMessage::getComponent);
+        .thenApply(messageCompiler::compile);
   }
 }

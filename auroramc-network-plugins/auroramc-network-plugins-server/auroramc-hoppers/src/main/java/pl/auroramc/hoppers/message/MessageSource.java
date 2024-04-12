@@ -2,7 +2,7 @@ package pl.auroramc.hoppers.message;
 
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Exclude;
-import pl.auroramc.commons.config.command.CommandMessageSource;
+import pl.auroramc.commons.integration.configs.command.CommandMessageSource;
 import pl.auroramc.messages.message.MutableMessage;
 
 public class MessageSource extends OkaeriConfig {

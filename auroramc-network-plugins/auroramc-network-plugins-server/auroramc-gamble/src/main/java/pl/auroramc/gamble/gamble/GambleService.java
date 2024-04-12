@@ -1,9 +1,9 @@
 package pl.auroramc.gamble.gamble;
 
-import static pl.auroramc.commons.message.compiler.CompiledMessageUtils.resolveComponent;
 import static pl.auroramc.gamble.message.MessageSourcePaths.COMPETITOR_PATH;
 import static pl.auroramc.gamble.message.MessageSourcePaths.CONTEXT_PATH;
 import static pl.auroramc.gamble.message.MessageSourcePaths.CURRENCY_PATH;
+import static pl.auroramc.messages.message.group.MutableMessageGroup.grouping;
 
 import pl.auroramc.commons.CompletableFutureUtils;
 import pl.auroramc.economy.currency.Currency;
@@ -11,6 +11,7 @@ import pl.auroramc.economy.economy.EconomyFacade;
 import pl.auroramc.gamble.message.MessageSource;
 import pl.auroramc.gamble.participant.Participant;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
+import pl.auroramc.messages.message.compiler.CompiledMessageGroup;
 
 class GambleService implements GambleFacade {
 
@@ -47,25 +48,25 @@ class GambleService implements GambleFacade {
                     winnerParticipant.uniqueId(),
                     fundsCurrency,
                     gamble.getGambleContext().stake()))
-        .thenAccept(
-            state -> {
-              winnerParticipant.sendMessage(
-                  resolveComponent(
-                      messageCompiler.compile(
-                          messageSource
-                              .stakeWon
-                              .placeholder(CONTEXT_PATH, gamble.getGambleContext())
-                              .placeholder(CURRENCY_PATH, fundsCurrency)
-                              .placeholder(COMPETITOR_PATH, losingParticipant))));
-              losingParticipant.sendMessage(
-                  resolveComponent(
-                      messageCompiler.compile(
-                          messageSource
-                              .stakeLost
-                              .placeholder(CONTEXT_PATH, gamble.getGambleContext())
-                              .placeholder(CURRENCY_PATH, fundsCurrency)
-                              .placeholder(COMPETITOR_PATH, winnerParticipant))));
-            })
+        .thenApply(
+            state ->
+                grouping()
+                    .message(
+                        messageSource
+                            .stakeWon
+                            .placeholder(CONTEXT_PATH, gamble.getGambleContext())
+                            .placeholder(CURRENCY_PATH, fundsCurrency)
+                            .placeholder(COMPETITOR_PATH, losingParticipant),
+                        winnerParticipant.getPlayerReference())
+                    .message(
+                        messageSource
+                            .stakeLost
+                            .placeholder(CONTEXT_PATH, gamble.getGambleContext())
+                            .placeholder(CURRENCY_PATH, fundsCurrency)
+                            .placeholder(COMPETITOR_PATH, winnerParticipant),
+                        losingParticipant.getPlayerReference()))
+        .thenApply(messageCompiler::compileGroup)
+        .thenAccept(CompiledMessageGroup::deliver)
         .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 

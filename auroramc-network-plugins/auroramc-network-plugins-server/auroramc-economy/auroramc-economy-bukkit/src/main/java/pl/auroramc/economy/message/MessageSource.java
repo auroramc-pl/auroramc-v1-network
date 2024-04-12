@@ -2,7 +2,7 @@ package pl.auroramc.economy.message;
 
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Exclude;
-import pl.auroramc.commons.config.command.CommandMessageSource;
+import pl.auroramc.commons.integration.configs.command.CommandMessageSource;
 import pl.auroramc.economy.balance.BalanceMessageSource;
 import pl.auroramc.economy.economy.EconomyMessageSource;
 import pl.auroramc.economy.leaderboard.LeaderboardMessageSource;

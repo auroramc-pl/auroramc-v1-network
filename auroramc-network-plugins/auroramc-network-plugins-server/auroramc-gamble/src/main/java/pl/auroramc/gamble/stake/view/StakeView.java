@@ -1,12 +1,12 @@
 package pl.auroramc.gamble.stake.view;
 
+import static net.kyori.adventure.text.Component.empty;
 import static org.bukkit.Bukkit.createInventory;
 import static org.bukkit.Material.ARROW;
 import static org.bukkit.Material.BLACK_STAINED_GLASS_PANE;
 import static org.bukkit.Material.PAPER;
 import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationDirection.BACKWARD;
 import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationDirection.FORWARD;
-import static pl.auroramc.commons.message.compiler.CompiledMessageUtils.resolveComponent;
 import static pl.auroramc.gamble.message.MessageSourcePaths.CONTEXT_PATH;
 import static pl.auroramc.gamble.message.MessageSourcePaths.CURRENCY_PATH;
 import static pl.auroramc.gamble.stake.view.StakeViewUtils.getSlotIndexOf;
@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -79,12 +78,12 @@ class StakeView implements InventoryHolder {
         createInventory(
             this,
             STAKE_ROW_COUNT * ELEMENTS_PER_ROW,
-            resolveComponent(messageCompiler.compile(messageSource.stakesTitle)));
+            messageCompiler.compile(messageSource.stakesTitle).getComponent());
 
     setItemAsFrame(
         inventory,
         ItemStackBuilder.newBuilder(BLACK_STAINED_GLASS_PANE)
-            .displayName(Component.empty())
+            .displayName(empty())
             .build());
 
     int currentIndex = 0;
@@ -113,40 +112,30 @@ class StakeView implements InventoryHolder {
 
   private ItemStack getNavigatorIconPointingForward() {
     return ItemStackBuilder.newBuilder(ARROW)
-        .displayName(
-            resolveComponent(messageCompiler.compile(messageSource.navigateForward, NO_CURSIVE)))
-        .lore(
-            resolveComponent(
-                messageCompiler.compileChildren(
-                    messageSource.navigateForwardSuggestion, NO_CURSIVE)))
+        .displayName(messageCompiler.compile(messageSource.navigateForward, NO_CURSIVE))
+        .lore(messageCompiler.compileChildren(messageSource.navigateForwardSuggestion, NO_CURSIVE))
         .build();
   }
 
   private ItemStack getNavigatorIconPointingBackward() {
     return ItemStackBuilder.newBuilder(ARROW)
-        .displayName(
-            resolveComponent(messageCompiler.compile(messageSource.navigateBackward, NO_CURSIVE)))
-        .lore(
-            resolveComponent(
-                messageCompiler.compileChildren(
-                    messageSource.navigateBackwardSuggestion, NO_CURSIVE)))
+        .displayName(messageCompiler.compile(messageSource.navigateBackward, NO_CURSIVE))
+        .lore(messageCompiler.compileChildren(messageSource.navigateBackwardSuggestion, NO_CURSIVE))
         .build();
   }
 
   private ItemStack getStakeItemOfStakeContext(final StakeContext stakeContext) {
     return ItemStackBuilder.newBuilder(new ItemStack(PAPER))
         .displayName(
-            resolveComponent(
-                messageCompiler.compile(
-                    messageSource.stakeName.placeholder(CONTEXT_PATH, stakeContext), NO_CURSIVE)))
+            messageCompiler.compile(
+                messageSource.stakeName.placeholder(CONTEXT_PATH, stakeContext), NO_CURSIVE))
         .lore(
-            resolveComponent(
-                messageCompiler.compileChildren(
-                    messageSource
-                        .stakeBrief
-                        .placeholder(CONTEXT_PATH, stakeContext)
-                        .placeholder(CURRENCY_PATH, fundsCurrency),
-                    NO_CURSIVE)))
+            messageCompiler.compileChildren(
+                messageSource
+                    .stakeBrief
+                    .placeholder(CONTEXT_PATH, stakeContext)
+                    .placeholder(CURRENCY_PATH, fundsCurrency),
+                NO_CURSIVE))
         .build();
   }
 

@@ -45,7 +45,7 @@ class NametagService implements NametagFacade {
 
   @Override
   public void belowName(final Player player, final Component belowName) {
-    nametagContextFacade.saveNameTagContext(player.getUniqueId(), new NametagContext(belowName));
+    nametagContextFacade.createNametagContext(player.getUniqueId(), new NametagContext(belowName));
   }
 
   @Override
@@ -69,7 +69,7 @@ class NametagService implements NametagFacade {
 
     for (final Player seenPlayer : getOnlinePlayers()) {
       final NametagContext nametagContext =
-          nametagContextFacade.findNameTagContextByUniqueId(seenPlayer.getUniqueId());
+          nametagContextFacade.findNametagContextByUniqueId(seenPlayer.getUniqueId());
       if (nametagContext == null) {
         continue;
       }

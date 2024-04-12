@@ -2,8 +2,6 @@ package pl.auroramc.cheque.message;
 
 public final class MessageSourcePaths {
 
-  public static final String DURATION_PATH = "duration";
-  public static final String SCHEMATICS_PATH = "schematics";
   public static final String CURRENCY_PATH = "currency";
   public static final String CONTEXT_PATH = "context";
   public static final String MAXIMUM_INTEGRAL_LENGTH_PATH = "integral.length.maximum";

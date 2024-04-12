@@ -3,9 +3,8 @@ package pl.auroramc.gamble.participant;
 import static org.bukkit.Bukkit.getPlayer;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
-import net.kyori.adventure.text.Component;
+import org.bukkit.entity.Player;
 
 public record Participant(UUID uniqueId, String username, Object prediction) {
 
@@ -13,8 +12,8 @@ public record Participant(UUID uniqueId, String username, Object prediction) {
     return new ParticipantBuilder();
   }
 
-  public void sendMessage(final Component message) {
-    Optional.ofNullable(getPlayer(uniqueId)).ifPresent(player -> player.sendMessage(message));
+  public Player getPlayerReference() {
+    return getPlayer(uniqueId);
   }
 
   @Override

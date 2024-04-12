@@ -87,7 +87,6 @@ class ChequeCommand {
 
     final ChequeIssuer chequeIssuer = new ChequeIssuer(player.getUniqueId(), player.getName());
     final ChequeContext chequeContext = new ChequeContext(chequeIssuer, fundsCurrency, amount);
-
     return economyFacade
         .withdraw(player.getUniqueId(), fundsCurrency, amount)
         .thenApply(state -> chequeFacade.createCheque(chequeContext))

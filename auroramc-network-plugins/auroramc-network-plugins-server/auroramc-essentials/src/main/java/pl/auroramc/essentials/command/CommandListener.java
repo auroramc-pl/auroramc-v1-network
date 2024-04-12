@@ -4,12 +4,12 @@ import static java.lang.Math.round;
 import static java.time.Duration.ofSeconds;
 import static java.util.Arrays.stream;
 import static java.util.function.Predicate.not;
+import static net.kyori.adventure.text.Component.empty;
 import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.event.ClickEvent.suggestCommand;
 import static org.bukkit.event.EventPriority.HIGHEST;
 import static pl.auroramc.commons.command.CommandUtils.resolveCommand;
 import static pl.auroramc.commons.lazy.Lazy.lazy;
-import static pl.auroramc.commons.message.compiler.CompiledMessageUtils.resolveComponent;
 import static pl.auroramc.essentials.message.MessageSourcePaths.PERCENTAGE_PATH;
 import static pl.auroramc.essentials.message.MessageSourcePaths.PLUGIN_NAME_PATH;
 import static pl.auroramc.essentials.message.MessageSourcePaths.SEPARATOR_PATH;
@@ -94,12 +94,12 @@ public class CommandListener implements Listener {
     final String suggestedCommand =
         getPotentialSuggestionForCommand(event.getSender(), performedCommand);
     if (suggestedCommand == null) {
-      event.message(resolveComponent(messageCompiler.compile(messageSource.unknownCommand)));
+      event.message(messageCompiler.compile(messageSource.unknownCommand).getComponent());
       return;
     }
 
     event.message(
-        getPotentialSuggestion(suggestedCommand, getArgumentsIfExists(performedCommand, input)));
+        getPotentialSuggestion(suggestedCommand, getArgumentsSegment(performedCommand, input)));
   }
 
   @EventHandler(priority = HIGHEST, ignoreCancelled = true)
@@ -132,18 +132,20 @@ public class CommandListener implements Listener {
   }
 
   private Component getPotentialSuggestion(final String suggestedCommand, final String arguments) {
-    return resolveComponent(
-        messageCompiler.compile(
+    return messageCompiler
+        .compile(
             messageSource.unknownCommandWithPotentialSuggestion.placeholder(
                 SUGGESTION_PATH,
                 text(suggestedCommand)
                     .hoverEvent(
-                        resolveComponent(
-                            messageCompiler.compile(messageSource.potentialSuggestionHover)))
-                    .clickEvent(suggestCommand("/%s%s".formatted(suggestedCommand, arguments))))));
+                        messageCompiler
+                            .compile(messageSource.potentialSuggestionHover)
+                            .getComponent())
+                    .clickEvent(suggestCommand("/%s%s".formatted(suggestedCommand, arguments)))))
+        .getComponent();
   }
 
-  private String getArgumentsIfExists(final String performedCommand, final String input) {
+  private String getArgumentsSegment(final String performedCommand, final String input) {
     final boolean hasArguments = input.split(COMMAND_ARGUMENT_DELIMITER).length > 1;
     final String delimiter = hasArguments ? COMMAND_ARGUMENT_DELIMITER : "";
     final int offset = hasArguments ? COMMAND_ARGUMENTS_OFFSET : 0;
@@ -179,13 +181,14 @@ public class CommandListener implements Listener {
   }
 
   private Component getTitleOfPluginSummary(final int percentageOfCustomPlugins) {
-    return resolveComponent(
-        messageCompiler.compile(
-            messageSource.titleOfSummary.placeholder(PERCENTAGE_PATH, percentageOfCustomPlugins)));
+    return messageCompiler
+        .compile(
+            messageSource.titleOfSummary.placeholder(PERCENTAGE_PATH, percentageOfCustomPlugins))
+        .getComponent();
   }
 
   private Component getEntriesOfPluginSummary(final List<Plugin> plugins) {
-    final Component result = Component.empty();
+    final Component result = empty();
     return plugins.stream()
         .map(
             plugin ->
@@ -195,14 +198,15 @@ public class CommandListener implements Listener {
 
   private Component getEntryOfPluginSummary(
       final Plugin plugin, final boolean whetherIsClosingEntry) {
-    return resolveComponent(
-        messageCompiler.compile(
+    return messageCompiler
+        .compile(
             messageSource
                 .entryOfSummary
                 .placeholder(PLUGIN_NAME_PATH, plugin.getName())
                 .placeholder(
                     SEPARATOR_PATH,
-                    whetherIsClosingEntry ? PLUGIN_SEPARATOR_CLOSING : PLUGIN_SEPARATOR)));
+                    whetherIsClosingEntry ? PLUGIN_SEPARATOR_CLOSING : PLUGIN_SEPARATOR))
+        .getComponent();
   }
 
   private boolean isSpecialCommand(final String commandName) {

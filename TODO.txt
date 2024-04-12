@@ -1,0 +1,8 @@
+requires updating:
+- auroramc-economy
+
+requires refactoring:
+- auroramc-auctions
+- auroramc-quests
+- auroramc-shops
+- auroramc-scoreboard

@@ -5,7 +5,7 @@ import static moe.rafal.juliet.datasource.hikari.HikariPooledDataSourceFactory.g
 import static pl.auroramc.commons.bukkit.BukkitUtils.registerListeners;
 import static pl.auroramc.commons.bukkit.BukkitUtils.resolveService;
 import static pl.auroramc.commons.bukkit.scheduler.BukkitSchedulerFactory.getBukkitScheduler;
-import static pl.auroramc.commons.config.juliet.JulietConfig.JULIET_CONFIG_FILE_NAME;
+import static pl.auroramc.commons.integration.configs.juliet.JulietConfig.JULIET_CONFIG_FILE_NAME;
 import static pl.auroramc.commons.scheduler.SchedulerPoll.ASYNC;
 import static pl.auroramc.dailyrewards.DailyRewardsConfig.DAILY_REWARDS_CONFIG_FILE_NAME;
 import static pl.auroramc.dailyrewards.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
@@ -24,12 +24,12 @@ import moe.rafal.juliet.Juliet;
 import moe.rafal.juliet.JulietBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.auroramc.commons.bukkit.integration.litecommands.BukkitCommandsBuilderProcessor;
-import pl.auroramc.commons.config.ConfigFactory;
-import pl.auroramc.commons.config.juliet.JulietConfig;
-import pl.auroramc.commons.config.serdes.SerdesCommons;
-import pl.auroramc.commons.config.serdes.juliet.SerdesJuliet;
-import pl.auroramc.commons.config.serdes.message.SerdesMessages;
+import pl.auroramc.commons.bukkit.integration.commands.BukkitCommandsBuilderProcessor;
+import pl.auroramc.commons.integration.configs.ConfigFactory;
+import pl.auroramc.commons.integration.configs.juliet.JulietConfig;
+import pl.auroramc.commons.integration.configs.serdes.SerdesCommons;
+import pl.auroramc.commons.integration.configs.serdes.juliet.SerdesJuliet;
+import pl.auroramc.commons.integration.configs.serdes.message.SerdesMessages;
 import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.dailyrewards.message.MessageSource;
 import pl.auroramc.dailyrewards.nametag.NametagListener;
@@ -40,6 +40,7 @@ import pl.auroramc.dailyrewards.visit.VisitFacade;
 import pl.auroramc.dailyrewards.visit.VisitListener;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 import pl.auroramc.nametag.NametagFacade;
+import pl.auroramc.nametag.context.NametagContextFacade;
 import pl.auroramc.registry.user.UserFacade;
 
 public class DailyRewardsBukkitPlugin extends JavaPlugin {
@@ -69,7 +70,8 @@ public class DailyRewardsBukkitPlugin extends JavaPlugin {
         JulietBuilder.newBuilder().withDataSource(getHikariDataSource(julietConfig.hikari)).build();
     final Logger logger = getLogger();
 
-    final NametagFacade nametagFacade = getNametagFacade(getNametagContextFacade());
+    final NametagContextFacade nametagContextFacade = getNametagContextFacade();
+    final NametagFacade nametagFacade = getNametagFacade(nametagContextFacade);
 
     final UserFacade userFacade = resolveService(getServer(), UserFacade.class);
     final VisitFacade visitFacade = getVisitFacade(scheduler, juliet);
@@ -77,7 +79,7 @@ public class DailyRewardsBukkitPlugin extends JavaPlugin {
 
     registerListeners(
         this,
-        new NametagListener(nametagFacade),
+        new NametagListener(nametagFacade, nametagContextFacade),
         new VisitListener(logger, userFacade, visitFacade, visitController, dailyRewardsConfig));
 
     scheduler.schedule(
