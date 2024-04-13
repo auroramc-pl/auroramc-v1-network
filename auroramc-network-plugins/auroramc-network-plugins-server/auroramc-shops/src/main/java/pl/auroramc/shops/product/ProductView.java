@@ -1,32 +1,34 @@
 package pl.auroramc.shops.product;
 
-import static pl.auroramc.commons.page.navigation.PageNavigationDirection.BACKWARD;
-import static pl.auroramc.commons.page.navigation.PageNavigationDirection.FORWARD;
-import static pl.auroramc.commons.page.navigation.PageNavigationUtils.navigate;
-import static pl.auroramc.shops.message.MessageVariableKey.CURRENCY_PATH;
-import static pl.auroramc.shops.message.MessageVariableKey.PRICE_PATH;
+import static pl.auroramc.commons.bukkit.item.ItemStackUtils.getItemStackWithQuantity;
+import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationDirection.BACKWARD;
+import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationDirection.FORWARD;
+import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationUtils.navigate;
+import static pl.auroramc.messages.message.decoration.MessageDecorations.NO_CURSIVE;
+import static pl.auroramc.shops.product.ProductMessageSourcePaths.CONTEXT_PATH;
 import static pl.auroramc.shops.product.ProductViewUtils.mergeLoreOnItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
-import java.text.DecimalFormat;
 import java.util.List;
+import java.util.stream.Stream;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.ApiStatus.Internal;
-import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.economy.currency.Currency;
-import pl.auroramc.shops.message.MessageSource;
+import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
+import pl.auroramc.messages.message.compiler.CompiledMessage;
 import pl.auroramc.shops.shop.Shop;
 
 class ProductView {
 
   private final Plugin plugin;
   private final Currency fundsCurrency;
-  private final MessageSource messageSource;
-  private final DecimalFormat priceFormat;
+  private final ProductMessageSource messageSource;
+  private final BukkitMessageCompiler messageCompiler;
   private final ProductFacade productFacade;
   private final Shop shop;
   private final ChestGui shopsGui;
@@ -36,16 +38,15 @@ class ProductView {
   ProductView(
       final Plugin plugin,
       final Currency fundsCurrency,
-      final MessageSource messageSource,
-      final DecimalFormat priceFormat,
+      final ProductMessageSource messageSource,
+      final BukkitMessageCompiler messageCompiler,
       final ProductFacade productFacade,
       final Shop shop,
-      final ChestGui shopsGui
-  ) {
+      final ChestGui shopsGui) {
     this.plugin = plugin;
     this.fundsCurrency = fundsCurrency;
     this.messageSource = messageSource;
-    this.priceFormat = priceFormat;
+    this.messageCompiler = messageCompiler;
     this.productFacade = productFacade;
     this.shop = shop;
     this.shopsGui = shopsGui;
@@ -78,44 +79,43 @@ class ProductView {
   }
 
   public void requestTransactionFinalization(
-      final InventoryClickEvent event, final Product product
-  ) {
+      final InventoryClickEvent event, final Product product) {
     if (event.isLeftClick()) {
-      productFacade.purchaseProduct(event.getWhoClicked(), product);
+      productFacade.purchaseProduct((Player) event.getWhoClicked(), product);
     } else if (event.isRightClick()) {
-      productFacade.saleProduct(event.getWhoClicked(), product);
+      productFacade.saleProduct((Player) event.getWhoClicked(), product);
     }
   }
 
   private GuiItem getProductItem(final Product product) {
     final ItemStack originItemStack = product.icon();
-    final ItemStack renderItemStack = mergeLoreOnItemStack(
-        originItemStack,
-        getAdditionalLoreForProductItem(product)
-    );
+    final ItemStack renderItemStack =
+        mergeLoreOnItemStack(originItemStack, getAdditionalLoreForProductItem(product));
     return new GuiItem(
-        renderItemStack,
-        event -> requestTransactionFinalization(event, product),
-        plugin
-    );
+        renderItemStack, event -> requestTransactionFinalization(event, product), plugin);
   }
 
-  private List<MutableMessage> getAdditionalLoreForProductItem(final Product product) {
-    return List.of(
-        messageSource.sellTag
-            .with(PRICE_PATH, priceFormat.format(product.priceForSale()))
-            .with(CURRENCY_PATH, fundsCurrency.getSymbol()),
-        messageSource.purchaseTag
-            .with(PRICE_PATH, priceFormat.format(product.priceForPurchase()))
-            .with(CURRENCY_PATH, fundsCurrency.getSymbol()),
-        messageSource.sellSuggestion,
-        messageSource.purchaseSuggestion
-    );
+  private List<CompiledMessage> getAdditionalLoreForProductItem(final Product product) {
+    return Stream.of(
+            messageSource.sellTag.placeholder(
+                CONTEXT_PATH,
+                new ProductContext(
+                    getItemStackWithQuantity(product.subject(), product.quantity()),
+                    fundsCurrency,
+                    product.priceForSale())),
+            messageSource.purchaseTag.placeholder(
+                CONTEXT_PATH,
+                new ProductContext(
+                    getItemStackWithQuantity(product.subject(), product.quantity()),
+                    fundsCurrency,
+                    product.priceForPurchase())),
+            messageSource.sellSuggestion,
+            messageSource.purchaseSuggestion)
+        .map(message -> messageCompiler.compile(message, NO_CURSIVE))
+        .toList();
   }
 
   private List<GuiItem> getProductItems(final List<Product> products) {
-    return products.stream()
-        .map(this::getProductItem)
-        .toList();
+    return products.stream().map(this::getProductItem).toList();
   }
 }

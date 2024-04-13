@@ -6,7 +6,7 @@ import static org.bukkit.Bukkit.getPlayer;
 import static org.bukkit.Material.PAPER;
 import static org.bukkit.persistence.PersistentDataType.STRING;
 import static pl.auroramc.cheque.message.MessageSourcePaths.CONTEXT_PATH;
-import static pl.auroramc.commons.bukkit.BukkitUtils.decreaseQuantityOfHeldItem;
+import static pl.auroramc.commons.bukkit.item.ItemStackUtils.decreaseQuantityOfHeldItem;
 import static pl.auroramc.messages.message.decoration.MessageDecorations.NO_CURSIVE;
 
 import com.jeff_media.morepersistentdatatypes.DataType;

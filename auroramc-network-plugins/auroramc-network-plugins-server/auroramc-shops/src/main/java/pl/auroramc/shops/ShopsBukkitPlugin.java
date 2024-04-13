@@ -1,15 +1,12 @@
 package pl.auroramc.shops;
 
-import static dev.rollczi.litecommands.bukkit.LiteBukkitMessages.PLAYER_ONLY;
-import static dev.rollczi.litecommands.message.LiteMessages.INVALID_USAGE;
-import static dev.rollczi.litecommands.message.LiteMessages.MISSING_PERMISSIONS;
 import static java.nio.file.Files.createDirectory;
 import static java.nio.file.Files.exists;
-import static pl.auroramc.commons.BukkitUtils.resolveService;
-import static pl.auroramc.commons.message.MutableMessage.LINE_SEPARATOR;
+import static pl.auroramc.commons.bukkit.BukkitUtils.resolveService;
+import static pl.auroramc.commons.bukkit.scheduler.BukkitSchedulerFactory.getBukkitScheduler;
+import static pl.auroramc.messages.message.compiler.BukkitMessageCompiler.getBukkitMessageCompiler;
 import static pl.auroramc.shops.ShopsConfig.SHOPS_CONFIG_FILE_NAME;
 import static pl.auroramc.shops.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
-import static pl.auroramc.shops.message.MessageVariableKey.SCHEMATICS_PATH;
 import static pl.auroramc.shops.product.ProductFacade.getProductFacade;
 import static pl.auroramc.shops.shop.ShopFacade.getShopFacade;
 
@@ -21,17 +18,17 @@ import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
-import java.util.logging.Logger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.auroramc.commons.config.ConfigFactory;
-import pl.auroramc.commons.config.serdes.SerdesCommons;
-import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
-import pl.auroramc.commons.integration.litecommands.MutableMessageResultHandler;
-import pl.auroramc.commons.message.MutableMessage;
-import pl.auroramc.economy.EconomyFacade;
+import pl.auroramc.commons.bukkit.integration.commands.BukkitCommandsBuilderProcessor;
+import pl.auroramc.commons.integration.configs.ConfigFactory;
+import pl.auroramc.commons.integration.configs.serdes.SerdesCommons;
+import pl.auroramc.commons.integration.configs.serdes.message.SerdesMessages;
+import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
+import pl.auroramc.economy.economy.EconomyFacade;
+import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 import pl.auroramc.shops.message.MessageSource;
 import pl.auroramc.shops.product.ProductFacade;
 import pl.auroramc.shops.shop.ShopCommand;
@@ -51,42 +48,42 @@ public class ShopsBukkitPlugin extends JavaPlugin {
         configFactory.produceConfig(ShopsConfig.class, SHOPS_CONFIG_FILE_NAME, new SerdesCommons());
     final ShopFacade shopFacade = getShopFacade(getShopsDirectoryPath(), getClassLoader());
 
+    final Scheduler scheduler = getBukkitScheduler(this);
+
     final MessageSource messageSource =
         configFactory.produceConfig(
-            MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource());
-
-    final Logger logger = getLogger();
+            MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessages());
+    final BukkitMessageCompiler messageCompiler = getBukkitMessageCompiler(scheduler);
 
     final CurrencyFacade currencyFacade = resolveService(getServer(), CurrencyFacade.class);
-    final Currency fundsCurrency =
-        Optional.ofNullable(currencyFacade.getCurrencyById(shopsConfig.fundsCurrencyId))
-            .orElseThrow(
-                () ->
-                    new ShopsInstantiationException(
-                        "Could not resolve funds currency, make sure that the currency's id is valid."));
+    final Currency fundsCurrency = getFundsCurrency(currencyFacade, shopsConfig.fundsCurrencyId);
+
     final EconomyFacade economyFacade = resolveService(getServer(), EconomyFacade.class);
     final ProductFacade productFacade =
         getProductFacade(
-            this, logger, messageSource, fundsCurrency, economyFacade, shopsConfig.priceFormat);
+            this, scheduler, messageSource.product, messageCompiler, fundsCurrency, economyFacade);
 
     commands =
         LiteBukkitFactory.builder(getName(), this)
             .extension(new LiteAdventureExtension<>(), configurer -> configurer.miniMessage(true))
-            .message(
-                INVALID_USAGE,
-                context ->
-                    messageSource.availableSchematicsSuggestion.with(
-                        SCHEMATICS_PATH, context.getSchematic().join(LINE_SEPARATOR)))
-            .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
-            .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
             .commands(LiteCommandsAnnotations.of(new ShopCommand(this, shopFacade, productFacade)))
-            .result(MutableMessage.class, new MutableMessageResultHandler<>())
+            .selfProcessor(
+                new BukkitCommandsBuilderProcessor(messageSource.command, messageCompiler))
             .build();
   }
 
   @Override
   public void onDisable() {
     commands.unregister();
+  }
+
+  private Currency getFundsCurrency(
+      final CurrencyFacade currencyFacade, final long fundsCurrencyId) {
+    return Optional.ofNullable(currencyFacade.getCurrencyById(fundsCurrencyId))
+        .orElseThrow(
+            () ->
+                new ShopsInstantiationException(
+                    "Could not resolve funds currency, make sure that the currency's id is valid."));
   }
 
   private Path getShopsDirectoryPath() {

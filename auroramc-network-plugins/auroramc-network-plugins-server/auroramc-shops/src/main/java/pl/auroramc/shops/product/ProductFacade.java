@@ -1,31 +1,30 @@
 package pl.auroramc.shops.product;
 
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
-import java.text.DecimalFormat;
-import java.util.logging.Logger;
-import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import pl.auroramc.economy.EconomyFacade;
+import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.economy.currency.Currency;
-import pl.auroramc.shops.message.MessageSource;
+import pl.auroramc.economy.economy.EconomyFacade;
+import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 import pl.auroramc.shops.shop.Shop;
 
 public interface ProductFacade {
 
   static ProductFacade getProductFacade(
       final Plugin plugin,
-      final Logger logger,
-      final MessageSource messageSource,
+      final Scheduler scheduler,
+      final ProductMessageSource messageSource,
+      final BukkitMessageCompiler messageCompiler,
       final Currency fundsCurrency,
-      final EconomyFacade economyFacade,
-      final DecimalFormat priceFormat) {
+      final EconomyFacade economyFacade) {
     return new ProductService(
-        plugin, logger, messageSource, fundsCurrency, economyFacade, priceFormat);
+        plugin, scheduler, messageSource, messageCompiler, fundsCurrency, economyFacade);
   }
 
-  void showProducts(final HumanEntity view, final Shop shop, final ChestGui shopsGui);
+  void showProducts(final Player player, final Shop shop, final ChestGui shopsGui);
 
-  void saleProduct(final HumanEntity entity, final Product product);
+  void saleProduct(final Player player, final Product product);
 
-  void purchaseProduct(final HumanEntity entity, final Product product);
+  void purchaseProduct(final Player player, final Product product);
 }

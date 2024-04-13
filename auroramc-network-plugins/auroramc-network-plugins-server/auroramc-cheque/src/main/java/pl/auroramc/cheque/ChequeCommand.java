@@ -8,7 +8,7 @@ import static pl.auroramc.cheque.message.MessageSourcePaths.MAXIMUM_CHEQUE_WORTH
 import static pl.auroramc.cheque.message.MessageSourcePaths.MAXIMUM_FRACTION_LENGTH_PATH;
 import static pl.auroramc.cheque.message.MessageSourcePaths.MAXIMUM_INTEGRAL_LENGTH_PATH;
 import static pl.auroramc.cheque.message.MessageSourcePaths.MINIMUM_CHEQUE_WORTH_PATH;
-import static pl.auroramc.commons.bukkit.BukkitUtils.giveOrDropItemStack;
+import static pl.auroramc.commons.bukkit.item.ItemStackUtils.giveOrDropItemStack;
 import static pl.auroramc.commons.format.decimal.DecimalUtils.getLengthOfFractionalPart;
 import static pl.auroramc.commons.format.decimal.DecimalUtils.getLengthOfIntegralPart;
 

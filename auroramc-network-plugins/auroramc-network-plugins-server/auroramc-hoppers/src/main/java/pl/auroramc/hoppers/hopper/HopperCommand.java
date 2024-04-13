@@ -2,7 +2,7 @@ package pl.auroramc.hoppers.hopper;
 
 import static org.bukkit.Material.HOPPER;
 import static org.bukkit.persistence.PersistentDataType.INTEGER;
-import static pl.auroramc.commons.bukkit.BukkitUtils.giveOrDropItemStack;
+import static pl.auroramc.commons.bukkit.item.ItemStackUtils.giveOrDropItemStack;
 import static pl.auroramc.hoppers.message.MessageSourcePaths.QUANTITY_PATH;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;

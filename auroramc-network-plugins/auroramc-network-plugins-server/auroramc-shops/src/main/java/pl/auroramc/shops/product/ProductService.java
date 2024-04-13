@@ -1,165 +1,141 @@
 package pl.auroramc.shops.product;
 
-import static pl.auroramc.commons.BukkitUtils.postToMainThread;
-import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
-import static pl.auroramc.commons.item.ItemStackFormatter.getFormattedItemStack;
-import static pl.auroramc.shops.message.MessageVariableKey.AMOUNT_PATH;
-import static pl.auroramc.shops.message.MessageVariableKey.CURRENCY_PATH;
-import static pl.auroramc.shops.message.MessageVariableKey.PRODUCT_PATH;
+import static java.util.concurrent.CompletableFuture.completedFuture;
+import static pl.auroramc.commons.bukkit.item.ItemStackUtils.getItemStackWithQuantity;
+import static pl.auroramc.commons.bukkit.item.ItemStackUtils.giveOrDropItemStack;
+import static pl.auroramc.commons.scheduler.SchedulerPoll.SYNC;
+import static pl.auroramc.shops.product.ProductMessageSourcePaths.CONTEXT_PATH;
 import static pl.auroramc.shops.product.ProductUtils.getEmptySlotsCount;
 import static pl.auroramc.shops.product.ProductUtils.getQuantityInSlots;
 import static pl.auroramc.shops.product.ProductViewFactory.produceProductGui;
 
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.concurrent.CompletableFuture;
-import java.util.logging.Logger;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import pl.auroramc.commons.message.MutableMessage;
-import pl.auroramc.economy.EconomyFacade;
+import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.economy.currency.Currency;
-import pl.auroramc.shops.message.MessageSource;
+import pl.auroramc.economy.economy.EconomyFacade;
+import pl.auroramc.messages.message.MutableMessage;
+import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
+import pl.auroramc.messages.message.compiler.CompiledMessage;
+import pl.auroramc.messages.viewer.BukkitViewer;
+import pl.auroramc.messages.viewer.Viewer;
 import pl.auroramc.shops.shop.Shop;
 
 class ProductService implements ProductFacade {
 
   private final Plugin plugin;
-  private final Logger logger;
-  private final MessageSource messageSource;
+  private final Scheduler scheduler;
+  private final ProductMessageSource messageSource;
+  private final BukkitMessageCompiler messageCompiler;
   private final Currency fundsCurrency;
   private final EconomyFacade economyFacade;
-  private final DecimalFormat priceFormat;
 
   ProductService(
       final Plugin plugin,
-      final Logger logger,
-      final MessageSource messageSource,
+      final Scheduler scheduler,
+      final ProductMessageSource messageSource,
+      final BukkitMessageCompiler messageCompiler,
       final Currency fundsCurrency,
-      final EconomyFacade economyFacade,
-      final DecimalFormat priceFormat
-  ) {
+      final EconomyFacade economyFacade) {
     this.plugin = plugin;
-    this.logger = logger;
+    this.scheduler = scheduler;
     this.messageSource = messageSource;
+    this.messageCompiler = messageCompiler;
     this.fundsCurrency = fundsCurrency;
     this.economyFacade = economyFacade;
-    this.priceFormat = priceFormat;
   }
 
   @Override
-  public void showProducts(
-      final HumanEntity entity, final Shop shop, final ChestGui shopsGui
-  ) {
-    produceProductGui(
-        plugin, fundsCurrency, messageSource,this, priceFormat, shop, shopsGui
-    ).show(entity);
+  public void showProducts(final Player player, final Shop shop, final ChestGui shopsGui) {
+    produceProductGui(plugin, fundsCurrency, messageSource, messageCompiler, this, shop, shopsGui)
+        .show(player);
   }
 
   @Override
-  public void saleProduct(final HumanEntity entity, final Product product) {
-    if (whetherEntityIsOutOfStock(entity, product)) {
-      entity.sendMessage(messageSource.productCouldNotBeSoldBecauseOfMissingStock.compile());
+  public void saleProduct(final Player player, final Product product) {
+    final Viewer viewer = BukkitViewer.wrap(player);
+    if (whetherEntityIsOutOfStock(player, product)) {
+      viewer.deliver(
+          messageCompiler.compile(messageSource.productCouldNotBeSoldBecauseOfMissingStock));
       return;
     }
 
-    economyFacade.deposit(entity.getUniqueId(), fundsCurrency, product.priceForSale())
-        .thenAccept(state -> postToMainThread(plugin,
-            () ->
-                entity.getInventory().removeItemAnySlot(
-                    getItemStackWithQuantity(product.subject(), product.quantity())
-                )
-            )
-        )
-        .thenApply(state -> getProductMessage(messageSource.productSold, product, product.priceForSale()))
-        .thenApply(MutableMessage::compile)
-        .thenAccept(entity::sendMessage)
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
-  }
-
-  private boolean whetherEntityIsOutOfStock(final HumanEntity entity, final Product product) {
-    return !entity
-        .getInventory()
-        .containsAtLeast(product.subject(), product.quantity());
+    economyFacade
+        .deposit(player.getUniqueId(), fundsCurrency, product.priceForSale())
+        .thenAccept(
+            state ->
+                scheduler.run(
+                    SYNC,
+                    () ->
+                        player
+                            .getInventory()
+                            .removeItemAnySlot(
+                                getItemStackWithQuantity(product.subject(), product.quantity()))))
+        .thenApply(
+            state -> getProductMessage(messageSource.productSold, product, product.priceForSale()))
+        .thenAccept(viewer::deliver)
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
   @Override
-  public void purchaseProduct(final HumanEntity entity, final Product product) {
-    economyFacade.has(entity.getUniqueId(), fundsCurrency, product.priceForPurchase())
-        .thenCompose(whetherEntityHasEnoughFunds ->
-            finalizeProductPurchase(entity, product, whetherEntityHasEnoughFunds)
-        )
-        .thenApply(MutableMessage::compile)
-        .thenAccept(entity::sendMessage)
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+  public void purchaseProduct(final Player player, final Product product) {
+    final Viewer viewer = BukkitViewer.wrap(player);
+    economyFacade
+        .has(player.getUniqueId(), fundsCurrency, product.priceForPurchase())
+        .thenCompose(
+            whetherEntityHasEnoughFunds ->
+                finalizeProductPurchase(player, product, whetherEntityHasEnoughFunds))
+        .thenAccept(viewer::deliver)
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
-  private CompletableFuture<MutableMessage> finalizeProductPurchase(
-      final HumanEntity entity, final Product product, final boolean whetherEntityHasEnoughFunds
-  ) {
+  private boolean whetherEntityIsOutOfStock(final Player entity, final Product product) {
+    return !entity.getInventory().containsAtLeast(product.subject(), product.quantity());
+  }
+
+  private CompletableFuture<CompiledMessage> finalizeProductPurchase(
+      final Player player, final Product product, final boolean whetherEntityHasEnoughFunds) {
     if (!whetherEntityHasEnoughFunds) {
-      return messageSource.productCouldNotBeBoughtBecauseOfMissingMoney
-          .asCompletedFuture();
+      return completedFuture(
+          messageCompiler.compile(messageSource.productCouldNotBeBoughtBecauseOfMissingMoney));
     }
 
-    final int requiredSlots = getQuantityInSlots(
-        product.quantity(),
-        product.subject().getMaxStackSize()
-    );
-    final int obtainedSlots = getEmptySlotsCount(
-        entity.getInventory(), product.subject()
-    );
+    final int requiredSlots =
+        getQuantityInSlots(product.quantity(), product.subject().getMaxStackSize());
+    final int obtainedSlots = getEmptySlotsCount(player.getInventory(), product.subject());
     if (requiredSlots > obtainedSlots) {
-      return messageSource.productCouldNotBeBoughtBecauseOfMissingSpace
-          .asCompletedFuture();
+      return completedFuture(
+          messageCompiler.compile(messageSource.productCouldNotBeBoughtBecauseOfMissingSpace));
     }
 
-    return economyFacade.withdraw(entity.getUniqueId(), fundsCurrency, product.priceForPurchase())
-        .thenAccept(state -> postToMainThread(plugin,
-            () ->
-                giveItemOrDropIfFull(
-                    entity,
-                    getItemStackWithQuantity(product.subject(), product.quantity())
-                )
-            )
-        )
+    return economyFacade
+        .withdraw(player.getUniqueId(), fundsCurrency, product.priceForPurchase())
+        .thenAccept(
+            state ->
+                scheduler.run(
+                    SYNC,
+                    () ->
+                        giveOrDropItemStack(
+                            player,
+                            getItemStackWithQuantity(product.subject(), product.quantity()))))
         .thenApply(
-            state -> getProductMessage(
-                messageSource.productBought, product, product.priceForPurchase()
-            )
-        )
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+            state ->
+                getProductMessage(messageSource.productBought, product, product.priceForPurchase()))
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
-  private MutableMessage getProductMessage(
-      final MutableMessage message, final Product product, final BigDecimal merchandiseValue
-  ) {
-    return message
-        .with(
-            PRODUCT_PATH,
-            getFormattedItemStack(
-                product.subject(),
-                product.quantity()
-            )
-        )
-        .with(CURRENCY_PATH, fundsCurrency.getSymbol())
-        .with(AMOUNT_PATH, priceFormat.format(merchandiseValue));
-  }
-
-  private void giveItemOrDropIfFull(final HumanEntity entity, final ItemStack itemStack) {
-    entity.getInventory().addItem(itemStack)
-        .forEach((index, remainingItem) ->
-            entity.getLocation()
-                .getWorld()
-                .dropItemNaturally(entity.getLocation(), remainingItem)
-        );
-  }
-
-  private ItemStack getItemStackWithQuantity(final ItemStack itemStack, final int quantity) {
-    final ItemStack copyOfItemStack = itemStack.clone();
-    copyOfItemStack.setAmount(quantity);
-    return copyOfItemStack;
+  private CompiledMessage getProductMessage(
+      final MutableMessage message, final Product product, final BigDecimal merchandiseValue) {
+    return messageCompiler.compile(
+        message.placeholder(
+            CONTEXT_PATH,
+            new ProductContext(
+                getItemStackWithQuantity(product.subject(), product.quantity()),
+                fundsCurrency,
+                merchandiseValue)));
   }
 }
