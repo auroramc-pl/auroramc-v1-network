@@ -8,19 +8,9 @@ final class SqlAccountRepositoryQuery {
         `auroramc_economy_accounts`
         (
           `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
-          `user_id` BIGINT NOT NULL,
-          `currency_id` BIGINT NOT NULL,
+          `user_id` BIGINT NOT NULL REFERENCES `auroramc_registry_users` (`id`) ON DELETE CASCADE,
+          `currency_id` BIGINT NOT NULL REFERENCES `auroramc_economy_currencies` (`id`) ON DELETE CASCADE,
           `balance` DECIMAL(11, 2) NOT NULL,
-          FOREIGN KEY
-            (`user_id`)
-            REFERENCES
-            `auroramc_registry_users` (`id`)
-            ON DELETE CASCADE,
-          FOREIGN KEY
-            (`currency_id`)
-          REFERENCES
-            `auroramc_economy_currencies` (`id`)
-            ON DELETE CASCADE,
           CONSTRAINT
             `account_balance_greater_than_zero`
             CHECK (

@@ -8,14 +8,11 @@ final class SqlPaymentRepositoryQuery {
         `auroramc_economy_payments`
         (
           `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
-          `initiator_id` BIGINT NOT NULL,
-          `receiver_id` BIGINT NOT NULL,
-          `currency_id` BIGINT NOT NULL,
+          `initiator_id` BIGINT NOT NULL REFERENCES `auroramc_registry_users`(`id`) ON DELETE CASCADE,
+          `receiver_id` BIGINT NOT NULL REFERENCES `auroramc_registry_users`(`id`) ON DELETE CASCADE,
+          `currency_id` BIGINT NOT NULL REFERENCES `auroramc_economy_currencies`(`id`) ON DELETE CASCADE,
           `amount` DECIMAL(11, 2) NOT NULL,
-          `transaction_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          FOREIGN KEY (`initiator_id`) REFERENCES `auroramc_registry_users`(`id`) ON DELETE CASCADE,
-          FOREIGN KEY (`receiver_id`) REFERENCES `auroramc_registry_users`(`id`) ON DELETE CASCADE,
-          FOREIGN KEY (`currency_id`) REFERENCES `auroramc_economy_currencies`(`id`) ON DELETE CASCADE
+          `transaction_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
         );
       """;
 
