@@ -12,7 +12,7 @@
   <artifactId>auroramc-network-plugins-server</artifactId>
   <packaging>pom</packaging>
   <modules>
-<!--    <module>auroramc-auctions</module>-->
+    <module>auroramc-auctions</module>
     <module>auroramc-bazaars</module>
     <module>auroramc-cheque</module>
     <module>auroramc-daily-rewards</module>

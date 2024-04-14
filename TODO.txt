@@ -1,7 +1,0 @@
-requires updating:
-[]
-
-requires refactoring:
-- auroramc-auctions
-- auroramc-quests
-- auroramc-scoreboard

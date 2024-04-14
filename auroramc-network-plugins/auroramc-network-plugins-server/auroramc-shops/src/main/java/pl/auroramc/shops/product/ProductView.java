@@ -1,12 +1,12 @@
 package pl.auroramc.shops.product;
 
 import static pl.auroramc.commons.bukkit.item.ItemStackUtils.getItemStackWithQuantity;
+import static pl.auroramc.commons.bukkit.item.ItemStackUtils.mergeLore;
 import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationDirection.BACKWARD;
 import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationDirection.FORWARD;
 import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationUtils.navigate;
 import static pl.auroramc.messages.message.decoration.MessageDecorations.NO_CURSIVE;
 import static pl.auroramc.shops.product.ProductMessageSourcePaths.CONTEXT_PATH;
-import static pl.auroramc.shops.product.ProductViewUtils.mergeLoreOnItemStack;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
@@ -90,12 +90,12 @@ class ProductView {
   private GuiItem getProductItem(final Product product) {
     final ItemStack originItemStack = product.icon();
     final ItemStack renderItemStack =
-        mergeLoreOnItemStack(originItemStack, getAdditionalLoreForProductItem(product));
+        mergeLore(originItemStack, getAdditionalLoreForProductItem(product));
     return new GuiItem(
         renderItemStack, event -> requestTransactionFinalization(event, product), plugin);
   }
 
-  private List<CompiledMessage> getAdditionalLoreForProductItem(final Product product) {
+  private CompiledMessage[] getAdditionalLoreForProductItem(final Product product) {
     return Stream.of(
             messageSource.sellTag.placeholder(
                 CONTEXT_PATH,
@@ -112,7 +112,7 @@ class ProductView {
             messageSource.sellSuggestion,
             messageSource.purchaseSuggestion)
         .map(message -> messageCompiler.compile(message, NO_CURSIVE))
-        .toList();
+        .toArray(CompiledMessage[]::new);
   }
 
   private List<GuiItem> getProductItems(final List<Product> products) {

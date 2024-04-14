@@ -15,6 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.auroramc.bazaars.bazaar.BazaarFacade;
 import pl.auroramc.bazaars.bazaar.listener.BazaarCreateListener;
 import pl.auroramc.bazaars.bazaar.listener.BazaarUsageListener;
+import pl.auroramc.bazaars.bazaar.parser.BazaarParser;
 import pl.auroramc.bazaars.message.MessageSource;
 import pl.auroramc.commons.integration.configs.ConfigFactory;
 import pl.auroramc.commons.integration.configs.serdes.message.SerdesMessages;
@@ -49,12 +50,13 @@ public class BazaarsBukkitPlugin extends JavaPlugin {
 
     final BazaarFacade bazaarFacade =
         getBazaarFacade(scheduler, messageSource, messageCompiler, economyFacade, fundsCurrency);
+    final BazaarParser bazaarParser = getBazaarParser();
 
     registerListeners(
         this,
-        new BazaarCreateListener(messageSource, messageCompiler, getBazaarParser()),
+        new BazaarCreateListener(messageSource, messageCompiler, bazaarParser),
         new BazaarUsageListener(
-            messageSource, messageCompiler, getBazaarParser(), bazaarFacade, userFacade));
+            messageSource, messageCompiler, bazaarParser, bazaarFacade, userFacade));
   }
 
   private Currency getFundsCurrency(
