@@ -46,7 +46,7 @@ public class AuctionCompletionTask implements Runnable {
             messageSource
                 .auctionNearCompletion
                 .placeholder(AUCTION_PATH, auction)
-                .placeholder(DURATION_PATH, period));
+                .placeholder(DURATION_PATH, period.plusSeconds(1)));
       }
     }
   }

@@ -5,6 +5,7 @@ import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationDirection
 import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationDirection.FORWARD;
 import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationUtils.navigate;
 import static pl.auroramc.commons.scheduler.SchedulerPoll.SYNC;
+import static pl.auroramc.messages.message.decoration.MessageDecorations.NO_CURSIVE;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
@@ -81,7 +82,7 @@ class VaultView {
     final ItemStack renderItemStack =
         mergeLore(
             originItemStack,
-            messageCompiler.compileChildren(messageSource.vaultItemRedeemSuggestion));
+            messageCompiler.compileChildren(messageSource.vaultItemRedeemSuggestion, NO_CURSIVE));
     return new GuiItem(renderItemStack, event -> requestVaultItemRedeem(event, vaultItem), plugin);
   }
 }
