@@ -1,21 +1,17 @@
 package pl.auroramc.quests;
 
-import static dev.rollczi.litecommands.bukkit.LiteBukkitMessages.PLAYER_NOT_FOUND;
-import static dev.rollczi.litecommands.bukkit.LiteBukkitMessages.PLAYER_ONLY;
-import static dev.rollczi.litecommands.message.LiteMessages.INVALID_USAGE;
-import static dev.rollczi.litecommands.message.LiteMessages.MISSING_PERMISSIONS;
 import static java.nio.file.Files.createDirectory;
 import static java.nio.file.Files.exists;
 import static java.util.Locale.ROOT;
-import static moe.rafal.juliet.datasource.HikariPooledDataSourceFactory.produceHikariDataSource;
-import static pl.auroramc.commons.BukkitUtils.registerListeners;
-import static pl.auroramc.commons.BukkitUtils.registerServices;
-import static pl.auroramc.commons.BukkitUtils.resolveService;
-import static pl.auroramc.commons.config.serdes.juliet.JulietConfig.JULIET_CONFIG_FILE_NAME;
-import static pl.auroramc.commons.message.MutableMessage.LINE_SEPARATOR;
+import static moe.rafal.juliet.datasource.hikari.HikariPooledDataSourceFactory.getHikariDataSource;
+import static pl.auroramc.commons.bukkit.BukkitUtils.registerListeners;
+import static pl.auroramc.commons.bukkit.BukkitUtils.registerServices;
+import static pl.auroramc.commons.bukkit.BukkitUtils.resolveService;
+import static pl.auroramc.commons.bukkit.scheduler.BukkitSchedulerFactory.getBukkitScheduler;
+import static pl.auroramc.commons.integration.configs.juliet.JulietConfig.JULIET_CONFIG_FILE_NAME;
+import static pl.auroramc.messages.message.compiler.BukkitMessageCompiler.getBukkitMessageCompiler;
 import static pl.auroramc.quests.integration.placeholderapi.PlaceholderApiIntegrationFactory.producePlaceholderApiIntegration;
-import static pl.auroramc.quests.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
-import static pl.auroramc.quests.message.MutableMessageVariableKey.SCHEMATICS_PATH;
+import static pl.auroramc.quests.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
 import static pl.auroramc.quests.objective.progress.ObjectiveProgressFacadeFactory.getObjectiveProgressFacade;
 import static pl.auroramc.quests.quest.QuestFacadeFactory.getQuestFacade;
 import static pl.auroramc.quests.quest.QuestIndexFactory.getQuestIndex;
@@ -38,16 +34,19 @@ import moe.rafal.juliet.Juliet;
 import moe.rafal.juliet.JulietBuilder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.auroramc.commons.config.ConfigFactory;
-import pl.auroramc.commons.config.serdes.juliet.JulietConfig;
-import pl.auroramc.commons.config.serdes.juliet.SerdesJuliet;
-import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
-import pl.auroramc.commons.event.publisher.EventPublisher;
-import pl.auroramc.commons.integration.ExternalIntegration;
-import pl.auroramc.commons.integration.ExternalIntegrator;
-import pl.auroramc.commons.integration.litecommands.MutableMessageResultHandler;
-import pl.auroramc.commons.message.MutableMessage;
-import pl.auroramc.quests.message.MutableMessageSource;
+import pl.auroramc.commons.bukkit.event.BukkitEventPublisher;
+import pl.auroramc.commons.bukkit.integration.ExternalIntegration;
+import pl.auroramc.commons.bukkit.integration.ExternalIntegrator;
+import pl.auroramc.commons.bukkit.integration.commands.BukkitCommandsBuilderProcessor;
+import pl.auroramc.commons.bukkit.scheduler.BukkitSchedulerFactory;
+import pl.auroramc.commons.integration.configs.ConfigFactory;
+import pl.auroramc.commons.integration.configs.juliet.JulietConfig;
+import pl.auroramc.commons.integration.configs.serdes.juliet.SerdesJuliet;
+import pl.auroramc.commons.integration.configs.serdes.message.SerdesMessages;
+import pl.auroramc.commons.scheduler.Scheduler;
+import pl.auroramc.messages.message.MutableMessage;
+import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
+import pl.auroramc.quests.message.MessageSource;
 import pl.auroramc.quests.objective.Objective;
 import pl.auroramc.quests.objective.progress.ObjectiveProgressController;
 import pl.auroramc.quests.objective.progress.ObjectiveProgressFacade;
@@ -76,21 +75,21 @@ public class QuestsBukkitPlugin extends JavaPlugin {
 
   @Override
   public void onEnable() {
-    final ConfigFactory configFactory = new ConfigFactory(
-        getDataFolder().toPath(), YamlBukkitConfigurer::new);
+    final ConfigFactory configFactory =
+        new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
 
-    final MutableMessageSource messageSource = configFactory.produceConfig(
-        MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
-    );
+    final Scheduler scheduler = getBukkitScheduler(this);
 
-    final Logger logger = getLogger();
+    final MessageSource messageSource =
+        configFactory.produceConfig(
+            MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessages());
+    final BukkitMessageCompiler messageCompiler = getBukkitMessageCompiler(scheduler);
 
-    final JulietConfig julietConfig = configFactory.produceConfig(
-        JulietConfig.class, JULIET_CONFIG_FILE_NAME, new SerdesJuliet()
-    );
-    final Juliet juliet = JulietBuilder.newBuilder()
-        .withDataSource(produceHikariDataSource(julietConfig.hikari))
-        .build();
+    final JulietConfig julietConfig =
+        configFactory.produceConfig(
+            JulietConfig.class, JULIET_CONFIG_FILE_NAME, new SerdesJuliet());
+    final Juliet juliet =
+        JulietBuilder.newBuilder().withDataSource(getHikariDataSource(julietConfig.hikari)).build();
 
     final ResourceKeyFacade resourceKeyFacade = getResourceKeyFacade(juliet);
     final QuestIndex questIndex = getQuestIndex();
@@ -101,46 +100,58 @@ public class QuestsBukkitPlugin extends JavaPlugin {
 
     questIndex.indexQuests(quests);
 
-    final EventPublisher eventPublisher = new EventPublisher(this);
+    final BukkitEventPublisher eventPublisher = new BukkitEventPublisher(scheduler);
 
     final UserFacade userFacade = resolveService(getServer(), UserFacade.class);
-    final ObjectiveProgressFacade objectiveProgressFacade = getObjectiveProgressFacade(logger, juliet);
-    final QuestObserverFacade questObserverFacade = getQuestObserverFacade(logger, juliet, userFacade);
+    final ObjectiveProgressFacade objectiveProgressFacade =
+        getObjectiveProgressFacade(logger, juliet);
+    final QuestObserverFacade questObserverFacade =
+        getQuestObserverFacade(logger, juliet, userFacade);
     final QuestTrackFacade questTrackFacade = getQuestTrackFacade(logger, juliet);
     final QuestController questController = new QuestController(questIndex, questTrackFacade);
-    final QuestTrackController questTrackController = new QuestTrackController(
-        this, getServer(), messageSource, questTrackFacade, questObserverFacade, objectiveProgressFacade
-    );
-    final QuestsView questsView = new QuestsView(
-        this, logger, messageSource, userFacade, questIndex, questController, questObserverFacade, questTrackController, objectiveProgressFacade, eventPublisher
-    );
-    final ObjectiveProgressController objectiveProgressController = new ObjectiveProgressController(
-        logger, userFacade, questTrackController, objectiveProgressFacade
-    );
+    final QuestTrackController questTrackController =
+        new QuestTrackController(
+            this,
+            getServer(),
+            messageSource,
+            questTrackFacade,
+            questObserverFacade,
+            objectiveProgressFacade);
+    final QuestsView questsView =
+        new QuestsView(
+            this,
+            logger,
+            messageSource,
+            userFacade,
+            questIndex,
+            questController,
+            questObserverFacade,
+            questTrackController,
+            objectiveProgressFacade,
+            eventPublisher);
+    final ObjectiveProgressController objectiveProgressController =
+        new ObjectiveProgressController(
+            logger, userFacade, questTrackController, objectiveProgressFacade);
 
-    registerListeners(this,
+    registerListeners(
+        this,
         new BreakBlockObjectiveHandler(questController, objectiveProgressController),
-        new PlaceBlockObjectiveHandler(questController, objectiveProgressController)
-    );
+        new PlaceBlockObjectiveHandler(questController, objectiveProgressController));
 
     if (questIndex.resolveQuests().stream()
-        .anyMatch(quest -> quest.getObjectives().stream()
-        .anyMatch(DistanceObjective.class::isInstance))
-    ) {
+        .anyMatch(
+            quest ->
+                quest.getObjectives().stream().anyMatch(DistanceObjective.class::isInstance))) {
       registerListeners(
-          this, new DistanceObjectiveHandler(questController, objectiveProgressController)
-      );
+          this, new DistanceObjectiveHandler(questController, objectiveProgressController));
     }
 
-    final ExternalIntegration placeholderApiIntegration = producePlaceholderApiIntegration(
-        this, userFacade, questIndex, questObserverFacade, objectiveProgressController
-    );
-    final ExternalIntegrator externalIntegrator = new ExternalIntegrator(
-        Map.of(
-            placeholderApiIntegration::isSupportedEnvironment,
-            placeholderApiIntegration
-        )
-    );
+    final ExternalIntegration placeholderApiIntegration =
+        producePlaceholderApiIntegration(
+            this, userFacade, questIndex, questObserverFacade, objectiveProgressController);
+    final ExternalIntegrator externalIntegrator =
+        new ExternalIntegrator(
+            Map.of(placeholderApiIntegration::isSupportedEnvironment, placeholderApiIntegration));
     externalIntegrator.configure(getServer());
 
     registerServices(
@@ -152,31 +163,24 @@ public class QuestsBukkitPlugin extends JavaPlugin {
             questObserverFacade,
             questTrackFacade,
             objectiveProgressFacade,
-            objectiveProgressController
-        )
-    );
+            objectiveProgressController));
 
-    commands = LiteBukkitFactory.builder(getName(), this)
-        .extension(new LiteAdventureExtension<>(),
-            configurer -> configurer.miniMessage(true)
-        )
-        .message(INVALID_USAGE,
-            context -> messageSource.availableSchematicsSuggestion
-                .with(SCHEMATICS_PATH, context.getSchematic().join(LINE_SEPARATOR))
-        )
-        .message(MISSING_PERMISSIONS, messageSource.executionOfCommandIsNotPermitted)
-        .message(PLAYER_ONLY, messageSource.executionFromConsoleIsUnsupported)
-        .message(PLAYER_NOT_FOUND, messageSource.specifiedPlayerIsUnknown)
-        .argument(Quest.class, new QuestArgumentResolver<>(messageSource, questIndex))
-        .commands(
-            LiteCommandsAnnotations.of(
-                new QuestsCommand(
-                    logger, messageSource, userFacade, questsView, questTrackFacade, questTrackController
-                )
-            )
-        )
-        .result(MutableMessage.class, new MutableMessageResultHandler<>())
-        .build();
+    commands =
+        LiteBukkitFactory.builder(getName(), this)
+            .extension(new LiteAdventureExtension<>(), configurer -> configurer.miniMessage(true))
+            .argument(Quest.class, new QuestArgumentResolver<>(messageSource, questIndex))
+            .commands(
+                LiteCommandsAnnotations.of(
+                    new QuestsCommand(
+                        logger,
+                        messageSource,
+                        userFacade,
+                        questsView,
+                        questTrackFacade,
+                        questTrackController)))
+            .selfProcessor(
+                new BukkitCommandsBuilderProcessor(messageSource.command, messageCompiler))
+            .build();
   }
 
   @Override
@@ -194,52 +198,40 @@ public class QuestsBukkitPlugin extends JavaPlugin {
       return createDirectory(shopsDirectoryPath);
     } catch (final IOException exception) {
       throw new QuestsInstantiationException(
-          "Could not create quests directory in %s path, because of unexpected exception.".formatted(shopsDirectoryPath.toString()),
-          exception
-      );
+          "Could not create quests directory in %s path, because of unexpected exception."
+              .formatted(shopsDirectoryPath.toString()),
+          exception);
     }
   }
 
   private void initTranslationForObjectivesFromQuests(
-      final MutableMessageSource messageSource, final List<Quest> quests) {
+      final MessageSource messageSource, final List<Quest> quests) {
     for (final Quest quest : quests) {
       initTranslationForObjectivesAndRequirements(messageSource, quest.getObjectives());
     }
   }
 
   private void initTranslationForObjectivesAndRequirements(
-      final MutableMessageSource messageSource, final List<Objective<?>> objectives) {
+      final MessageSource messageSource, final List<Objective<?>> objectives) {
     for (final Objective<?> objective : objectives) {
       objective.setMessage(
-          getMessageByFieldName(
-              messageSource,
-              getMessageFieldNameByObjective(objective)
-          )
-      );
+          getMessageByFieldName(messageSource, getMessageFieldNameByObjective(objective)));
       for (final ObjectiveRequirement requirement : objective.getRequirements()) {
         requirement.setMessage(
-            getMessageByFieldName(
-                messageSource,
-                getMessageFieldNameByRequirement(requirement)
-            )
-        );
+            getMessageByFieldName(messageSource, getMessageFieldNameByRequirement(requirement)));
       }
     }
   }
 
   private MutableMessage getMessageByFieldName(
-      final MutableMessageSource messageSource, final String translationFieldName
-  ) {
+      final MessageSource messageSource, final String translationFieldName) {
     try {
-      return (MutableMessage) messageSource.getClass()
-          .getDeclaredField(translationFieldName)
-          .get(messageSource);
+      return (MutableMessage)
+          messageSource.getClass().getDeclaredField(translationFieldName).get(messageSource);
     } catch (final NoSuchFieldException | IllegalAccessException exception) {
       throw new QuestsInstantiationException(
           "Could not resolve message field by %s field name, because of unexpected exception."
-              .formatted(
-                  translationFieldName
-              ),
+              .formatted(translationFieldName),
           exception);
     }
   }
@@ -253,8 +245,10 @@ public class QuestsBukkitPlugin extends JavaPlugin {
   }
 
   private String getMessageFieldName(final Class<?> clazz) {
-    final String nameOfClazzWithoutPackage = clazz.getSimpleName().replace(clazz.getPackageName(), "");
-    final String initialCharacterOfClazzLowercase = nameOfClazzWithoutPackage.substring(0, 1).toLowerCase(ROOT);
+    final String nameOfClazzWithoutPackage =
+        clazz.getSimpleName().replace(clazz.getPackageName(), "");
+    final String initialCharacterOfClazzLowercase =
+        nameOfClazzWithoutPackage.substring(0, 1).toLowerCase(ROOT);
     final String clazzWithoutInitialCharacter = nameOfClazzWithoutPackage.substring(1);
     return initialCharacterOfClazzLowercase + clazzWithoutInitialCharacter;
   }

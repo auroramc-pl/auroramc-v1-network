@@ -37,7 +37,7 @@ class SqlObjectiveProgressRepository implements ObjectiveProgressRepository {
 
   @Override
   public List<ObjectiveProgress> getObjectiveProgresses(
-      final ObjectiveProgressesKey objectiveProgressesKey) {
+      final ObjectiveProgressCompositeKey objectiveProgressesKey) {
     try (final Connection connection = juliet.borrowConnection();
         final PreparedStatement statement = connection.prepareStatement(GET_OBJECTIVE_PROGRESSES)) {
       statement.setLong(1, objectiveProgressesKey.userId());

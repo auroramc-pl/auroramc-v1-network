@@ -1,8 +1,8 @@
 package pl.auroramc.quests.quest;
 
 import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
-import static pl.auroramc.quests.message.MutableMessageVariableKey.QUEST_PATH;
-import static pl.auroramc.quests.message.MutableMessageVariableKey.USERNAME_PATH;
+import static pl.auroramc.quests.message.MessageSourcePaths.QUEST_PATH;
+import static pl.auroramc.quests.message.MessageSourcePaths.USERNAME_PATH;
 import static pl.auroramc.quests.quest.QuestState.COMPLETED;
 import static pl.auroramc.quests.quest.QuestState.IN_PROGRESS;
 
@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 import org.bukkit.entity.Player;
 import pl.auroramc.commons.message.MutableMessage;
-import pl.auroramc.quests.message.MutableMessageSource;
+import pl.auroramc.quests.message.MessageSource;
 import pl.auroramc.quests.quest.track.QuestTrack;
 import pl.auroramc.quests.quest.track.QuestTrackController;
 import pl.auroramc.quests.quest.track.QuestTrackFacade;
@@ -28,7 +28,7 @@ import pl.auroramc.registry.user.UserFacade;
 public class QuestsCommand {
 
   private final Logger logger;
-  private final MutableMessageSource messageSource;
+  private final MessageSource messageSource;
   private final UserFacade userFacade;
   private final QuestsView questsView;
   private final QuestTrackFacade questTrackFacade;
@@ -36,7 +36,7 @@ public class QuestsCommand {
 
   public QuestsCommand(
       final Logger logger,
-      final MutableMessageSource messageSource,
+      final MessageSource messageSource,
       final UserFacade userFacade,
       final QuestsView questsView,
       final QuestTrackFacade questTrackFacade,

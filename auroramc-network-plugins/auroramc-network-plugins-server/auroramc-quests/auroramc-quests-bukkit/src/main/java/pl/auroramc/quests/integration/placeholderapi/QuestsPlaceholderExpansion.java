@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pl.auroramc.commons.message.MutableMessage;
+import pl.auroramc.messages.message.MutableMessageCollector;
 import pl.auroramc.quests.objective.Objective;
 import pl.auroramc.quests.objective.progress.ObjectiveProgress;
 import pl.auroramc.quests.objective.progress.ObjectiveProgressController;
@@ -83,7 +83,7 @@ class QuestsPlaceholderExpansion extends PlaceholderExpansion {
             objectiveToObjectiveProgress ->
                 getQuestObjective(
                     objectiveToObjectiveProgress.getKey(), objectiveToObjectiveProgress.getValue()))
-        .collect(MutableMessage.collector())
+        .collect(MutableMessageCollector.collector())
         .getTemplate();
   }
 

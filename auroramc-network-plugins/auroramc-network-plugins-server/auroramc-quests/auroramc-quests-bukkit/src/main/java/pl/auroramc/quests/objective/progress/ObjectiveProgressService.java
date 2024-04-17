@@ -1,38 +1,40 @@
 package pl.auroramc.quests.objective.progress;
 
 import static java.time.Duration.ofSeconds;
-import static java.util.concurrent.CompletableFuture.completedFuture;
-import static java.util.concurrent.CompletableFuture.runAsync;
-import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
+import static pl.auroramc.commons.CompletableFutureUtils.NIL;
+import static pl.auroramc.commons.scheduler.SchedulerPoll.ASYNC;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.logging.Logger;
+import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.commons.scheduler.Scheduler;
+import pl.auroramc.commons.scheduler.caffeine.CaffeineExecutor;
 import pl.auroramc.quests.objective.Objective;
 
 class ObjectiveProgressService implements ObjectiveProgressFacade {
 
-  private static final CompletableFuture<Void> EMPTY_FUTURE = completedFuture(null);
   private static final int INITIAL_OBJECTIVE_DATA = 0;
-  private final Logger logger;
+  private final Scheduler scheduler;
   private final ObjectiveProgressRepository objectiveProgressRepository;
   private final LoadingCache<ObjectiveProgressKey, ObjectiveProgress>
       objectiveProgressKeyToObjectiveProgress;
-  private final LoadingCache<ObjectiveProgressesKey, List<ObjectiveProgress>>
+  private final LoadingCache<ObjectiveProgressCompositeKey, List<ObjectiveProgress>>
       objectiveProgressesKeyToObjectiveProgresses;
 
   ObjectiveProgressService(
-      final Logger logger, final ObjectiveProgressRepository objectiveProgressRepository) {
-    this.logger = logger;
+      final Scheduler scheduler, final ObjectiveProgressRepository objectiveProgressRepository) {
+    this.scheduler = scheduler;
     this.objectiveProgressRepository = objectiveProgressRepository;
     this.objectiveProgressKeyToObjectiveProgress =
         Caffeine.newBuilder()
+            .executor(new CaffeineExecutor(scheduler))
             .expireAfterWrite(ofSeconds(30))
             .build(objectiveProgressRepository::getObjectiveProgress);
     this.objectiveProgressesKeyToObjectiveProgresses =
         Caffeine.newBuilder()
+            .executor(new CaffeineExecutor(scheduler))
             .expireAfterWrite(ofSeconds(20))
             .build(objectiveProgressRepository::getObjectiveProgresses);
   }
@@ -40,7 +42,7 @@ class ObjectiveProgressService implements ObjectiveProgressFacade {
   @Override
   public List<ObjectiveProgress> getObjectiveProgresses(final Long userId, final Long questId) {
     return objectiveProgressesKeyToObjectiveProgresses.get(
-        new ObjectiveProgressesKey(userId, questId));
+        new ObjectiveProgressCompositeKey(userId, questId));
   }
 
   @Override
@@ -66,17 +68,13 @@ class ObjectiveProgressService implements ObjectiveProgressFacade {
 
   @Override
   public void createObjectiveProgress(final ObjectiveProgress objectiveProgress) {
-    objectiveProgressKeyToObjectiveProgress.put(
-        getObjectiveProgressKey(objectiveProgress), objectiveProgress);
-    runAsyncWithExceptionDelegation(
-        () -> objectiveProgressRepository.createObjectiveProgress(objectiveProgress));
-  }
-
-  private ObjectiveProgressKey getObjectiveProgressKey(final ObjectiveProgress objectiveProgress) {
-    return new ObjectiveProgressKey(
-        objectiveProgress.getUserId(),
-        objectiveProgress.getQuestId(),
-        objectiveProgress.getObjectiveId());
+    scheduler
+        .run(ASYNC, () -> objectiveProgressRepository.createObjectiveProgress(objectiveProgress))
+        .thenAccept(
+            state ->
+                objectiveProgressKeyToObjectiveProgress.put(
+                    getObjectiveProgressKey(objectiveProgress), objectiveProgress))
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
   @Override
@@ -84,22 +82,23 @@ class ObjectiveProgressService implements ObjectiveProgressFacade {
       final Objective<?> objective, final ObjectiveProgress objectiveProgress) {
     updateObjectiveProgress0(objectiveProgress);
     if (objectiveProgress.getData() % objective.getSaveInterval() != 0) {
-      return EMPTY_FUTURE;
+      return NIL;
     }
 
-    return runAsyncWithExceptionDelegation(
-            () -> objectiveProgressRepository.updateObjectiveProgress(objectiveProgress))
+    return scheduler
+        .run(ASYNC, () -> objectiveProgressRepository.updateObjectiveProgress(objectiveProgress))
         .thenAccept(
             state ->
                 objectiveProgressesKeyToObjectiveProgresses.invalidate(
-                    new ObjectiveProgressesKey(
-                        objectiveProgress.getUserId(), objectiveProgress.getQuestId())));
+                    new ObjectiveProgressCompositeKey(
+                        objectiveProgress.getUserId(), objectiveProgress.getQuestId())))
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
   private void updateObjectiveProgress0(final ObjectiveProgress objectiveProgress) {
     final List<ObjectiveProgress> objectiveProgresses =
         objectiveProgressesKeyToObjectiveProgresses.getIfPresent(
-            new ObjectiveProgressesKey(
+            new ObjectiveProgressCompositeKey(
                 objectiveProgress.getUserId(), objectiveProgress.getQuestId()));
     if (objectiveProgresses != null) {
       for (final ObjectiveProgress objectiveProgress0 : objectiveProgresses) {
@@ -114,13 +113,19 @@ class ObjectiveProgressService implements ObjectiveProgressFacade {
 
   @Override
   public void deleteObjectiveProgressByUserIdAndQuestId(final Long userId, final Long questId) {
-    runAsyncWithExceptionDelegation(
-        () ->
-            objectiveProgressRepository.deleteObjectiveProgressByUserIdAndQuestId(userId, questId));
+    scheduler
+        .run(
+            ASYNC,
+            () ->
+                objectiveProgressRepository.deleteObjectiveProgressByUserIdAndQuestId(
+                    userId, questId))
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
-  private CompletableFuture<Void> runAsyncWithExceptionDelegation(final Runnable runnable) {
-    return runAsync(runnable)
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+  private ObjectiveProgressKey getObjectiveProgressKey(final ObjectiveProgress objectiveProgress) {
+    return new ObjectiveProgressKey(
+        objectiveProgress.getUserId(),
+        objectiveProgress.getQuestId(),
+        objectiveProgress.getObjectiveId());
   }
 }

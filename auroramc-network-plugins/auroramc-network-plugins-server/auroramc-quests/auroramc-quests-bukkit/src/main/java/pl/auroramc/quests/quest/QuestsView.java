@@ -19,7 +19,7 @@ import static pl.auroramc.commons.message.MutableMessageDecoration.NO_CURSIVE;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.BACKWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationDirection.FORWARD;
 import static pl.auroramc.commons.page.navigation.PageNavigationUtils.navigate;
-import static pl.auroramc.quests.message.MutableMessageVariableKey.QUEST_PATH;
+import static pl.auroramc.quests.message.MessageSourcePaths.QUEST_PATH;
 import static pl.auroramc.quests.quest.QuestState.IN_PROGRESS;
 
 import com.github.stefvanschie.inventoryframework.adventuresupport.ComponentHolder;
@@ -44,7 +44,7 @@ import org.jetbrains.annotations.ApiStatus.Internal;
 import pl.auroramc.commons.event.publisher.EventPublisher;
 import pl.auroramc.commons.item.ItemStackBuilder;
 import pl.auroramc.commons.message.MutableMessage;
-import pl.auroramc.quests.message.MutableMessageSource;
+import pl.auroramc.quests.message.MessageSource;
 import pl.auroramc.quests.objective.Objective;
 import pl.auroramc.quests.objective.ObjectiveUtils;
 import pl.auroramc.quests.objective.progress.ObjectiveProgress;
@@ -60,7 +60,7 @@ public class QuestsView {
 
   private final Plugin plugin;
   private final Logger logger;
-  private final MutableMessageSource messageSource;
+  private final MessageSource messageSource;
   private final UserFacade userFacade;
   private final QuestIndex questIndex;
   private final QuestController questController;
@@ -72,7 +72,7 @@ public class QuestsView {
   public QuestsView(
       final Plugin plugin,
       final Logger logger,
-      final MutableMessageSource messageSource,
+      final MessageSource messageSource,
       final UserFacade userFacade,
       final QuestIndex questIndex,
       final QuestController questController,

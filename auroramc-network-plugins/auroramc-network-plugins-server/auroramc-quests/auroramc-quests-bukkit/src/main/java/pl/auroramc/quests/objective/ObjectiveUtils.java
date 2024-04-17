@@ -5,16 +5,17 @@ import static java.util.Locale.ROOT;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Stream.concat;
-import static pl.auroramc.quests.message.MutableMessageVariableKey.DATA_PATH;
-import static pl.auroramc.quests.message.MutableMessageVariableKey.GOAL_PATH;
-import static pl.auroramc.quests.message.MutableMessageVariableKey.ITEM_PATH;
-import static pl.auroramc.quests.message.MutableMessageVariableKey.TYPE_PATH;
+import static pl.auroramc.quests.message.MessageSourcePaths.DATA_PATH;
+import static pl.auroramc.quests.message.MessageSourcePaths.GOAL_PATH;
+import static pl.auroramc.quests.message.MessageSourcePaths.ITEM_PATH;
+import static pl.auroramc.quests.message.MessageSourcePaths.TYPE_PATH;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
-import pl.auroramc.commons.message.MutableMessage;
+import pl.auroramc.messages.message.MutableMessage;
+import pl.auroramc.messages.message.MutableMessageCollector;
 import pl.auroramc.quests.objective.progress.ObjectiveProgress;
 import pl.auroramc.quests.objective.requirement.HeldItemRequirement;
 import pl.auroramc.quests.objective.requirement.ObjectiveRequirement;
@@ -37,7 +38,7 @@ public final class ObjectiveUtils {
       final Map<? extends Objective<?>, ObjectiveProgress> objectiveToObjectiveProgress) {
     return objectives.stream()
         .map(objective -> getQuestObjective(objective, objectiveToObjectiveProgress.get(objective)))
-        .collect(MutableMessage.collector());
+        .collect(MutableMessageCollector.collector());
   }
 
   public static String getQuestObjectivesTemplate(

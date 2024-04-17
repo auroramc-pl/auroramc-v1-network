@@ -5,13 +5,14 @@ import static java.util.function.Function.identity;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toMap;
 import static org.bukkit.Bukkit.getPlayer;
-import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
+import static pl.auroramc.commons.CompletableFutureUtils.NIL;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Logger;
+import java.util.concurrent.CompletableFuture;
 import org.bukkit.entity.Player;
+import pl.auroramc.commons.CompletableFutureUtils;
 import pl.auroramc.quests.objective.Objective;
 import pl.auroramc.quests.objective.requirement.ObjectiveRequirement;
 import pl.auroramc.quests.quest.Quest;
@@ -21,17 +22,14 @@ import pl.auroramc.registry.user.UserFacade;
 
 public class ObjectiveProgressController {
 
-  private final Logger logger;
   private final UserFacade userFacade;
   private final QuestTrackController questTrackController;
   private final ObjectiveProgressFacade objectiveProgressFacade;
 
   public ObjectiveProgressController(
-      final Logger logger,
       final UserFacade userFacade,
       final QuestTrackController questTrackController,
       final ObjectiveProgressFacade objectiveProgressFacade) {
-    this.logger = logger;
     this.userFacade = userFacade;
     this.questTrackController = questTrackController;
     this.objectiveProgressFacade = objectiveProgressFacade;
@@ -52,11 +50,11 @@ public class ObjectiveProgressController {
       final UUID uniqueId, final Quest quest, final Objective<?> objective) {
     userFacade
         .getUserByUniqueId(uniqueId)
-        .thenAccept(user -> processObjectiveGoal(user, quest, objective))
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+        .thenCompose(user -> processObjectiveGoal(user, quest, objective))
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
-  public void processObjectiveGoal(
+  public CompletableFuture<Void> processObjectiveGoal(
       final User user, final Quest quest, final Objective<?> objective) {
     final ObjectiveProgress objectiveProgress =
         objectiveProgressFacade.resolveObjectiveProgress(
@@ -66,15 +64,15 @@ public class ObjectiveProgressController {
             objective.getGoalResolver().resolveGoal());
     if (isObjectiveCompleted(objectiveProgress)) {
       completeQuestIfAllObjectivesAreCompleted(user, quest);
-      return;
+      return NIL;
     }
 
     objectiveProgress.setData(objectiveProgress.getData() + 1);
-    objectiveProgressFacade
+    return objectiveProgressFacade
         .updateObjectiveProgress(objective, objectiveProgress)
         .thenAccept(
             state -> completeQuestIfAllObjectivesAreCompleted(user, quest, objectiveProgress))
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
   public Map<Objective<?>, ObjectiveProgress> getUncompletedObjectives(

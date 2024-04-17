@@ -5,7 +5,7 @@ import java.util.List;
 interface ObjectiveProgressRepository {
 
   List<ObjectiveProgress> getObjectiveProgresses(
-      final ObjectiveProgressesKey objectiveProgressesKey);
+      final ObjectiveProgressCompositeKey objectiveProgressesKey);
 
   ObjectiveProgress getObjectiveProgress(final ObjectiveProgressKey objectiveProgressKey);
 

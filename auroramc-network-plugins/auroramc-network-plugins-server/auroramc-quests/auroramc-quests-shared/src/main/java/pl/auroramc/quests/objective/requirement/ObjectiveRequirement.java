@@ -2,7 +2,7 @@ package pl.auroramc.quests.objective.requirement;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus.Internal;
-import pl.auroramc.commons.message.MutableMessage;
+import pl.auroramc.messages.message.MutableMessage;
 
 public interface ObjectiveRequirement {
 

@@ -1,7 +1,7 @@
 package pl.auroramc.quests.integration.placeholderapi;
 
 import org.bukkit.plugin.Plugin;
-import pl.auroramc.commons.integration.ExternalIntegration;
+import pl.auroramc.commons.bukkit.integration.ExternalIntegration;
 import pl.auroramc.quests.objective.progress.ObjectiveProgressController;
 import pl.auroramc.quests.quest.QuestIndex;
 import pl.auroramc.quests.quest.observer.QuestObserverFacade;
