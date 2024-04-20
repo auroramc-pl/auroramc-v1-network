@@ -104,9 +104,9 @@ public class QuestsBukkitPlugin extends JavaPlugin {
 
     final UserFacade userFacade = resolveService(getServer(), UserFacade.class);
     final ObjectiveProgressFacade objectiveProgressFacade =
-        getObjectiveProgressFacade(logger, juliet);
+        getObjectiveProgressFacade(scheduler, juliet);
     final QuestObserverFacade questObserverFacade =
-        getQuestObserverFacade(logger, juliet, userFacade);
+        getQuestObserverFacade(scheduler, juliet, userFacade);
     final QuestTrackFacade questTrackFacade = getQuestTrackFacade(logger, juliet);
     final QuestController questController = new QuestController(questIndex, questTrackFacade);
     final QuestTrackController questTrackController =

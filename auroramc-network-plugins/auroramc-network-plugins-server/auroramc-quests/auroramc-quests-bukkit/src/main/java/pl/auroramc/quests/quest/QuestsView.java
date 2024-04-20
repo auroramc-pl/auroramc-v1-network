@@ -41,6 +41,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.ApiStatus.Internal;
+import pl.auroramc.commons.bukkit.event.BukkitEventPublisher;
 import pl.auroramc.commons.event.publisher.EventPublisher;
 import pl.auroramc.commons.item.ItemStackBuilder;
 import pl.auroramc.commons.message.MutableMessage;
@@ -67,7 +68,7 @@ public class QuestsView {
   private final QuestObserverFacade questObserverFacade;
   private final QuestTrackController questTrackController;
   private final ObjectiveProgressFacade objectiveProgressFacade;
-  private final EventPublisher eventPublisher;
+  private final BukkitEventPublisher eventPublisher;
 
   public QuestsView(
       final Plugin plugin,
@@ -79,7 +80,7 @@ public class QuestsView {
       final QuestObserverFacade questObserverFacade,
       final QuestTrackController questTrackController,
       final ObjectiveProgressFacade objectiveProgressFacade,
-      final EventPublisher eventPublisher
+      final BukkitEventPublisher eventPublisher
   ) {
     this.plugin = plugin;
     this.logger = logger;

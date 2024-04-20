@@ -1,7 +1,6 @@
 package pl.auroramc.quests.quest.track;
 
 import static java.util.concurrent.CompletableFuture.runAsync;
-import static pl.auroramc.commons.BukkitUtils.postToMainThread;
 import static pl.auroramc.quests.message.MessageSourcePaths.QUEST_PATH;
 import static pl.auroramc.quests.quest.QuestState.COMPLETED;
 
