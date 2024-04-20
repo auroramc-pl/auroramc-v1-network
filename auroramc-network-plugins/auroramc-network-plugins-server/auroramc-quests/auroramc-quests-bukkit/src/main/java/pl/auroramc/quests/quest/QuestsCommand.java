@@ -1,5 +1,6 @@
 package pl.auroramc.quests.quest;
 
+import static java.time.temporal.ChronoUnit.SECONDS;
 import static pl.auroramc.quests.quest.QuestMessageSourcePaths.QUEST_PATH;
 import static pl.auroramc.quests.quest.QuestMessageSourcePaths.USER_PATH;
 import static pl.auroramc.quests.quest.QuestState.COMPLETED;
@@ -8,6 +9,7 @@ import static pl.auroramc.quests.quest.QuestState.IN_PROGRESS;
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.cooldown.Cooldown;
 import dev.rollczi.litecommands.annotations.execute.Execute;
 import dev.rollczi.litecommands.annotations.optional.OptionalArg;
 import dev.rollczi.litecommands.annotations.permission.Permission;
@@ -24,6 +26,7 @@ import pl.auroramc.registry.user.UserFacade;
 
 @Permission("auroramc.quests.quests")
 @Command(name = "quests")
+@Cooldown(key = "quests-cooldown", count = 30, unit = SECONDS)
 public class QuestsCommand {
 
   private final QuestMessageSource messageSource;
