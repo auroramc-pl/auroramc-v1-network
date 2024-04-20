@@ -1,8 +1,8 @@
 package pl.auroramc.shops.shop;
 
-import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationDirection.BACKWARD;
-import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationDirection.FORWARD;
-import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationUtils.navigate;
+import static pl.auroramc.commons.bukkit.page.navigation.NavigationDirection.BACKWARD;
+import static pl.auroramc.commons.bukkit.page.navigation.NavigationDirection.FORWARD;
+import static pl.auroramc.commons.bukkit.page.navigation.NavigationUtils.navigate;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;

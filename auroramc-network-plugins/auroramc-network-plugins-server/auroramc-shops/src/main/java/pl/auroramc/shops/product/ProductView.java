@@ -2,9 +2,9 @@ package pl.auroramc.shops.product;
 
 import static pl.auroramc.commons.bukkit.item.ItemStackUtils.getItemStackWithQuantity;
 import static pl.auroramc.commons.bukkit.item.ItemStackUtils.mergeLore;
-import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationDirection.BACKWARD;
-import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationDirection.FORWARD;
-import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationUtils.navigate;
+import static pl.auroramc.commons.bukkit.page.navigation.NavigationDirection.BACKWARD;
+import static pl.auroramc.commons.bukkit.page.navigation.NavigationDirection.FORWARD;
+import static pl.auroramc.commons.bukkit.page.navigation.NavigationUtils.navigate;
 import static pl.auroramc.messages.message.decoration.MessageDecorations.NO_CURSIVE;
 import static pl.auroramc.shops.product.ProductMessageSourcePaths.CONTEXT_PATH;
 

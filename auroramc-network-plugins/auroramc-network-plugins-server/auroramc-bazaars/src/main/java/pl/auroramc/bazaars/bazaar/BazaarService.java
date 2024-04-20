@@ -91,7 +91,7 @@ class BazaarService implements BazaarFacade {
             transactionContext.merchantUniqueId(),
             fundsCurrency,
             parsingContext.price())
-        .thenAccept(
+        .thenCompose(
             state -> scheduler.run(SYNC, () -> handleItemTransferForPurchase(transactionContext)))
         .thenApply(
             state ->
@@ -139,7 +139,7 @@ class BazaarService implements BazaarFacade {
             transactionContext.customerUniqueId(),
             fundsCurrency,
             parsingContext.price())
-        .thenAccept(
+        .thenCompose(
             state -> scheduler.run(SYNC, () -> handleItemTransferForSale(transactionContext)))
         .thenApply(
             state ->

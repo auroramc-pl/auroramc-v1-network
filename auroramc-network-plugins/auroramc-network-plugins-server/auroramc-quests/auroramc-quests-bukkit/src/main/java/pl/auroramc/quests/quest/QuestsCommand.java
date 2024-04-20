@@ -1,7 +1,7 @@
 package pl.auroramc.quests.quest;
 
-import static pl.auroramc.quests.message.MessageSourcePaths.QUEST_PATH;
-import static pl.auroramc.quests.message.MessageSourcePaths.USER_PATH;
+import static pl.auroramc.quests.quest.QuestMessageSourcePaths.QUEST_PATH;
+import static pl.auroramc.quests.quest.QuestMessageSourcePaths.USER_PATH;
 import static pl.auroramc.quests.quest.QuestState.COMPLETED;
 import static pl.auroramc.quests.quest.QuestState.IN_PROGRESS;
 
@@ -16,7 +16,6 @@ import java.util.concurrent.CompletableFuture;
 import org.bukkit.entity.Player;
 import pl.auroramc.commons.CompletableFutureUtils;
 import pl.auroramc.messages.message.MutableMessage;
-import pl.auroramc.quests.message.MessageSource;
 import pl.auroramc.quests.quest.track.QuestTrack;
 import pl.auroramc.quests.quest.track.QuestTrackController;
 import pl.auroramc.quests.quest.track.QuestTrackFacade;
@@ -27,14 +26,14 @@ import pl.auroramc.registry.user.UserFacade;
 @Command(name = "quests")
 public class QuestsCommand {
 
-  private final MessageSource messageSource;
+  private final QuestMessageSource messageSource;
   private final UserFacade userFacade;
   private final QuestsView questsView;
   private final QuestTrackFacade questTrackFacade;
   private final QuestTrackController questTrackController;
 
   public QuestsCommand(
-      final MessageSource messageSource,
+      final QuestMessageSource messageSource,
       final UserFacade userFacade,
       final QuestsView questsView,
       final QuestTrackFacade questTrackFacade,

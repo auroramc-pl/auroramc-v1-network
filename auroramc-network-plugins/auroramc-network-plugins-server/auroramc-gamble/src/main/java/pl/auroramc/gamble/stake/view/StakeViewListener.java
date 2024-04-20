@@ -9,7 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import pl.auroramc.commons.CompletableFutureUtils;
-import pl.auroramc.commons.bukkit.page.navigation.PageNavigator;
+import pl.auroramc.commons.bukkit.page.navigation.Navigator;
 import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.economy.EconomyFacade;
@@ -65,7 +65,7 @@ public class StakeViewListener implements Listener {
 
       stakeView
           .getNavigatorBySlot(event.getSlot())
-          .map(PageNavigator::direction)
+          .map(Navigator::direction)
           .map(
               direction ->
                   direction.navigate(stakeViewFacade.getPageCount(), stakeView.getPageIndex()))
@@ -92,8 +92,8 @@ public class StakeViewListener implements Listener {
         .thenAccept(
             whetherPlayerHasEnoughFunds ->
                 completeStakeFinalization(event, stakeContext, whetherPlayerHasEnoughFunds))
-        .thenAccept(state -> scheduler.run(SYNC, player::closeInventory))
-        .thenAccept(state -> scheduler.run(SYNC, stakeViewFacade::recalculate))
+        .thenCompose(state -> scheduler.run(SYNC, player::closeInventory))
+        .thenCompose(state -> scheduler.run(SYNC, stakeViewFacade::recalculate))
         .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 

@@ -3,7 +3,7 @@ package pl.auroramc.quests.quest.track;
 import static org.bukkit.Bukkit.getPlayer;
 import static pl.auroramc.commons.scheduler.SchedulerPoll.ASYNC;
 import static pl.auroramc.commons.scheduler.SchedulerPoll.SYNC;
-import static pl.auroramc.quests.message.MessageSourcePaths.QUEST_PATH;
+import static pl.auroramc.quests.quest.QuestMessageSourcePaths.QUEST_PATH;
 import static pl.auroramc.quests.quest.QuestState.COMPLETED;
 
 import java.util.Objects;
@@ -13,10 +13,10 @@ import java.util.concurrent.CompletableFuture;
 import org.bukkit.entity.Player;
 import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
-import pl.auroramc.quests.message.MessageSource;
 import pl.auroramc.quests.objective.Objective;
 import pl.auroramc.quests.objective.progress.ObjectiveProgressFacade;
 import pl.auroramc.quests.quest.Quest;
+import pl.auroramc.quests.quest.QuestMessageSource;
 import pl.auroramc.quests.quest.QuestState;
 import pl.auroramc.quests.quest.observer.QuestObserver;
 import pl.auroramc.quests.quest.observer.QuestObserverFacade;
@@ -26,7 +26,7 @@ import pl.auroramc.registry.user.User;
 public class QuestTrackController {
 
   private final Scheduler scheduler;
-  private final MessageSource messageSource;
+  private final QuestMessageSource messageSource;
   private final BukkitMessageCompiler messageCompiler;
   private final QuestTrackFacade questTrackFacade;
   private final QuestObserverFacade questObserverFacade;
@@ -34,7 +34,7 @@ public class QuestTrackController {
 
   public QuestTrackController(
       final Scheduler scheduler,
-      final MessageSource messageSource,
+      final QuestMessageSource messageSource,
       final BukkitMessageCompiler messageCompiler,
       final QuestTrackFacade questTrackFacade,
       final QuestObserverFacade questObserverFacade,

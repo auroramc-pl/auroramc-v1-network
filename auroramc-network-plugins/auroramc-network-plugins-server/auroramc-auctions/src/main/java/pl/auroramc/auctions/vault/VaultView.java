@@ -1,9 +1,9 @@
 package pl.auroramc.auctions.vault;
 
 import static pl.auroramc.commons.bukkit.item.ItemStackUtils.mergeLore;
-import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationDirection.BACKWARD;
-import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationDirection.FORWARD;
-import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationUtils.navigate;
+import static pl.auroramc.commons.bukkit.page.navigation.NavigationDirection.BACKWARD;
+import static pl.auroramc.commons.bukkit.page.navigation.NavigationDirection.FORWARD;
+import static pl.auroramc.commons.bukkit.page.navigation.NavigationUtils.navigate;
 import static pl.auroramc.commons.scheduler.SchedulerPoll.SYNC;
 import static pl.auroramc.messages.message.decoration.MessageDecorations.NO_CURSIVE;
 
@@ -59,7 +59,7 @@ class VaultView {
   public void requestVaultItemRedeem(final InventoryClickEvent event, final VaultItem vaultItem) {
     vaultController
         .redeemVaultItem(event.getWhoClicked().getUniqueId(), vaultItem)
-        .thenAccept(state -> scheduler.run(SYNC, () -> populateVaultItems(vaultItemsPane)));
+        .thenCompose(state -> scheduler.run(SYNC, () -> populateVaultItems(vaultItemsPane)));
   }
 
   @Internal

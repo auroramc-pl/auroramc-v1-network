@@ -2,7 +2,7 @@ package pl.auroramc.quests.quest;
 
 import static dev.rollczi.litecommands.argument.parser.ParseResult.failure;
 import static java.util.Locale.ROOT;
-import static pl.auroramc.quests.message.MessageSourcePaths.INPUT_PATH;
+import static pl.auroramc.quests.quest.QuestMessageSourcePaths.INPUT_PATH;
 
 import dev.rollczi.litecommands.argument.Argument;
 import dev.rollczi.litecommands.argument.parser.ParseResult;
@@ -11,15 +11,14 @@ import dev.rollczi.litecommands.invocation.Invocation;
 import dev.rollczi.litecommands.suggestion.SuggestionContext;
 import dev.rollczi.litecommands.suggestion.SuggestionResult;
 import java.util.Optional;
-import pl.auroramc.quests.message.MessageSource;
 import pl.auroramc.quests.resource.key.ResourceKey;
 
 public class QuestArgumentResolver<T> extends ArgumentResolver<T, Quest> {
 
-  private final MessageSource messageSource;
+  private final QuestMessageSource messageSource;
   private final QuestIndex questIndex;
 
-  public QuestArgumentResolver(final MessageSource messageSource, final QuestIndex questIndex) {
+  public QuestArgumentResolver(final QuestMessageSource messageSource, final QuestIndex questIndex) {
     this.messageSource = messageSource;
     this.questIndex = questIndex;
   }

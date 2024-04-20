@@ -87,7 +87,7 @@ public class VaultController {
                     SUBJECT_PATH, vaultItem.getResolvedSubject()))
         .thenApply(messageCompiler::compile)
         .thenAccept(message -> message.deliver(player))
-        .thenAccept(
+        .thenCompose(
             state ->
                 scheduler.run(
                     SYNC,

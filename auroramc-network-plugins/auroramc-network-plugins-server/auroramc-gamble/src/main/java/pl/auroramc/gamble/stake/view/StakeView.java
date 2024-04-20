@@ -5,8 +5,8 @@ import static org.bukkit.Bukkit.createInventory;
 import static org.bukkit.Material.ARROW;
 import static org.bukkit.Material.BLACK_STAINED_GLASS_PANE;
 import static org.bukkit.Material.PAPER;
-import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationDirection.BACKWARD;
-import static pl.auroramc.commons.bukkit.page.navigation.PageNavigationDirection.FORWARD;
+import static pl.auroramc.commons.bukkit.page.navigation.NavigationDirection.BACKWARD;
+import static pl.auroramc.commons.bukkit.page.navigation.NavigationDirection.FORWARD;
 import static pl.auroramc.gamble.message.MessageSourcePaths.CONTEXT_PATH;
 import static pl.auroramc.gamble.message.MessageSourcePaths.CURRENCY_PATH;
 import static pl.auroramc.gamble.stake.view.StakeViewUtils.getSlotIndexOf;
@@ -22,7 +22,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import pl.auroramc.commons.bukkit.item.ItemStackBuilder;
-import pl.auroramc.commons.bukkit.page.navigation.PageNavigator;
+import pl.auroramc.commons.bukkit.page.navigation.Navigator;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.gamble.message.MessageSource;
 import pl.auroramc.gamble.stake.context.StakeContext;
@@ -37,7 +37,7 @@ class StakeView implements InventoryHolder {
   private static final int STAKE_ROW_COUNT = 6;
   private static final int ELEMENTS_PER_ROW = 9;
   private final Map<Integer, StakeContext> stakeContextBySlot;
-  private final Map<Integer, PageNavigator> navigatorBySlot;
+  private final Map<Integer, Navigator> navigatorBySlot;
   private final int pageIndex;
   private final Currency fundsCurrency;
   private final MessageSource messageSource;
@@ -57,8 +57,8 @@ class StakeView implements InventoryHolder {
     this.messageCompiler = messageCompiler;
     this.navigatorBySlot =
         Map.of(
-            48, new PageNavigator(BACKWARD, getNavigatorIconPointingBackward()),
-            50, new PageNavigator(FORWARD, getNavigatorIconPointingForward()));
+            48, new Navigator(BACKWARD, getNavigatorIconPointingBackward()),
+            50, new Navigator(FORWARD, getNavigatorIconPointingForward()));
     this.stakeContextBySlot = new HashMap<>();
     this.stakes = stakes;
     this.stakeInventory = createStakeInventory();
@@ -106,7 +106,7 @@ class StakeView implements InventoryHolder {
     return inventory;
   }
 
-  Optional<PageNavigator> getNavigatorBySlot(final int slot) {
+  Optional<Navigator> getNavigatorBySlot(final int slot) {
     return Optional.ofNullable(navigatorBySlot.get(slot));
   }
 
