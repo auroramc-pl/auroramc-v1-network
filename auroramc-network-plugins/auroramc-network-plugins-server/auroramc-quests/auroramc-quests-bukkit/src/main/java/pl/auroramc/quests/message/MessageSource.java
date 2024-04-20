@@ -10,22 +10,22 @@ public class MessageSource extends OkaeriConfig {
   public static final @Exclude String MESSAGE_SOURCE_FILE_NAME = "messages.yml";
 
   public MutableMessage questCouldNotBeFound =
-      MutableMessage.of("<red>Zadanie o nazwie <yellow>{quest} <red>nie zostało znalezione.");
+      MutableMessage.of("<red>Zadanie o nazwie <yellow>{input} <red>nie zostało znalezione.");
 
   public MutableMessage questHasBeenAssigned =
       MutableMessage.of(
-          "<gray>Zadanie <white>{quest} <gray>zostało przypisane dla <white>{player}<gray>.");
+          "<gray>Zadanie <white>{quest.@key.@name} <gray>zostało przypisane dla <white>{user.@username}<gray>.");
 
   public MutableMessage questIsAlreadyAssigned =
       MutableMessage.of(
-          "<red>Zadanie <yellow>{quest} <red>jest już przypisane dla <yellow>{player}<red>.");
+          "<red>Zadanie <yellow>{quest.@key.@name} <red>jest już przypisane dla <yellow>{user.@username}<red>.");
 
   public MutableMessage questIsAlreadyCompleted =
       MutableMessage.of(
-          "<red>Zadanie <yellow>{quest} <red>jest już ukończone przez <yellow>{player}<red>.");
+          "<red>Zadanie <yellow>{quest.@key.@id} <red>jest już ukończone przez <yellow>{user.@username}<red>.");
 
   public MutableMessage questHasBeenCompleted =
-      MutableMessage.of("<gray>Ukończyłeś zadanie <white>{quest}<gray>.");
+      MutableMessage.of("<gray>Ukończyłeś zadanie <white>{quest.@key.@id}<gray>.");
 
   public MutableMessage questIsCompleted = MutableMessage.of("<yellow>Ukończyłeś już te zadanie.");
 

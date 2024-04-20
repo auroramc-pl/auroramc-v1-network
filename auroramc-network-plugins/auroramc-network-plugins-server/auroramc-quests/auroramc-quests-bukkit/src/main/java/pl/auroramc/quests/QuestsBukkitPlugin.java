@@ -29,7 +29,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 import moe.rafal.juliet.Juliet;
 import moe.rafal.juliet.JulietBuilder;
 import org.bukkit.command.CommandSender;
@@ -38,7 +37,6 @@ import pl.auroramc.commons.bukkit.event.BukkitEventPublisher;
 import pl.auroramc.commons.bukkit.integration.ExternalIntegration;
 import pl.auroramc.commons.bukkit.integration.ExternalIntegrator;
 import pl.auroramc.commons.bukkit.integration.commands.BukkitCommandsBuilderProcessor;
-import pl.auroramc.commons.bukkit.scheduler.BukkitSchedulerFactory;
 import pl.auroramc.commons.integration.configs.ConfigFactory;
 import pl.auroramc.commons.integration.configs.juliet.JulietConfig;
 import pl.auroramc.commons.integration.configs.serdes.juliet.SerdesJuliet;
@@ -107,13 +105,13 @@ public class QuestsBukkitPlugin extends JavaPlugin {
         getObjectiveProgressFacade(scheduler, juliet);
     final QuestObserverFacade questObserverFacade =
         getQuestObserverFacade(scheduler, juliet, userFacade);
-    final QuestTrackFacade questTrackFacade = getQuestTrackFacade(logger, juliet);
+    final QuestTrackFacade questTrackFacade = getQuestTrackFacade(scheduler, juliet);
     final QuestController questController = new QuestController(questIndex, questTrackFacade);
     final QuestTrackController questTrackController =
         new QuestTrackController(
-            this,
-            getServer(),
+            scheduler,
             messageSource,
+            messageCompiler,
             questTrackFacade,
             questObserverFacade,
             objectiveProgressFacade);
@@ -130,15 +128,14 @@ public class QuestsBukkitPlugin extends JavaPlugin {
             objectiveProgressFacade,
             eventPublisher);
     final ObjectiveProgressController objectiveProgressController =
-        new ObjectiveProgressController(
-            logger, userFacade, questTrackController, objectiveProgressFacade);
+        new ObjectiveProgressController(userFacade, questTrackController, objectiveProgressFacade);
 
     registerListeners(
         this,
         new BreakBlockObjectiveHandler(questController, objectiveProgressController),
         new PlaceBlockObjectiveHandler(questController, objectiveProgressController));
 
-    if (questIndex.resolveQuests().stream()
+    if (questIndex.getQuests().stream()
         .anyMatch(
             quest ->
                 quest.getObjectives().stream().anyMatch(DistanceObjective.class::isInstance))) {
@@ -172,7 +169,6 @@ public class QuestsBukkitPlugin extends JavaPlugin {
             .commands(
                 LiteCommandsAnnotations.of(
                     new QuestsCommand(
-                        logger,
                         messageSource,
                         userFacade,
                         questsView,

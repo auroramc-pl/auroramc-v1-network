@@ -57,7 +57,7 @@ class QuestsPlaceholderExpansion extends PlaceholderExpansion {
       return null;
     }
 
-    final Quest quest = questIndex.resolveQuest(questObserver.getQuestId());
+    final Quest quest = questIndex.getQuestById(questObserver.getQuestId());
     if (quest == null) {
       return null;
     }

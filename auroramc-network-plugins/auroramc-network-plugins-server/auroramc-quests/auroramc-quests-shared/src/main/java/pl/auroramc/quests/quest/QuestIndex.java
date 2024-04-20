@@ -6,9 +6,11 @@ public interface QuestIndex {
 
   void indexQuests(final List<Quest> bunchOfQuests);
 
-  Quest resolveQuest(final Long questId);
+  Quest getQuestById(final Long questId);
 
-  List<Quest> resolveQuests(final List<Long> bunchOfQuestIds);
+  Quest getQuestByName(final String name);
 
-  List<Quest> resolveQuests();
+  List<Quest> getQuestsByIds(final List<Long> bunchOfQuestIds);
+
+  List<Quest> getQuests();
 }

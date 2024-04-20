@@ -126,7 +126,7 @@ public class QuestsView {
         viewer.getUniqueId());
 
     final PaginatedPane questsPane = new PaginatedPane(0, 0, 9, 5);
-    questsPane.populateWithGuiItems(questIndex.resolveQuests().stream()
+    questsPane.populateWithGuiItems(questIndex.getQuests().stream()
         .sorted(comparingInt(Quest::getWeight))
         .map(quest -> getQuestIcon(quest, assignedQuests, viewer.getUniqueId()))
         .toList());
@@ -198,8 +198,8 @@ public class QuestsView {
           questObserver.setQuestId(quest.getKey().getId());
           questObserverFacade.updateQuestObserver(questObserver);
 
-          final Quest previousQuest = questIndex.resolveQuest(previousQuestId);
-          final Quest observedQuest = questIndex.resolveQuest(questObserver.getQuestId());
+          final Quest previousQuest = questIndex.getQuestById(previousQuestId);
+          final Quest observedQuest = questIndex.getQuestById(questObserver.getQuestId());
           eventPublisher.publish(new QuestObservedEvent(viewer, previousQuest, observedQuest));
 
           viewer.sendMessage(
