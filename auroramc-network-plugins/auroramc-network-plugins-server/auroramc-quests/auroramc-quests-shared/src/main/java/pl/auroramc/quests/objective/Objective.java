@@ -2,7 +2,7 @@ package pl.auroramc.quests.objective;
 
 import java.util.List;
 import org.jetbrains.annotations.ApiStatus.Internal;
-import pl.auroramc.commons.message.MutableMessage;
+import pl.auroramc.messages.message.MutableMessage;
 import pl.auroramc.quests.objective.requirement.ObjectiveRequirement;
 import pl.auroramc.quests.resource.Resource;
 import pl.auroramc.quests.resource.key.ResourceKey;

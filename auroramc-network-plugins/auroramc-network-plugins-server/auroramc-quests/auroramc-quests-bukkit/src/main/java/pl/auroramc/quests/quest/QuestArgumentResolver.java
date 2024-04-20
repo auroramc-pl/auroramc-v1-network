@@ -2,6 +2,7 @@ package pl.auroramc.quests.quest;
 
 import static dev.rollczi.litecommands.argument.parser.ParseResult.failure;
 import static java.util.Locale.ROOT;
+import static pl.auroramc.quests.quest.QuestMessageSourcePaths.INPUT_PATH;
 
 import dev.rollczi.litecommands.argument.Argument;
 import dev.rollczi.litecommands.argument.parser.ParseResult;
@@ -9,16 +10,15 @@ import dev.rollczi.litecommands.argument.resolver.ArgumentResolver;
 import dev.rollczi.litecommands.invocation.Invocation;
 import dev.rollczi.litecommands.suggestion.SuggestionContext;
 import dev.rollczi.litecommands.suggestion.SuggestionResult;
-import pl.auroramc.quests.message.MutableMessageSource;
+import java.util.Optional;
 import pl.auroramc.quests.resource.key.ResourceKey;
 
 public class QuestArgumentResolver<T> extends ArgumentResolver<T, Quest> {
 
-  private final MutableMessageSource messageSource;
+  private final QuestMessageSource messageSource;
   private final QuestIndex questIndex;
 
-  public QuestArgumentResolver(
-      final MutableMessageSource messageSource, final QuestIndex questIndex) {
+  public QuestArgumentResolver(final QuestMessageSource messageSource, final QuestIndex questIndex) {
     this.messageSource = messageSource;
     this.questIndex = questIndex;
   }
@@ -26,11 +26,10 @@ public class QuestArgumentResolver<T> extends ArgumentResolver<T, Quest> {
   @Override
   protected ParseResult<Quest> parse(
       final Invocation<T> invocation, final Argument<Quest> context, final String argument) {
-    return questIndex.resolveQuests().stream()
-        .filter(quest -> quest.getKey().getName().equals(argument.toLowerCase(ROOT)))
-        .findAny()
+    return Optional.ofNullable(questIndex.getQuestByName(argument.toLowerCase(ROOT)))
         .map(ParseResult::success)
-        .orElseGet(() -> failure(messageSource.questCouldNotBeFound.with("quest", argument)));
+        .orElseGet(
+            () -> failure(messageSource.questCouldNotBeFound.placeholder(INPUT_PATH, argument)));
   }
 
   @Override
@@ -38,7 +37,7 @@ public class QuestArgumentResolver<T> extends ArgumentResolver<T, Quest> {
       final Invocation<T> invocation,
       final Argument<Quest> argument,
       final SuggestionContext context) {
-    return questIndex.resolveQuests().stream()
+    return questIndex.getQuests().stream()
         .map(Quest::getKey)
         .map(ResourceKey::getName)
         .collect(SuggestionResult.collector());

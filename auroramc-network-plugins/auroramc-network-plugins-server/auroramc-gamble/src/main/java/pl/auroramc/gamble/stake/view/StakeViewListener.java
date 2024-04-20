@@ -1,51 +1,53 @@
 package pl.auroramc.gamble.stake.view;
 
-import static pl.auroramc.commons.BukkitUtils.postToMainThread;
-import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
+import static pl.auroramc.commons.scheduler.SchedulerPoll.SYNC;
 import static pl.auroramc.gamble.gamble.GambleFactory.getGamble;
 
 import java.util.UUID;
-import java.util.logging.Logger;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.plugin.Plugin;
-import pl.auroramc.commons.page.navigation.PageNavigator;
-import pl.auroramc.economy.EconomyFacade;
+import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.commons.bukkit.page.navigation.Navigator;
+import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.economy.currency.Currency;
+import pl.auroramc.economy.economy.EconomyFacade;
 import pl.auroramc.gamble.coinflip.CoinSide;
-import pl.auroramc.gamble.gamble.GambleContext;
+import pl.auroramc.gamble.gamble.context.GambleContext;
 import pl.auroramc.gamble.gamble.GambleFacade;
-import pl.auroramc.gamble.gamble.Participant;
-import pl.auroramc.gamble.message.MutableMessageSource;
-import pl.auroramc.gamble.stake.StakeContext;
+import pl.auroramc.gamble.participant.Participant;
+import pl.auroramc.gamble.message.MessageSource;
+import pl.auroramc.gamble.stake.context.StakeContext;
 import pl.auroramc.gamble.stake.StakeFacade;
+import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
+import pl.auroramc.messages.viewer.BukkitViewer;
+import pl.auroramc.messages.viewer.Viewer;
 
 public class StakeViewListener implements Listener {
 
-  private final Plugin plugin;
-  private final Logger logger;
+  private final Scheduler scheduler;
   private final Currency fundsCurrency;
-  private final MutableMessageSource messageSource;
+  private final MessageSource messageSource;
+  private final BukkitMessageCompiler messageCompiler;
   private final EconomyFacade economyFacade;
   private final GambleFacade gambleFacade;
   private final StakeFacade stakeFacade;
   private final StakeViewFacade stakeViewFacade;
 
   public StakeViewListener(
-      final Plugin plugin,
-      final Logger logger,
+      final Scheduler scheduler,
       final Currency fundsCurrency,
-      final MutableMessageSource messageSource,
+      final MessageSource messageSource,
+      final BukkitMessageCompiler messageCompiler,
       final EconomyFacade economyFacade,
       final GambleFacade gambleFacade,
       final StakeFacade stakeFacade,
       final StakeViewFacade stakeViewFacade) {
-    this.plugin = plugin;
-    this.logger = logger;
+    this.scheduler = scheduler;
     this.fundsCurrency = fundsCurrency;
     this.messageSource = messageSource;
+    this.messageCompiler = messageCompiler;
     this.economyFacade = economyFacade;
     this.gambleFacade = gambleFacade;
     this.stakeFacade = stakeFacade;
@@ -63,7 +65,7 @@ public class StakeViewListener implements Listener {
 
       stakeView
           .getNavigatorBySlot(event.getSlot())
-          .map(PageNavigator::direction)
+          .map(Navigator::direction)
           .map(
               direction ->
                   direction.navigate(stakeViewFacade.getPageCount(), stakeView.getPageIndex()))
@@ -79,8 +81,9 @@ public class StakeViewListener implements Listener {
   public void requestStakeFinalizing(
       final InventoryClickEvent event, final StakeContext stakeContext) {
     final Player player = (Player) event.getWhoClicked();
+    final Viewer viewer = BukkitViewer.wrap(player);
     if (stakeContext.initiator().uniqueId().equals(player.getUniqueId())) {
-      player.sendMessage(messageSource.stakeFinalizationSelf.compile());
+      viewer.deliver(messageCompiler.compile(messageSource.stakeFinalizationSelf));
       return;
     }
 
@@ -89,9 +92,9 @@ public class StakeViewListener implements Listener {
         .thenAccept(
             whetherPlayerHasEnoughFunds ->
                 completeStakeFinalization(event, stakeContext, whetherPlayerHasEnoughFunds))
-        .thenAccept(state -> postToMainThread(plugin, player::closeInventory))
-        .thenAccept(state -> postToMainThread(plugin, stakeViewFacade::recalculate))
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+        .thenCompose(state -> scheduler.run(SYNC, player::closeInventory))
+        .thenCompose(state -> scheduler.run(SYNC, stakeViewFacade::recalculate))
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
   private void completeStakeFinalization(
@@ -99,26 +102,35 @@ public class StakeViewListener implements Listener {
       final StakeContext stakeContext,
       final boolean whetherPlayerHasEnoughFunds) {
     final Player player = (Player) event.getWhoClicked();
+    final Viewer viewer = BukkitViewer.wrap(player);
     if (!whetherPlayerHasEnoughFunds) {
-      player.sendMessage(messageSource.stakeFinalizationMissingBalance.compile());
+      viewer.deliver(messageCompiler.compile(messageSource.stakeFinalizationMissingBalance));
       return;
     }
 
     stakeFacade.deleteStakeContext(stakeContext);
 
+    // Until we have only two sides of a coin, we can assume that the opposite side of the
+    // initiator's prediction is the competitor's prediction.
+    final Object prediction = ((CoinSide) stakeContext.initiator().prediction()).opposite();
     gambleFacade.settleGamble(
         getGamble(
-            GambleContext.newBuilder()
-                .gambleUniqueId(UUID.randomUUID())
-                .stake(stakeContext.stake())
-                .initiator(stakeContext.initiator())
-                .competitor(
-                    Participant.newBuilder()
-                        .uniqueId(event.getWhoClicked().getUniqueId())
-                        .username(event.getWhoClicked().getName())
-                        .prediction(((CoinSide) stakeContext.initiator().prediction()).opposite())
-                        .build())
-                .build(),
+            getGambleContext((Player) event.getWhoClicked(), stakeContext, prediction),
             stakeContext));
+  }
+
+  private GambleContext getGambleContext(
+      final Player player, final StakeContext stakeContext, final Object prediction) {
+    return GambleContext.newBuilder()
+        .gambleUniqueId(UUID.randomUUID())
+        .stake(stakeContext.stake())
+        .initiator(stakeContext.initiator())
+        .competitor(
+            Participant.newBuilder()
+                .uniqueId(player.getUniqueId())
+                .username(player.getName())
+                .prediction(prediction)
+                .build())
+        .build();
   }
 }

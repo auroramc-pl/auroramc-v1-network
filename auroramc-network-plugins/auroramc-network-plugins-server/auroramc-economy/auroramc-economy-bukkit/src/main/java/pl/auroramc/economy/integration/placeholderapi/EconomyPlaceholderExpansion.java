@@ -11,8 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pl.auroramc.commons.decimal.DecimalFormatter;
-import pl.auroramc.economy.EconomyFacade;
+import pl.auroramc.commons.format.decimal.DecimalFormatter;
+import pl.auroramc.economy.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
 

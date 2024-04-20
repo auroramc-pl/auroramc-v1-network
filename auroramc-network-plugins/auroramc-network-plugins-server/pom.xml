@@ -12,6 +12,7 @@
   <artifactId>auroramc-network-plugins-server</artifactId>
   <packaging>pom</packaging>
   <modules>
+    <module>auroramc-auctions</module>
     <module>auroramc-bazaars</module>
     <module>auroramc-cheque</module>
     <module>auroramc-daily-rewards</module>
@@ -22,9 +23,8 @@
     <module>auroramc-lobby</module>
     <module>auroramc-quests</module>
     <module>auroramc-registry</module>
-    <module>auroramc-scoreboard</module>
+<!--    <module>auroramc-scoreboard</module>-->
     <module>auroramc-shops</module>
-    <module>auroramc-auctions</module>
   </modules>
 
   <properties>

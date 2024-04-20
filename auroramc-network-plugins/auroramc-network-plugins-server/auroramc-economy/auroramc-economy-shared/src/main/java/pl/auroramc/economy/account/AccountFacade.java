@@ -7,7 +7,7 @@ public interface AccountFacade {
 
   CompletableFuture<Account> getAccount(final Long userId, final Long currencyId);
 
-  CompletableFuture<Void> createAccount(final Account account);
+  CompletableFuture<Account> createAccount(final Account account);
 
   CompletableFuture<Void> updateAccount(final Account account);
 

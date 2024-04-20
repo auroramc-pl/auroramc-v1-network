@@ -7,7 +7,7 @@ import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import java.util.List;
 import org.bukkit.inventory.ItemStack;
-import pl.auroramc.commons.item.ItemStackBuilder;
+import pl.auroramc.commons.bukkit.item.ItemStackBuilder;
 import pl.auroramc.shops.product.Product;
 import pl.auroramc.shops.shop.ShopDsl.ProductsDsl;
 

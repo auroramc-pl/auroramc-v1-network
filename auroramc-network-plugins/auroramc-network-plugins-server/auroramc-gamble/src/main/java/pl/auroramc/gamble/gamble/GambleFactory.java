@@ -3,7 +3,8 @@ package pl.auroramc.gamble.gamble;
 import static pl.auroramc.gamble.gamble.GambleKey.COINFLIP;
 
 import pl.auroramc.gamble.coinflip.CoinflipGamble;
-import pl.auroramc.gamble.stake.StakeContext;
+import pl.auroramc.gamble.gamble.context.GambleContext;
+import pl.auroramc.gamble.stake.context.StakeContext;
 
 public final class GambleFactory {
 

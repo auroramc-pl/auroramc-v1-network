@@ -5,7 +5,7 @@ import static java.time.Duration.ofSeconds;
 import static pl.auroramc.commons.BukkitUtils.getTicksOf;
 import static pl.auroramc.commons.BukkitUtils.registerListeners;
 import static pl.auroramc.commons.BukkitUtils.resolveService;
-import static pl.auroramc.scoreboard.ScoreboardConfig.PLUGIN_CONFIG_FILE_NAME;
+import static pl.auroramc.scoreboard.ScoreboardConfig.SCOREBOARD_CONFIG_FILE_NAME;
 import static pl.auroramc.scoreboard.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
 import static pl.auroramc.scoreboard.sidebar.SidebarFacade.getSidebarFacade;
 import static pl.auroramc.scoreboard.sidebar.SidebarRenderer.getSidebarRenderer;
@@ -37,7 +37,7 @@ public class ScoreboardBukkitPlugin extends JavaPlugin {
     final ConfigFactory configFactory = new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
 
     final ScoreboardConfig scoreboardConfig = configFactory.produceConfig(
-        ScoreboardConfig.class, PLUGIN_CONFIG_FILE_NAME
+        ScoreboardConfig.class, SCOREBOARD_CONFIG_FILE_NAME
     );
     final MutableMessageSource messageSource = configFactory.produceConfig(
         MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()

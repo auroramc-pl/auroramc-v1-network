@@ -24,15 +24,15 @@
     </dependency>
     <dependency>
       <groupId>pl.auroramc</groupId>
-      <artifactId>auroramc-commons-bukkit</artifactId>
-      <version>1.0-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>pl.auroramc</groupId>
       <artifactId>auroramc-registry-shared</artifactId>
       <version>1.0-SNAPSHOT</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>pl.auroramc</groupId>
+      <artifactId>auroramc-commons-platform-bukkit</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>moe.rafal</groupId>
@@ -43,20 +43,14 @@
     <dependency>
       <groupId>dev.rollczi</groupId>
       <artifactId>litecommands-bukkit</artifactId>
-      <version>3.4.0</version>
+      <version>3.4.1</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>dev.rollczi</groupId>
       <artifactId>litecommands-adventure-platform</artifactId>
-      <version>3.4.0</version>
+      <version>3.4.1</version>
       <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.javalin</groupId>
-      <artifactId>javalin</artifactId>
-      <version>6.1.3</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.spotify</groupId>
@@ -68,12 +62,6 @@
       <groupId>com.github.ben-manes.caffeine</groupId>
       <artifactId>caffeine</artifactId>
       <version>3.1.8</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.17.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

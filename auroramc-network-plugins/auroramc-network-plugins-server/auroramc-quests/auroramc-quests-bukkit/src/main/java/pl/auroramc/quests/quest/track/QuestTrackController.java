@@ -1,21 +1,22 @@
 package pl.auroramc.quests.quest.track;
 
-import static java.util.concurrent.CompletableFuture.runAsync;
-import static pl.auroramc.commons.BukkitUtils.postToMainThread;
-import static pl.auroramc.quests.message.MutableMessageVariableKey.QUEST_VARIABLE_KEY;
+import static org.bukkit.Bukkit.getPlayer;
+import static pl.auroramc.commons.scheduler.SchedulerPoll.ASYNC;
+import static pl.auroramc.commons.scheduler.SchedulerPoll.SYNC;
+import static pl.auroramc.quests.quest.QuestMessageSourcePaths.QUEST_PATH;
 import static pl.auroramc.quests.quest.QuestState.COMPLETED;
 
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import pl.auroramc.quests.message.MutableMessageSource;
+import pl.auroramc.commons.scheduler.Scheduler;
+import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 import pl.auroramc.quests.objective.Objective;
 import pl.auroramc.quests.objective.progress.ObjectiveProgressFacade;
 import pl.auroramc.quests.quest.Quest;
+import pl.auroramc.quests.quest.QuestMessageSource;
 import pl.auroramc.quests.quest.QuestState;
 import pl.auroramc.quests.quest.observer.QuestObserver;
 import pl.auroramc.quests.quest.observer.QuestObserverFacade;
@@ -24,23 +25,23 @@ import pl.auroramc.registry.user.User;
 
 public class QuestTrackController {
 
-  private final Plugin plugin;
-  private final Server server;
-  private final MutableMessageSource messageSource;
+  private final Scheduler scheduler;
+  private final QuestMessageSource messageSource;
+  private final BukkitMessageCompiler messageCompiler;
   private final QuestTrackFacade questTrackFacade;
   private final QuestObserverFacade questObserverFacade;
   private final ObjectiveProgressFacade objectiveProgressFacade;
 
   public QuestTrackController(
-      final Plugin plugin,
-      final Server server,
-      final MutableMessageSource messageSource,
+      final Scheduler scheduler,
+      final QuestMessageSource messageSource,
+      final BukkitMessageCompiler messageCompiler,
       final QuestTrackFacade questTrackFacade,
       final QuestObserverFacade questObserverFacade,
       final ObjectiveProgressFacade objectiveProgressFacade) {
-    this.plugin = plugin;
-    this.server = server;
+    this.scheduler = scheduler;
     this.messageSource = messageSource;
+    this.messageCompiler = messageCompiler;
     this.questTrackFacade = questTrackFacade;
     this.questObserverFacade = questObserverFacade;
     this.objectiveProgressFacade = objectiveProgressFacade;
@@ -52,7 +53,9 @@ public class QuestTrackController {
 
   public CompletableFuture<Void> assignQuest(
       final User user, final Quest quest, final QuestState state) {
-    return runAsync(
+    return scheduler
+        .run(
+            ASYNC,
             () ->
                 questTrackFacade.createQuestTrack(
                     user.getUniqueId(),
@@ -84,13 +87,13 @@ public class QuestTrackController {
     questTrack.setQuestState(COMPLETED);
     questTrackFacade.updateQuestTrack(questTrack);
 
-    Optional.ofNullable(server.getPlayer(user.getUniqueId()))
-        .ifPresent(target -> postToMainThread(plugin, () -> completeQuestSequence(quest, target)));
+    Optional.ofNullable(getPlayer(user.getUniqueId()))
+        .ifPresent(target -> scheduler.run(SYNC, () -> completeQuestSequence(quest, target)));
   }
 
+  @SuppressWarnings("unchecked")
   private void completeQuestSequence(final Quest quest, final Player player) {
     for (final QuestReward<?> reward : quest.getRewards()) {
-      // noinspection unchecked
       ((QuestReward<Player>) reward).apply(player);
     }
 
@@ -102,10 +105,8 @@ public class QuestTrackController {
       questObserverFacade.updateQuestObserver(questObserver);
     }
 
-    player.sendMessage(
-        messageSource
-            .questHasBeenCompleted
-            .with(QUEST_VARIABLE_KEY, quest.getKey().getId())
-            .compile());
+    messageCompiler
+        .compile(messageSource.questHasBeenCompleted.placeholder(QUEST_PATH, quest))
+        .deliver(player);
   }
 }

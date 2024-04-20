@@ -1,56 +1,50 @@
 package pl.auroramc.gamble.coinflip;
 
 import static java.math.BigDecimal.ZERO;
-import static java.math.RoundingMode.HALF_DOWN;
-import static java.util.Locale.ROOT;
+import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.concurrent.CompletableFuture.completedFuture;
-import static org.apache.commons.lang3.StringUtils.capitalize;
-import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
-import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
 import static pl.auroramc.gamble.gamble.GambleKey.COINFLIP;
-import static pl.auroramc.gamble.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MutableMessageVariableKey.PREDICTION_VARIABLE_KEY;
-import static pl.auroramc.gamble.message.MutableMessageVariableKey.STAKE_VARIABLE_KEY;
+import static pl.auroramc.gamble.message.MessageSourcePaths.CONTEXT_PATH;
+import static pl.auroramc.gamble.message.MessageSourcePaths.CURRENCY_PATH;
+import static pl.auroramc.gamble.message.MessageSourcePaths.PREDICTION_PATH;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.cooldown.Cooldown;
 import dev.rollczi.litecommands.annotations.execute.Execute;
 import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.math.BigDecimal;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.logging.Logger;
 import org.bukkit.entity.Player;
-import pl.auroramc.commons.message.MutableMessage;
-import pl.auroramc.economy.EconomyFacade;
+import pl.auroramc.commons.CompletableFutureUtils;
 import pl.auroramc.economy.currency.Currency;
-import pl.auroramc.gamble.gamble.Participant;
-import pl.auroramc.gamble.message.MutableMessageSource;
-import pl.auroramc.gamble.stake.StakeContext;
+import pl.auroramc.economy.economy.EconomyFacade;
+import pl.auroramc.gamble.participant.Participant;
+import pl.auroramc.gamble.message.MessageSource;
+import pl.auroramc.gamble.stake.context.StakeContext;
 import pl.auroramc.gamble.stake.StakeFacade;
 import pl.auroramc.gamble.stake.view.StakeViewFacade;
+import pl.auroramc.messages.message.MutableMessage;
 
 @Permission("auroramc.gamble.coinflip")
 @Command(name = "coinflip", aliases = "coin")
+@Cooldown(key = "coinflip-cooldown", count = 30, unit = SECONDS)
 public class CoinflipCommand {
 
-  private final Logger logger;
   private final StakeFacade stakeFacade;
   private final StakeViewFacade stakeViewFacade;
   private final Currency fundsCurrency;
-  private final MutableMessageSource messageSource;
+  private final MessageSource messageSource;
   private final EconomyFacade economyFacade;
 
   public CoinflipCommand(
-      final Logger logger,
       final StakeFacade stakeFacade,
       final StakeViewFacade stakeViewFacade,
       final Currency fundsCurrency,
-      final MutableMessageSource messageSource,
-      final EconomyFacade economyFacade
-  ) {
-    this.logger = logger;
+      final MessageSource messageSource,
+      final EconomyFacade economyFacade) {
     this.stakeFacade = stakeFacade;
     this.stakeViewFacade = stakeViewFacade;
     this.fundsCurrency = fundsCurrency;
@@ -60,60 +54,57 @@ public class CoinflipCommand {
 
   @Execute
   public CompletableFuture<MutableMessage> coinflip(
-      final @Context Player player,
-      final @Arg CoinSide prediction,
-      final @Arg BigDecimal stake
-  ) {
-    final BigDecimal fixedStake = stake.setScale(2, HALF_DOWN);
-    if (fixedStake.compareTo(ZERO) <= 0) {
-      return completedFuture(
-          messageSource.stakeMustBeGreaterThanZero
-      );
+      final @Context Player player, final @Arg CoinSide prediction, final @Arg BigDecimal stake) {
+    if (stake.compareTo(ZERO) <= 0) {
+      return completedFuture(messageSource.stakeMustBeGreaterThanZero);
     }
 
-    return economyFacade.has(player.getUniqueId(), fundsCurrency, fixedStake)
-        .thenCompose(whetherPlayerHasEnoughFunds ->
-            completeCoinflipGambleCreation(
-                player, prediction, fixedStake, whetherPlayerHasEnoughFunds
-            )
-        )
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+    return economyFacade
+        .has(player.getUniqueId(), fundsCurrency, stake)
+        .thenCompose(
+            whetherPlayerHasEnoughFunds ->
+                completeCoinflipGambleCreation(
+                    player, prediction, stake, whetherPlayerHasEnoughFunds))
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
   private CompletableFuture<MutableMessage> completeCoinflipGambleCreation(
       final Player player,
       final CoinSide prediction,
       final BigDecimal stake,
-      final boolean whetherPlayerHasEnoughFunds
-  ) {
+      final boolean whetherPlayerHasEnoughFunds) {
     if (!whetherPlayerHasEnoughFunds) {
-      return completedFuture(
-          messageSource.stakeMissingBalance
-      );
+      return completedFuture(messageSource.stakeMissingBalance);
     }
 
-    return economyFacade.withdraw(player.getUniqueId(), fundsCurrency, stake)
-        .thenApply(state -> {
-          stakeFacade.createStakeContext(
-              StakeContext.newBuilder()
-                  .gambleKey(COINFLIP)
-                  .stakeUniqueId(UUID.randomUUID())
-                  .stake(stake)
-                  .participant(
-                      Participant.newBuilder()
-                          .uniqueId(player.getUniqueId())
-                          .username(player.getName())
-                          .prediction(prediction)
-                          .build()
-                  )
-              .build()
-          );
-          stakeViewFacade.recalculate();
-          return messageSource.stakeCreated
-              .with(CURRENCY_VARIABLE_KEY, fundsCurrency.getSymbol())
-              .with(STAKE_VARIABLE_KEY, getFormattedDecimal(stake))
-              .with(PREDICTION_VARIABLE_KEY, capitalize(prediction.name().toLowerCase(ROOT)));
-        })
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+    return economyFacade
+        .withdraw(player.getUniqueId(), fundsCurrency, stake)
+        .thenApply(
+            state -> {
+              final StakeContext stakeContext = getStakeContext(player, prediction, stake);
+              stakeFacade.createStakeContext(stakeContext);
+              stakeViewFacade.recalculate();
+              return messageSource
+                  .stakeCreated
+                  .placeholder(CONTEXT_PATH, stakeContext)
+                  .placeholder(CURRENCY_PATH, fundsCurrency)
+                  .placeholder(PREDICTION_PATH, prediction);
+            })
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
+  }
+
+  private StakeContext getStakeContext(
+      final Player player, final CoinSide prediction, final BigDecimal stake) {
+    return StakeContext.newBuilder()
+        .gambleKey(COINFLIP)
+        .stakeUniqueId(UUID.randomUUID())
+        .stake(stake)
+        .participant(
+            Participant.newBuilder()
+                .uniqueId(player.getUniqueId())
+                .username(player.getName())
+                .prediction(prediction)
+                .build())
+        .build();
   }
 }

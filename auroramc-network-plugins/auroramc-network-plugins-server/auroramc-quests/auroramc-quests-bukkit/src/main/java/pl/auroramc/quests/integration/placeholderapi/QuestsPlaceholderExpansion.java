@@ -1,8 +1,8 @@
 package pl.auroramc.quests.integration.placeholderapi;
 
 import static java.lang.String.join;
-import static pl.auroramc.quests.objective.ObjectiveUtils.getQuestObjective;
 
+import java.util.ArrayList;
 import java.util.Map;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Server;
@@ -10,8 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pl.auroramc.commons.message.MutableMessage;
 import pl.auroramc.quests.objective.Objective;
+import pl.auroramc.quests.objective.ObjectiveController;
 import pl.auroramc.quests.objective.progress.ObjectiveProgress;
 import pl.auroramc.quests.objective.progress.ObjectiveProgressController;
 import pl.auroramc.quests.quest.Quest;
@@ -28,6 +28,7 @@ class QuestsPlaceholderExpansion extends PlaceholderExpansion {
   private final UserFacade userFacade;
   private final QuestIndex questIndex;
   private final QuestObserverFacade questObserverFacade;
+  private final ObjectiveController objectiveController;
   private final ObjectiveProgressController objectiveProgressController;
 
   public QuestsPlaceholderExpansion(
@@ -36,12 +37,14 @@ class QuestsPlaceholderExpansion extends PlaceholderExpansion {
       final UserFacade userFacade,
       final QuestIndex questIndex,
       final QuestObserverFacade questObserverFacade,
+      final ObjectiveController objectiveController,
       final ObjectiveProgressController objectiveProgressController) {
     this.plugin = plugin;
     this.server = server;
     this.userFacade = userFacade;
     this.questIndex = questIndex;
     this.questObserverFacade = questObserverFacade;
+    this.objectiveController = objectiveController;
     this.objectiveProgressController = objectiveProgressController;
   }
 
@@ -57,7 +60,7 @@ class QuestsPlaceholderExpansion extends PlaceholderExpansion {
       return null;
     }
 
-    final Quest quest = questIndex.resolveQuest(questObserver.getQuestId());
+    final Quest quest = questIndex.getQuestById(questObserver.getQuestId());
     if (quest == null) {
       return null;
     }
@@ -78,13 +81,8 @@ class QuestsPlaceholderExpansion extends PlaceholderExpansion {
 
   private String aggregateQuestObjectives(
       final Map<Objective<?>, ObjectiveProgress> objectivesToObjectiveProgresses) {
-    return objectivesToObjectiveProgresses.entrySet().stream()
-        .map(
-            objectiveToObjectiveProgress ->
-                getQuestObjective(
-                    objectiveToObjectiveProgress.getKey(), objectiveToObjectiveProgress.getValue()))
-        .collect(MutableMessage.collector())
-        .getTemplate();
+    return objectiveController.getQuestObjectivesTemplate(
+        new ArrayList<>(objectivesToObjectiveProgresses.keySet()), objectivesToObjectiveProgresses);
   }
 
   @Override

@@ -1,23 +1,19 @@
 package pl.auroramc.registry.user;
 
-import static java.util.concurrent.CompletableFuture.completedFuture;
-import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
+import static pl.auroramc.commons.CompletableFutureUtils.NIL;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.logging.Logger;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import pl.auroramc.commons.CompletableFutureUtils;
 
 public class UserListener implements Listener {
 
-  private static final CompletableFuture<Void> EMPTY_FUTURE = completedFuture(null);
-  private final Logger logger;
   private final UserFacade userFacade;
 
-  public UserListener(final Logger logger, final UserFacade userFacade) {
-    this.logger = logger;
+  public UserListener(final UserFacade userFacade) {
     this.userFacade = userFacade;
   }
 
@@ -25,22 +21,25 @@ public class UserListener implements Listener {
   public void onUserValidation(final AsyncPlayerPreLoginEvent event) {
     userFacade
         .getUserByUniqueId(event.getUniqueId())
-        .thenCompose(user -> validateUser(user, event.getUniqueId(), event.getName()))
-        .exceptionally(exception -> delegateCaughtException(logger, exception))
+        .thenApply(user -> new ValidationContext(user, event.getUniqueId(), event.getName()))
+        .thenCompose(this::validateUser)
+        .exceptionally(CompletableFutureUtils::delegateCaughtException)
         .join();
   }
 
-  private CompletableFuture<Void> validateUser(
-      final User user, final UUID uniqueId, final String username) {
+  private CompletableFuture<Void> validateUser(final ValidationContext context) {
+    final User user = context.user();
     if (user == null) {
-      return userFacade.createUser(new User(null, uniqueId, username));
+      return userFacade.createUser(new User(null, context.uniqueId(), context.username()));
     }
 
-    if (username.equals(user.getUsername())) {
-      return EMPTY_FUTURE;
+    if (context.username().equals(user.getUsername())) {
+      return NIL;
     }
 
-    user.setUsername(username);
+    user.setUsername(context.username());
     return userFacade.updateUser(user);
   }
+
+  private record ValidationContext(User user, UUID uniqueId, String username) {}
 }

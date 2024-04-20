@@ -4,7 +4,7 @@ import java.util.function.Predicate;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import pl.auroramc.commons.message.MutableMessage;
+import pl.auroramc.messages.message.MutableMessage;
 
 public class HeldItemRequirement implements ObjectiveRequirement {
 

@@ -1,135 +1,101 @@
 package pl.auroramc.economy.transfer;
 
 import static java.math.BigDecimal.ZERO;
-import static java.math.RoundingMode.HALF_DOWN;
-import static java.util.logging.Level.SEVERE;
-import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
-import static pl.auroramc.commons.decimal.DecimalFormatter.getFormattedDecimal;
+import static java.time.temporal.ChronoUnit.SECONDS;
+import static java.util.concurrent.CompletableFuture.completedFuture;
+import static pl.auroramc.commons.CompletableFutureUtils.delegateCaughtException;
 import static pl.auroramc.commons.lazy.Lazy.lazy;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.AMOUNT_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.CURRENCY_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.SOURCE_VARIABLE_KEY;
-import static pl.auroramc.economy.message.MutableMessageVariableKey.TARGET_VARIABLE_KEY;
+import static pl.auroramc.economy.transfer.TransferMessageSourcePaths.CONTEXT_PATH;
+import static pl.auroramc.economy.transfer.TransferMessageSourcePaths.CURRENCY_PATH;
+import static pl.auroramc.messages.message.group.MutableMessageGroup.grouping;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.cooldown.Cooldown;
 import dev.rollczi.litecommands.annotations.execute.Execute;
 import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.math.BigDecimal;
-import java.util.logging.Logger;
+import java.util.concurrent.CompletableFuture;
 import org.bukkit.entity.Player;
 import pl.auroramc.commons.lazy.Lazy;
-import pl.auroramc.economy.EconomyFacade;
+import pl.auroramc.economy.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
-import pl.auroramc.economy.message.MutableMessageSource;
+import pl.auroramc.messages.message.group.MutableMessageGroup;
 
 @Permission("auroramc.economy.transfer")
-@Command(name = "transfer", aliases = {"pay", "przelej", "zaplac"})
+@Command(name = "transfer", aliases = "pay")
+@Cooldown(key = "transfer-cooldown", count = 30, unit = SECONDS)
 public class TransferCommand {
 
-  private final Logger logger;
-  private final MutableMessageSource messageSource;
   private final EconomyFacade economyFacade;
+  private final TransferMessageSource messageSource;
   private final Lazy<Currency> transferCurrency;
 
   public TransferCommand(
-      final Logger logger,
-      final MutableMessageSource messageSource,
       final EconomyFacade economyFacade,
+      final TransferMessageSource messageSource,
       final TransferConfig transferConfig,
-      final CurrencyFacade currencyFacade
-  ) {
-    this.logger = logger;
-    this.messageSource = messageSource;
+      final CurrencyFacade currencyFacade) {
     this.economyFacade = economyFacade;
-    this.transferCurrency = lazy(
-        () -> currencyFacade.getCurrencyById(transferConfig.transferableCurrencyId)
-    );
+    this.messageSource = messageSource;
+    this.transferCurrency =
+        lazy(() -> currencyFacade.getCurrencyById(transferConfig.transferableCurrencyId));
   }
 
   @Execute
-  public void transfer(
-      final @Context Player source,
-      final @Arg Player target,
-      final @Arg BigDecimal amount
-  ) {
-    final BigDecimal fixedAmount = amount.setScale(2, HALF_DOWN);
-    if (fixedAmount.compareTo(ZERO) <= 0) {
-      source.sendMessage(
-          messageSource.transferAmountHasToBeGreaterThanZero
-              .compile()
-      );
-      return;
+  public CompletableFuture<MutableMessageGroup> transfer(
+      final @Context Player source, final @Arg Player target, final @Arg BigDecimal amount) {
+    if (amount.compareTo(ZERO) <= 0) {
+      return completedFuture(
+          grouping().message(messageSource.validationRequiresAmountGreaterThanZero, source));
     }
 
     if (source.getUniqueId().equals(target.getUniqueId())) {
-      source.sendMessage(
-          messageSource.transferRequiresTarget
-              .compile()
-      );
-      return;
+      return completedFuture(
+          grouping().message(messageSource.validationRequiresSpecifyingTarget, source));
     }
 
-    economyFacade.has(source.getUniqueId(), transferCurrency.get(), fixedAmount)
-        .thenAccept(whetherTransferCouldBeFinalized ->
-            processTransfer(
-                source, target, fixedAmount, whetherTransferCouldBeFinalized
-            )
-        )
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+    final Currency currency = transferCurrency.get();
+    return economyFacade
+        .has(source.getUniqueId(), currency, amount)
+        .thenCompose(
+            hasEnoughMoney ->
+                processTransfer(currency, source, target, amount, hasEnoughMoney))
+        .exceptionally(
+            exception -> {
+              delegateCaughtException(exception);
+              return grouping()
+                  .message(
+                      messageSource.transferFailed.placeholder(CURRENCY_PATH, currency), source);
+            });
   }
 
-  private void processTransfer(
-      final Player source,
-      final Player target,
+  private CompletableFuture<MutableMessageGroup> processTransfer(
+      final Currency currency,
+      final Player initiator,
+      final Player receiver,
       final BigDecimal amount,
-      final boolean whetherTransferCouldBeFinalized
-  ) {
-    if (!whetherTransferCouldBeFinalized) {
-      source.sendMessage(
-          messageSource.transferMissingBalance
-              .compile()
-      );
-      return;
+      final boolean hasEnoughMoney) {
+    if (!hasEnoughMoney) {
+      return completedFuture(
+          grouping().message(messageSource.validationRequiresGreaterAmountOfBalance, initiator));
     }
 
-    final Currency resolvedCurrency = transferCurrency.get();
-    final String preformattedAmount = getFormattedDecimal(amount);
+    final TransferContext initiatorContext = new TransferContext(receiver, currency, amount);
+    final TransferContext receiverContext = new TransferContext(initiator, currency, amount);
 
-    economyFacade.transfer(source.getUniqueId(), target.getUniqueId(), resolvedCurrency, amount)
-        .thenAccept(state -> {
-          source.sendMessage(
-              messageSource.transferSent
-                  .with(TARGET_VARIABLE_KEY, target.getName())
-                  .with(CURRENCY_VARIABLE_KEY, resolvedCurrency.getSymbol())
-                  .with(AMOUNT_VARIABLE_KEY, preformattedAmount)
-                  .compile()
-          );
-          target.sendMessage(
-              messageSource.transferReceived
-                  .with(SOURCE_VARIABLE_KEY, source.getName())
-                  .with(CURRENCY_VARIABLE_KEY, resolvedCurrency.getSymbol())
-                  .with(AMOUNT_VARIABLE_KEY, preformattedAmount)
-                  .compile()
-          );
-        })
-        .exceptionally(exception -> {
-          logger.log(SEVERE,
-              "Could not transfer %s from %s to %s."
-                  .formatted(
-                      preformattedAmount,
-                      source.getName(),
-                      target.getName()
-                  ),
-              exception
-          );
-          source.sendMessage(
-              messageSource.transferFailed
-                  .compile()
-          );
-          return null;
-        });
+    return economyFacade
+        .transfer(initiator.getUniqueId(), receiver.getUniqueId(), currency, amount)
+        .thenApply(
+            ignored ->
+                grouping()
+                    .message(
+                        messageSource.transferSent.placeholder(CONTEXT_PATH, initiatorContext),
+                        initiator)
+                    .message(
+                        messageSource.transferReceived.placeholder(CONTEXT_PATH, receiverContext),
+                        receiver));
   }
 }

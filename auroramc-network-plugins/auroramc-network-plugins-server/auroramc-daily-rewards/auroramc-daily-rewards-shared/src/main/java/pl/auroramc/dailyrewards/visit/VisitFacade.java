@@ -2,12 +2,14 @@ package pl.auroramc.dailyrewards.visit;
 
 import java.time.Instant;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 public interface VisitFacade {
 
-  void createVisit(final Visit visit);
+  CompletableFuture<Void> createVisit(final Visit visit);
 
-  Set<Visit> getVisitsByUserId(final Long userId);
+  CompletableFuture<Set<Visit>> getVisitsByUserId(final Long userId);
 
-  Set<Visit> getVisitsByUserIdBetween(final Long userId, final Instant from, final Instant to);
+  CompletableFuture<Set<Visit>> getVisitsByUserIdInTimeframe(
+      final Long userId, final Instant from, final Instant to);
 }

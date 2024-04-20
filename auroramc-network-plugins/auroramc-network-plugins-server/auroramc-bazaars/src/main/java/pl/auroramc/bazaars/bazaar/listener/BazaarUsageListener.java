@@ -5,7 +5,6 @@ import static org.bukkit.event.EventPriority.HIGHEST;
 import static org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK;
 import static pl.auroramc.bazaars.bazaar.BazaarType.BUY;
 import static pl.auroramc.bazaars.bazaar.BazaarUtils.resolveSignProp;
-import static pl.auroramc.bazaars.sign.SignDelegateFactory.produceSignDelegate;
 
 import java.util.Optional;
 import org.bukkit.block.Block;
@@ -21,24 +20,31 @@ import pl.auroramc.bazaars.bazaar.BazaarFacade;
 import pl.auroramc.bazaars.bazaar.parser.BazaarParser;
 import pl.auroramc.bazaars.bazaar.parser.BazaarParsingContext;
 import pl.auroramc.bazaars.bazaar.transaction.context.BazaarTransactionContext;
-import pl.auroramc.bazaars.message.MutableMessageSource;
-import pl.auroramc.commons.message.MutableMessage;
+import pl.auroramc.bazaars.message.MessageSource;
+import pl.auroramc.bazaars.sign.SignDelegateFactory;
+import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
+import pl.auroramc.messages.viewer.BukkitViewer;
+import pl.auroramc.messages.viewer.Viewer;
 import pl.auroramc.registry.user.User;
 import pl.auroramc.registry.user.UserFacade;
 
 public class BazaarUsageListener implements Listener {
 
-  private final MutableMessageSource messageSource;
+  private final MessageSource messageSource;
+  private final BukkitMessageCompiler messageCompiler;
   private final BazaarParser bazaarParser;
   private final BazaarFacade bazaarFacade;
   private final UserFacade userFacade;
 
   public BazaarUsageListener(
-      final MutableMessageSource messageSource,
+      final MessageSource messageSource,
+      final BukkitMessageCompiler messageCompiler,
       final BazaarParser bazaarParser,
       final BazaarFacade bazaarFacade,
       final UserFacade userFacade) {
     this.messageSource = messageSource;
+    this.messageCompiler = messageCompiler;
     this.bazaarParser = bazaarParser;
     this.bazaarFacade = bazaarFacade;
     this.userFacade = userFacade;
@@ -46,6 +52,7 @@ public class BazaarUsageListener implements Listener {
 
   @EventHandler(priority = HIGHEST, ignoreCancelled = true)
   public void onBazaarInteraction(final PlayerInteractEvent event) {
+    final Player player = event.getPlayer();
     if (event.getAction() != RIGHT_CLICK_BLOCK) {
       return;
     }
@@ -55,11 +62,12 @@ public class BazaarUsageListener implements Listener {
       return;
     }
 
+    final Viewer viewer = BukkitViewer.wrap(player);
     if (clickedBlock.getState() instanceof Sign sign
         && sign.getBlockData() instanceof WallSign wallSign
         && resolveSignProp(sign, wallSign).getState() instanceof Container magazine) {
       final BazaarParsingContext parsingContext =
-          bazaarParser.parseContextOrNull(produceSignDelegate(sign));
+          bazaarParser.parseContextOrNull(SignDelegateFactory.getSignDelegate(sign));
       if (parsingContext == null) {
         return;
       }
@@ -68,14 +76,16 @@ public class BazaarUsageListener implements Listener {
       // opens a sign editor, so to prevent for this behavior, we have to cancel
       // that event.
       event.setCancelled(true);
-
-      final Player customer = event.getPlayer();
+      if (player.getName().equalsIgnoreCase(parsingContext.merchant())) {
+        viewer.deliver(messageCompiler.compile(messageSource.bazaarSelfInteraction));
+        return;
+      }
 
       // Validation of magazine stock needs to be done at this moment in
       // the main thread, since otherwise the chest's inventory won't be
       // loaded yet and the check will always return false if not warmed up.
       if (parsingContext.type() == BUY && whetherMagazineIsOutOfStock(magazine, parsingContext)) {
-        customer.sendMessage(messageSource.bazaarOutOfStock.compile());
+        viewer.deliver(messageCompiler.compile(messageSource.bazaarOutOfStock));
         return;
       }
 
@@ -85,10 +95,10 @@ public class BazaarUsageListener implements Listener {
           .thenApply(
               merchantUniqueId ->
                   new BazaarTransactionContext(
-                      customer, magazine, customer.getUniqueId(), merchantUniqueId, parsingContext))
+                      player, magazine, player.getUniqueId(), merchantUniqueId, parsingContext))
           .thenCompose(bazaarFacade::handleItemTransaction)
-          .thenApply(MutableMessage::compile)
-          .thenAccept(customer::sendMessage);
+          .thenAccept(viewer::deliver)
+          .exceptionally(CompletableFutureUtils::delegateCaughtException);
     }
   }
 

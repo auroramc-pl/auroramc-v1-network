@@ -8,16 +8,16 @@ final class SqlVisitRepositoryQuery {
         `auroramc_dailyrewards_visits` (
           `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
           `user_id` BIGINT REFERENCES `auroramc_registry_users`(`id`),
-          `session_duration` BIGINT NOT NULL,
-          `session_start_time` TIMESTAMP NOT NULL,
-          `session_ditch_time` TIMESTAMP NOT NULL
+          `duration` BIGINT NOT NULL,
+          `start_time` TIMESTAMP NOT NULL,
+          `ditch_time` TIMESTAMP NOT NULL
         );
       """;
 
   static final String CREATE_VISIT =
       """
       INSERT INTO `auroramc_dailyrewards_visits`
-        (`user_id`, `session_duration`, `session_start_time`, `session_ditch_time`)
+        (`user_id`, `duration`, `start_time`, `ditch_time`)
       VALUES
         (?, ?, ?, ?);
       """;
@@ -25,10 +25,7 @@ final class SqlVisitRepositoryQuery {
   static final String FIND_VISITS_BY_USER_ID =
       """
       SELECT
-        `user_id`,
-        `session_duration`,
-        `session_start_time`,
-        `session_ditch_time`
+        `user_id`, `duration`, `start_time`, `ditch_time`
       FROM
         `auroramc_dailyrewards_visits`
       WHERE
@@ -40,16 +37,13 @@ final class SqlVisitRepositoryQuery {
   static final String FIND_VISITS_BY_USER_ID_BETWEEN =
       """
       SELECT
-        `user_id`,
-        `session_duration`,
-        `session_start_time`,
-        `session_ditch_time`
+        `user_id`, `duration`, `start_time`, `ditch_time`
       FROM
         `auroramc_dailyrewards_visits`
       WHERE
         `user_id` = ?
       AND
-        `session_start_time` BETWEEN ? AND ?
+        `start_time` BETWEEN ? AND ?
       LIMIT
         20;
       """;

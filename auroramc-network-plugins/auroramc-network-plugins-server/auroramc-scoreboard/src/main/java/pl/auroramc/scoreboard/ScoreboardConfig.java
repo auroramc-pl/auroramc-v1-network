@@ -5,7 +5,7 @@ import eu.okaeri.configs.annotation.Exclude;
 
 public class ScoreboardConfig extends OkaeriConfig {
 
-  public static final @Exclude String PLUGIN_CONFIG_FILE_NAME = "config.yml";
+  public static final @Exclude String SCOREBOARD_CONFIG_FILE_NAME = "config.yml";
 
   public boolean updatePeriodically = true;
 }

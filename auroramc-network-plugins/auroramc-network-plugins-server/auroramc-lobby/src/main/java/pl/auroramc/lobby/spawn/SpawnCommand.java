@@ -1,38 +1,35 @@
 package pl.auroramc.lobby.spawn;
 
-import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
+import static java.time.temporal.ChronoUnit.SECONDS;
 
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.cooldown.Cooldown;
 import dev.rollczi.litecommands.annotations.execute.Execute;
 import java.util.concurrent.CompletableFuture;
-import java.util.logging.Logger;
 import org.bukkit.entity.Player;
-import pl.auroramc.commons.message.delivery.DeliverableMutableMessage;
+import pl.auroramc.commons.CompletableFutureUtils;
 import pl.auroramc.lobby.LobbyConfig;
-import pl.auroramc.lobby.message.MutableMessageSource;
+import pl.auroramc.lobby.message.MessageSource;
+import pl.auroramc.messages.message.MutableMessage;
 
 @Command(name = "spawn")
+@Cooldown(key = "spawn-cooldown", count = 5, unit = SECONDS)
 public class SpawnCommand {
 
-  private final Logger logger;
   private final LobbyConfig lobbyConfig;
-  private final MutableMessageSource messageSource;
+  private final MessageSource messageSource;
 
-  public SpawnCommand(
-      final Logger logger,
-      final LobbyConfig lobbyConfig,
-      final MutableMessageSource messageSource) {
-    this.logger = logger;
+  public SpawnCommand(final LobbyConfig lobbyConfig, final MessageSource messageSource) {
     this.lobbyConfig = lobbyConfig;
     this.messageSource = messageSource;
   }
 
   @Execute
-  public CompletableFuture<DeliverableMutableMessage> spawn(final @Context Player invoker) {
+  public CompletableFuture<MutableMessage> spawn(final @Context Player invoker) {
     return invoker
         .teleportAsync(lobbyConfig.spawn)
         .thenApply(state -> messageSource.teleportedIntoSpawn)
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 }

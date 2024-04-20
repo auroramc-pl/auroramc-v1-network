@@ -22,7 +22,17 @@ public class VisitController {
     visitStartTimeByUniqueId.put(uniqueId, now());
   }
 
-  public Duration gatherVisitPeriod(final UUID uniqueId) {
+  public Duration getVisitDuration(final UUID uniqueId) {
+    return visitStartTimeByUniqueId.containsKey(uniqueId)
+        ? between(visitStartTimeByUniqueId.get(uniqueId), now())
+        : ZERO;
+  }
+
+  public Instant getVisitStartTime(final UUID uniqueId) {
+    return visitStartTimeByUniqueId.get(uniqueId);
+  }
+
+  public Duration gatherVisitDuration(final UUID uniqueId) {
     if (visitStartTimeByUniqueId.containsKey(uniqueId)) {
       final Instant visitStartTime = visitStartTimeByUniqueId.get(uniqueId);
       final Instant visitDitchTime = now();
@@ -31,15 +41,5 @@ public class VisitController {
     }
 
     return ZERO;
-  }
-
-  public Duration getVisitPeriod(final UUID uniqueId) {
-    return visitStartTimeByUniqueId.containsKey(uniqueId)
-        ? between(visitStartTimeByUniqueId.get(uniqueId), now())
-        : ZERO;
-  }
-
-  public Instant getVisitStartTime(final UUID uniqueId) {
-    return visitStartTimeByUniqueId.get(uniqueId);
   }
 }

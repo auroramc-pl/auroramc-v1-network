@@ -25,21 +25,21 @@ public class HopperInitializeListener implements Listener {
   @EventHandler
   public void onHopperInitialize(final BlockPlaceEvent event) {
     final ItemStack itemInHand = event.getItemInHand();
-    if (whetherBlockIsHopper(event.getBlock()) && whetherBlockHasTransferQuantity(itemInHand)) {
+    if (hasHopperType(event.getBlock()) && hasTransferQuantity(itemInHand)) {
       final CustomBlockData blockData = new CustomBlockData(event.getBlock(), plugin);
-      blockData.set(transferQuantityKey, INTEGER, resolveTransferQuantity(itemInHand));
+      blockData.set(transferQuantityKey, INTEGER, getTransferQuantity(itemInHand));
     }
   }
 
-  private boolean whetherBlockIsHopper(final Block block) {
+  private boolean hasHopperType(final Block block) {
     return block.getType() == HOPPER;
   }
 
-  private boolean whetherBlockHasTransferQuantity(final ItemStack itemStack) {
+  private boolean hasTransferQuantity(final ItemStack itemStack) {
     return itemStack.getItemMeta().getPersistentDataContainer().has(transferQuantityKey, INTEGER);
   }
 
-  private Integer resolveTransferQuantity(final ItemStack itemStack) {
+  private Integer getTransferQuantity(final ItemStack itemStack) {
     return itemStack.getItemMeta().getPersistentDataContainer().get(transferQuantityKey, INTEGER);
   }
 }

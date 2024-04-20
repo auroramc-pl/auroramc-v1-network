@@ -7,11 +7,11 @@ public final class SignDelegateFactory {
 
   private SignDelegateFactory() {}
 
-  public static SignDelegate produceSignDelegate(final Sign sign) {
+  public static SignDelegate getSignDelegate(final Sign sign) {
     return new SignDelegateBukkit(sign);
   }
 
-  public static SignDelegate produceSignDelegate(final SignChangeEvent event) {
+  public static SignDelegate getSignDelegate(final SignChangeEvent event) {
     return new SignDelegateBukkit(event);
   }
 }

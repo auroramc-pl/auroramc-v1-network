@@ -18,7 +18,7 @@ public class QuestController {
   public List<Quest> getAssignedQuestsByUniqueId(final UUID uniqueId) {
     return questTrackFacade.getQuestTracksByUniqueId(uniqueId, false).stream()
         .map(QuestTrack::getQuestId)
-        .map(questIndex::resolveQuest)
+        .map(questIndex::getQuestById)
         .toList();
   }
 }

@@ -1,17 +1,17 @@
 package pl.auroramc.quests.objective.progress;
 
-import java.util.logging.Logger;
 import moe.rafal.juliet.Juliet;
+import pl.auroramc.commons.scheduler.Scheduler;
 
 public final class ObjectiveProgressFacadeFactory {
 
   private ObjectiveProgressFacadeFactory() {}
 
   public static ObjectiveProgressFacade getObjectiveProgressFacade(
-      final Logger logger, final Juliet juliet) {
+      final Scheduler scheduler, final Juliet juliet) {
     final SqlObjectiveProgressRepository sqlObjectiveProgressRepository =
         new SqlObjectiveProgressRepository(juliet);
     sqlObjectiveProgressRepository.createObjectiveProgressSchemaIfRequired();
-    return new ObjectiveProgressService(logger, sqlObjectiveProgressRepository);
+    return new ObjectiveProgressService(scheduler, sqlObjectiveProgressRepository);
   }
 }

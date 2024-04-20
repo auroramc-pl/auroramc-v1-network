@@ -1,7 +1,6 @@
 package pl.auroramc.dailyrewards.visit;
 
 import static java.time.Instant.now;
-import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -11,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import pl.auroramc.commons.CompletableFutureUtils;
 import pl.auroramc.dailyrewards.DailyRewardsConfig;
 import pl.auroramc.registry.user.UserFacade;
 
@@ -36,36 +36,38 @@ public class VisitListener implements Listener {
   }
 
   @EventHandler
-  public void onPlayerJoin(final PlayerJoinEvent event) {
+  public void onVisitStart(final PlayerJoinEvent event) {
     userFacade
         .getUserByUniqueId(event.getPlayer().getUniqueId())
         .thenAccept(user -> visitController.startVisitTracking(user.getUniqueId()))
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
   @EventHandler
-  public void onPlayerQuit(final PlayerQuitEvent event) {
+  public void onVisitDitch(final PlayerQuitEvent event) {
     final Player player = event.getPlayer();
 
-    final Instant visitStartTime = visitController.getVisitStartTime(player.getUniqueId());
-    final Instant visitDitchTime = now();
+    final Instant startTime = visitController.getVisitStartTime(player.getUniqueId());
+    final Instant ditchTime = now();
 
-    final boolean isUntrackedSession = visitStartTime == null;
+    final boolean isUntrackedSession = startTime == null;
     if (isUntrackedSession) {
       logger.warning(
           "Found an untracked visit for %s (%s)".formatted(player.getName(), player.getUniqueId()));
       return;
     }
 
-    final Duration visitPeriod = visitController.gatherVisitPeriod(player.getUniqueId());
-    if (visitPeriod.compareTo(dailyRewardsConfig.visitBuffer) <= 0) {
+    final Duration duration = visitController.gatherVisitDuration(player.getUniqueId());
+    if (duration.compareTo(dailyRewardsConfig.visitBuffer) <= 0) {
+      logger.fine(
+          "Skipping visit for %s (%s) due to insufficient duration"
+              .formatted(player.getName(), player.getUniqueId()));
       return;
     }
 
     userFacade
         .getUserByUniqueId(player.getUniqueId())
-        .thenApply(user -> new Visit(user.getId(), visitPeriod, visitStartTime, visitDitchTime))
-        .thenAccept(visitFacade::createVisit)
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+        .thenApply(user -> new Visit(user.getId(), duration, startTime, ditchTime))
+        .thenCompose(visitFacade::createVisit);
   }
 }

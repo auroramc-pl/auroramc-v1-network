@@ -12,6 +12,7 @@ import static pl.auroramc.bazaars.bazaar.parser.BazaarParserToken.PRICE;
 import static pl.auroramc.bazaars.bazaar.parser.BazaarParserToken.QUANTITY;
 import static pl.auroramc.bazaars.bazaar.parser.BazaarParsingAssertions.assertNotEmpty;
 import static pl.auroramc.bazaars.bazaar.parser.BazaarParsingAssertions.assertNotNull;
+import static pl.auroramc.commons.format.decimal.DecimalParser.getParsedDecimal;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -19,6 +20,11 @@ import org.bukkit.Material;
 import pl.auroramc.bazaars.bazaar.BazaarType;
 import pl.auroramc.bazaars.sign.SignDelegate;
 
+// Bazaar sign structure:
+// * 1st line - merchant
+// * 2nd line - quantity
+// * 3rd line - price
+// * 4th line - material
 class BazaarParserImpl implements BazaarParser {
 
   private static final String EMPTY_LINE = "";
@@ -49,7 +55,7 @@ class BazaarParserImpl implements BazaarParser {
             "Could not parse bazaar, because of malformed bazaar type.");
     final BigDecimal price;
     try {
-      price = new BigDecimal(combinedPriceValue.substring(2)).setScale(2, HALF_DOWN);
+      price = getParsedDecimal(combinedPriceValue.substring(2)).setScale(2, HALF_DOWN);
     } catch (final NumberFormatException exception) {
       throw new BazaarParsingException("Could not parse bazaar, because of malformed price.");
     }

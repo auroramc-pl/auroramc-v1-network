@@ -2,33 +2,35 @@ package pl.auroramc.quests.quest.observer;
 
 import static java.time.Duration.ofSeconds;
 import static java.util.concurrent.CompletableFuture.completedFuture;
-import static java.util.concurrent.CompletableFuture.runAsync;
-import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
+import static pl.auroramc.commons.scheduler.SchedulerPoll.ASYNC;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.logging.Logger;
+import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.commons.scheduler.Scheduler;
+import pl.auroramc.commons.scheduler.caffeine.CaffeineExecutor;
 import pl.auroramc.registry.user.User;
 import pl.auroramc.registry.user.UserFacade;
 
 class QuestObserverService implements QuestObserverFacade {
 
-  private final Logger logger;
+  private final Scheduler scheduler;
   private final UserFacade userFacade;
   private final QuestObserverRepository questObserverRepository;
   private final LoadingCache<UUID, QuestObserver> questObserverByUniqueId;
 
   public QuestObserverService(
-      final Logger logger,
+      final Scheduler scheduler,
       final UserFacade userFacade,
       final QuestObserverRepository questObserverRepository) {
-    this.logger = logger;
+    this.scheduler = scheduler;
     this.userFacade = userFacade;
     this.questObserverRepository = questObserverRepository;
     this.questObserverByUniqueId =
         Caffeine.newBuilder()
+            .executor(new CaffeineExecutor(scheduler))
             .expireAfterAccess(ofSeconds(20))
             .build(questObserverRepository::findQuestObserverByUniqueId);
   }
@@ -54,18 +56,20 @@ class QuestObserverService implements QuestObserverFacade {
               createQuestObserver(newQuestObserver);
               return newQuestObserver;
             })
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
   @Override
   public void createQuestObserver(final QuestObserver questObserver) {
-    runAsync(() -> questObserverRepository.createQuestObserver(questObserver))
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+    scheduler
+        .run(ASYNC, () -> questObserverRepository.createQuestObserver(questObserver))
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
   @Override
   public void updateQuestObserver(final QuestObserver questObserver) {
-    runAsync(() -> questObserverRepository.updateQuestObserver(questObserver))
-        .exceptionally(exception -> delegateCaughtException(logger, exception));
+    scheduler
+        .run(ASYNC, () -> questObserverRepository.updateQuestObserver(questObserver))
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 }

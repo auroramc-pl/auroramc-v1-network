@@ -1,7 +1,7 @@
 package pl.auroramc.auth.timeout;
 
 import static java.time.Duration.ZERO;
-import static pl.auroramc.auth.message.MutableMessageVariableKey.PERIOD_VARIABLE_KEY;
+import static pl.auroramc.auth.message.MutableMessageVariableKey.PERIOD_PATH;
 
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -42,7 +42,7 @@ public class TimeoutNotificationTask implements Runnable {
       player.sendActionBar(
           messageSource
               .authorizationTicking
-              .with(PERIOD_VARIABLE_KEY, durationFormatter.getFormattedDuration(remainingPeriod))
+              .with(PERIOD_PATH, durationFormatter.getFormattedDuration(remainingPeriod))
               .compile());
       return;
     }
