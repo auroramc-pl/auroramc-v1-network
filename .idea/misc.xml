@@ -18,15 +18,12 @@
         <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-gamble/pom.xml" />
         <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-hoppers/pom.xml" />
         <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-lobby/pom.xml" />
-        <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-auctions/auroramc-auctions-bukkit/pom.xml" />
-        <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-auctions/auroramc-auctions-shared/pom.xml" />
         <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-punishments/pom.xml" />
         <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-quests/pom.xml" />
         <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-registry/pom.xml" />
         <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-scoreboard/pom.xml" />
         <option value="$PROJECT_DIR$/auroramc-network-shared/auroramc-commons/pom.xml" />
         <option value="$PROJECT_DIR$/auroramc-network-shared/auroramc-nametags/pom.xml" />
-        <option value="$PROJECT_DIR$/auroramc-network-shared/auroramc-network-shared-global/pom.xml" />
       </set>
     </option>
   </component>

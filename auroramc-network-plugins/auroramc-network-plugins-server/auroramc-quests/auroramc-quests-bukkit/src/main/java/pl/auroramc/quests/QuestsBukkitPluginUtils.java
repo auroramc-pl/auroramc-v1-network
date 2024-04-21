@@ -2,6 +2,7 @@ package pl.auroramc.quests;
 
 import static java.util.Locale.ROOT;
 
+import eu.okaeri.configs.OkaeriConfig;
 import java.util.List;
 import pl.auroramc.messages.message.MutableMessage;
 import pl.auroramc.quests.message.MessageSource;
@@ -24,16 +25,18 @@ final class QuestsBukkitPluginUtils {
       final MessageSource messageSource, final List<Objective<?>> objectives) {
     for (final Objective<?> objective : objectives) {
       objective.setMessage(
-          getMessageByFieldName(messageSource, getMessageFieldNameByObjective(objective)));
+          getMessageByFieldName(
+              messageSource.objective, getMessageFieldNameByObjective(objective)));
       for (final ObjectiveRequirement requirement : objective.getRequirements()) {
         requirement.setMessage(
-            getMessageByFieldName(messageSource, getMessageFieldNameByRequirement(requirement)));
+            getMessageByFieldName(
+                messageSource.requirement, getMessageFieldNameByRequirement(requirement)));
       }
     }
   }
 
   private static MutableMessage getMessageByFieldName(
-      final MessageSource messageSource, final String translationFieldName) {
+      final OkaeriConfig messageSource, final String translationFieldName) {
     try {
       return (MutableMessage)
           messageSource.getClass().getDeclaredField(translationFieldName).get(messageSource);

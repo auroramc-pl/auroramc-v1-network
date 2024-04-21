@@ -5,9 +5,9 @@ import static java.util.stream.Stream.concat;
 import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static pl.auroramc.messages.message.MutableMessage.LINE_DELIMITER;
 import static pl.auroramc.messages.message.decoration.MessageDecorations.NO_CURSIVE;
-import static pl.auroramc.quests.message.MessageSourcePaths.ITEM_PATH;
-import static pl.auroramc.quests.message.MessageSourcePaths.OBJECTIVE_PATH;
-import static pl.auroramc.quests.message.MessageSourcePaths.OBJECTIVE_PROGRESS_PATH;
+import static pl.auroramc.quests.objective.ObjectiveMessageSourcePaths.OBJECTIVE_PATH;
+import static pl.auroramc.quests.objective.ObjectiveMessageSourcePaths.OBJECTIVE_PROGRESS_PATH;
+import static pl.auroramc.quests.objective.requirement.RequirementMessageSourcePaths.ITEM_PATH;
 
 import java.util.HashMap;
 import java.util.List;
