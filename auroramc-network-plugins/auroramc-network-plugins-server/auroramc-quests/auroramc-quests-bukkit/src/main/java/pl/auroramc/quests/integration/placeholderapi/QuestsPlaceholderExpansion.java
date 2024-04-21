@@ -1,11 +1,7 @@
 package pl.auroramc.quests.integration.placeholderapi;
 
-import static java.lang.String.join;
-
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -20,11 +16,8 @@ import pl.auroramc.quests.quest.observer.QuestObserver;
 import pl.auroramc.quests.quest.observer.QuestObserverFacade;
 import pl.auroramc.registry.user.UserFacade;
 
-class QuestsPlaceholderExpansion extends PlaceholderExpansion {
+class QuestsPlaceholderExpansion extends PlaceholderExpansionDelegate {
 
-  public static final String PLACEHOLDER_API_PLUGIN_NAME = "PlaceholderAPI";
-  private final Plugin plugin;
-  private final Server server;
   private final UserFacade userFacade;
   private final QuestIndex questIndex;
   private final QuestObserverFacade questObserverFacade;
@@ -33,14 +26,12 @@ class QuestsPlaceholderExpansion extends PlaceholderExpansion {
 
   public QuestsPlaceholderExpansion(
       final Plugin plugin,
-      final Server server,
       final UserFacade userFacade,
       final QuestIndex questIndex,
       final QuestObserverFacade questObserverFacade,
       final ObjectiveController objectiveController,
       final ObjectiveProgressController objectiveProgressController) {
-    this.plugin = plugin;
-    this.server = server;
+    super(plugin);
     this.userFacade = userFacade;
     this.questIndex = questIndex;
     this.questObserverFacade = questObserverFacade;
@@ -82,26 +73,6 @@ class QuestsPlaceholderExpansion extends PlaceholderExpansion {
   private String aggregateQuestObjectives(
       final Map<Objective<?>, ObjectiveProgress> objectivesToObjectiveProgresses) {
     return objectiveController.getQuestObjectivesTemplate(
-        new ArrayList<>(objectivesToObjectiveProgresses.keySet()), objectivesToObjectiveProgresses);
-  }
-
-  @Override
-  public boolean canRegister() {
-    return server.getPluginManager().isPluginEnabled(PLACEHOLDER_API_PLUGIN_NAME);
-  }
-
-  @Override
-  public @NotNull String getIdentifier() {
-    return plugin.getPluginMeta().getName();
-  }
-
-  @Override
-  public @NotNull String getAuthor() {
-    return plugin.getPluginMeta().getVersion();
-  }
-
-  @Override
-  public @NotNull String getVersion() {
-    return join(", ", plugin.getPluginMeta().getAuthors());
+        List.copyOf(objectivesToObjectiveProgresses.keySet()), objectivesToObjectiveProgresses);
   }
 }

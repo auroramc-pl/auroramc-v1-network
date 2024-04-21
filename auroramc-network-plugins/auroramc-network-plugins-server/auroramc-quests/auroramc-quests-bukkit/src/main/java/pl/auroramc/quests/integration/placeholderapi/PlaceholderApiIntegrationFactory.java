@@ -21,7 +21,6 @@ public final class PlaceholderApiIntegrationFactory {
       final ObjectiveProgressController objectiveProgressController) {
     return new PlaceholderApiIntegration(
         plugin,
-        plugin.getServer(),
         userFacade,
         questIndex,
         questObserverFacade,

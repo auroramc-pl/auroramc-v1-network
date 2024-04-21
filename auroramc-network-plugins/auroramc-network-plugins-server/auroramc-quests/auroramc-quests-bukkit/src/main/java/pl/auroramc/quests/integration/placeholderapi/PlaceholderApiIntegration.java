@@ -1,6 +1,5 @@
 package pl.auroramc.quests.integration.placeholderapi;
 
-import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 import pl.auroramc.commons.bukkit.integration.ExternalIntegrationDelegate;
 import pl.auroramc.quests.objective.ObjectiveController;
@@ -13,7 +12,6 @@ class PlaceholderApiIntegration extends ExternalIntegrationDelegate {
 
   private static final String PLACEHOLDER_API_PLUGIN_NAME = "PlaceholderAPI";
   private final Plugin plugin;
-  private final Server server;
   private final UserFacade userFacade;
   private final QuestIndex questIndex;
   private final QuestObserverFacade questObserverFacade;
@@ -22,7 +20,6 @@ class PlaceholderApiIntegration extends ExternalIntegrationDelegate {
 
   PlaceholderApiIntegration(
       final Plugin plugin,
-      final Server server,
       final UserFacade userFacade,
       final QuestIndex questIndex,
       final QuestObserverFacade questObserverFacade,
@@ -30,7 +27,6 @@ class PlaceholderApiIntegration extends ExternalIntegrationDelegate {
       final ObjectiveProgressController objectiveProgressController) {
     super(PLACEHOLDER_API_PLUGIN_NAME);
     this.plugin = plugin;
-    this.server = server;
     this.userFacade = userFacade;
     this.questIndex = questIndex;
     this.questObserverFacade = questObserverFacade;
@@ -42,7 +38,6 @@ class PlaceholderApiIntegration extends ExternalIntegrationDelegate {
   public void configure() {
     new QuestsPlaceholderExpansion(
             plugin,
-            server,
             userFacade,
             questIndex,
             questObserverFacade,
