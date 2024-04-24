@@ -3,9 +3,10 @@ package pl.auroramc.scoreboard.message;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Exclude;
 import java.util.List;
-import pl.auroramc.commons.message.MutableMessage;
+import pl.auroramc.messages.message.MutableMessage;
+import pl.auroramc.scoreboard.quest.QuestMessageSource;
 
-public class MutableMessageSource extends OkaeriConfig {
+public class MessageSource extends OkaeriConfig {
 
   public static final @Exclude String MESSAGE_SOURCE_FILE_NAME = "translation.yml";
 
@@ -17,5 +18,5 @@ public class MutableMessageSource extends OkaeriConfig {
           MutableMessage.of("<gray>Nazwa: <white>%player_name%"),
           MutableMessage.of("<gray>Ranga: <white>%luckperms_primary_group_name%"));
 
-  public MutableMessageSourceQuest quest = new MutableMessageSourceQuest();
+  public QuestMessageSource quest = new QuestMessageSource();
 }

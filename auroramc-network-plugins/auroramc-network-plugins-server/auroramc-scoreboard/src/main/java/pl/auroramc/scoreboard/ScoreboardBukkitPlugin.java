@@ -1,32 +1,35 @@
 package pl.auroramc.scoreboard;
 
-import static java.time.Duration.ZERO;
 import static java.time.Duration.ofSeconds;
-import static pl.auroramc.commons.BukkitUtils.getTicksOf;
-import static pl.auroramc.commons.BukkitUtils.registerListeners;
-import static pl.auroramc.commons.BukkitUtils.resolveService;
+import static pl.auroramc.commons.bukkit.BukkitUtils.registerListeners;
+import static pl.auroramc.commons.bukkit.BukkitUtils.resolveService;
+import static pl.auroramc.commons.bukkit.scheduler.BukkitSchedulerFactory.getBukkitScheduler;
+import static pl.auroramc.commons.scheduler.SchedulerPoll.ASYNC;
+import static pl.auroramc.messages.message.compiler.BukkitMessageCompiler.getBukkitMessageCompiler;
 import static pl.auroramc.scoreboard.ScoreboardConfig.SCOREBOARD_CONFIG_FILE_NAME;
-import static pl.auroramc.scoreboard.message.MutableMessageSource.MESSAGE_SOURCE_FILE_NAME;
+import static pl.auroramc.scoreboard.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
 import static pl.auroramc.scoreboard.sidebar.SidebarFacade.getSidebarFacade;
 import static pl.auroramc.scoreboard.sidebar.SidebarRenderer.getSidebarRenderer;
 
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import java.util.Set;
-import java.util.logging.Logger;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.auroramc.commons.config.ConfigFactory;
-import pl.auroramc.commons.config.serdes.message.SerdesMessageSource;
+import pl.auroramc.commons.integration.configs.ConfigFactory;
+import pl.auroramc.commons.integration.configs.serdes.message.SerdesMessages;
+import pl.auroramc.commons.scheduler.Scheduler;
+import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
+import pl.auroramc.quests.objective.ObjectiveController;
 import pl.auroramc.quests.objective.progress.ObjectiveProgressController;
 import pl.auroramc.quests.quest.QuestIndex;
 import pl.auroramc.quests.quest.observer.QuestObserverFacade;
 import pl.auroramc.registry.user.UserFacade;
-import pl.auroramc.scoreboard.message.MutableMessageSource;
+import pl.auroramc.scoreboard.message.MessageSource;
 import pl.auroramc.scoreboard.quest.QuestListener;
 import pl.auroramc.scoreboard.quest.QuestSidebarComponent;
 import pl.auroramc.scoreboard.sidebar.SidebarFacade;
 import pl.auroramc.scoreboard.sidebar.SidebarRenderer;
 import pl.auroramc.scoreboard.sidebar.SidebarRenderingTask;
-import pl.auroramc.scoreboard.sidebar.component.SidebarComponentKyori;
+import pl.auroramc.scoreboard.sidebar.component.SidebarComponent;
 
 public class ScoreboardBukkitPlugin extends JavaPlugin {
 
@@ -34,21 +37,25 @@ public class ScoreboardBukkitPlugin extends JavaPlugin {
 
   @Override
   public void onEnable() {
-    final ConfigFactory configFactory = new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
+    final ConfigFactory configFactory =
+        new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
+    final ScoreboardConfig scoreboardConfig =
+        configFactory.produceConfig(ScoreboardConfig.class, SCOREBOARD_CONFIG_FILE_NAME);
 
-    final ScoreboardConfig scoreboardConfig = configFactory.produceConfig(
-        ScoreboardConfig.class, SCOREBOARD_CONFIG_FILE_NAME
-    );
-    final MutableMessageSource messageSource = configFactory.produceConfig(
-        MutableMessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessageSource()
-    );
+    final Scheduler scheduler = getBukkitScheduler(this);
 
-    final Logger logger = getLogger();
+    final MessageSource messageSource =
+        configFactory.produceConfig(
+            MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessages());
+    final BukkitMessageCompiler messageCompiler = getBukkitMessageCompiler(scheduler);
 
     final SidebarFacade sidebarFacade = getSidebarFacade();
-    final SidebarRenderer sidebarRenderer = getSidebarRenderer(
-        messageSource, sidebarFacade, getAvailableComponents(logger, messageSource)
-    );
+    final SidebarRenderer sidebarRenderer =
+        getSidebarRenderer(
+            messageSource,
+            messageCompiler,
+            sidebarFacade,
+            getAvailableComponents(messageSource, messageCompiler));
 
     registerListeners(this, new ScoreboardListener(sidebarFacade, sidebarRenderer));
     if (hasQuestSupport()) {
@@ -56,31 +63,36 @@ public class ScoreboardBukkitPlugin extends JavaPlugin {
     }
 
     if (scoreboardConfig.updatePeriodically) {
-      getServer().getScheduler().runTaskTimerAsynchronously(this,
-          new SidebarRenderingTask(sidebarRenderer),
-          getTicksOf(ZERO),
-          getTicksOf(ofSeconds(2))
-      );
+      scheduler.schedule(ASYNC, new SidebarRenderingTask(sidebarRenderer), ofSeconds(5));
     }
-  }
-
-  private Set<SidebarComponentKyori<?>> getAvailableComponents(final Logger logger, final MutableMessageSource messageSource) {
-    return hasQuestSupport()
-        ? Set.of(getQuestComponent(logger, messageSource))
-        : Set.of();
   }
 
   private boolean hasQuestSupport() {
     return getServer().getPluginManager().isPluginEnabled(QUESTS_PLUGIN_NAME);
   }
 
-  private SidebarComponentKyori<?> getQuestComponent(final Logger logger, final MutableMessageSource messageSource) {
+  private Set<SidebarComponent<?>> getAvailableComponents(
+      final MessageSource messageSource, final BukkitMessageCompiler messageCompiler) {
+    return hasQuestSupport() ? Set.of(getQuestComponent(messageSource, messageCompiler)) : Set.of();
+  }
+
+  private SidebarComponent<?> getQuestComponent(
+      final MessageSource messageSource, final BukkitMessageCompiler messageCompiler) {
     final UserFacade userFacade = resolveService(getServer(), UserFacade.class);
     final QuestIndex questIndex = resolveService(getServer(), QuestIndex.class);
-    final QuestObserverFacade questObserverFacade = resolveService(getServer(), QuestObserverFacade.class);
-    final ObjectiveProgressController objectiveProgressController = resolveService(getServer(), ObjectiveProgressController.class);
+    final QuestObserverFacade questObserverFacade =
+        resolveService(getServer(), QuestObserverFacade.class);
+    final ObjectiveController objectiveController =
+        resolveService(getServer(), ObjectiveController.class);
+    final ObjectiveProgressController objectiveProgressController =
+        resolveService(getServer(), ObjectiveProgressController.class);
     return new QuestSidebarComponent(
-        logger, messageSource, userFacade, questIndex, questObserverFacade, objectiveProgressController
-    );
+        messageSource,
+        messageCompiler,
+        userFacade,
+        questIndex,
+        questObserverFacade,
+        objectiveController,
+        objectiveProgressController);
   }
 }

@@ -1,108 +1,122 @@
 package pl.auroramc.scoreboard.quest;
 
+import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
 import static java.util.Map.Entry.comparingByKey;
-import static pl.auroramc.commons.ExceptionUtils.delegateCaughtException;
-import static pl.auroramc.commons.message.MutableMessage.EMPTY_DELIMITER;
-import static pl.auroramc.commons.message.MutableMessage.empty;
-import static pl.auroramc.commons.message.MutableMessage.newline;
-import static pl.auroramc.quests.objective.ObjectiveUtils.getQuestObjectiveTemplate;
-import static pl.auroramc.scoreboard.message.MutableMessageVariableKey.QUEST_PATH;
+import static pl.auroramc.messages.message.compiler.CompiledMessage.empty;
+import static pl.auroramc.scoreboard.quest.QuestMessageSourcePaths.QUEST_PATH;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Logger;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
-import pl.auroramc.commons.message.MutableMessage;
+import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.messages.message.MutableMessage;
+import pl.auroramc.messages.message.MutableMessageCollector;
+import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
+import pl.auroramc.messages.message.compiler.CompiledMessage;
 import pl.auroramc.quests.objective.Objective;
+import pl.auroramc.quests.objective.ObjectiveController;
 import pl.auroramc.quests.objective.progress.ObjectiveProgress;
 import pl.auroramc.quests.objective.progress.ObjectiveProgressController;
 import pl.auroramc.quests.quest.Quest;
 import pl.auroramc.quests.quest.QuestIndex;
 import pl.auroramc.quests.quest.observer.QuestObserver;
 import pl.auroramc.quests.quest.observer.QuestObserverFacade;
+import pl.auroramc.registry.user.User;
 import pl.auroramc.registry.user.UserFacade;
-import pl.auroramc.scoreboard.message.MutableMessageSource;
-import pl.auroramc.scoreboard.sidebar.component.SidebarComponentKyori;
+import pl.auroramc.scoreboard.message.MessageSource;
+import pl.auroramc.scoreboard.sidebar.component.SidebarComponent;
 
-public class QuestSidebarComponent implements SidebarComponentKyori<Quest> {
+public class QuestSidebarComponent implements SidebarComponent<Quest> {
 
-  private final Logger logger;
-  private final MutableMessageSource messageSource;
+  private final MessageSource messageSource;
+  private final BukkitMessageCompiler messageCompiler;
   private final UserFacade userFacade;
   private final QuestIndex questIndex;
   private final QuestObserverFacade questObserverFacade;
+  private final ObjectiveController objectiveController;
   private final ObjectiveProgressController objectiveProgressController;
 
   public QuestSidebarComponent(
-      final Logger logger,
-      final MutableMessageSource messageSource,
+      final MessageSource messageSource,
+      final BukkitMessageCompiler messageCompiler,
       final UserFacade userFacade,
       final QuestIndex questIndex,
       final QuestObserverFacade questObserverFacade,
+      final ObjectiveController objectiveController,
       final ObjectiveProgressController objectiveProgressController) {
-    this.logger = logger;
     this.messageSource = messageSource;
+    this.messageCompiler = messageCompiler;
     this.userFacade = userFacade;
     this.questIndex = questIndex;
     this.questObserverFacade = questObserverFacade;
+    this.objectiveController = objectiveController;
     this.objectiveProgressController = objectiveProgressController;
   }
 
   @Override
-  public MutableMessage render(final Player viewer, final @Nullable Quest quest) {
+  public List<CompiledMessage> render(final Player viewer, final @Nullable Quest quest) {
     if (quest == null) {
-      return empty();
+      return emptyList();
     }
 
-    return empty()
-        .append(renderQuestName(quest))
-        .append(renderQuestObjectiveHeader())
-        .append(renderQuestObjectives(viewer, quest));
+    return getObservedQuest(viewer, quest);
   }
 
   @Override
-  public MutableMessage render(final Player viewer) {
+  public List<CompiledMessage> render(final Player viewer) {
     return Optional.ofNullable(
             questObserverFacade.findQuestObserverByUniqueId(viewer.getUniqueId()))
         .map(QuestObserver::getQuestId)
-        .map(questIndex::resolveQuest)
+        .map(questIndex::getQuestById)
         .map(quest -> render(viewer, quest))
-        .orElse(empty());
+        .orElse(emptyList());
   }
 
-  private MutableMessage renderQuestName(final Quest quest) {
-    return newline()
-        .append(messageSource.quest.observedQuest, EMPTY_DELIMITER)
-        .append(
-            messageSource.quest.observedQuestName.with(
-                QUEST_PATH, quest.getKey().getName()));
+  private List<CompiledMessage> getObservedQuest(final Player viewer, final Quest quest) {
+    final List<CompiledMessage> observedQuest = new ArrayList<>();
+    observedQuest.add(empty());
+    observedQuest.add(
+        messageCompiler.compile(messageSource.quest.observedQuest.placeholder(QUEST_PATH, quest)));
+    observedQuest.addAll(getQuestObjectives(viewer, quest));
+    return observedQuest;
   }
 
-  private MutableMessage renderQuestObjectiveHeader() {
-    return newline().append(messageSource.quest.remainingQuestObjectives, EMPTY_DELIMITER);
+  private List<CompiledMessage> getQuestObjectives(final Player viewer, final Quest quest) {
+    final List<CompiledMessage> questObjectives = new ArrayList<>();
+    questObjectives.add(messageCompiler.compile(messageSource.quest.remainingObjectives));
+    questObjectives.addAll(getQuestObjectives0(viewer, quest));
+    return questObjectives;
   }
 
-  private MutableMessage renderQuestObjectives(final Player viewer, final Quest quest) {
+  private List<CompiledMessage> getQuestObjectives0(final Player viewer, final Quest quest) {
     return userFacade
         .getUserByUniqueId(viewer.getUniqueId())
-        .thenApply(user -> objectiveProgressController.getUncompletedObjectives(user, quest))
-        .thenApply(this::aggregateQuestObjectives)
-        .exceptionally(exception -> delegateCaughtException(logger, exception))
+        .thenApply(user -> getMergedQuestObjectives(user, quest))
+        .thenApply(messageCompiler::compileChildren)
+        .thenApply(List::of)
+        .exceptionally(CompletableFutureUtils::delegateCaughtException)
         .join();
   }
 
-  private MutableMessage aggregateQuestObjectives(
+  private MutableMessage getMergedQuestObjectives(final User user, final Quest quest) {
+    return getMergedQuestObjectives(
+        objectiveProgressController.getUncompletedObjectives(user, quest));
+  }
+
+  private MutableMessage getMergedQuestObjectives(
       final Map<Objective<?>, ObjectiveProgress> objectivesToObjectiveProgresses) {
     return objectivesToObjectiveProgresses.entrySet().stream()
         .sorted(comparingByKey(comparing(objective -> objective.getClass().getSimpleName())))
         .map(
             objectiveToObjectiveProgress ->
                 MutableMessage.of(
-                    getQuestObjectiveTemplate(
+                    objectiveController.getQuestObjectiveTemplate(
                         objectiveToObjectiveProgress.getKey(),
                         objectiveToObjectiveProgress.getValue())))
-        .collect(MutableMessage.collector());
+        .collect(MutableMessageCollector.collector());
   }
 }

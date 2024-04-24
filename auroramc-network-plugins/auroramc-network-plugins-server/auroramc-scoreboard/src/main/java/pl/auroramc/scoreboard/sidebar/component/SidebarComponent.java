@@ -1,11 +1,13 @@
 package pl.auroramc.scoreboard.sidebar.component;
 
-import javax.annotation.Nullable;
-import pl.auroramc.commons.message.MutableMessage;
+import java.util.List;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
+import pl.auroramc.messages.message.compiler.CompiledMessage;
 
-interface SidebarComponent<V, Y> {
+public interface SidebarComponent<Y> {
 
-  MutableMessage render(final V viewer, final @Nullable Y value);
+  List<CompiledMessage> render(final Player viewer, final @Nullable Y value);
 
-  MutableMessage render(final V viewer);
+  List<CompiledMessage> render(final Player viewer);
 }

@@ -6,22 +6,25 @@ import fr.mrmicky.fastboard.adventure.FastBoard;
 import java.util.Set;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
-import pl.auroramc.commons.message.BukkitMutableMessage;
-import pl.auroramc.commons.message.MutableMessage;
-import pl.auroramc.scoreboard.message.MutableMessageSource;
-import pl.auroramc.scoreboard.sidebar.component.SidebarComponentKyori;
+import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
+import pl.auroramc.messages.message.compiler.CompiledMessage;
+import pl.auroramc.scoreboard.message.MessageSource;
+import pl.auroramc.scoreboard.sidebar.component.SidebarComponent;
 
 class DefaultSidebarRenderer implements SidebarRenderer {
 
-  private final MutableMessageSource messageSource;
+  private final MessageSource messageSource;
+  private final BukkitMessageCompiler messageCompiler;
   private final SidebarFacade sidebarFacade;
-  private final Set<SidebarComponentKyori<?>> sidebarComponents;
+  private final Set<SidebarComponent<?>> sidebarComponents;
 
   DefaultSidebarRenderer(
-      final MutableMessageSource messageSource,
+      final MessageSource messageSource,
+      final BukkitMessageCompiler messageCompiler,
       final SidebarFacade sidebarFacade,
-      final Set<SidebarComponentKyori<?>> sidebarComponents) {
+      final Set<SidebarComponent<?>> sidebarComponents) {
     this.messageSource = messageSource;
+    this.messageCompiler = messageCompiler;
     this.sidebarFacade = sidebarFacade;
     this.sidebarComponents = sidebarComponents;
   }
@@ -29,20 +32,14 @@ class DefaultSidebarRenderer implements SidebarRenderer {
   @Override
   public void render(final Player viewer) {
     final FastBoard sidebar = sidebarFacade.resolveSidebarByUniqueId(viewer.getUniqueId());
-    sidebar.updateTitle(getCompiledMessageWithPlaceholders(viewer, messageSource.title));
+    sidebar.updateTitle(messageCompiler.compile(viewer, messageSource.title).getComponent());
     sidebar.updateLines(
-        BukkitMutableMessage.of(
-                concat(
-                        messageSource.lines.stream(),
-                        sidebarComponents.stream()
-                            .map(sidebarComponent -> sidebarComponent.render(viewer)))
-                    .collect(MutableMessage.collector()))
-            .withTargetedPlaceholders(viewer)
-            .compileChildren());
-  }
-
-  private Component getCompiledMessageWithPlaceholders(
-      final Player viewer, final MutableMessage message) {
-    return BukkitMutableMessage.of(message).withTargetedPlaceholders(viewer).compile();
+        concat(
+                messageSource.lines.stream()
+                    .map(message -> messageCompiler.compile(viewer, message)),
+                sidebarComponents.stream()
+                    .flatMap(component -> component.render(viewer).stream()))
+            .map(CompiledMessage::getComponent)
+            .toArray(Component[]::new));
   }
 }

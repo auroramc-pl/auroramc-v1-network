@@ -169,6 +169,7 @@ public class QuestsBukkitPlugin extends JavaPlugin {
             questFacade,
             questObserverFacade,
             questTrackFacade,
+            objectiveController,
             objectiveProgressFacade,
             objectiveProgressController));
 
