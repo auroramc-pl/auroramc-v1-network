@@ -8,7 +8,7 @@ import pl.auroramc.scoreboard.quest.QuestMessageSource;
 
 public class MessageSource extends OkaeriConfig {
 
-  public static final @Exclude String MESSAGE_SOURCE_FILE_NAME = "translation.yml";
+  public static final @Exclude String MESSAGE_SOURCE_FILE_NAME = "messages.yml";
 
   public MutableMessage title =
       MutableMessage.of("<bold><gradient:#0bf57c:#10de73>Aurora<gradient:#00dbfc:#07c6e3>MC");
