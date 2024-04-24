@@ -27,12 +27,11 @@ import pl.auroramc.quests.quest.observer.QuestObserver;
 import pl.auroramc.quests.quest.observer.QuestObserverFacade;
 import pl.auroramc.registry.user.User;
 import pl.auroramc.registry.user.UserFacade;
-import pl.auroramc.scoreboard.message.MessageSource;
 import pl.auroramc.scoreboard.sidebar.component.SidebarComponent;
 
 public class QuestSidebarComponent implements SidebarComponent<Quest> {
 
-  private final MessageSource messageSource;
+  private final QuestMessageSource messageSource;
   private final BukkitMessageCompiler messageCompiler;
   private final UserFacade userFacade;
   private final QuestIndex questIndex;
@@ -41,7 +40,7 @@ public class QuestSidebarComponent implements SidebarComponent<Quest> {
   private final ObjectiveProgressController objectiveProgressController;
 
   public QuestSidebarComponent(
-      final MessageSource messageSource,
+      final QuestMessageSource messageSource,
       final BukkitMessageCompiler messageCompiler,
       final UserFacade userFacade,
       final QuestIndex questIndex,
@@ -80,14 +79,14 @@ public class QuestSidebarComponent implements SidebarComponent<Quest> {
     final List<CompiledMessage> observedQuest = new ArrayList<>();
     observedQuest.add(empty());
     observedQuest.add(
-        messageCompiler.compile(messageSource.quest.observedQuest.placeholder(QUEST_PATH, quest)));
+        messageCompiler.compile(messageSource.observedQuest.placeholder(QUEST_PATH, quest)));
     observedQuest.addAll(getQuestObjectives(viewer, quest));
     return observedQuest;
   }
 
   private List<CompiledMessage> getQuestObjectives(final Player viewer, final Quest quest) {
     final List<CompiledMessage> questObjectives = new ArrayList<>();
-    questObjectives.add(messageCompiler.compile(messageSource.quest.remainingObjectives));
+    questObjectives.add(messageCompiler.compile(messageSource.remainingObjectives));
     questObjectives.addAll(getQuestObjectives0(viewer, quest));
     return questObjectives;
   }

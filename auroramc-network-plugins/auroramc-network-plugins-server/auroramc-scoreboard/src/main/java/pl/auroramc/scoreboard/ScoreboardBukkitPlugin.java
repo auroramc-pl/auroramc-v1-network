@@ -87,7 +87,7 @@ public class ScoreboardBukkitPlugin extends JavaPlugin {
     final ObjectiveProgressController objectiveProgressController =
         resolveService(getServer(), ObjectiveProgressController.class);
     return new QuestSidebarComponent(
-        messageSource,
+        messageSource.quest,
         messageCompiler,
         userFacade,
         questIndex,
