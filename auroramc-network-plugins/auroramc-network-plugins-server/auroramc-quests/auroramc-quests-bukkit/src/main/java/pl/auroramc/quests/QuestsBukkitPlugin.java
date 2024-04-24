@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 import moe.rafal.juliet.Juliet;
 import moe.rafal.juliet.JulietBuilder;
 import org.bukkit.command.CommandSender;
@@ -82,6 +83,8 @@ public class QuestsBukkitPlugin extends JavaPlugin {
             MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessages());
     final BukkitMessageCompiler messageCompiler = getBukkitMessageCompiler(scheduler);
 
+    final Logger logger = getLogger();
+
     final JulietConfig julietConfig =
         configFactory.produceConfig(
             JulietConfig.class, JULIET_CONFIG_FILE_NAME, new SerdesJuliet());
@@ -108,6 +111,7 @@ public class QuestsBukkitPlugin extends JavaPlugin {
     final QuestController questController = new QuestController(questIndex, questTrackFacade);
     final QuestTrackController questTrackController =
         new QuestTrackController(
+            logger,
             scheduler,
             messageSource.quest,
             messageCompiler,

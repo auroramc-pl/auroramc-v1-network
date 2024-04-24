@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Logger;
 import org.bukkit.entity.Player;
 import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
@@ -25,6 +26,7 @@ import pl.auroramc.registry.user.User;
 
 public class QuestTrackController {
 
+  private final Logger logger;
   private final Scheduler scheduler;
   private final QuestMessageSource messageSource;
   private final BukkitMessageCompiler messageCompiler;
@@ -33,12 +35,14 @@ public class QuestTrackController {
   private final ObjectiveProgressFacade objectiveProgressFacade;
 
   public QuestTrackController(
+      final Logger logger,
       final Scheduler scheduler,
       final QuestMessageSource messageSource,
       final BukkitMessageCompiler messageCompiler,
       final QuestTrackFacade questTrackFacade,
       final QuestObserverFacade questObserverFacade,
       final ObjectiveProgressFacade objectiveProgressFacade) {
+    this.logger = logger;
     this.scheduler = scheduler;
     this.messageSource = messageSource;
     this.messageCompiler = messageCompiler;
@@ -84,6 +88,14 @@ public class QuestTrackController {
                     new QuestTrackResolvingException(
                         "Could not get quest track for user %s and quest %d"
                             .formatted(user.getUniqueId(), quest.getKey().getId())));
+    if (questTrack.isCompleted()) {
+      logger.fine(
+          "Quest %s is already completed for user %s"
+              .formatted(quest.getKey().getName(), user.getUniqueId()));
+      return;
+    }
+
+    questTrack.setCompleted(true);
     questTrack.setQuestState(COMPLETED);
     questTrackFacade.updateQuestTrack(questTrack);
 

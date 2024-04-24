@@ -9,6 +9,7 @@ import static pl.auroramc.commons.CompletableFutureUtils.NIL;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import org.bukkit.entity.Player;
@@ -110,6 +111,6 @@ public class ObjectiveProgressController {
   }
 
   private boolean isObjectiveCompleted(final ObjectiveProgress objectiveProgress) {
-    return objectiveProgress.getData() >= objectiveProgress.getGoal();
+    return Objects.equals(objectiveProgress.getData(), objectiveProgress.getGoal());
   }
 }
