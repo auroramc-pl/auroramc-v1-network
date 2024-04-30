@@ -12,7 +12,7 @@ import java.util.Set;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.ApiStatus.Internal;
+import pl.auroramc.commons.External;
 import pl.auroramc.shops.product.ProductFacade;
 
 class ShopsView {
@@ -29,30 +29,27 @@ class ShopsView {
     this.productFacade = productFacade;
   }
 
-  public void populateShopItems(final PaginatedPane requestingPane) {
+  public @External void requestClickCancelling(final InventoryClickEvent event) {
+    event.setCancelled(true);
+  }
+
+  public @External void populateShopItems(final PaginatedPane requestingPane) {
     shopItemsPane = requestingPane;
     shopItemsPane.clear();
     shopItemsPane.populateWithGuiItems(getShopItems(shopFacade.getShops()));
     shopsGui.update();
   }
 
-  public void navigateToShop(final InventoryClickEvent event, final Shop shop) {
-    productFacade.showProducts((Player) event.getWhoClicked(), shop, shopsGui);
-  }
-
-  @Internal
-  public void navigateToNextPage() {
+  public @External void navigateToNextPage() {
     navigate(FORWARD, shopsGui, shopItemsPane);
   }
 
-  @Internal
-  public void navigateToPrevPage() {
+  public @External void navigateToPrevPage() {
     navigate(BACKWARD, shopsGui, shopItemsPane);
   }
 
-  @Internal
-  public void requestClickCancelling(final InventoryClickEvent event) {
-    event.setCancelled(true);
+  public void navigateToShop(final InventoryClickEvent event, final Shop shop) {
+    productFacade.showProducts((Player) event.getWhoClicked(), shop, shopsGui);
   }
 
   private GuiItem getShopItem(final Shop shop) {

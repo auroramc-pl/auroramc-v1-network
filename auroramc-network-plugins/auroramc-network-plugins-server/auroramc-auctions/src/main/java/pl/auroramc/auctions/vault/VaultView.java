@@ -14,8 +14,8 @@ import java.util.UUID;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.ApiStatus.Internal;
 import pl.auroramc.auctions.vault.item.VaultItem;
+import pl.auroramc.commons.External;
 import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 
@@ -45,7 +45,19 @@ class VaultView {
     this.vaultOwnerUniqueId = vaultOwnerUniqueId;
   }
 
-  public void populateVaultItems(final PaginatedPane requestingPane) {
+  public @External void requestClickCancelling(final InventoryClickEvent event) {
+    event.setCancelled(true);
+  }
+
+  public @External void navigateToNextPage() {
+    navigate(FORWARD, vaultGui, vaultItemsPane);
+  }
+
+  public @External void navigateToPrevPage() {
+    navigate(BACKWARD, vaultGui, vaultItemsPane);
+  }
+
+  public @External void populateVaultItems(final PaginatedPane requestingPane) {
     vaultItemsPane = requestingPane;
     vaultItemsPane.clear();
     vaultItemsPane.populateWithGuiItems(
@@ -60,21 +72,6 @@ class VaultView {
     vaultController
         .redeemVaultItem(event.getWhoClicked().getUniqueId(), vaultItem)
         .thenCompose(state -> scheduler.run(SYNC, () -> populateVaultItems(vaultItemsPane)));
-  }
-
-  @Internal
-  public void requestClickCancelling(final InventoryClickEvent event) {
-    event.setCancelled(true);
-  }
-
-  @Internal
-  public void navigateToNextPage() {
-    navigate(FORWARD, vaultGui, vaultItemsPane);
-  }
-
-  @Internal
-  public void navigateToPrevPage() {
-    navigate(BACKWARD, vaultGui, vaultItemsPane);
   }
 
   private GuiItem getGuiItemForVaultItem(final VaultItem vaultItem) {

@@ -39,8 +39,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.ApiStatus.Internal;
 import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.commons.External;
 import pl.auroramc.commons.bukkit.event.BukkitEventPublisher;
 import pl.auroramc.commons.bukkit.item.ItemStackBuilder;
 import pl.auroramc.commons.bukkit.page.navigation.NavigationMessageSource;
@@ -59,6 +59,7 @@ import pl.auroramc.quests.quest.track.QuestTrackController;
 import pl.auroramc.registry.user.User;
 import pl.auroramc.registry.user.UserFacade;
 
+// TODO: Split monster view into multiple segments
 public class QuestsView {
 
   private final Plugin plugin;
@@ -109,19 +110,18 @@ public class QuestsView {
     questsGui.show(viewer);
   }
 
-  @Internal
-  public void navigateToNextPage(final ChestGui questsGui, final PaginatedPane questsPane) {
+  public @External void requestClickCancelling(final InventoryClickEvent event) {
+    event.setCancelled(true);
+  }
+
+  public @External void navigateToNextPage(
+      final ChestGui questsGui, final PaginatedPane questsPane) {
     navigate(FORWARD, questsGui, questsPane);
   }
 
-  @Internal
-  public void navigateToPrevPage(final ChestGui questsGui, final PaginatedPane questsPane) {
+  public @External void navigateToPrevPage(
+      final ChestGui questsGui, final PaginatedPane questsPane) {
     navigate(BACKWARD, questsGui, questsPane);
-  }
-
-  @Internal
-  public void requestClickCancelling(final InventoryClickEvent event) {
-    event.setCancelled(true);
   }
 
   private ChestGui getQuestsGui(final HumanEntity viewer) {
@@ -268,7 +268,8 @@ public class QuestsView {
     final List<CompiledMessage> entries = new ArrayList<>();
     entries.add(empty());
     entries.addAll(questObjectives);
-    entries.add(messageCompiler.compile(messageSource.questRequiresCompletionOfAllObjectives, NO_CURSIVE));
+    entries.add(
+        messageCompiler.compile(messageSource.questRequiresCompletionOfAllObjectives, NO_CURSIVE));
     entries.add(empty());
     entries.add(messageCompiler.compile(messageSource.questCouldBeTracked, NO_CURSIVE));
     return entries.toArray(CompiledMessage[]::new);

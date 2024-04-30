@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.ApiStatus.Internal;
+import pl.auroramc.commons.External;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 import pl.auroramc.messages.message.compiler.CompiledMessage;
@@ -52,30 +52,27 @@ class ProductView {
     this.shopsGui = shopsGui;
   }
 
-  public void populateProductItems(final PaginatedPane requestingPane) {
+  public @External void requestClickCancelling(final InventoryClickEvent event) {
+    event.setCancelled(true);
+  }
+
+  public @External void populateProductItems(final PaginatedPane requestingPane) {
     productItemsPane = requestingPane;
     productItemsPane.clear();
     productItemsPane.populateWithGuiItems(getProductItems(shop.products()));
     productGui.update();
   }
 
-  public void navigateToShops(final InventoryClickEvent event) {
+  public @External void navigateToShops(final InventoryClickEvent event) {
     shopsGui.show(event.getWhoClicked());
   }
 
-  @Internal
-  public void navigateToNextPage() {
+  public @External void navigateToNextPage() {
     navigate(FORWARD, productGui, productItemsPane);
   }
 
-  @Internal
-  public void navigateToPrevPage() {
+  public @External void navigateToPrevPage() {
     navigate(BACKWARD, productGui, productItemsPane);
-  }
-
-  @Internal
-  public void requestClickCancelling(final InventoryClickEvent event) {
-    event.setCancelled(true);
   }
 
   public void requestTransactionFinalization(
