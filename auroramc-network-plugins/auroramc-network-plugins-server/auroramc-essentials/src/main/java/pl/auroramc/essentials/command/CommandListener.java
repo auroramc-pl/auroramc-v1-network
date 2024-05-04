@@ -49,9 +49,11 @@ public class CommandListener implements Listener {
   private static final String PLUGIN_SEPARATOR_CLOSING = "";
   private static final String BENTOBOX_EXTENSION_PREFIX = "BentoBox-";
   private static final String SPECIAL_COMMAND_NAME_PREFIX = "/";
+  private static final String DIRECT_COMMAND_CALL_DELIMITER = ":";
   private static final String CUSTOM_MADE_PLUGIN_NAME_PREFIX = "auroramc-";
+  private static final String COMMAND_NAME_PREFIX = "/";
   private static final String COMMAND_ARGUMENT_DELIMITER = " ";
-  private static final int COMMAND_ARGUMENTS_OFFSET = 1;
+
   private final Server server;
   private final FuzzySearch fuzzySearch;
   private final MessageSource messageSource;
@@ -90,9 +92,8 @@ public class CommandListener implements Listener {
   public void onUnknownCommandUse(final UnknownCommandEvent event) {
     final String input = event.getCommandLine();
 
-    final String performedCommand = resolveCommand("/%s".formatted(input));
-    final String suggestedCommand =
-        getPotentialSuggestionForCommand(event.getSender(), performedCommand);
+    final String performedCommand = resolveCommand("/%s".formatted(input)).substring(COMMAND_NAME_PREFIX.length());
+    final String suggestedCommand = getPotentialSuggestionForCommand(event.getSender(), performedCommand);
     if (suggestedCommand == null) {
       event.message(messageCompiler.compile(messageSource.unknownCommand).getComponent());
       return;
@@ -148,21 +149,26 @@ public class CommandListener implements Listener {
   private String getArgumentsSegment(final String performedCommand, final String input) {
     final boolean hasArguments = input.split(COMMAND_ARGUMENT_DELIMITER).length > 1;
     final String delimiter = hasArguments ? COMMAND_ARGUMENT_DELIMITER : "";
-    final int offset = hasArguments ? COMMAND_ARGUMENTS_OFFSET : 0;
-    return "%s%s".formatted(delimiter, input.substring(performedCommand.length() + offset));
+    final int offset = hasArguments ? COMMAND_ARGUMENT_DELIMITER.length() : 0;
+    return "%s%s"
+        .formatted(
+            delimiter,
+            input.substring(
+                performedCommand.substring(COMMAND_NAME_PREFIX.length()).length() + offset));
   }
 
   private Set<String> getAvailableCommands(final CommandSender invoker) {
     final Set<String> availableCommands = new HashSet<>();
     for (final Entry<String, Command> commandByCommandName :
         server.getCommandMap().getKnownCommands().entrySet()) {
-      if (isSpecialCommand(commandByCommandName.getKey())) {
+      final String commandName = commandByCommandName.getKey();
+      if (isSpecialCommand(commandName) || isDirectCommand(commandName)) {
         continue;
       }
 
       final Command command = commandByCommandName.getValue();
       if (command.testPermissionSilent(invoker)) {
-        availableCommands.add(commandByCommandName.getKey().toLowerCase());
+        availableCommands.add(commandName.toLowerCase());
       }
     }
     return availableCommands;
@@ -211,6 +217,10 @@ public class CommandListener implements Listener {
 
   private boolean isSpecialCommand(final String commandName) {
     return commandName.startsWith(SPECIAL_COMMAND_NAME_PREFIX);
+  }
+
+  private boolean isDirectCommand(final String commandName) {
+    return commandName.contains(DIRECT_COMMAND_CALL_DELIMITER);
   }
 
   private boolean isPluginSummaryRequest(final String query) {
