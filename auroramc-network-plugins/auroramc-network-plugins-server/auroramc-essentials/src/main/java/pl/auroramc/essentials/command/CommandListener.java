@@ -92,8 +92,10 @@ public class CommandListener implements Listener {
   public void onUnknownCommandUse(final UnknownCommandEvent event) {
     final String input = event.getCommandLine();
 
-    final String performedCommand = resolveCommand("/%s".formatted(input)).substring(COMMAND_NAME_PREFIX.length());
-    final String suggestedCommand = getPotentialSuggestionForCommand(event.getSender(), performedCommand);
+    final String performedCommand =
+        resolveCommand("/%s".formatted(input)).substring(COMMAND_NAME_PREFIX.length());
+    final String suggestedCommand =
+        getPotentialSuggestionForCommand(event.getSender(), performedCommand);
     if (suggestedCommand == null) {
       event.message(messageCompiler.compile(messageSource.unknownCommand).getComponent());
       return;
@@ -224,7 +226,11 @@ public class CommandListener implements Listener {
   }
 
   private boolean isPluginSummaryRequest(final String query) {
-    final String commandName = resolveCommand(query);
+    String commandName = resolveCommand(query);
+    if (commandName.startsWith(COMMAND_NAME_PREFIX)) {
+      commandName = commandName.substring(COMMAND_NAME_PREFIX.length());
+    }
+
     return commandName.equals(PLUGIN_SUMMARY_COMMAND_NAME)
         || commandName.equals(PLUGIN_SUMMARY_COMMAND_ALIAS);
   }
