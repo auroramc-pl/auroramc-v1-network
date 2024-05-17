@@ -50,7 +50,7 @@
     <dependency>
       <groupId>com.github.stefvanschie.inventoryframework</groupId>
       <artifactId>IF</artifactId>
-      <version>0.10.13</version>
+      <version>0.10.14</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
