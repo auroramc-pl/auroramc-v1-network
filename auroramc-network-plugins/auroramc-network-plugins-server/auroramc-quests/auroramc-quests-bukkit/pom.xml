@@ -49,19 +49,19 @@
     <dependency>
       <groupId>dev.rollczi</groupId>
       <artifactId>litecommands-bukkit</artifactId>
-      <version>3.4.1</version>
+      <version>3.4.2</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>dev.rollczi</groupId>
       <artifactId>litecommands-adventure-platform</artifactId>
-      <version>3.4.1</version>
+      <version>3.4.2</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>io.github.classgraph</groupId>
       <artifactId>classgraph</artifactId>
-      <version>4.8.172</version>
+      <version>4.8.173</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

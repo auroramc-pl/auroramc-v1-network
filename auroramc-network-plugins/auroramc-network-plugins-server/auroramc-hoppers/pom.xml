@@ -25,13 +25,13 @@
     <dependency>
       <groupId>dev.rollczi</groupId>
       <artifactId>litecommands-bukkit</artifactId>
-      <version>3.4.1</version>
+      <version>3.4.2</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>dev.rollczi</groupId>
       <artifactId>litecommands-adventure-platform</artifactId>
-      <version>3.4.1</version>
+      <version>3.4.2</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -53,7 +53,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.5.3</version>
+        <version>3.6.0</version>
         <executions>
           <execution>
             <phase>package</phase>
