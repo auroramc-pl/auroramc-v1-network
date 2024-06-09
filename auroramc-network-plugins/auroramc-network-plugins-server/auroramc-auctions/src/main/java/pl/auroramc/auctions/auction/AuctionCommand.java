@@ -10,7 +10,7 @@ import static pl.auroramc.auctions.auction.AuctionMessageSourcePaths.OFFER_PATH;
 import static pl.auroramc.auctions.auction.AuctionMessageSourcePaths.TRADER_PATH;
 import static pl.auroramc.auctions.auction.AuctionMessageSourcePaths.VENDOR_PATH;
 import static pl.auroramc.auctions.auction.AuctionUtils.getPotentialOffer;
-import static pl.auroramc.commons.CompletableFutureUtils.delegateCaughtException;
+import static pl.auroramc.commons.concurrent.CompletableFutureUtils.delegateCaughtException;
 import static pl.auroramc.commons.concurrent.Mutex.mutex;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;

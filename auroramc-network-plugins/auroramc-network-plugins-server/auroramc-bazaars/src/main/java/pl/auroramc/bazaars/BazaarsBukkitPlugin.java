@@ -17,12 +17,12 @@ import pl.auroramc.bazaars.bazaar.listener.BazaarCreateListener;
 import pl.auroramc.bazaars.bazaar.listener.BazaarUsageListener;
 import pl.auroramc.bazaars.bazaar.parser.BazaarParser;
 import pl.auroramc.bazaars.message.MessageSource;
-import pl.auroramc.commons.integration.configs.ConfigFactory;
-import pl.auroramc.commons.integration.configs.serdes.message.SerdesMessages;
 import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
 import pl.auroramc.economy.economy.EconomyFacade;
+import pl.auroramc.integrations.configs.ConfigFactory;
+import pl.auroramc.integrations.configs.serdes.message.SerdesMessages;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 import pl.auroramc.registry.user.UserFacade;
 

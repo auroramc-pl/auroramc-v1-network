@@ -2,12 +2,12 @@ package pl.auroramc.economy.message;
 
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Exclude;
-import pl.auroramc.commons.integration.configs.command.CommandMessageSource;
 import pl.auroramc.economy.balance.BalanceMessageSource;
 import pl.auroramc.economy.economy.EconomyMessageSource;
 import pl.auroramc.economy.leaderboard.LeaderboardMessageSource;
 import pl.auroramc.economy.payment.PaymentMessageSource;
 import pl.auroramc.economy.transfer.TransferMessageSource;
+import pl.auroramc.integrations.configs.command.CommandMessageSource;
 import pl.auroramc.messages.message.MutableMessage;
 
 public class MessageSource extends OkaeriConfig {

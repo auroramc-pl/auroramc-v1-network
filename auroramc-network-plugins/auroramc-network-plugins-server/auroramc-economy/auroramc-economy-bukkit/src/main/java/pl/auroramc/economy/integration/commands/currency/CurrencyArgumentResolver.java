@@ -26,9 +26,7 @@ public class CurrencyArgumentResolver<T> extends ArgumentResolver<T, Currency> {
 
   @Override
   protected ParseResult<Currency> parse(
-      final Invocation<T> invocation,
-      final Argument<Currency> argument,
-      final String value) {
+      final Invocation<T> invocation, final Argument<Currency> argument, final String value) {
     return lifted(() -> parseLong(value))
         .get()
         .map(currencyFacade::getCurrencyById)

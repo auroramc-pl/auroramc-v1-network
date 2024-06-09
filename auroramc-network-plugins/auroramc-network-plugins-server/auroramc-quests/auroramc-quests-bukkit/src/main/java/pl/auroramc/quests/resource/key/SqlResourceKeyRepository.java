@@ -24,25 +24,19 @@ class SqlResourceKeyRepository implements ResourceKeyRepository {
   }
 
   void createResourceKeySchemaIfRequired() {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final Statement statement = connection.createStatement()
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final Statement statement = connection.createStatement()) {
       statement.execute(CREATE_QUEST_KEY_SCHEMA);
     } catch (final SQLException exception) {
       throw new ResourceKeyRepositoryException(
-          "Could not create schema for resource keys, because of unexpected exception.",
-          exception
-      );
+          "Could not create schema for resource keys, because of unexpected exception.", exception);
     }
   }
 
   @Override
   public List<ResourceKey> getResourceKeys() {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(GET_RESOURCE_KEYS)
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement = connection.prepareStatement(GET_RESOURCE_KEYS)) {
       final List<ResourceKey> results = new ArrayList<>();
       final ResultSet resultSet = statement.executeQuery();
       while (resultSet.next()) {
@@ -51,18 +45,15 @@ class SqlResourceKeyRepository implements ResourceKeyRepository {
       return results;
     } catch (final SQLException exception) {
       throw new ResourceKeyRepositoryException(
-          "Could not get resource keys, because of unexpected exception.",
-          exception
-      );
+          "Could not get resource keys, because of unexpected exception.", exception);
     }
   }
 
   @Override
   public void createResourceKeys(final List<ResourceKey> resourceKeys) {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(CREATE_RESOURCE_KEY, RETURN_GENERATED_KEYS)
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement =
+            connection.prepareStatement(CREATE_RESOURCE_KEY, RETURN_GENERATED_KEYS)) {
       for (final ResourceKey resourceKey : resourceKeys) {
         statement.setString(1, resourceKey.getName());
         statement.addBatch();
@@ -77,18 +68,14 @@ class SqlResourceKeyRepository implements ResourceKeyRepository {
       }
     } catch (final SQLException exception) {
       throw new ResourceKeyRepositoryException(
-          "Could not create resource keys, because of unexpected exception.",
-          exception
-      );
+          "Could not create resource keys, because of unexpected exception.", exception);
     }
   }
 
   @Override
   public void deleteResourceKeys(final List<ResourceKey> resourceKeys) {
-    try (
-        final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(DELETE_RESOURCE_KEY)
-    ) {
+    try (final Connection connection = juliet.borrowConnection();
+        final PreparedStatement statement = connection.prepareStatement(DELETE_RESOURCE_KEY)) {
       for (final ResourceKey resourceKey : resourceKeys) {
         statement.setLong(1, resourceKey.getId());
         statement.addBatch();
@@ -96,16 +83,11 @@ class SqlResourceKeyRepository implements ResourceKeyRepository {
       statement.executeBatch();
     } catch (final SQLException exception) {
       throw new ResourceKeyRepositoryException(
-          "Could not delete resource keys, because of unexpected exception.",
-          exception
-      );
+          "Could not delete resource keys, because of unexpected exception.", exception);
     }
   }
 
   private ResourceKey mapResultSetToResourceKey(final ResultSet resultSet) throws SQLException {
-    return new ResourceKey(
-        resultSet.getLong("id"),
-        resultSet.getString("name")
-    );
+    return new ResourceKey(resultSet.getLong("id"), resultSet.getString("name"));
   }
 }

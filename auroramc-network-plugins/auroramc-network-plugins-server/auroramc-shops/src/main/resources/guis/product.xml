@@ -1,30 +1,30 @@
 <chestgui
-  xmlns="https://gist.githubusercontent.com/rchomczyk/31fff815e757f9dff61bb9f2c99d38aa/raw/bc23d70320361356a2b93a5f1691d58cc7d7f9ee/if.xsd"
-  title="Dostępne produkty" rows="4" field="productGui"
-  onGlobalClick="requestClickCancelling">
-  <paginatedpane x="0" y="0" length="9" height="2" field="productItemsPane"
-    populate="populateProductItems"/>
-
-  <outlinepane x="0" y="3" length="9" height="1" priority="lowest" repeat="true">
+  field="productGui"
+  onGlobalClick="requestClickCancelling" rows="4" title="Dostępne produkty"
+  xmlns="https://gist.githubusercontent.com/rchomczyk/31fff815e757f9dff61bb9f2c99d38aa/raw/bc23d70320361356a2b93a5f1691d58cc7d7f9ee/if.xsd">
+  <outlinepane height="1" length="9" priority="lowest" repeat="true" x="0" y="3">
     <item id="black_stained_glass_pane">
-      <displayname> </displayname>
+      <displayname></displayname>
     </item>
   </outlinepane>
 
-  <staticpane x="0" y="3" length="9" height="1">
-    <item id="nether_star" x="4" y="0" onClick="navigateToShops">
+  <paginatedpane field="productItemsPane" height="2" length="9" populate="populateProductItems" x="0"
+    y="0"/>
+
+  <staticpane height="1" length="9" x="0" y="3">
+    <item id="nether_star" onClick="navigateToShops" x="4" y="0">
       <displayname>&amp;7Powrót do wyboru sklepów</displayname>
       <lore>
         <line>&amp;7Naciśnij, aby powrócić do wyboru sklepów.</line>
       </lore>
     </item>
-    <item id="paper" x="3" y="0" onClick="navigateToPrevPage">
+    <item id="paper" onClick="navigateToPrevPage" x="3" y="0">
       <displayname>&amp;7Poprzednia strona</displayname>
       <lore>
         <line>&amp;7Naciśnij, aby przejść do poprzedniej strony.</line>
       </lore>
     </item>
-    <item id="paper" x="5" y="0" onClick="navigateToNextPage">
+    <item id="paper" onClick="navigateToNextPage" x="5" y="0">
       <displayname>&amp;7Następna strona</displayname>
       <lore>
         <line>&amp;7Naciśnij, aby przejść do następnej strony.</line>

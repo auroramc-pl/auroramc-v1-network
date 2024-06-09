@@ -3,7 +3,7 @@ package pl.auroramc.lobby;
 import static org.bukkit.Bukkit.getOnlinePlayers;
 
 import org.bukkit.entity.Player;
-import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 import pl.auroramc.lobby.message.MessageSource;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 import pl.auroramc.messages.message.compiler.CompiledMessage;

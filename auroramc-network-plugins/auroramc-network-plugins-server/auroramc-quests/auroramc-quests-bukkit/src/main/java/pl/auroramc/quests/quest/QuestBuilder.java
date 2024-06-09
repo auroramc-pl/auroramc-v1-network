@@ -7,7 +7,7 @@ import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import java.util.List;
 import org.bukkit.inventory.ItemStack;
-import pl.auroramc.commons.bukkit.item.ItemStackBuilder;
+import pl.auroramc.integrations.item.ItemStackBuilder;
 import pl.auroramc.quests.objective.Objective;
 import pl.auroramc.quests.quest.QuestDsl.ObjectivesDsl;
 import pl.auroramc.quests.quest.QuestDsl.QuestRewardsDsl;

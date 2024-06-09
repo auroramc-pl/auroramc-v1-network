@@ -2,7 +2,7 @@ package pl.auroramc.cheque.message;
 
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Exclude;
-import pl.auroramc.commons.integration.configs.command.CommandMessageSource;
+import pl.auroramc.integrations.configs.command.CommandMessageSource;
 import pl.auroramc.messages.message.MutableMessage;
 
 public class MessageSource extends OkaeriConfig {
@@ -10,7 +10,8 @@ public class MessageSource extends OkaeriConfig {
   public static final @Exclude String MESSAGE_SOURCE_FILE_NAME = "messages.yml";
 
   public MutableMessage chequeIssued =
-      MutableMessage.of("<gray>Wystawiłeś czek o wartości <white>{context.currency.@symbol}{context.amount}<gray>.");
+      MutableMessage.of(
+          "<gray>Wystawiłeś czek o wartości <white>{context.currency.@symbol}{context.amount}<gray>.");
 
   public MutableMessage chequeFinalized =
       MutableMessage.of(
@@ -29,9 +30,11 @@ public class MessageSource extends OkaeriConfig {
           "<red>Nie posiadasz wystarczających środków aby wystawić czek o tej wartości.");
 
   public MutableMessage titleOfCheque =
-      MutableMessage.of("<gray>Czek <dark_gray>(<white>{context.currency.@symbol}{context.amount}<dark_gray>)");
+      MutableMessage.of(
+          "<gray>Czek <dark_gray>(<white>{context.currency.@symbol}{context.amount}<dark_gray>)");
 
-  public MutableMessage linesOfCheque = MutableMessage.of("<gray>Wystawiający: <white>{context.issuer.username}");
+  public MutableMessage linesOfCheque =
+      MutableMessage.of("<gray>Wystawiający: <white>{context.issuer.username}");
 
   public CommandMessageSource command = new CommandMessageSource();
 }

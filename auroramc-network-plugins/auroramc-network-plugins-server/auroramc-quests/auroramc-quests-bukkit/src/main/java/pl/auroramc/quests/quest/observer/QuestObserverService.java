@@ -8,7 +8,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.commons.scheduler.caffeine.CaffeineExecutor;
 import pl.auroramc.registry.user.User;

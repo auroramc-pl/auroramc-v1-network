@@ -1,6 +1,6 @@
 package pl.auroramc.cheque.payment;
 
-import static pl.auroramc.commons.CompletableFutureUtils.NIL;
+import static pl.auroramc.commons.concurrent.CompletableFutureUtils.NIL;
 import static pl.auroramc.commons.scheduler.SchedulerPoll.ASYNC;
 
 import java.math.BigDecimal;

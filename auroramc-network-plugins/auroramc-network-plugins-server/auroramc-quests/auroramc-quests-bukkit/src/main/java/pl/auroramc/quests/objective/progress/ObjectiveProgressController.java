@@ -5,7 +5,7 @@ import static java.util.function.Function.identity;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toMap;
 import static org.bukkit.Bukkit.getPlayer;
-import static pl.auroramc.commons.CompletableFutureUtils.NIL;
+import static pl.auroramc.commons.concurrent.CompletableFutureUtils.NIL;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import org.bukkit.entity.Player;
-import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 import pl.auroramc.quests.objective.Objective;
 import pl.auroramc.quests.objective.requirement.ObjectiveRequirement;
 import pl.auroramc.quests.quest.Quest;

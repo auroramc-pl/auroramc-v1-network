@@ -10,7 +10,7 @@ public class MessageSource extends OkaeriConfig {
 
   public MutableMessage titleOfSummary =
       MutableMessage.of(
-              """
+          """
       <gray>Serwer składa się w <white>{percentage}% <gray>z autorskich wtyczek
       stworzonych dedykowanie dla naszego serwera, wszystkie z nich nie są dostępne
       do uzyskania dla osób trzecich. Niżej dostępna lista wtyczek zawiera tylko

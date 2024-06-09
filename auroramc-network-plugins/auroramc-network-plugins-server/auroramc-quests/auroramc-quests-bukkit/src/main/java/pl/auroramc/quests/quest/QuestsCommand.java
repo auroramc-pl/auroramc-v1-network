@@ -16,7 +16,7 @@ import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import org.bukkit.entity.Player;
-import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 import pl.auroramc.messages.message.MutableMessage;
 import pl.auroramc.quests.quest.track.QuestTrack;
 import pl.auroramc.quests.quest.track.QuestTrackController;

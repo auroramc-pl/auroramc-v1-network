@@ -20,7 +20,7 @@ import net.kyori.adventure.text.TextComponent;
 import pl.auroramc.auctions.AuctionsConfig;
 import pl.auroramc.auctions.message.MessageFacade;
 import pl.auroramc.auctions.vault.VaultController;
-import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.economy.EconomyFacade;
 import pl.auroramc.registry.user.User;

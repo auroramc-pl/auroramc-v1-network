@@ -3,7 +3,7 @@ package pl.auroramc.economy.transfer;
 import static java.math.BigDecimal.ZERO;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.concurrent.CompletableFuture.completedFuture;
-import static pl.auroramc.commons.CompletableFutureUtils.delegateCaughtException;
+import static pl.auroramc.commons.concurrent.CompletableFutureUtils.delegateCaughtException;
 import static pl.auroramc.commons.lazy.Lazy.lazy;
 import static pl.auroramc.economy.transfer.TransferMessageSourcePaths.CONTEXT_PATH;
 import static pl.auroramc.economy.transfer.TransferMessageSourcePaths.CURRENCY_PATH;
@@ -19,9 +19,9 @@ import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
 import org.bukkit.entity.Player;
 import pl.auroramc.commons.lazy.Lazy;
-import pl.auroramc.economy.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
+import pl.auroramc.economy.economy.EconomyFacade;
 import pl.auroramc.messages.message.group.MutableMessageGroup;
 
 @Permission("auroramc.economy.transfer")

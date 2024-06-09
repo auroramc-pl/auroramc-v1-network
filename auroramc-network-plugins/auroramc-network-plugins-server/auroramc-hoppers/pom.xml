@@ -1,82 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>pl.auroramc</groupId>
-    <artifactId>auroramc-network-plugins-server</artifactId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
-
   <artifactId>auroramc-hoppers</artifactId>
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-
-  <dependencies>
-    <dependency>
-      <groupId>pl.auroramc</groupId>
-      <artifactId>auroramc-commons-platform-bukkit</artifactId>
-      <version>1.0-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>dev.rollczi</groupId>
-      <artifactId>litecommands-bukkit</artifactId>
-      <version>3.4.2</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>dev.rollczi</groupId>
-      <artifactId>litecommands-adventure-platform</artifactId>
-      <version>3.4.2</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.jeff-media</groupId>
-      <artifactId>custom-block-data</artifactId>
-      <version>2.2.2</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.github.ben-manes.caffeine</groupId>
-      <artifactId>caffeine</artifactId>
-      <version>3.1.8</version>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
-
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.6.0</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <relocations>
-                <relocation>
-                  <pattern>com.jeff_media.customblockdata</pattern>
-                  <shadedPattern>pl.auroramc.hoppers.library.com.jeff_media.customblockdata</shadedPattern>
-                </relocation>
-              </relocations>
-            </configuration>
-          </execution>
-        </executions>
         <configuration>
           <dependencyReducedPomLocation>
             ${project.build.directory}/dependency-reduced-pom.xml
           </dependencyReducedPomLocation>
         </configuration>
+        <executions>
+          <execution>
+            <configuration>
+              <relocations>
+                <relocation>
+                  <pattern>com.jeff_media.customblockdata</pattern>
+                  <shadedPattern>pl.auroramc.hoppers.library.com.jeff_media.customblockdata
+                  </shadedPattern>
+                </relocation>
+              </relocations>
+            </configuration>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+        <groupId>org.apache.maven.plugins</groupId>
+        <version>3.6.0</version>
       </plugin>
     </plugins>
   </build>
+
+  <dependencies>
+    <dependency>
+      <artifactId>auroramc-integrations-platform-bukkit</artifactId>
+      <groupId>pl.auroramc</groupId>
+      <scope>compile</scope>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <artifactId>litecommands-bukkit</artifactId>
+      <groupId>dev.rollczi</groupId>
+      <scope>compile</scope>
+      <version>${dependency.version.litecommands}</version>
+    </dependency>
+    <dependency>
+      <artifactId>litecommands-adventure-platform</artifactId>
+      <groupId>dev.rollczi</groupId>
+      <scope>compile</scope>
+      <version>${dependency.version.litecommands}</version>
+    </dependency>
+    <dependency>
+      <artifactId>custom-block-data</artifactId>
+      <groupId>com.jeff-media</groupId>
+      <scope>compile</scope>
+      <version>${dependency.version.customblockdata}</version>
+    </dependency>
+    <dependency>
+      <artifactId>caffeine</artifactId>
+      <groupId>com.github.ben-manes.caffeine</groupId>
+      <scope>provided</scope>
+      <version>${dependency.version.caffeine}</version>
+    </dependency>
+  </dependencies>
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>auroramc-network-plugins-server</artifactId>
+    <groupId>pl.auroramc</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
 </project>

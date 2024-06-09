@@ -2,7 +2,8 @@ package pl.auroramc.gamble.message;
 
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Exclude;
-import pl.auroramc.commons.integration.configs.command.CommandMessageSource;
+import pl.auroramc.integrations.configs.command.CommandMessageSource;
+import pl.auroramc.integrations.configs.page.navigation.NavigationMessageSource;
 import pl.auroramc.messages.message.MutableMessage;
 
 public class MessageSource extends OkaeriConfig {
@@ -57,15 +58,7 @@ public class MessageSource extends OkaeriConfig {
           .append(MutableMessage.of("<gray>Stawka: <white>{currency.@symbol}{context.stake}"))
           .append(MutableMessage.of("<gray>Naciśnij aby dołączyć do zakładu."));
 
-  public MutableMessage navigateForward = MutableMessage.of("<gray>Następna strona");
-
-  public MutableMessage navigateForwardSuggestion =
-      MutableMessage.of("<gray>Naciśnij aby przejść do następnej strony.");
-
-  public MutableMessage navigateBackward = MutableMessage.of("<gray>Poprzednia strona");
-
-  public MutableMessage navigateBackwardSuggestion =
-      MutableMessage.of("<gray>Naciśnij aby przejść do poprzedniej strony.");
+  public NavigationMessageSource navigation = new NavigationMessageSource();
 
   public CommandMessageSource command = new CommandMessageSource();
 }

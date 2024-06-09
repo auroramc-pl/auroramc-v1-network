@@ -8,9 +8,9 @@ import static pl.auroramc.cheque.message.MessageSourcePaths.MAXIMUM_CHEQUE_WORTH
 import static pl.auroramc.cheque.message.MessageSourcePaths.MAXIMUM_FRACTION_LENGTH_PATH;
 import static pl.auroramc.cheque.message.MessageSourcePaths.MAXIMUM_INTEGRAL_LENGTH_PATH;
 import static pl.auroramc.cheque.message.MessageSourcePaths.MINIMUM_CHEQUE_WORTH_PATH;
-import static pl.auroramc.commons.bukkit.item.ItemStackUtils.giveOrDropItemStack;
 import static pl.auroramc.commons.format.decimal.DecimalUtils.getLengthOfFractionalPart;
 import static pl.auroramc.commons.format.decimal.DecimalUtils.getLengthOfIntegralPart;
+import static pl.auroramc.integrations.item.ItemStackUtils.giveOrDropItemStack;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
 import org.bukkit.entity.Player;
 import pl.auroramc.cheque.message.MessageSource;
-import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.economy.EconomyFacade;
 import pl.auroramc.messages.message.MutableMessage;

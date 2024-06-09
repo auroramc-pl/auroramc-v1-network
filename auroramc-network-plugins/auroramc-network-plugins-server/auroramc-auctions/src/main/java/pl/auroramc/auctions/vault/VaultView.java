@@ -1,10 +1,10 @@
 package pl.auroramc.auctions.vault;
 
-import static pl.auroramc.commons.bukkit.item.ItemStackUtils.mergeLore;
 import static pl.auroramc.commons.bukkit.page.navigation.NavigationDirection.BACKWARD;
 import static pl.auroramc.commons.bukkit.page.navigation.NavigationDirection.FORWARD;
 import static pl.auroramc.commons.bukkit.page.navigation.NavigationUtils.navigate;
 import static pl.auroramc.commons.scheduler.SchedulerPoll.SYNC;
+import static pl.auroramc.integrations.item.ItemStackUtils.mergeLore;
 import static pl.auroramc.messages.message.decoration.MessageDecorations.NO_CURSIVE;
 
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;

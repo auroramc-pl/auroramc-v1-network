@@ -14,14 +14,14 @@ import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.auroramc.commons.bukkit.integration.commands.BukkitCommandsBuilderProcessor;
-import pl.auroramc.commons.integration.configs.ConfigFactory;
-import pl.auroramc.commons.integration.configs.serdes.message.SerdesMessages;
 import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.hoppers.hopper.HopperCommand;
 import pl.auroramc.hoppers.hopper.HopperInitializeListener;
 import pl.auroramc.hoppers.hopper.HopperTransferListener;
 import pl.auroramc.hoppers.message.MessageSource;
+import pl.auroramc.integrations.commands.BukkitCommandsBuilderProcessor;
+import pl.auroramc.integrations.configs.ConfigFactory;
+import pl.auroramc.integrations.configs.serdes.message.SerdesMessages;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 
 public class HoppersBukkitPlugin extends JavaPlugin {

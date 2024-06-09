@@ -8,7 +8,7 @@ import dev.rollczi.litecommands.annotations.cooldown.Cooldown;
 import dev.rollczi.litecommands.annotations.execute.Execute;
 import java.util.concurrent.CompletableFuture;
 import org.bukkit.entity.Player;
-import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 import pl.auroramc.lobby.LobbyConfig;
 import pl.auroramc.lobby.message.MessageSource;
 import pl.auroramc.messages.message.MutableMessage;

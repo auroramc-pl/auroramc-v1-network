@@ -18,8 +18,8 @@ import org.bukkit.inventory.InventoryHolder;
 import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.gamble.message.MessageSource;
-import pl.auroramc.gamble.stake.context.StakeContext;
 import pl.auroramc.gamble.stake.StakeFacade;
+import pl.auroramc.gamble.stake.context.StakeContext;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 
 class StakeViewService implements StakeViewFacade {

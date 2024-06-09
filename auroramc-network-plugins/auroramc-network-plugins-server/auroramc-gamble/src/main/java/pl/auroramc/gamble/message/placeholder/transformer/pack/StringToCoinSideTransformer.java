@@ -6,17 +6,14 @@ import static org.apache.commons.lang3.StringUtils.capitalize;
 import pl.auroramc.gamble.coinflip.CoinSide;
 import pl.auroramc.messages.placeholder.transformer.pack.ObjectTransformer;
 
-class StringToCoinSideTransformer implements ObjectTransformer<CoinSide, String> {
+class StringToCoinSideTransformer extends ObjectTransformer<CoinSide, String> {
 
-  StringToCoinSideTransformer() {}
+  StringToCoinSideTransformer() {
+    super(CoinSide.class);
+  }
 
   @Override
   public String transform(final CoinSide value) {
     return capitalize(value.name().toLowerCase(ROOT));
-  }
-
-  @Override
-  public Class<?> type() {
-    return CoinSide.class;
   }
 }

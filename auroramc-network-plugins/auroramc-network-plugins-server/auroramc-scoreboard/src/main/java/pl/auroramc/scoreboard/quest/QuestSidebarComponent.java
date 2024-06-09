@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
-import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 import pl.auroramc.messages.message.MutableMessage;
 import pl.auroramc.messages.message.MutableMessageCollector;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;

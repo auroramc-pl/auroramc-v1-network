@@ -5,7 +5,7 @@ import static pl.auroramc.gamble.message.MessageSourcePaths.CONTEXT_PATH;
 import static pl.auroramc.gamble.message.MessageSourcePaths.CURRENCY_PATH;
 import static pl.auroramc.messages.message.group.MutableMessageGroup.grouping;
 
-import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.economy.EconomyFacade;
 import pl.auroramc.gamble.message.MessageSource;

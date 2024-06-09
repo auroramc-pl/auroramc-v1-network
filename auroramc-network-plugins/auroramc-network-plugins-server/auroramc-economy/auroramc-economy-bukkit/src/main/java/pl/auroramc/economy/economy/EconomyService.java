@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BinaryOperator;
 import java.util.logging.Logger;
-import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 import pl.auroramc.economy.account.Account;
 import pl.auroramc.economy.account.AccountFacade;
 import pl.auroramc.economy.currency.Currency;

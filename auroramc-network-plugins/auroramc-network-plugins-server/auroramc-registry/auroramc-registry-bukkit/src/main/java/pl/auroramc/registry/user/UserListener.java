@@ -1,13 +1,13 @@
 package pl.auroramc.registry.user;
 
-import static pl.auroramc.commons.CompletableFutureUtils.NIL;
+import static pl.auroramc.commons.concurrent.CompletableFutureUtils.NIL;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 
 public class UserListener implements Listener {
 

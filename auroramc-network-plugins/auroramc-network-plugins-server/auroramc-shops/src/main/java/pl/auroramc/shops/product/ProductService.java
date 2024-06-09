@@ -1,9 +1,9 @@
 package pl.auroramc.shops.product;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
-import static pl.auroramc.commons.bukkit.item.ItemStackUtils.getItemStackWithQuantity;
-import static pl.auroramc.commons.bukkit.item.ItemStackUtils.giveOrDropItemStack;
 import static pl.auroramc.commons.scheduler.SchedulerPoll.SYNC;
+import static pl.auroramc.integrations.item.ItemStackUtils.getItemStackWithQuantity;
+import static pl.auroramc.integrations.item.ItemStackUtils.giveOrDropItemStack;
 import static pl.auroramc.shops.product.ProductMessageSourcePaths.CONTEXT_PATH;
 import static pl.auroramc.shops.product.ProductUtils.getEmptySlotsCount;
 import static pl.auroramc.shops.product.ProductUtils.getQuantityInSlots;
@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.economy.EconomyFacade;

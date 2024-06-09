@@ -7,7 +7,7 @@ import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import java.math.BigDecimal;
 import org.bukkit.inventory.ItemStack;
-import pl.auroramc.commons.bukkit.item.ItemStackBuilder;
+import pl.auroramc.integrations.item.ItemStackBuilder;
 
 public final class ProductBuilder {
 

@@ -37,8 +37,7 @@ class DefaultSidebarRenderer implements SidebarRenderer {
         concat(
                 messageSource.lines.stream()
                     .map(message -> messageCompiler.compile(viewer, message)),
-                sidebarComponents.stream()
-                    .flatMap(component -> component.render(viewer).stream()))
+                sidebarComponents.stream().flatMap(component -> component.render(viewer).stream()))
             .map(CompiledMessage::getComponent)
             .toArray(Component[]::new));
   }

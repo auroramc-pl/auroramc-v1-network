@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <artifactId>auroramc-scoreboard</artifactId>
+  <dependencies>
+    <dependency>
+      <artifactId>auroramc-integrations-platform-bukkit</artifactId>
+      <groupId>pl.auroramc</groupId>
+      <scope>compile</scope>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <artifactId>auroramc-registry-shared</artifactId>
+      <groupId>pl.auroramc</groupId>
+      <scope>provided</scope>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <artifactId>auroramc-quests-bukkit</artifactId>
+      <groupId>pl.auroramc</groupId>
+      <scope>provided</scope>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <artifactId>fastboard</artifactId>
+      <groupId>fr.mrmicky</groupId>
+      <scope>provided</scope>
+      <version>${dependency.version.fastboard}</version>
+    </dependency>
+  </dependencies>
+
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
-    <groupId>pl.auroramc</groupId>
     <artifactId>auroramc-network-plugins-server</artifactId>
+    <groupId>pl.auroramc</groupId>
     <version>1.0-SNAPSHOT</version>
   </parent>
-
-  <artifactId>auroramc-scoreboard</artifactId>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
-  <dependencies>
-    <dependency>
-      <groupId>pl.auroramc</groupId>
-      <artifactId>auroramc-commons-platform-bukkit</artifactId>
-      <version>1.0-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>pl.auroramc</groupId>
-      <artifactId>auroramc-registry-shared</artifactId>
-      <version>1.0-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>pl.auroramc</groupId>
-      <artifactId>auroramc-quests-bukkit</artifactId>
-      <version>1.0-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>fr.mrmicky</groupId>
-      <artifactId>fastboard</artifactId>
-      <version>2.1.2</version>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
 
 </project>

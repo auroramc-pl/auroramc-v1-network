@@ -2,8 +2,8 @@ package pl.auroramc.auctions.vault;
 
 import static org.bukkit.Bukkit.getPlayer;
 import static pl.auroramc.auctions.vault.VaultMessageSourcePaths.SUBJECT_PATH;
-import static pl.auroramc.commons.bukkit.item.ItemStackUtils.giveOrDropItemStack;
 import static pl.auroramc.commons.scheduler.SchedulerPoll.SYNC;
+import static pl.auroramc.integrations.item.ItemStackUtils.giveOrDropItemStack;
 
 import java.util.Set;
 import java.util.UUID;
@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Blocking;
 import pl.auroramc.auctions.vault.item.VaultItem;
 import pl.auroramc.auctions.vault.item.VaultItemFacade;
-import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 import pl.auroramc.registry.user.User;

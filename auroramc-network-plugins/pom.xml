@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <artifactId>auroramc-network-plugins</artifactId>
   <modelVersion>4.0.0</modelVersion>
+
+  <modules>
+    <module>auroramc-network-plugins-server</module>
+    <!--    <module>auroramc-network-plugins-proxy</module>-->
+  </modules>
+  <packaging>pom</packaging>
   <parent>
-    <groupId>pl.auroramc</groupId>
     <artifactId>auroramc-network</artifactId>
+    <groupId>pl.auroramc</groupId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>auroramc-network-plugins</artifactId>
-  <packaging>pom</packaging>
-  <modules>
-    <module>auroramc-network-plugins-server</module>
-    <module>auroramc-network-plugins-proxy</module>
-  </modules>
-
   <properties>
+    <dependency.version.caffeine>3.1.8</dependency.version.caffeine>
+    <dependency.version.classgraph>4.8.173</dependency.version.classgraph>
+    <dependency.version.completablefutures>0.3.6</dependency.version.completablefutures>
+    <dependency.version.groovy>5.0.0-alpha-8</dependency.version.groovy>
+    <dependency.version.juliet>1.0-SNAPSHOT</dependency.version.juliet>
+    <dependency.version.litecommands>3.4.2</dependency.version.litecommands>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 

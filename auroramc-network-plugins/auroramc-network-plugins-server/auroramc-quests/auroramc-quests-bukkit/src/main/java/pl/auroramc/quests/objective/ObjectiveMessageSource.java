@@ -4,8 +4,8 @@ import eu.okaeri.configs.OkaeriConfig;
 import pl.auroramc.messages.message.MutableMessage;
 
 /**
- * Fields in that message source are dynamically attached to the {@link Objective}
- * instances.
+ * Fields in that message source are dynamically attached to the {@link Objective} instances.
+ *
  * @see Objective#getMessage()
  * @see Objective#setMessage(MutableMessage)
  */

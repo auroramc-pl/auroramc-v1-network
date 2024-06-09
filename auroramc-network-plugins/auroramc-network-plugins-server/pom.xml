@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>pl.auroramc</groupId>
-    <artifactId>auroramc-network-plugins</artifactId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
-
   <artifactId>auroramc-network-plugins-server</artifactId>
-  <packaging>pom</packaging>
+  <dependencies>
+    <dependency>
+      <artifactId>paper-api</artifactId>
+      <groupId>io.papermc.paper</groupId>
+      <scope>provided</scope>
+      <version>1.20.4-R0.1-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+
+  <modelVersion>4.0.0</modelVersion>
   <modules>
     <module>auroramc-auctions</module>
     <module>auroramc-bazaars</module>
@@ -26,8 +28,21 @@
     <module>auroramc-scoreboard</module>
     <module>auroramc-shops</module>
   </modules>
+  <packaging>pom</packaging>
+
+  <parent>
+    <artifactId>auroramc-network-plugins</artifactId>
+    <groupId>pl.auroramc</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
 
   <properties>
+    <dependency.version.adventure>4.17.0</dependency.version.adventure>
+    <dependency.version.customblockdata>2.2.2</dependency.version.customblockdata>
+    <dependency.version.fastboard>2.1.2</dependency.version.fastboard>
+    <dependency.version.inventoryframework>0.10.14</dependency.version.inventoryframework>
+    <dependency.version.morepersistentdatatypes>2.4.0</dependency.version.morepersistentdatatypes>
+    <dependency.version.placeholderapi>2.11.6</dependency.version.placeholderapi>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -41,14 +56,5 @@
       <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
     </repository>
   </repositories>
-
-  <dependencies>
-    <dependency>
-      <groupId>io.papermc.paper</groupId>
-      <artifactId>paper-api</artifactId>
-      <version>1.20.4-R0.1-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
 
 </project>

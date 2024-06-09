@@ -3,8 +3,8 @@ package pl.auroramc.economy.integration.placeholderapi;
 import java.util.logging.Logger;
 import org.bukkit.plugin.Plugin;
 import pl.auroramc.commons.bukkit.integration.ExternalIntegrationDelegate;
-import pl.auroramc.economy.economy.EconomyFacade;
 import pl.auroramc.economy.currency.CurrencyFacade;
+import pl.auroramc.economy.economy.EconomyFacade;
 
 class PlaceholderApiIntegration extends ExternalIntegrationDelegate {
 

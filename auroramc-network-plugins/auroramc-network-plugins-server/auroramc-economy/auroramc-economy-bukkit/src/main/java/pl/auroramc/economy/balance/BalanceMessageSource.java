@@ -11,5 +11,6 @@ public class BalanceMessageSource extends OkaeriConfig {
       MutableMessage.of("<gray>Podsumowanie stanu konta gracza <white>{player.displayName}<gray>:");
 
   public MutableMessage balanceSummaryEntry =
-      MutableMessage.of("<dark_gray>► <gray>{context.currency.@name} <dark_gray>- <white>{context.currency.@symbol}{context.balance}");
+      MutableMessage.of(
+          "<dark_gray>► <gray>{context.currency.@name} <dark_gray>- <white>{context.currency.@symbol}{context.balance}");
 }

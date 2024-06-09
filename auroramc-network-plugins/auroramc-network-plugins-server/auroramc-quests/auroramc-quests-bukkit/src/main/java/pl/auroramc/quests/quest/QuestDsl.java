@@ -9,7 +9,7 @@ import groovy.lang.DelegatesTo;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.inventory.ItemStack;
-import pl.auroramc.commons.bukkit.item.ItemStackBuilder;
+import pl.auroramc.integrations.item.ItemStackBuilder;
 import pl.auroramc.quests.objective.Objective;
 import pl.auroramc.quests.objective.ObjectiveBuilder;
 import pl.auroramc.quests.quest.reward.ExecQuestReward;

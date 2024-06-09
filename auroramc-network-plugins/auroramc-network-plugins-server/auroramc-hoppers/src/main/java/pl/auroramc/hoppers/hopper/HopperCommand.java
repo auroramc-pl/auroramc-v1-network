@@ -2,8 +2,8 @@ package pl.auroramc.hoppers.hopper;
 
 import static org.bukkit.Material.HOPPER;
 import static org.bukkit.persistence.PersistentDataType.INTEGER;
-import static pl.auroramc.commons.bukkit.item.ItemStackUtils.giveOrDropItemStack;
 import static pl.auroramc.hoppers.message.MessageSourcePaths.QUANTITY_PATH;
+import static pl.auroramc.integrations.item.ItemStackUtils.giveOrDropItemStack;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -13,8 +13,8 @@ import dev.rollczi.litecommands.annotations.permission.Permission;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import pl.auroramc.commons.bukkit.item.ItemStackBuilder;
 import pl.auroramc.hoppers.message.MessageSource;
+import pl.auroramc.integrations.item.ItemStackBuilder;
 import pl.auroramc.messages.message.MutableMessage;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 

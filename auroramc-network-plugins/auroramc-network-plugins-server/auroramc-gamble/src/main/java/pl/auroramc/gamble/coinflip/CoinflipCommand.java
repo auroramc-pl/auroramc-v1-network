@@ -18,13 +18,13 @@ import java.math.BigDecimal;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import org.bukkit.entity.Player;
-import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.economy.EconomyFacade;
-import pl.auroramc.gamble.participant.Participant;
 import pl.auroramc.gamble.message.MessageSource;
-import pl.auroramc.gamble.stake.context.StakeContext;
+import pl.auroramc.gamble.participant.Participant;
 import pl.auroramc.gamble.stake.StakeFacade;
+import pl.auroramc.gamble.stake.context.StakeContext;
 import pl.auroramc.gamble.stake.view.StakeViewFacade;
 import pl.auroramc.messages.message.MutableMessage;
 

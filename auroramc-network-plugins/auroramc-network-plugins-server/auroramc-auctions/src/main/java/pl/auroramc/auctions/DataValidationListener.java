@@ -1,7 +1,7 @@
 package pl.auroramc.auctions;
 
 import static java.util.concurrent.CompletableFuture.allOf;
-import static pl.auroramc.commons.CompletableFutureUtils.NIL;
+import static pl.auroramc.commons.concurrent.CompletableFutureUtils.NIL;
 
 import java.util.concurrent.CompletableFuture;
 import org.bukkit.event.EventHandler;
@@ -11,7 +11,7 @@ import pl.auroramc.auctions.audience.Audience;
 import pl.auroramc.auctions.audience.AudienceFacade;
 import pl.auroramc.auctions.vault.Vault;
 import pl.auroramc.auctions.vault.VaultFacade;
-import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 import pl.auroramc.registry.user.User;
 import pl.auroramc.registry.user.UserFacade;
 

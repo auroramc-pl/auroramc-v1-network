@@ -18,9 +18,6 @@ import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import java.util.Optional;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.auroramc.commons.bukkit.integration.commands.BukkitCommandsBuilderProcessor;
-import pl.auroramc.commons.integration.configs.ConfigFactory;
-import pl.auroramc.commons.integration.configs.serdes.message.SerdesMessages;
 import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
@@ -33,6 +30,9 @@ import pl.auroramc.gamble.stake.StakeCommand;
 import pl.auroramc.gamble.stake.StakeFacade;
 import pl.auroramc.gamble.stake.view.StakeViewFacade;
 import pl.auroramc.gamble.stake.view.StakeViewListener;
+import pl.auroramc.integrations.commands.BukkitCommandsBuilderProcessor;
+import pl.auroramc.integrations.configs.ConfigFactory;
+import pl.auroramc.integrations.configs.serdes.message.SerdesMessages;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 
 public class GambleBukkitPlugin extends JavaPlugin {

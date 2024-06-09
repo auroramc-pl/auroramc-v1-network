@@ -18,7 +18,8 @@ public class QuestArgumentResolver<T> extends ArgumentResolver<T, Quest> {
   private final QuestMessageSource messageSource;
   private final QuestIndex questIndex;
 
-  public QuestArgumentResolver(final QuestMessageSource messageSource, final QuestIndex questIndex) {
+  public QuestArgumentResolver(
+      final QuestMessageSource messageSource, final QuestIndex questIndex) {
     this.messageSource = messageSource;
     this.questIndex = questIndex;
   }

@@ -47,7 +47,8 @@ public class AuctionMessageSource extends OkaeriConfig {
       MutableMessage.of("<red>Nie posiadasz wystarczająco pieniędzy, aby złożyć tą ofertę.");
 
   public MutableMessage offered =
-      MutableMessage.of("<gray>Złożyłeś ofertę w wysokości <white>{context.currency.@symbol}{context.amount}<gray>.");
+      MutableMessage.of(
+          "<gray>Złożyłeś ofertę w wysokości <white>{context.currency.@symbol}{context.amount}<gray>.");
 
   public MutableMessage offeringFailed =
       MutableMessage.of("<red>Wystąpił nieoczekiwany błąd podczas złożenia oferty.");
@@ -56,7 +57,8 @@ public class AuctionMessageSource extends OkaeriConfig {
       MutableMessage.of("<red>W tej chwili nie trwa żadna aukcja.");
 
   public MutableMessage auctionWinningBid =
-      MutableMessage.of("<white>{context.currency.@symbol}{context.amount} <dark_gray>(<white>{auction.trader}<dark_gray>)");
+      MutableMessage.of(
+          "<white>{context.currency.@symbol}{context.amount} <dark_gray>(<white>{auction.trader}<dark_gray>)");
 
   public MutableMessage auctionSummary =
       MutableMessage.of(

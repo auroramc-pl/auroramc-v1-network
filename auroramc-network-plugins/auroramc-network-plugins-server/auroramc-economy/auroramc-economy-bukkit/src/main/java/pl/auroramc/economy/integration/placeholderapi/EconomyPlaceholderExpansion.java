@@ -12,9 +12,9 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pl.auroramc.commons.format.decimal.DecimalFormatter;
-import pl.auroramc.economy.economy.EconomyFacade;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.economy.currency.CurrencyFacade;
+import pl.auroramc.economy.economy.EconomyFacade;
 
 class EconomyPlaceholderExpansion extends PlaceholderExpansion {
 

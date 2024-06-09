@@ -21,11 +21,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import pl.auroramc.commons.bukkit.item.ItemStackBuilder;
 import pl.auroramc.commons.bukkit.page.navigation.Navigator;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.gamble.message.MessageSource;
 import pl.auroramc.gamble.stake.context.StakeContext;
+import pl.auroramc.integrations.configs.page.navigation.NavigationMessageSource;
+import pl.auroramc.integrations.item.ItemStackBuilder;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 
 class StakeView implements InventoryHolder {
@@ -41,6 +42,7 @@ class StakeView implements InventoryHolder {
   private final int pageIndex;
   private final Currency fundsCurrency;
   private final MessageSource messageSource;
+  private final NavigationMessageSource navigationMessageSource;
   private final BukkitMessageCompiler messageCompiler;
   private final List<StakeContext> stakes;
   private final Inventory stakeInventory;
@@ -55,6 +57,7 @@ class StakeView implements InventoryHolder {
     this.fundsCurrency = fundsCurrency;
     this.messageSource = messageSource;
     this.messageCompiler = messageCompiler;
+    this.navigationMessageSource = messageSource.navigation;
     this.navigatorBySlot =
         Map.of(
             48, new Navigator(BACKWARD, getNavigatorIconPointingBackward()),
@@ -82,9 +85,7 @@ class StakeView implements InventoryHolder {
 
     setItemAsFrame(
         inventory,
-        ItemStackBuilder.newBuilder(BLACK_STAINED_GLASS_PANE)
-            .displayName(empty())
-            .build());
+        ItemStackBuilder.newBuilder(BLACK_STAINED_GLASS_PANE).displayName(empty()).build());
 
     int currentIndex = 0;
     int closingIndex = stakes.size() - 1;
@@ -112,15 +113,21 @@ class StakeView implements InventoryHolder {
 
   private ItemStack getNavigatorIconPointingForward() {
     return ItemStackBuilder.newBuilder(ARROW)
-        .displayName(messageCompiler.compile(messageSource.navigateForward, NO_CURSIVE))
-        .lore(messageCompiler.compileChildren(messageSource.navigateForwardSuggestion, NO_CURSIVE))
+        .displayName(
+            messageCompiler.compile(navigationMessageSource.nameOfNextPageButton, NO_CURSIVE))
+        .lore(
+            messageCompiler.compileChildren(
+                navigationMessageSource.loreOfNextPageButton, NO_CURSIVE))
         .build();
   }
 
   private ItemStack getNavigatorIconPointingBackward() {
     return ItemStackBuilder.newBuilder(ARROW)
-        .displayName(messageCompiler.compile(messageSource.navigateBackward, NO_CURSIVE))
-        .lore(messageCompiler.compileChildren(messageSource.navigateBackwardSuggestion, NO_CURSIVE))
+        .displayName(
+            messageCompiler.compile(navigationMessageSource.nameOfPrevPageButton, NO_CURSIVE))
+        .lore(
+            messageCompiler.compileChildren(
+                navigationMessageSource.loreOfPrevPageButton, NO_CURSIVE))
         .build();
   }
 

@@ -4,7 +4,7 @@ import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Exclude;
 import pl.auroramc.auctions.auction.AuctionMessageSource;
 import pl.auroramc.auctions.vault.VaultMessageSource;
-import pl.auroramc.commons.integration.configs.command.CommandMessageSource;
+import pl.auroramc.integrations.configs.command.CommandMessageSource;
 
 public class MessageSource extends OkaeriConfig {
 

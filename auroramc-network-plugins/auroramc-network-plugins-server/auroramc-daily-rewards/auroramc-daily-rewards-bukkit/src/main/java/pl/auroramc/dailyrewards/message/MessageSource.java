@@ -2,7 +2,7 @@ package pl.auroramc.dailyrewards.message;
 
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Exclude;
-import pl.auroramc.commons.integration.configs.command.CommandMessageSource;
+import pl.auroramc.integrations.configs.command.CommandMessageSource;
 import pl.auroramc.messages.message.MutableMessage;
 
 public class MessageSource extends OkaeriConfig {

@@ -1,7 +1,7 @@
 package pl.auroramc.economy.account;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static pl.auroramc.commons.CompletableFutureUtils.delegateCaughtException;
+import static pl.auroramc.commons.concurrent.CompletableFutureUtils.delegateCaughtException;
 import static pl.auroramc.commons.format.decimal.DecimalUtils.getLengthOfIntegralPart;
 import static pl.auroramc.economy.account.SqlAccountRepositoryQuery.CREATE_ACCOUNT;
 import static pl.auroramc.economy.account.SqlAccountRepositoryQuery.CREATE_ACCOUNT_INDEX_FOR_BALANCE;

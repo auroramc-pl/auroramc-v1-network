@@ -22,7 +22,7 @@ import pl.auroramc.bazaars.bazaar.parser.BazaarParsingContext;
 import pl.auroramc.bazaars.bazaar.transaction.context.BazaarTransactionContext;
 import pl.auroramc.bazaars.message.MessageSource;
 import pl.auroramc.bazaars.sign.SignDelegateFactory;
-import pl.auroramc.commons.CompletableFutureUtils;
+import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 import pl.auroramc.messages.viewer.BukkitViewer;
 import pl.auroramc.messages.viewer.Viewer;

@@ -1,6 +1,6 @@
 package pl.auroramc.economy.payment;
 
-import static pl.auroramc.commons.CompletableFutureUtils.NIL;
+import static pl.auroramc.commons.concurrent.CompletableFutureUtils.NIL;
 import static pl.auroramc.commons.scheduler.SchedulerPoll.ASYNC;
 
 import java.util.List;

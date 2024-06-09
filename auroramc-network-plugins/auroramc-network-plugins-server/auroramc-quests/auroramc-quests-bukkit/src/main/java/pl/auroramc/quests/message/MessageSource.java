@@ -2,8 +2,8 @@ package pl.auroramc.quests.message;
 
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Exclude;
-import pl.auroramc.commons.bukkit.page.navigation.NavigationMessageSource;
-import pl.auroramc.commons.integration.configs.command.CommandMessageSource;
+import pl.auroramc.integrations.configs.command.CommandMessageSource;
+import pl.auroramc.integrations.configs.page.navigation.NavigationMessageSource;
 import pl.auroramc.quests.objective.ObjectiveMessageSource;
 import pl.auroramc.quests.objective.requirement.RequirementMessageSource;
 import pl.auroramc.quests.quest.QuestMessageSource;
