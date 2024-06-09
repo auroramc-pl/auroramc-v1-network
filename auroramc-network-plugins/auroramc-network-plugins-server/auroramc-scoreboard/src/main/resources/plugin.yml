@@ -9,5 +9,5 @@ softdepend:
   - auroramc-registry
   - auroramc-quests
 libraries:
-  - fr.mrmicky:fastboard:2.1.0
+  - fr.mrmicky:fastboard:2.1.2
   - com.github.ben-manes.caffeine:caffeine:3.1.8

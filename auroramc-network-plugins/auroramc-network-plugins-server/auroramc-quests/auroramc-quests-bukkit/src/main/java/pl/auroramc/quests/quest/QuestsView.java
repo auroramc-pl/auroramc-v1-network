@@ -7,7 +7,7 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.bukkit.Material.BLACK_STAINED_GLASS_PANE;
 import static org.bukkit.Material.PAPER;
-import static org.bukkit.enchantments.Enchantment.DURABILITY;
+import static org.bukkit.enchantments.Enchantment.UNBREAKING;
 import static org.bukkit.event.inventory.ClickType.LEFT;
 import static org.bukkit.event.inventory.ClickType.RIGHT;
 import static org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS;
@@ -191,7 +191,7 @@ public class QuestsView {
         .manipulate(
             quests -> quests.contains(quest),
             assignedQuests,
-            icon -> icon.flags(HIDE_ENCHANTS).enchantment(DURABILITY, 1))
+            icon -> icon.flags(HIDE_ENCHANTS).enchantment(UNBREAKING, 1))
         .build();
   }
 
