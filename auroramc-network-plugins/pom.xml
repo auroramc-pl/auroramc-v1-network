@@ -18,7 +18,7 @@
 
   <properties>
     <dependency.version.caffeine>3.1.8</dependency.version.caffeine>
-    <dependency.version.classgraph>4.8.173</dependency.version.classgraph>
+    <dependency.version.classgraph>4.8.174</dependency.version.classgraph>
     <dependency.version.completablefutures>0.3.6</dependency.version.completablefutures>
     <dependency.version.groovy>5.0.0-alpha-8</dependency.version.groovy>
     <dependency.version.juliet>1.0-SNAPSHOT</dependency.version.juliet>
