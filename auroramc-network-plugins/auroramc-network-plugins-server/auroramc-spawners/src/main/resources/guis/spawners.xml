@@ -1,0 +1,29 @@
+<chestgui
+  field="spawnersGui"
+  onGlobalClick="requestClickCancelling" rows="4" title="Dostępne spawnery"
+  xmlns="https://gist.githubusercontent.com/rchomczyk/31fff815e757f9dff61bb9f2c99d38aa/raw/bc23d70320361356a2b93a5f1691d58cc7d7f9ee/if.xsd">
+  <outlinepane height="1" length="9" priority="lowest" repeat="true" x="0" y="3">
+    <item id="black_stained_glass_pane">
+      <displayname></displayname>
+    </item>
+  </outlinepane>
+
+  <paginatedpane field="spawnersPane" height="2" length="9" populate="populateSpawnerItems" x="0"
+    y="0"/>
+
+  <staticpane height="1" length="9" x="0" y="3">
+    <item id="paper" onClick="navigateToPrevPage" x="3" y="0">
+      <displayname>&amp;7Poprzednia strona</displayname>
+      <lore>
+        <line>&amp;7Naciśnij, aby przejść do poprzedniej strony.</line>
+      </lore>
+    </item>
+    <item id="paper" onClick="navigateToNextPage" x="5" y="0">
+      <displayname>&amp;7Następna strona</displayname>
+      <lore>
+        <line>&amp;7Naciśnij, aby przejść do następnej strony.</line>
+      </lore>
+    </item>
+  </staticpane>
+
+</chestgui>

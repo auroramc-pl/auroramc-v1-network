@@ -20,8 +20,8 @@ class ShopsView {
   private final Plugin plugin;
   private final ShopFacade shopFacade;
   private final ProductFacade productFacade;
-  public ChestGui shopsGui;
-  public PaginatedPane shopItemsPane;
+  public @External ChestGui shopsGui;
+  public @External PaginatedPane shopItemsPane;
 
   ShopsView(final Plugin plugin, final ShopFacade shopFacade, final ProductFacade productFacade) {
     this.plugin = plugin;

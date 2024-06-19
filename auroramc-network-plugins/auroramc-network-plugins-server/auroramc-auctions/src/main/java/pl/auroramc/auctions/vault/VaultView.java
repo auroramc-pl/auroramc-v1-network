@@ -27,8 +27,8 @@ class VaultView {
   private final BukkitMessageCompiler messageCompiler;
   private final VaultController vaultController;
   private final UUID vaultOwnerUniqueId;
-  public ChestGui vaultGui;
-  public PaginatedPane vaultItemsPane;
+  public @External ChestGui vaultGui;
+  public @External PaginatedPane vaultItemsPane;
 
   VaultView(
       final Plugin plugin,
