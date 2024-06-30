@@ -9,7 +9,7 @@
       <groupId>org.apache.groovy</groupId>
       <scope>provided</scope>
       <type>pom</type>
-      <version>5.0.0-alpha-8</version>
+      <version>5.0.0-alpha-9</version>
     </dependency>
   </dependencies>
 
