@@ -54,7 +54,7 @@
           </execution>
         </executions>
         <groupId>io.github.git-commit-id</groupId>
-        <version>9.0.0</version>
+        <version>9.0.1</version>
       </plugin>
     </plugins>
     <resources>

@@ -39,7 +39,7 @@
   <properties>
     <dependency.version.adventure>4.17.0</dependency.version.adventure>
     <dependency.version.customblockdata>2.2.2</dependency.version.customblockdata>
-    <dependency.version.fastboard>2.1.2</dependency.version.fastboard>
+    <dependency.version.fastboard>2.1.3</dependency.version.fastboard>
     <dependency.version.inventoryframework>0.10.15</dependency.version.inventoryframework>
     <dependency.version.morepersistentdatatypes>2.4.0</dependency.version.morepersistentdatatypes>
     <dependency.version.placeholderapi>2.11.6</dependency.version.placeholderapi>
