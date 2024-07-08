@@ -1,7 +1,7 @@
 package pl.auroramc.economy;
 
 import static moe.rafal.juliet.datasource.hikari.HikariPooledDataSourceFactory.getHikariDataSource;
-import static pl.auroramc.commons.bukkit.BukkitUtils.registerServices;
+import static pl.auroramc.commons.bukkit.BukkitUtils.registerFacades;
 import static pl.auroramc.commons.bukkit.BukkitUtils.resolveService;
 import static pl.auroramc.commons.bukkit.scheduler.BukkitSchedulerFactory.getBukkitScheduler;
 import static pl.auroramc.economy.EconomyConfig.ECONOMY_CONFIG_FILE_NAME;
@@ -87,7 +87,7 @@ public class EconomyBukkitPlugin extends JavaPlugin {
         getPaymentFacade(scheduler, logger, juliet, economyConfig.payment);
     final EconomyFacade economyFacade =
         getEconomyFacade(logger, userFacade, accountFacade, paymentFacade);
-    registerServices(this, Set.of(currencyFacade, accountFacade, paymentFacade, economyFacade));
+    registerFacades(this, Set.of(currencyFacade, accountFacade, paymentFacade, economyFacade));
 
     final ExternalIntegration placeholderApiIntegration =
         getPlaceholderApiIntegration(this, economyFacade, currencyFacade);

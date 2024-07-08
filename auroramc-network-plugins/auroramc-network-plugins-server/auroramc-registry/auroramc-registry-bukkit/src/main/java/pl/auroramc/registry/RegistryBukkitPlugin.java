@@ -2,8 +2,8 @@ package pl.auroramc.registry;
 
 import static java.util.Collections.singleton;
 import static moe.rafal.juliet.datasource.hikari.HikariPooledDataSourceFactory.getHikariDataSource;
+import static pl.auroramc.commons.bukkit.BukkitUtils.registerFacades;
 import static pl.auroramc.commons.bukkit.BukkitUtils.registerListeners;
-import static pl.auroramc.commons.bukkit.BukkitUtils.registerServices;
 import static pl.auroramc.commons.bukkit.scheduler.BukkitSchedulerFactory.getBukkitScheduler;
 import static pl.auroramc.integrations.configs.juliet.JulietConfig.JULIET_CONFIG_FILE_NAME;
 import static pl.auroramc.registry.user.UserFacadeFactory.getUserFacade;
@@ -37,7 +37,7 @@ public class RegistryBukkitPlugin extends JavaPlugin {
     final Scheduler scheduler = getBukkitScheduler(this);
 
     final UserFacade userFacade = getUserFacade(scheduler, juliet);
-    registerServices(this, singleton(userFacade));
+    registerFacades(this, singleton(userFacade));
     registerListeners(this, new UserListener(userFacade));
   }
 

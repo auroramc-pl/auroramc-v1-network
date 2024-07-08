@@ -1,7 +1,9 @@
 package pl.auroramc.dailyrewards;
 
 import static java.time.Duration.ofSeconds;
+import static java.util.Collections.singleton;
 import static moe.rafal.juliet.datasource.hikari.HikariPooledDataSourceFactory.getHikariDataSource;
+import static pl.auroramc.commons.bukkit.BukkitUtils.registerFacades;
 import static pl.auroramc.commons.bukkit.BukkitUtils.registerListeners;
 import static pl.auroramc.commons.bukkit.BukkitUtils.resolveService;
 import static pl.auroramc.commons.bukkit.scheduler.BukkitSchedulerFactory.getBukkitScheduler;
@@ -76,6 +78,7 @@ public class DailyRewardsBukkitPlugin extends JavaPlugin {
     final UserFacade userFacade = resolveService(getServer(), UserFacade.class);
     final VisitFacade visitFacade = getVisitFacade(scheduler, juliet);
     final VisitController visitController = new VisitController();
+    registerFacades(this, singleton(visitFacade));
 
     registerListeners(
         this,

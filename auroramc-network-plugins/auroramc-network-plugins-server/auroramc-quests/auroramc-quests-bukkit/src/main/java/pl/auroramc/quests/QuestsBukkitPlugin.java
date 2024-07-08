@@ -3,8 +3,8 @@ package pl.auroramc.quests;
 import static java.nio.file.Files.createDirectory;
 import static java.nio.file.Files.exists;
 import static moe.rafal.juliet.datasource.hikari.HikariPooledDataSourceFactory.getHikariDataSource;
+import static pl.auroramc.commons.bukkit.BukkitUtils.registerFacades;
 import static pl.auroramc.commons.bukkit.BukkitUtils.registerListeners;
-import static pl.auroramc.commons.bukkit.BukkitUtils.registerServices;
 import static pl.auroramc.commons.bukkit.BukkitUtils.resolveService;
 import static pl.auroramc.commons.bukkit.scheduler.BukkitSchedulerFactory.getBukkitScheduler;
 import static pl.auroramc.integrations.configs.juliet.JulietConfig.JULIET_CONFIG_FILE_NAME;
@@ -165,10 +165,9 @@ public class QuestsBukkitPlugin extends JavaPlugin {
             Map.of(placeholderApiIntegration::isSupportedEnvironment, placeholderApiIntegration));
     externalIntegrator.configure(getServer());
 
-    registerServices(
+    registerFacades(
         this,
         Set.of(
-            userFacade,
             questIndex,
             questFacade,
             questObserverFacade,
