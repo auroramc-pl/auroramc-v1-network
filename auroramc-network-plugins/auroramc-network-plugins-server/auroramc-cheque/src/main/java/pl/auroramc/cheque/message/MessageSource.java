@@ -34,7 +34,7 @@ public class MessageSource extends OkaeriConfig {
           "<gray>Czek <dark_gray>(<white><context.currency.@symbol><context.amount><dark_gray>)");
 
   public MutableMessage linesOfCheque =
-      MutableMessage.of("<gray>Wystawiający: <white<context.issuer.username>");
+      MutableMessage.of("<gray>Wystawiający: <white><context.issuer.username>");
 
   public CommandMessageSource command = new CommandMessageSource();
 }
