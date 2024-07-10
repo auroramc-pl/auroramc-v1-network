@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 import pl.auroramc.lobby.message.MessageSource;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
-import pl.auroramc.messages.message.compiler.CompiledMessage;
 import pl.auroramc.messages.viewer.BukkitViewer;
 import pl.auroramc.messages.viewer.Viewer;
 
@@ -28,7 +27,6 @@ class VoidTeleportationTask implements Runnable {
 
   @Override
   public void run() {
-    final CompiledMessage message = messageCompiler.compile(messageSource.teleportedFromVoid);
     for (final Player player : getOnlinePlayers()) {
       if (player.getLocation().getY() > TELEPORT_SINCE_Y) {
         continue;
@@ -37,7 +35,8 @@ class VoidTeleportationTask implements Runnable {
       final Viewer viewer = BukkitViewer.wrap(player);
       player
           .teleportAsync(lobbyConfig.spawn)
-          .thenAccept(state -> viewer.deliver(message))
+          .thenAccept(
+              state -> viewer.deliver(messageCompiler.compile(messageSource.teleportedFromVoid)))
           .exceptionally(CompletableFutureUtils::delegateCaughtException);
     }
   }

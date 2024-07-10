@@ -13,7 +13,6 @@
   <packaging>pom</packaging>
   <modules>
 <!--    <module>auroramc-auth</module>-->
-<!--    <module>auroramc-punishments</module>-->
   </modules>
 
   <properties>

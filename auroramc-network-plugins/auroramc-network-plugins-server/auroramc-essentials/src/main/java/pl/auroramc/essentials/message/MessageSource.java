@@ -11,7 +11,7 @@ public class MessageSource extends OkaeriConfig {
   public MutableMessage titleOfSummary =
       MutableMessage.of(
           """
-      <gray>Serwer składa się w <white>{percentage}% <gray>z autorskich wtyczek
+      <gray>Serwer składa się w <white><percentage>% <gray>z autorskich wtyczek
       stworzonych dedykowanie dla naszego serwera, wszystkie z nich nie są dostępne
       do uzyskania dla osób trzecich. Niżej dostępna lista wtyczek zawiera tylko
       autorskie wtyczki, w celu zapobiegnięcia próbom znalezienia oraz
@@ -21,14 +21,14 @@ public class MessageSource extends OkaeriConfig {
       """
               .trim());
 
-  public MutableMessage entryOfSummary = MutableMessage.of("<white>{pluginName}<gray>{separator}");
+  public MutableMessage entryOfSummary = MutableMessage.of("<white><pluginName><gray><separator>");
 
   public MutableMessage unknownCommand =
       MutableMessage.of("<red>Wprowadzona przez ciebie komenda nie została znaleziona.");
 
   public MutableMessage unknownCommandWithPotentialSuggestion =
       MutableMessage.of(
-          "<red>Wprowadzona przez ciebie komenda nie została znaleziona. Czy nie chodziło Ci może przypadkiem o <yellow>/{suggestion}<red>?");
+          "<red>Wprowadzona przez ciebie komenda nie została znaleziona. Czy nie chodziło Ci może przypadkiem o <yellow>/<suggestion><red>?");
 
   public MutableMessage potentialSuggestionHover =
       MutableMessage.of("<gray>Naciśnij, aby użyć sugestii dotyczącej poprawnej komendy.");

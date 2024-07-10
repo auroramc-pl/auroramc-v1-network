@@ -7,15 +7,15 @@ public class TransferMessageSource extends OkaeriConfig {
 
   public MutableMessage transferSent =
       MutableMessage.of(
-          "<gray>Wysłałeś przelew do <white>{context.player.displayName}<gray>, <gray>z twojego konta zostało odebrane <white>{context.currency.@symbol}{context.amount}<gray>.");
+          "<gray>Wysłałeś przelew do <white><context.player.displayName><gray>, <gray>z twojego konta zostało odebrane <white><context.currency.@symbol><context.amount><gray>.");
 
   public MutableMessage transferReceived =
       MutableMessage.of(
-          "<gray>Otrzymałeś przelew od <white>{context.player.displayName}<gray>, do twojego konta zostało dodane <white>{context.currency.@symbol}{context.amount}<gray>.");
+          "<gray>Otrzymałeś przelew od <white><context.player.displayName><gray>, do twojego konta zostało dodane <white><context.currency.@symbol><context.amount><gray>.");
 
   public MutableMessage transferFailed =
       MutableMessage.of(
-          "<red>Operacja nie została wykonana, gdyż nie udało się odnaleźć waluty z id pasującym do <yellow>{currency.@id}<red>.");
+          "<red>Operacja nie została wykonana, gdyż nie udało się odnaleźć waluty z id pasującym do <yellow><currency.@id><red>.");
 
   public MutableMessage validationRequiresAmountGreaterThanZero =
       MutableMessage.of("<red>Kwota musi być większa od zera.");

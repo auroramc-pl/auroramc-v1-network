@@ -9,7 +9,7 @@ public class MutableMessageSource extends OkaeriConfig {
   public static final @Exclude String MESSAGE_SOURCE_FILE_NAME = "messages.yml";
 
   public MutableMessage availableSchematicsSuggestion =
-      MutableMessage.of("<red>Poprawne użycie: <yellow><newline>{schematics}");
+      MutableMessage.of("<red>Poprawne użycie: <yellow><newline><schematics>");
 
   public MutableMessage executionOfCommandIsNotPermitted =
       MutableMessage.of("<red>Nie posiadasz wystarczających uprawnień aby użyć tej komendy.");
@@ -84,7 +84,7 @@ public class MutableMessageSource extends OkaeriConfig {
 
   public MutableMessage authorizationTicking =
       MutableMessage.of(
-          "<dark_gray>► <gray>Na uwierzytelnienie pozostało ci <white>{period}<gray>.");
+          "<dark_gray>► <gray>Na uwierzytelnienie pozostało ci <white><period><gray>.");
 
   public MutableMessage authorizationTimeout =
       MutableMessage.of("<red>Skończył ci się czas na uwierzytelnienie.");
@@ -105,7 +105,7 @@ public class MutableMessageSource extends OkaeriConfig {
           "<red>Przekroczyłeś limit prób na wpisanie hasła, jeśli chcesz spróbować ponownie, dołącz na serwer.");
 
   public MutableMessage emailHasBeenChanged =
-      MutableMessage.of("<gray>Ustawiłeś aktualny adres e-mail na <white>{email}<gray>.");
+      MutableMessage.of("<gray>Ustawiłeś aktualny adres e-mail na <white><email><gray>.");
 
   public MutableMessage recoveryEmailSubject = MutableMessage.of("Odzyskiwanie hasła - AuroraMC");
 }

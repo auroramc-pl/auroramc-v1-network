@@ -30,15 +30,15 @@ public class MessageSource extends OkaeriConfig {
 
   public MutableMessage stakeCreated =
       MutableMessage.of(
-          "<gray>Zakład o stawce <white>{currency.@symbol}{context.stake} <gray>na <white>{prediction} <gray>został utworzony i oczekuje na przeciwnika.");
+          "<gray>Zakład o stawce <white><currency.@symbol><context.stake> <gray>na <white><prediction> <gray>został utworzony i oczekuje na przeciwnika.");
 
   public MutableMessage stakeWon =
       MutableMessage.of(
-          "<gray>Wygrałeś <hover:show_text:'<gray>Unikalny identyfikator: <white>{context.gambleUniqueId}'>zakład</hover> <gray>o stawce <white>{currency.@symbol}{context.stake} <gray>mierząc się z <white>{competitor.username}<gray>.");
+          "<gray>Wygrałeś <hover:show_text:'<gray>Unikalny identyfikator: <white><context.gambleUniqueId>'>zakład</hover> <gray>o stawce <white><currency.@symbol><context.stake> <gray>mierząc się z <white><competitor.username><gray>.");
 
   public MutableMessage stakeLost =
       MutableMessage.of(
-          "<gray>Przegrałeś <hover:show_text:'<gray>Unikalny identyfikator: <white>{context.gambleUniqueId}'>zakład</hover> <gray>o stawce <white>{currency.@symbol}{context.stake} <gray>mierząc się z <white>{competitor.username}<gray>.");
+          "<gray>Przegrałeś <hover:show_text:'<gray>Unikalny identyfikator: <white><context.gambleUniqueId>'>zakład</hover> <gray>o stawce <white><currency.@symbol><context.stake> <gray>mierząc się z <white><competitor.username><gray>.");
 
   public MutableMessage stakeFinalizationSelf =
       MutableMessage.of("<red>Nie możesz dołączyć do własnego zakładu.");
@@ -49,13 +49,13 @@ public class MessageSource extends OkaeriConfig {
   public MutableMessage stakesTitle = MutableMessage.of("Oczekujące zakłady");
 
   public MutableMessage stakeName =
-      MutableMessage.of("<gray>Zakład <dark_gray>(<white>{context.gambleKey}<dark_gray>)");
+      MutableMessage.of("<gray>Zakład <dark_gray>(<white><context.gambleKey><dark_gray>)");
 
   public MutableMessage stakeBrief =
       MutableMessage.empty()
-          .append(MutableMessage.of("<gray>Gracz: <white>{context.initiator.username}"))
-          .append(MutableMessage.of("<gray>Wybór: <white>{context.initiator.prediction}"))
-          .append(MutableMessage.of("<gray>Stawka: <white>{currency.@symbol}{context.stake}"))
+          .append(MutableMessage.of("<gray>Gracz: <white><context.initiator.username>"))
+          .append(MutableMessage.of("<gray>Wybór: <white><context.initiator.prediction>"))
+          .append(MutableMessage.of("<gray>Stawka: <white><currency.@symbol><context.stake>"))
           .append(MutableMessage.of("<gray>Naciśnij aby dołączyć do zakładu."));
 
   public NavigationMessageSource navigation = new NavigationMessageSource();

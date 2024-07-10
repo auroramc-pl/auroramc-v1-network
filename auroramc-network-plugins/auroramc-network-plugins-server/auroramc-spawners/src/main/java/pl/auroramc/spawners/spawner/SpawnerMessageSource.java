@@ -7,10 +7,10 @@ public class SpawnerMessageSource extends OkaeriConfig {
 
   public MutableMessage spawnerPurchased =
       MutableMessage.of(
-          "<gray>Zakupiłeś zmianę typu spawnera na <white>{spawner.creatureType} <gray>za <white>{currency.@symbol}{spawner.price}<gray>, które zostały pobrane z twojego konta.");
+          "<gray>Zakupiłeś zmianę typu spawnera na <white><spawner.creatureType> <gray>za <white><currency.@symbol><spawner.price><gray>, które zostały pobrane z twojego konta.");
 
   public MutableMessage spawnerPurchaseTag =
-      MutableMessage.of("<gray>Cena zakupu: <white>{currency.@symbol}{spawner.price}");
+      MutableMessage.of("<gray>Cena zakupu: <white><currency.@symbol><spawner.price>");
 
   public MutableMessage spawnerPurchaseSuggestion =
       MutableMessage.of("<gray>Naciśnij <white>LPM <gray>aby zakupić ten przedmiot.");
@@ -25,5 +25,5 @@ public class SpawnerMessageSource extends OkaeriConfig {
 
   public MutableMessage spawnerDisplayName =
       MutableMessage.of(
-          "<white>{creatureType}Spawner");
+          "<white><creatureType>Spawner");
 }

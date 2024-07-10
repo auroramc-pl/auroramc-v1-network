@@ -10,11 +10,11 @@ public class LeaderboardMessageSource extends OkaeriConfig {
 
   public MutableMessage leaderboardFooter =
       MutableMessage.of(
-          "<gray>Twoja pozycja:<newline><yellow>{context.position}) <gray>{context.username} <dark_gray>- <white>{context.currency.@symbol}{context.balance}");
+          "<gray>Twoja pozycja:<newline><yellow><context.position>) <gray><context.username> <dark_gray>- <white><context.currency.@symbol><context.balance>");
 
   public MutableMessage leaderboardEntry =
       MutableMessage.of(
-          "<dark_gray>{context.position}) <gray>{context.username} <dark_gray>- <white>{context.currency.@symbol}{context.balance}");
+          "<dark_gray><context.position>) <gray><context.username> <dark_gray>- <white><context.currency.@symbol><context.balance>");
 
   public MutableMessage leaderboardEmpty =
       MutableMessage.of(

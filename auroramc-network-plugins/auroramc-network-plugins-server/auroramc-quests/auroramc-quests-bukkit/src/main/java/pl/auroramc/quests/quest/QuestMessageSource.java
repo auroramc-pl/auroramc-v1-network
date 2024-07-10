@@ -6,25 +6,25 @@ import pl.auroramc.messages.message.MutableMessage;
 public class QuestMessageSource extends OkaeriConfig {
 
   public MutableMessage observingQuest =
-      MutableMessage.of("<gray>Obserwujesz zadanie <white>{quest.@key.@id}<gray>.");
+      MutableMessage.of("<gray>Obserwujesz zadanie <white><quest.@key.@id><gray>.");
 
   public MutableMessage questCouldNotBeFound =
-      MutableMessage.of("<red>Zadanie o nazwie <yellow>{input} <red>nie zostało znalezione.");
+      MutableMessage.of("<red>Zadanie o nazwie <yellow><input> <red>nie zostało znalezione.");
 
   public MutableMessage questHasBeenAssigned =
       MutableMessage.of(
-          "<gray>Zadanie <white>{quest.@key.@name} <gray>zostało przypisane dla <white>{user.@username}<gray>.");
+          "<gray>Zadanie <white><quest.@key.@name> <gray>zostało przypisane dla <white><user.@username><gray>.");
 
   public MutableMessage questIsAlreadyAssigned =
       MutableMessage.of(
-          "<red>Zadanie <yellow>{quest.@key.@name} <red>jest już przypisane dla <yellow>{user.@username}<red>.");
+          "<red>Zadanie <yellow><quest.@key.@name> <red>jest już przypisane dla <yellow><user.@username><red>.");
 
   public MutableMessage questIsAlreadyCompleted =
       MutableMessage.of(
-          "<red>Zadanie <yellow>{quest.@key.@id} <red>jest już ukończone przez <yellow>{user.@username}<red>.");
+          "<red>Zadanie <yellow><quest.@key.@id> <red>jest już ukończone przez <yellow><user.@username><red>.");
 
   public MutableMessage questHasBeenCompleted =
-      MutableMessage.of("<gray>Ukończyłeś zadanie <white>{quest.@key.@id}<gray>.");
+      MutableMessage.of("<gray>Ukończyłeś zadanie <white><quest.@key.@id><gray>.");
 
   public MutableMessage questIsCompleted = MutableMessage.of("<yellow>Ukończyłeś już te zadanie.");
 

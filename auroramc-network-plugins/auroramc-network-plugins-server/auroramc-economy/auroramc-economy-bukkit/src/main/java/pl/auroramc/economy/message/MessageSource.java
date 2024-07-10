@@ -16,7 +16,7 @@ public class MessageSource extends OkaeriConfig {
 
   public MutableMessage validationRequiresExistingCurrency =
       MutableMessage.of(
-          "<red>Wprowadzona przez ciebie waluta <dark_gray>(<yellow>{currency.id}<dark_gray>) <red>nie została odnaleziona, upewnij się, czy jest ona poprawna.");
+          "<red>Wprowadzona przez ciebie waluta <dark_gray>(<yellow><currency.id><dark_gray>) <red>nie została odnaleziona, upewnij się, czy jest ona poprawna.");
 
   public CommandMessageSource command = new CommandMessageSource();
 
