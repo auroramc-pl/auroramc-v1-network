@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 
 public class ExecQuestReward implements QuestReward<Player> {
 
-  private static final String TARGET_VARIABLE_NAME = "{target}";
+  private static final String TARGET_VARIABLE_NAME = "<target>";
   private final Server server;
   private final List<String> templatesOfCommands;
 
