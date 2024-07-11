@@ -14,6 +14,7 @@
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/auroramc-network-shared/auroramc-nametags/pom.xml" />
+        <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-auctions/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
@@ -26,7 +27,6 @@
         <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-gamble/pom.xml" />
         <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-hoppers/pom.xml" />
         <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-lobby/pom.xml" />
-        <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-auctions/pom.xml" />
         <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-punishments/pom.xml" />
         <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-quests/pom.xml" />
         <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-registry/pom.xml" />
