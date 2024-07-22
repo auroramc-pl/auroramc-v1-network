@@ -11,7 +11,7 @@ import dev.rollczi.litecommands.invocation.Invocation;
 import dev.rollczi.litecommands.suggestion.SuggestionContext;
 import dev.rollczi.litecommands.suggestion.SuggestionResult;
 import java.util.Optional;
-import pl.auroramc.quests.resource.key.ResourceKey;
+import pl.auroramc.registry.resource.key.ResourceKey;
 
 public class QuestArgumentResolver<T> extends ArgumentResolver<T, Quest> {
 

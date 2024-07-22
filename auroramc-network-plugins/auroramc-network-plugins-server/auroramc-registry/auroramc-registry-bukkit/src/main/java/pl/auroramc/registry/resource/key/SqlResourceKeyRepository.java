@@ -1,10 +1,10 @@
-package pl.auroramc.quests.resource.key;
+package pl.auroramc.registry.resource.key;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static pl.auroramc.quests.resource.key.SqlResourceKeyRepositoryQuery.CREATE_QUEST_KEY_SCHEMA;
-import static pl.auroramc.quests.resource.key.SqlResourceKeyRepositoryQuery.CREATE_RESOURCE_KEY;
-import static pl.auroramc.quests.resource.key.SqlResourceKeyRepositoryQuery.DELETE_RESOURCE_KEY;
-import static pl.auroramc.quests.resource.key.SqlResourceKeyRepositoryQuery.GET_RESOURCE_KEYS;
+import static pl.auroramc.registry.resource.key.SqlResourceKeyRepositoryQuery.CREATE_RESOURCE_KEY;
+import static pl.auroramc.registry.resource.key.SqlResourceKeyRepositoryQuery.CREATE_RESOURCE_KEYS_SCHEMA;
+import static pl.auroramc.registry.resource.key.SqlResourceKeyRepositoryQuery.DELETE_RESOURCE_KEY;
+import static pl.auroramc.registry.resource.key.SqlResourceKeyRepositoryQuery.GET_RESOURCE_KEYS;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,10 +23,10 @@ class SqlResourceKeyRepository implements ResourceKeyRepository {
     this.juliet = juliet;
   }
 
-  void createResourceKeySchemaIfRequired() {
+  void createResourceKeysSchemaIfRequired() {
     try (final Connection connection = juliet.borrowConnection();
         final Statement statement = connection.createStatement()) {
-      statement.execute(CREATE_QUEST_KEY_SCHEMA);
+      statement.execute(CREATE_RESOURCE_KEYS_SCHEMA);
     } catch (final SQLException exception) {
       throw new ResourceKeyRepositoryException(
           "Could not create schema for resource keys, because of unexpected exception.", exception);

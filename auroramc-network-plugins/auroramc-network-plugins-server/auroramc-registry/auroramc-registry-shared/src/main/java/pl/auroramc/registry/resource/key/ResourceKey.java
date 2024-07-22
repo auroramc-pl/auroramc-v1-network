@@ -1,4 +1,4 @@
-package pl.auroramc.quests.resource.key;
+package pl.auroramc.registry.resource.key;
 
 public class ResourceKey {
 

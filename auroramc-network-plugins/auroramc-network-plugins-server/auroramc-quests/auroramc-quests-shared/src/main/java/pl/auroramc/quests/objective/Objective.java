@@ -4,8 +4,8 @@ import java.util.List;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import pl.auroramc.messages.message.MutableMessage;
 import pl.auroramc.quests.objective.requirement.ObjectiveRequirement;
-import pl.auroramc.quests.resource.Resource;
-import pl.auroramc.quests.resource.key.ResourceKey;
+import pl.auroramc.registry.resource.Resource;
+import pl.auroramc.registry.resource.key.ResourceKey;
 
 public class Objective<T> extends Resource {
 

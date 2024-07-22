@@ -5,7 +5,7 @@ import org.bukkit.Material;
 import pl.auroramc.quests.objective.Objective;
 import pl.auroramc.quests.objective.ObjectiveGoalResolver;
 import pl.auroramc.quests.objective.requirement.ObjectiveRequirement;
-import pl.auroramc.quests.resource.key.ResourceKey;
+import pl.auroramc.registry.resource.key.ResourceKey;
 
 public class BreakBlockObjective extends Objective<Material> {
 

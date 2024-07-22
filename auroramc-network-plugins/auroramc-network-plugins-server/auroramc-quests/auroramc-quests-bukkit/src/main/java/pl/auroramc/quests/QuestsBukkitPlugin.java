@@ -17,7 +17,6 @@ import static pl.auroramc.quests.quest.QuestFacadeFactory.getQuestFacade;
 import static pl.auroramc.quests.quest.QuestIndexFactory.getQuestIndex;
 import static pl.auroramc.quests.quest.observer.QuestObserverFacadeFactory.getQuestObserverFacade;
 import static pl.auroramc.quests.quest.track.QuestTrackFacadeFactory.getQuestTrackFacade;
-import static pl.auroramc.quests.resource.key.ResourceKeyFacadeFactory.getResourceKeyFacade;
 
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.adventure.LiteAdventureExtension;
@@ -62,7 +61,7 @@ import pl.auroramc.quests.quest.QuestsView;
 import pl.auroramc.quests.quest.observer.QuestObserverFacade;
 import pl.auroramc.quests.quest.track.QuestTrackController;
 import pl.auroramc.quests.quest.track.QuestTrackFacade;
-import pl.auroramc.quests.resource.key.ResourceKeyFacade;
+import pl.auroramc.registry.resource.key.ResourceKeyFacade;
 import pl.auroramc.registry.user.UserFacade;
 
 public class QuestsBukkitPlugin extends JavaPlugin {
@@ -91,10 +90,10 @@ public class QuestsBukkitPlugin extends JavaPlugin {
     juliet =
         JulietBuilder.newBuilder().withDataSource(getHikariDataSource(julietConfig.hikari)).build();
 
-    final ResourceKeyFacade resourceKeyFacade = getResourceKeyFacade(juliet);
+    final ResourceKeyFacade resourceKeyFacade = resolveService(getServer(), ResourceKeyFacade.class);
     final QuestIndex questIndex = getQuestIndex();
     final QuestFacade questFacade = getQuestFacade(getQuestsDirectoryPath(), getClassLoader());
-    final List<Quest> quests = questFacade.discoverQuestDefinitions(getQuestsDirectoryPath());
+    final List<Quest> quests = questFacade.getQuests();
     resourceKeyFacade.validateResourceKeys(quests);
     initTranslationForObjectivesFromQuests(messageSource, quests);
 

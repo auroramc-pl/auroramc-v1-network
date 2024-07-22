@@ -7,8 +7,8 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import pl.auroramc.integrations.reward.Reward;
 import pl.auroramc.quests.objective.Objective;
-import pl.auroramc.quests.resource.Resource;
-import pl.auroramc.quests.resource.key.ResourceKey;
+import pl.auroramc.registry.resource.Resource;
+import pl.auroramc.registry.resource.key.ResourceKey;
 
 public final class Quest extends Resource {
 

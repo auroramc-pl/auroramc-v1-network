@@ -12,8 +12,8 @@ import pl.auroramc.integrations.reward.Reward;
 import pl.auroramc.integrations.reward.RewardsDsl;
 import pl.auroramc.quests.objective.Objective;
 import pl.auroramc.quests.quest.QuestDsl.ObjectivesDsl;
-import pl.auroramc.quests.resource.key.ResourceKey;
-import pl.auroramc.quests.resource.key.ResourceKeyBuilder;
+import pl.auroramc.registry.resource.key.ResourceKey;
+import pl.auroramc.registry.resource.key.ResourceKeyBuilder;
 
 public final class QuestBuilder {
 

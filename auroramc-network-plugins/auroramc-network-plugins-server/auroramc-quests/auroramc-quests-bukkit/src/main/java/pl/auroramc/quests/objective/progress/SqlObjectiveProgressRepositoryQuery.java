@@ -7,8 +7,8 @@ final class SqlObjectiveProgressRepositoryQuery {
       CREATE TABLE IF NOT EXISTS `auroramc_quests_objective_progresses`
       (
         `user_id` BIGINT REFERENCES `auroramc_registry_users` (`id`) ON DELETE CASCADE,
-        `quest_id` BIGINT REFERENCES `auroramc_quests_resource_keys` (`id`) ON DELETE CASCADE,
-        `objective_id` BIGINT REFERENCES `auroramc_quests_resource_keys` (`id`) ON DELETE CASCADE,
+        `quest_id` BIGINT REFERENCES `auroramc_registry_resource_keys` (`id`) ON DELETE CASCADE,
+        `objective_id` BIGINT REFERENCES `auroramc_registry_resource_keys` (`id`) ON DELETE CASCADE,
         `data` INT,
         `goal` INT
       );

@@ -1,7 +1,7 @@
-package pl.auroramc.quests.resource;
+package pl.auroramc.registry.resource;
 
 import java.util.List;
-import pl.auroramc.quests.resource.key.ResourceKey;
+import pl.auroramc.registry.resource.key.ResourceKey;
 
 public class Resource {
 

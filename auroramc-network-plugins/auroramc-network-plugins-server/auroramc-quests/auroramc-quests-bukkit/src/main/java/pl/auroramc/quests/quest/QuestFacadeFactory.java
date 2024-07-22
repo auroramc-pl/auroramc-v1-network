@@ -7,9 +7,7 @@ public final class QuestFacadeFactory {
   private QuestFacadeFactory() {}
 
   public static QuestFacade getQuestFacade(
-      final Path questsPath, final ClassLoader pluginClassLoader) {
-    final QuestService questService = new QuestService(pluginClassLoader);
-    questService.discoverQuestDefinitions(questsPath);
-    return questService;
+      final Path questDefinitionsPath, final ClassLoader pluginClassLoader) {
+    return new QuestService(pluginClassLoader, questDefinitionsPath);
   }
 }

@@ -1,4 +1,4 @@
-package pl.auroramc.quests.resource.key;
+package pl.auroramc.registry.resource.key;
 
 import static java.util.function.Function.identity;
 import static java.util.function.Predicate.not;
@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
-import pl.auroramc.quests.resource.Resource;
+import pl.auroramc.registry.resource.Resource;
 
 class ResourceKeyService implements ResourceKeyFacade {
 

@@ -12,8 +12,8 @@ import pl.auroramc.quests.objective.goal.DefinedObjectiveGoalResolver;
 import pl.auroramc.quests.objective.goal.RangedObjectiveGoalResolver;
 import pl.auroramc.quests.objective.requirement.ObjectiveRequirement;
 import pl.auroramc.quests.objective.requirement.ObjectiveRequirementDsl;
-import pl.auroramc.quests.resource.key.ResourceKey;
-import pl.auroramc.quests.resource.key.ResourceKeyBuilder;
+import pl.auroramc.registry.resource.key.ResourceKey;
+import pl.auroramc.registry.resource.key.ResourceKeyBuilder;
 
 public final class ObjectiveBuilder<T> {
 

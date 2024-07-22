@@ -7,7 +7,7 @@ final class SqlQuestTrackRepositoryQuery {
       CREATE TABLE IF NOT EXISTS `auroramc_quests_quest_tracks`
       (
         `user_id` BIGINT REFERENCES `auroramc_registry_users` (`id`) ON DELETE CASCADE,
-        `quest_id` BIGINT REFERENCES `auroramc_quests_resource_keys` (`id`) ON DELETE CASCADE,
+        `quest_id` BIGINT REFERENCES `auroramc_registry_resource_keys` (`id`) ON DELETE CASCADE,
         `quest_state` ENUM ('IN_PROGRESS', 'COMPLETED') DEFAULT 'IN_PROGRESS'
       );
       """;
