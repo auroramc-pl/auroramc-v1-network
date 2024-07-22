@@ -61,8 +61,7 @@ public class TransferCommand {
     return economyFacade
         .has(source.getUniqueId(), currency, amount)
         .thenCompose(
-            hasEnoughMoney ->
-                processTransfer(currency, source, target, amount, hasEnoughMoney))
+            hasEnoughMoney -> processTransfer(currency, source, target, amount, hasEnoughMoney))
         .exceptionally(
             exception -> {
               delegateCaughtException(exception);

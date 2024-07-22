@@ -46,7 +46,7 @@ public class MutableMessageSource extends OkaeriConfig {
 
   public MutableMessage specifiedPasswordIsUnsafe =
       MutableMessage.of(
-              """
+          """
       <red>Wprowadzone przez ciebie hasło nie spełnia wymagań!
       <dark_gray>Wymagania dotyczące hasła:
       <dark_red>► <red>Hasło może zawierać tylko znaki alfanumeryczne

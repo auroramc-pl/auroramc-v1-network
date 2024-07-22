@@ -95,7 +95,8 @@ public class VaultController {
         .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
-  private CompletableFuture<Void> giveOrDropVaultItem(final Player player, final VaultItem vaultItem) {
+  private CompletableFuture<Void> giveOrDropVaultItem(
+      final Player player, final VaultItem vaultItem) {
     return scheduler.run(
         SYNC,
         () -> giveOrDropItemStack(player, ItemStack.deserializeBytes(vaultItem.getSubject())));

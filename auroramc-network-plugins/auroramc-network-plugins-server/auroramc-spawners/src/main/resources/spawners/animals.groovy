@@ -1,9 +1,7 @@
 package spawners
 
 import org.bukkit.Material
-import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.EntityType
-import org.bukkit.inventory.ItemFlag
 import pl.auroramc.integrations.item.ItemStackBuilder
 
 import static pl.auroramc.spawners.spawner.SpawnerDsl.spawners

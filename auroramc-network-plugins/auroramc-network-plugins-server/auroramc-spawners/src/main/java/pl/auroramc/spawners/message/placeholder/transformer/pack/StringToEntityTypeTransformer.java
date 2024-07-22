@@ -20,7 +20,8 @@ class StringToEntityTypeTransformer extends ObjectTransformer<EntityType, String
   @Override
   public String transform(final EntityType value) {
     return stream(value.name().toLowerCase(ROOT).split(NAME_SEGMENTS_DELIMITER))
-        .map(StringUtils::capitalize)
-        .collect(joining(NAME_DELIMITER)) + NAME_DELIMITER;
+            .map(StringUtils::capitalize)
+            .collect(joining(NAME_DELIMITER))
+        + NAME_DELIMITER;
   }
 }

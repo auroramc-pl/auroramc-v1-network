@@ -16,16 +16,15 @@ public final class SpawnerBuilder {
   private BigDecimal price;
   private EntityType creatureType;
 
-  SpawnerBuilder() {
-
-  }
+  SpawnerBuilder() {}
 
   public SpawnerBuilder icon(final ItemStack icon) {
     this.icon = icon;
     return this;
   }
 
-  public SpawnerBuilder icon(final @DelegatesTo(value = ItemStackBuilder.class) Closure<?> closure) {
+  public SpawnerBuilder icon(
+      final @DelegatesTo(value = ItemStackBuilder.class) Closure<?> closure) {
     final ItemStackBuilder itemStackBuilder = ItemStackBuilder.newBuilder(STONE);
     closure.setDelegate(itemStackBuilder);
     closure.setResolveStrategy(DELEGATE_ONLY);

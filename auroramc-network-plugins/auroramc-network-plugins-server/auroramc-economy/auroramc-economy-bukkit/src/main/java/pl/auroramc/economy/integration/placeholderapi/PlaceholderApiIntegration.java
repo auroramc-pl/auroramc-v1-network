@@ -18,8 +18,7 @@ class PlaceholderApiIntegration extends ExternalIntegrationDelegate {
       final Plugin plugin,
       final Logger logger,
       final EconomyFacade economyFacade,
-      final CurrencyFacade currencyFacade
-  ) {
+      final CurrencyFacade currencyFacade) {
     super(PLACEHOLDER_API_PLUGIN_NAME);
     this.plugin = plugin;
     this.logger = logger;

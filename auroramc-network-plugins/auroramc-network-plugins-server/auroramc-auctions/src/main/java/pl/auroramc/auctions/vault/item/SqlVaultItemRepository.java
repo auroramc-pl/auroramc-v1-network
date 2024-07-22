@@ -83,7 +83,8 @@ class SqlVaultItemRepository implements VaultItemRepository {
       statement.setLong(1, vaultItem.getId());
       final int affectedRows = statement.executeUpdate();
       if (affectedRows == 0) {
-        throw new NoRowsAffectedException("Query to delete vault item not affected any rows, probably it could be caused by delayed packets.");
+        throw new NoRowsAffectedException(
+            "Query to delete vault item not affected any rows, probably it could be caused by delayed packets.");
       }
     } catch (final SQLException exception) {
       throw new VaultItemRepositoryException(

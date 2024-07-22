@@ -32,7 +32,13 @@ final class SpawnersViewFactory {
 
       return load(
           new SpawnersView(
-              plugin, fundsCurrency, spawnerFacade, spawnerController, messageSource, messageCompiler, subject),
+              plugin,
+              fundsCurrency,
+              spawnerFacade,
+              spawnerController,
+              messageSource,
+              messageCompiler,
+              subject),
           inputStream,
           plugin);
     } catch (final IOException exception) {

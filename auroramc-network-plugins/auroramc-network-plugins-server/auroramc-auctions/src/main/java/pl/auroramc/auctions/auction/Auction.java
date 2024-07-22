@@ -117,11 +117,11 @@ public class Auction {
     return remainingTicks;
   }
 
-  public int getAndDecrementRemainingTicks() {
-    return remainingTicks--;
-  }
-
   public void setRemainingTicks(final int remainingTicks) {
     this.remainingTicks = remainingTicks;
+  }
+
+  public int getAndDecrementRemainingTicks() {
+    return remainingTicks--;
   }
 }

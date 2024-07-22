@@ -1,131 +1,131 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>pl.auroramc</groupId>
-    <artifactId>auroramc-auth</artifactId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
-
   <artifactId>auroramc-auth-velocity</artifactId>
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-
   <dependencies>
     <dependency>
-      <groupId>org.mariadb.jdbc</groupId>
       <artifactId>mariadb-java-client</artifactId>
+      <groupId>org.mariadb.jdbc</groupId>
+      <scope>compile</scope>
       <version>3.4.1</version>
-      <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>pl.auroramc</groupId>
       <artifactId>auroramc-auth-shared</artifactId>
-      <version>1.0-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
       <groupId>pl.auroramc</groupId>
+      <scope>compile</scope>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
       <artifactId>auroramc-commons-velocity</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <groupId>pl.auroramc</groupId>
       <scope>compile</scope>
+      <version>1.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>moe.rafal</groupId>
       <artifactId>juliet</artifactId>
+      <groupId>moe.rafal</groupId>
+      <scope>compile</scope>
       <version>1.0-SNAPSHOT</version>
-      <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>at.favre.lib</groupId>
       <artifactId>bcrypt</artifactId>
+      <groupId>at.favre.lib</groupId>
+      <scope>compile</scope>
       <version>0.10.2</version>
-      <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>com.zaxxer</groupId>
       <artifactId>HikariCP</artifactId>
+      <groupId>com.zaxxer</groupId>
+      <scope>compile</scope>
       <version>5.1.0</version>
-      <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>com.sun.mail</groupId>
       <artifactId>jakarta.mail</artifactId>
-      <version>2.0.1</version>
+      <groupId>com.sun.mail</groupId>
       <scope>compile</scope>
+      <version>2.0.1</version>
     </dependency>
     <dependency>
-      <groupId>com.sun.activation</groupId>
       <artifactId>jakarta.activation</artifactId>
+      <groupId>com.sun.activation</groupId>
+      <scope>compile</scope>
       <version>2.0.1</version>
-      <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>org.simplejavamail</groupId>
       <artifactId>simple-java-mail</artifactId>
-      <version>8.11.2</version>
-      <scope>compile</scope>
       <exclusions>
         <exclusion>
-          <groupId>com.sun.activation</groupId>
           <artifactId>jakarta.activation</artifactId>
+          <groupId>com.sun.activation</groupId>
         </exclusion>
         <exclusion>
-          <groupId>com.sun.mail</groupId>
           <artifactId>jakarta.mail</artifactId>
+          <groupId>com.sun.mail</groupId>
         </exclusion>
       </exclusions>
+      <groupId>org.simplejavamail</groupId>
+      <scope>compile</scope>
+      <version>8.11.2</version>
     </dependency>
     <dependency>
-      <groupId>com.github.ben-manes.caffeine</groupId>
       <artifactId>caffeine</artifactId>
+      <groupId>com.github.ben-manes.caffeine</groupId>
+      <scope>compile</scope>
       <version>3.1.8</version>
-      <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>com.konghq</groupId>
       <artifactId>unirest-java-core</artifactId>
+      <groupId>com.konghq</groupId>
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>com.konghq</groupId>
       <artifactId>unirest-modules-gson</artifactId>
-      <scope>runtime</scope>
       <exclusions>
         <exclusion>
-          <groupId>com.google.code.gson</groupId>
           <artifactId>gson</artifactId>
+          <groupId>com.google.code.gson</groupId>
         </exclusion>
       </exclusions>
+      <groupId>com.konghq</groupId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>dev.rollczi</groupId>
       <artifactId>litecommands-velocity</artifactId>
-      <version>3.4.2</version>
+      <groupId>dev.rollczi</groupId>
       <scope>compile</scope>
+      <version>3.4.2</version>
     </dependency>
     <dependency>
-      <groupId>com.velocitypowered</groupId>
       <artifactId>velocity-api</artifactId>
-      <version>3.2.0-SNAPSHOT</version>
+      <groupId>com.velocitypowered</groupId>
       <scope>provided</scope>
+      <version>3.2.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>com.konghq</groupId>
         <artifactId>unirest-java-bom</artifactId>
-        <version>4.4.0</version>
-        <type>pom</type>
+        <groupId>com.konghq</groupId>
         <scope>import</scope>
+        <type>pom</type>
+        <version>4.4.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>auroramc-auth</artifactId>
+    <groupId>pl.auroramc</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
 </project>

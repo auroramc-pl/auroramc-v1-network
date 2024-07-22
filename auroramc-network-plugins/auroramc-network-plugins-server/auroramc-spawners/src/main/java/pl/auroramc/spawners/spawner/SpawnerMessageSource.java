@@ -20,10 +20,7 @@ public class SpawnerMessageSource extends OkaeriConfig {
           "<red>Nie posiadasz wystarczająco pieniędzy, aby zmienić typ spawnera na wybrany przez ciebie.");
 
   public MutableMessage spawnerCouldNotBePurchasedBecauseOfSameType =
-      MutableMessage.of(
-          "<red>Nie możesz zmienić spawnera na ten typ, ponieważ już go posiada.");
+      MutableMessage.of("<red>Nie możesz zmienić spawnera na ten typ, ponieważ już go posiada.");
 
-  public MutableMessage spawnerDisplayName =
-      MutableMessage.of(
-          "<white><creatureType>Spawner");
+  public MutableMessage spawnerDisplayName = MutableMessage.of("<white><creatureType>Spawner");
 }

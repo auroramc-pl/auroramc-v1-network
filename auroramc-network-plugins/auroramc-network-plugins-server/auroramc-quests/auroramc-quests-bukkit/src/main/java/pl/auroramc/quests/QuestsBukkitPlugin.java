@@ -90,7 +90,8 @@ public class QuestsBukkitPlugin extends JavaPlugin {
     juliet =
         JulietBuilder.newBuilder().withDataSource(getHikariDataSource(julietConfig.hikari)).build();
 
-    final ResourceKeyFacade resourceKeyFacade = resolveService(getServer(), ResourceKeyFacade.class);
+    final ResourceKeyFacade resourceKeyFacade =
+        resolveService(getServer(), ResourceKeyFacade.class);
     final QuestIndex questIndex = getQuestIndex();
     final QuestFacade questFacade = getQuestFacade(getQuestsDirectoryPath(), getClassLoader());
     final List<Quest> quests = questFacade.getQuests();

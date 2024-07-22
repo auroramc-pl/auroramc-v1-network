@@ -35,8 +35,7 @@ public class UserListener {
       final UserFacade userFacade,
       final UserController userController,
       final IdentityGenerator identityGenerator,
-      final String unparsedUsernamePattern
-  ) {
+      final String unparsedUsernamePattern) {
     this.logger = logger;
     this.messageSource = messageSource;
     this.userFacade = userFacade;
@@ -51,20 +50,21 @@ public class UserListener {
       return;
     }
 
-    event.setResult(PreLoginComponentResult.denied(messageSource.specifiedUsernameIsInvalid.compile()));
+    event.setResult(
+        PreLoginComponentResult.denied(messageSource.specifiedUsernameIsInvalid.compile()));
   }
 
   @Subscribe
-  public void onUserAuthentication(
-      final PostLoginEvent event, final Continuation continuation) {
+  public void onUserAuthentication(final PostLoginEvent event, final Continuation continuation) {
     resumeWhenComplete(
-        userController.authenticateUser(event.getPlayer())
-            .thenCompose(state -> userFacade.getUserByUniqueId(event.getPlayer().getUniqueId()))
-            .thenApply(this::markUserAsAuthenticated)
-            .thenApply(this::infoAboutAuthentication)
-            .thenAccept(event.getPlayer()::sendMessage)
-            .exceptionally(exception -> delegateCaughtException(logger, exception))
-    ).execute(continuation);
+            userController
+                .authenticateUser(event.getPlayer())
+                .thenCompose(state -> userFacade.getUserByUniqueId(event.getPlayer().getUniqueId()))
+                .thenApply(this::markUserAsAuthenticated)
+                .thenApply(this::infoAboutAuthentication)
+                .thenAccept(event.getPlayer()::sendMessage)
+                .exceptionally(exception -> delegateCaughtException(logger, exception)))
+        .execute(continuation);
   }
 
   private User markUserAsAuthenticated(final User user) {
@@ -77,22 +77,21 @@ public class UserListener {
       return messageSource.authorizedWithPremium.compile();
     }
 
-    return (
-        user.isRegistered()
+    return (user.isRegistered()
             ? messageSource.suggestAuthorization
-            : messageSource.suggestRegistration
-    ).compile();
+            : messageSource.suggestRegistration)
+        .compile();
   }
 
   @Subscribe
   public void onUserServerConnection(
-      final PlayerChooseInitialServerEvent event, final Continuation continuation
-  ) {
+      final PlayerChooseInitialServerEvent event, final Continuation continuation) {
     resumeWhenComplete(
-        userFacade.getUserByUniqueId(event.getPlayer().getUniqueId())
-            .thenAccept(user -> userController.redirectUser(event, user))
-            .exceptionally(exception -> delegateCaughtException(logger, exception))
-    ).execute(continuation);
+            userFacade
+                .getUserByUniqueId(event.getPlayer().getUniqueId())
+                .thenAccept(user -> userController.redirectUser(event, user))
+                .exceptionally(exception -> delegateCaughtException(logger, exception)))
+        .execute(continuation);
   }
 
   @Subscribe
@@ -102,14 +101,15 @@ public class UserListener {
 
   @Subscribe
   public void onUserGameProfileRequest(
-      final GameProfileRequestEvent event, final Continuation continuation
-  ) {
+      final GameProfileRequestEvent event, final Continuation continuation) {
     resumeWhenComplete(
-        userFacade.getUserByUsername(event.getUsername())
-            .thenCompose(user -> getUniqueIdOrGenerate(user, event.getUsername()))
-            .thenAccept(uniqueId -> event.setGameProfile(event.getGameProfile().withId(uniqueId)))
-            .exceptionally(exception -> delegateCaughtException(logger, exception))
-    ).execute(continuation);
+            userFacade
+                .getUserByUsername(event.getUsername())
+                .thenCompose(user -> getUniqueIdOrGenerate(user, event.getUsername()))
+                .thenAccept(
+                    uniqueId -> event.setGameProfile(event.getGameProfile().withId(uniqueId)))
+                .exceptionally(exception -> delegateCaughtException(logger, exception)))
+        .execute(continuation);
   }
 
   private CompletableFuture<UUID> getUniqueIdOrGenerate(final User user, final String username) {
