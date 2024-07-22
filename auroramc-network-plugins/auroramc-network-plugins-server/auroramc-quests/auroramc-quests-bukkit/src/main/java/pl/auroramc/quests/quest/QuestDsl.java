@@ -1,20 +1,13 @@
 package pl.auroramc.quests.quest;
 
 import static groovy.lang.Closure.DELEGATE_ONLY;
-import static org.bukkit.Bukkit.getServer;
-import static org.bukkit.Material.STONE;
 
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.inventory.ItemStack;
-import pl.auroramc.integrations.item.ItemStackBuilder;
 import pl.auroramc.quests.objective.Objective;
 import pl.auroramc.quests.objective.ObjectiveBuilder;
-import pl.auroramc.quests.quest.reward.ExecQuestReward;
-import pl.auroramc.quests.quest.reward.ItemQuestReward;
-import pl.auroramc.quests.quest.reward.QuestReward;
 
 class QuestDsl {
 
@@ -46,39 +39,6 @@ class QuestDsl {
 
     public List<Objective<?>> objectives() {
       return objectives;
-    }
-  }
-
-  static class QuestRewardsDsl {
-
-    private final List<QuestReward<?>> rewards;
-
-    QuestRewardsDsl() {
-      this.rewards = new ArrayList<>();
-    }
-
-    public void item(final ItemStack item) {
-      rewards.add(new ItemQuestReward(item));
-    }
-
-    public void item(final @DelegatesTo(ItemStackBuilder.class) Closure<?> closure) {
-      final ItemStackBuilder delegate = ItemStackBuilder.newBuilder(STONE);
-      closure.setDelegate(delegate);
-      closure.setResolveStrategy(DELEGATE_ONLY);
-      closure.call();
-      rewards.add(new ItemQuestReward(delegate.build()));
-    }
-
-    public void exec(final List<String> commands) {
-      rewards.add(new ExecQuestReward(getServer(), commands));
-    }
-
-    public void exec(final String... commands) {
-      exec(List.of(commands));
-    }
-
-    public List<QuestReward<?>> rewards() {
-      return rewards;
     }
   }
 }

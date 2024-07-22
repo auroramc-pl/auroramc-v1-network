@@ -8,10 +8,10 @@ import groovy.lang.DelegatesTo;
 import java.util.List;
 import org.bukkit.inventory.ItemStack;
 import pl.auroramc.integrations.item.ItemStackBuilder;
+import pl.auroramc.integrations.reward.Reward;
+import pl.auroramc.integrations.reward.RewardsDsl;
 import pl.auroramc.quests.objective.Objective;
 import pl.auroramc.quests.quest.QuestDsl.ObjectivesDsl;
-import pl.auroramc.quests.quest.QuestDsl.QuestRewardsDsl;
-import pl.auroramc.quests.quest.reward.QuestReward;
 import pl.auroramc.quests.resource.key.ResourceKey;
 import pl.auroramc.quests.resource.key.ResourceKeyBuilder;
 
@@ -20,7 +20,7 @@ public final class QuestBuilder {
   private ResourceKey key;
   private ItemStack icon;
   private List<Objective<?>> objectives = List.of();
-  private List<QuestReward<?>> rewards = List.of();
+  private List<Reward> rewards = List.of();
   private int weight;
 
   QuestBuilder() {}
@@ -61,14 +61,13 @@ public final class QuestBuilder {
     return objectives(objectivesDsl.objectives());
   }
 
-  public QuestBuilder rewards(final List<QuestReward<?>> rewards) {
+  public QuestBuilder rewards(final List<Reward> rewards) {
     this.rewards = rewards;
     return this;
   }
 
-  public QuestBuilder rewards(
-      final @DelegatesTo(value = QuestRewardsDsl.class) Closure<?> closure) {
-    final QuestRewardsDsl rewardsDsl = new QuestRewardsDsl();
+  public QuestBuilder rewards(final @DelegatesTo(value = RewardsDsl.class) Closure<?> closure) {
+    final RewardsDsl rewardsDsl = new RewardsDsl();
     closure.setDelegate(rewardsDsl);
     closure.setResolveStrategy(DELEGATE_ONLY);
     closure.call();

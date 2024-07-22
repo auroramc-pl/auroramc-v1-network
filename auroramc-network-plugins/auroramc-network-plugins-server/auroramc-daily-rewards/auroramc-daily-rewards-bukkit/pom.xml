@@ -17,6 +17,18 @@
       <version>1.0-SNAPSHOT</version>
     </dependency>
     <dependency>
+      <artifactId>auroramc-integrations-dsl</artifactId>
+      <groupId>pl.auroramc</groupId>
+      <scope>compile</scope>
+      <version>1.0-SNAPSHOT</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>groovy-jsr223</artifactId>
+          <groupId>org.apache.groovy</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
       <artifactId>auroramc-nametags</artifactId>
       <groupId>pl.auroramc</groupId>
       <scope>compile</scope>

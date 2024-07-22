@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.ApiStatus.Internal;
+import pl.auroramc.integrations.reward.Reward;
 import pl.auroramc.quests.objective.Objective;
-import pl.auroramc.quests.quest.reward.QuestReward;
 import pl.auroramc.quests.resource.Resource;
 import pl.auroramc.quests.resource.key.ResourceKey;
 
@@ -16,14 +16,14 @@ public final class Quest extends Resource {
       new ConcurrentHashMap<>();
   private final ItemStack icon;
   private final List<Objective<?>> objectives;
-  private final List<QuestReward<?>> rewards;
+  private final List<Reward> rewards;
   private final int weight;
 
   Quest(
       final ResourceKey key,
       final ItemStack icon,
       final List<Objective<?>> objectives,
-      final List<QuestReward<?>> rewards,
+      final List<Reward> rewards,
       final int weight) {
     super(key);
     this.icon = icon;
@@ -76,7 +76,7 @@ public final class Quest extends Resource {
         .toList();
   }
 
-  public List<QuestReward<?>> getRewards() {
+  public List<Reward> getRewards() {
     return rewards;
   }
 

@@ -13,6 +13,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 import org.bukkit.entity.Player;
 import pl.auroramc.commons.scheduler.Scheduler;
+import pl.auroramc.integrations.reward.Reward;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 import pl.auroramc.quests.objective.Objective;
 import pl.auroramc.quests.objective.progress.ObjectiveProgressFacade;
@@ -21,7 +22,6 @@ import pl.auroramc.quests.quest.QuestMessageSource;
 import pl.auroramc.quests.quest.QuestState;
 import pl.auroramc.quests.quest.observer.QuestObserver;
 import pl.auroramc.quests.quest.observer.QuestObserverFacade;
-import pl.auroramc.quests.quest.reward.QuestReward;
 import pl.auroramc.registry.user.User;
 
 public class QuestTrackController {
@@ -103,10 +103,9 @@ public class QuestTrackController {
         .ifPresent(target -> scheduler.run(SYNC, () -> completeQuestSequence(quest, target)));
   }
 
-  @SuppressWarnings("unchecked")
   private void completeQuestSequence(final Quest quest, final Player player) {
-    for (final QuestReward<?> reward : quest.getRewards()) {
-      ((QuestReward<Player>) reward).apply(player);
+    for (final Reward reward : quest.getRewards()) {
+      reward.assign(player);
     }
 
     final QuestObserver questObserver =
