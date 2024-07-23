@@ -1,12 +1,11 @@
 package pl.auroramc.quests;
 
-import static java.nio.file.Files.createDirectory;
-import static java.nio.file.Files.exists;
 import static moe.rafal.juliet.datasource.hikari.HikariPooledDataSourceFactory.getHikariDataSource;
 import static pl.auroramc.commons.bukkit.BukkitUtils.registerFacades;
 import static pl.auroramc.commons.bukkit.BukkitUtils.registerListeners;
 import static pl.auroramc.commons.bukkit.BukkitUtils.resolveService;
 import static pl.auroramc.commons.bukkit.scheduler.BukkitSchedulerFactory.getBukkitScheduler;
+import static pl.auroramc.commons.resource.ResourceUtils.unpackResources;
 import static pl.auroramc.integrations.configs.juliet.JulietConfig.JULIET_CONFIG_FILE_NAME;
 import static pl.auroramc.messages.message.compiler.BukkitMessageCompiler.getBukkitMessageCompiler;
 import static pl.auroramc.quests.QuestsBukkitPluginUtils.initTranslationForObjectivesFromQuests;
@@ -23,7 +22,6 @@ import dev.rollczi.litecommands.adventure.LiteAdventureExtension;
 import dev.rollczi.litecommands.annotations.LiteCommandsAnnotations;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +70,9 @@ public class QuestsBukkitPlugin extends JavaPlugin {
 
   @Override
   public void onEnable() {
+    unpackResources(
+        getFile(), getDataFolder(), Set.of(QUESTS_DIRECTORY_NAME), Set.of());
+
     final ConfigFactory configFactory =
         new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
 
@@ -200,18 +201,6 @@ public class QuestsBukkitPlugin extends JavaPlugin {
   }
 
   private Path getQuestsDirectoryPath() {
-    final Path shopsDirectoryPath = getDataFolder().toPath().resolve(QUESTS_DIRECTORY_NAME);
-    if (exists(shopsDirectoryPath)) {
-      return shopsDirectoryPath;
-    }
-
-    try {
-      return createDirectory(shopsDirectoryPath);
-    } catch (final IOException exception) {
-      throw new QuestsInstantiationException(
-          "Could not create quests directory in %s path, because of unexpected exception."
-              .formatted(shopsDirectoryPath.toString()),
-          exception);
-    }
+    return getDataFolder().toPath().resolve(QUESTS_DIRECTORY_NAME);
   }
 }

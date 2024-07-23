@@ -1,6 +1,6 @@
 package pl.auroramc.shops.shop;
 
-import static pl.auroramc.shops.shop.ShopsViewFactory.produceShopsGui;
+import static pl.auroramc.shops.shop.ShopsViewFactory.getShopsGui;
 
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
@@ -29,6 +29,6 @@ public class ShopCommand {
 
   @Execute
   public void shop(final @Context Player player) {
-    produceShopsGui(plugin, shopFacade, productFacade).show(player);
+    getShopsGui(plugin, shopFacade, productFacade).show(player);
   }
 }

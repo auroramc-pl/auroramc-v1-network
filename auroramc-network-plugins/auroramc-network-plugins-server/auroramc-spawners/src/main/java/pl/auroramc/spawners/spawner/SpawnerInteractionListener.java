@@ -3,7 +3,7 @@ package pl.auroramc.spawners.spawner;
 import static org.bukkit.Material.SPAWNER;
 import static org.bukkit.event.EventPriority.HIGHEST;
 import static org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK;
-import static pl.auroramc.spawners.spawner.SpawnersViewFactory.produceSpawnersGui;
+import static pl.auroramc.spawners.spawner.SpawnersViewFactory.getSpawnersGui;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
@@ -57,7 +57,7 @@ public class SpawnerInteractionListener implements Listener {
   }
 
   private void processSpawnerInteraction(final Player player, final CreatureSpawner spawner) {
-    produceSpawnersGui(
+    getSpawnersGui(
             plugin,
             fundsCurrency,
             spawnerFacade,

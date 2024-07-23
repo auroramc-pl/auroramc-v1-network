@@ -14,7 +14,7 @@ final class ShopsViewFactory {
 
   private ShopsViewFactory() {}
 
-  static ChestGui produceShopsGui(
+  static ChestGui getShopsGui(
       final Plugin plugin, final ShopFacade shopFacade, final ProductFacade productFacade) {
     try (final InputStream inputStream = plugin.getResource(VIEW_DEFINITION_RESOURCE_PATH)) {
       if (inputStream == null) {

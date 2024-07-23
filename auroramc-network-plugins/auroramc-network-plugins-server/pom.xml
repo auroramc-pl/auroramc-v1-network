@@ -16,8 +16,8 @@
   <modules>
     <module>auroramc-auctions</module>
     <module>auroramc-bazaars</module>
+    <module>auroramc-bounties</module>
     <module>auroramc-cheque</module>
-    <module>auroramc-bounty</module>
     <module>auroramc-economy</module>
     <module>auroramc-essentials</module>
     <module>auroramc-gamble</module>

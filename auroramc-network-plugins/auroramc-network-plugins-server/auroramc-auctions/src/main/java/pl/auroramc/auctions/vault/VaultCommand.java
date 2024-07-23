@@ -1,6 +1,6 @@
 package pl.auroramc.auctions.vault;
 
-import static pl.auroramc.auctions.vault.VaultViewFactory.produceVaultView;
+import static pl.auroramc.auctions.vault.VaultViewFactory.getVaultView;
 
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
@@ -36,7 +36,7 @@ public class VaultCommand {
 
   @Execute
   public void vault(final @Context Player player) {
-    produceVaultView(
+    getVaultView(
             plugin,
             scheduler,
             messageSource,

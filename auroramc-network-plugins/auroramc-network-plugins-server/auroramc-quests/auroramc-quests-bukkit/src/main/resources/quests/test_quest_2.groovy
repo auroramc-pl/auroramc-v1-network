@@ -42,7 +42,7 @@ quest {
         }
     }
     rewards {
-        exec("eco add {target} 1 100")
+        exec("eco add <target> 1 100")
     }
     weight(2)
 }

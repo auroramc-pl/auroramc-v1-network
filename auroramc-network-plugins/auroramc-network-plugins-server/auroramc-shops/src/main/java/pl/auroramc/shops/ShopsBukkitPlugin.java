@@ -1,9 +1,8 @@
 package pl.auroramc.shops;
 
-import static java.nio.file.Files.createDirectory;
-import static java.nio.file.Files.exists;
 import static pl.auroramc.commons.bukkit.BukkitUtils.resolveService;
 import static pl.auroramc.commons.bukkit.scheduler.BukkitSchedulerFactory.getBukkitScheduler;
+import static pl.auroramc.commons.resource.ResourceUtils.unpackResources;
 import static pl.auroramc.messages.message.compiler.BukkitMessageCompiler.getBukkitMessageCompiler;
 import static pl.auroramc.shops.ShopsConfig.SHOPS_CONFIG_FILE_NAME;
 import static pl.auroramc.shops.message.MessageSource.MESSAGE_SOURCE_FILE_NAME;
@@ -15,9 +14,9 @@ import dev.rollczi.litecommands.adventure.LiteAdventureExtension;
 import dev.rollczi.litecommands.annotations.LiteCommandsAnnotations;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.Set;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.auroramc.commons.scheduler.Scheduler;
@@ -36,11 +35,15 @@ import pl.auroramc.shops.shop.ShopFacade;
 
 public class ShopsBukkitPlugin extends JavaPlugin {
 
+  private static final String GUIS_DIRECTORY_NAME = "guis";
   private static final String SHOPS_DIRECTORY_NAME = "shops";
   private LiteCommands<CommandSender> commands;
 
   @Override
   public void onEnable() {
+    unpackResources(
+        getFile(), getDataFolder(), Set.of(GUIS_DIRECTORY_NAME, SHOPS_DIRECTORY_NAME), Set.of());
+
     final ConfigFactory configFactory =
         new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
 
@@ -87,18 +90,6 @@ public class ShopsBukkitPlugin extends JavaPlugin {
   }
 
   private Path getShopsDirectoryPath() {
-    final Path shopsDirectoryPath = getDataFolder().toPath().resolve(SHOPS_DIRECTORY_NAME);
-    if (exists(shopsDirectoryPath)) {
-      return shopsDirectoryPath;
-    }
-
-    try {
-      return createDirectory(shopsDirectoryPath);
-    } catch (final IOException exception) {
-      throw new ShopsInstantiationException(
-          "Could not create shops directory in %s path, because of unexpected exception."
-              .formatted(shopsDirectoryPath.toString()),
-          exception);
-    }
+    return getDataFolder().toPath().resolve(SHOPS_DIRECTORY_NAME);
   }
 }

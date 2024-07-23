@@ -16,7 +16,7 @@ final class ProductViewFactory {
 
   private ProductViewFactory() {}
 
-  static ChestGui produceProductGui(
+  static ChestGui getProductGui(
       final Plugin plugin,
       final Currency fundsCurrency,
       final ProductMessageSource messageSource,

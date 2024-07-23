@@ -7,7 +7,7 @@ import static pl.auroramc.integrations.item.ItemStackUtils.giveOrDropItemStack;
 import static pl.auroramc.shops.product.ProductMessageSourcePaths.CONTEXT_PATH;
 import static pl.auroramc.shops.product.ProductUtils.getEmptySlotsCount;
 import static pl.auroramc.shops.product.ProductUtils.getQuantityInSlots;
-import static pl.auroramc.shops.product.ProductViewFactory.produceProductGui;
+import static pl.auroramc.shops.product.ProductViewFactory.getProductGui;
 
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import java.math.BigDecimal;
@@ -51,7 +51,7 @@ class ProductService implements ProductFacade {
 
   @Override
   public void showProducts(final Player player, final Shop shop, final ChestGui shopsGui) {
-    produceProductGui(plugin, fundsCurrency, messageSource, messageCompiler, this, shop, shopsGui)
+    getProductGui(plugin, fundsCurrency, messageSource, messageCompiler, this, shop, shopsGui)
         .show(player);
   }
 
