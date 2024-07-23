@@ -16,7 +16,7 @@ final class SpawnersViewFactory {
 
   private SpawnersViewFactory() {}
 
-  static ChestGui produceSpawnersGui(
+  static ChestGui getSpawnersGui(
       final Plugin plugin,
       final Currency fundsCurrency,
       final SpawnerFacade spawnerFacade,

@@ -3,9 +3,9 @@
   <component name="SonarLintProjectSettings">
     <option name="moduleMapping">
       <map>
-        <entry key="auroramc-bounty" value="auroramc-daily-rewards" />
-        <entry key="auroramc-bounty-bukkit" value="auroramc-daily-rewards-bukkit" />
-        <entry key="auroramc-bounty-shared" value="auroramc-daily-rewards-shared" />
+        <entry key="auroramc-bounties" value="auroramc-daily-rewards" />
+        <entry key="auroramc-bounties-bukkit" value="auroramc-daily-rewards-bukkit" />
+        <entry key="auroramc-bounties-shared" value="auroramc-daily-rewards-shared" />
       </map>
     </option>
   </component>

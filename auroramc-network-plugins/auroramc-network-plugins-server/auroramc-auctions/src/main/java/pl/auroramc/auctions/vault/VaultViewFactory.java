@@ -14,7 +14,7 @@ class VaultViewFactory {
 
   private VaultViewFactory() {}
 
-  static ChestGui produceVaultView(
+  static ChestGui getVaultView(
       final Plugin plugin,
       final Scheduler scheduler,
       final VaultMessageSource messageSource,
