@@ -2,6 +2,7 @@ package pl.auroramc.auctions.auction;
 
 import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_DOWN;
+import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.UUID.randomUUID;
 import static pl.auroramc.auctions.auction.AuctionMessageSourcePaths.AUCTION_PATH;
 import static pl.auroramc.auctions.auction.AuctionMessageSourcePaths.CONTEXT_PATH;
@@ -16,6 +17,7 @@ import static pl.auroramc.commons.concurrent.Mutex.mutex;
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.cooldown.Cooldown;
 import dev.rollczi.litecommands.annotations.execute.Execute;
 import dev.rollczi.litecommands.annotations.optional.OptionalArg;
 import dev.rollczi.litecommands.annotations.permission.Permission;
@@ -40,6 +42,7 @@ import pl.auroramc.messages.message.compiler.CompiledMessage;
 
 @Permission("auroramc.auctions.auction")
 @Command(name = "auction")
+@Cooldown(key = "auction-cooldown", count = 3, unit = SECONDS)
 public class AuctionCommand {
 
   private final AudienceFacade audienceFacade;

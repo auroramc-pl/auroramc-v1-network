@@ -4,10 +4,12 @@ import static java.time.Duration.ZERO;
 import static java.time.LocalDate.now;
 import static java.time.LocalTime.MAX;
 import static java.time.ZoneOffset.UTC;
+import static java.time.temporal.ChronoUnit.SECONDS;
 import static pl.auroramc.commons.scheduler.SchedulerPoll.SYNC;
 
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.cooldown.Cooldown;
 import dev.rollczi.litecommands.annotations.execute.Execute;
 import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.time.Duration;
@@ -31,6 +33,7 @@ import pl.auroramc.registry.user.UserFacade;
 @Command(
     name = "bounty",
     aliases = {"daily", "nagroda", "nagrody"})
+@Cooldown(key = "bounty-cooldown", count = 30, unit = SECONDS)
 public class BountyCommand {
 
   private final Scheduler scheduler;

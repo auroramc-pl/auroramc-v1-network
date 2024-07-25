@@ -25,7 +25,9 @@ import pl.auroramc.registry.user.User;
 import pl.auroramc.registry.user.UserFacade;
 
 @Permission("auroramc.quests.quests")
-@Command(name = "quests")
+@Command(
+    name = "quests",
+    aliases = {"quest", "zadania", "zadanie"})
 @Cooldown(key = "quests-cooldown", count = 30, unit = SECONDS)
 public class QuestsCommand {
 
