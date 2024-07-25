@@ -9,103 +9,103 @@ public class MutableMessageSource extends OkaeriConfig {
   public static final @Exclude String MESSAGE_SOURCE_FILE_NAME = "messages.yml";
 
   public MutableMessage availableSchematicsSuggestion =
-      MutableMessage.of("<red>Poprawne użycie: <yellow><newline><schematics>");
+      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Poprawne użycie: <gradient:#ffad33:#ff8052:#ffdb57:#ff8052:#ffdb57:#ffad33><newline><schematics>");
 
   public MutableMessage executionOfCommandIsNotPermitted =
-      MutableMessage.of("<red>Nie posiadasz wystarczających uprawnień aby użyć tej komendy.");
+      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie posiadasz wystarczających uprawnień aby użyć tej komendy.");
 
   public MutableMessage executionFromConsoleIsUnsupported =
-      MutableMessage.of("<red>Nie możesz użyć tej konsoli z poziomu konsoli.");
+      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie możesz użyć tej konsoli z poziomu konsoli.");
 
   public MutableMessage notAllowedBecauseOfPremiumAccount =
       MutableMessage.of(
-          "<red>Nie możesz tego zrobić, ponieważ posiadasz włączone automatyczne uwierzytelnianie!");
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie możesz tego zrobić, ponieważ posiadasz włączone automatyczne uwierzytelnianie!");
 
   public MutableMessage notAllowedBecauseOfRegisteredAccount =
-      MutableMessage.of("<red>Nie możesz tego zrobić, ponieważ jesteś już zarejestrowany!");
+      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie możesz tego zrobić, ponieważ jesteś już zarejestrowany!");
 
   public MutableMessage notAllowedBecauseOfNonRegisteredAccount =
       MutableMessage.of(
-          "<red>Nie możesz tego zrobić, ponieważ nie jesteś zarejestrowany, użyj <yellow>/register<red>, aby to zrobić!");
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie możesz tego zrobić, ponieważ nie jesteś zarejestrowany, użyj <gradient:#ffad33:#ff8052:#ffdb57:#ff8052:#ffdb57:#ffad33>/register<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>, aby to zrobić!");
 
   public MutableMessage notAllowedBecauseOfAuthorization =
-      MutableMessage.of("<red>Nie możesz tego zrobić, ponieważ jesteś już uwierzytelniony!");
+      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie możesz tego zrobić, ponieważ jesteś już uwierzytelniony!");
 
   public MutableMessage notAllowedBecauseOfMissingAuthorization =
-      MutableMessage.of("<red>Nie możesz tego zrobić, ponieważ nie jesteś zalogowany!");
+      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie możesz tego zrobić, ponieważ nie jesteś zalogowany!");
 
   public MutableMessage specifiedPasswordsDiffers =
-      MutableMessage.of("<red>Wprowadzone przez ciebie hasła różnią się!");
+      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wprowadzone przez ciebie hasła różnią się!");
 
   public MutableMessage specifiedPasswordIsInvalid =
-      MutableMessage.of("<red>Wprowadzone przez ciebie hasło jest nieprawidłowe!");
+      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wprowadzone przez ciebie hasło jest nieprawidłowe!");
 
   public MutableMessage specifiedPasswordIsSame =
       MutableMessage.of(
-          "<red>Nie możesz tego zrobić, ponieważ wprowadzone hasło nie różni się od bieżącego.");
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie możesz tego zrobić, ponieważ wprowadzone hasło nie różni się od bieżącego.");
 
   public MutableMessage specifiedPasswordIsUnsafe =
       MutableMessage.of(
           """
-      <red>Wprowadzone przez ciebie hasło nie spełnia wymagań!
-      <dark_gray>Wymagania dotyczące hasła:
-      <dark_red>► <red>Hasło może zawierać tylko znaki alfanumeryczne
-      <dark_red>► <red>Hasło musi zawierać co najmniej jedną małą literę
-      <dark_red>► <red>Hasło musi zawierać co najmniej jedną dużą literę
-      <dark_red>► <red>Hasło musi zawierać co najmniej 8 znaków
-      <dark_red>► <red>Hasło musi zawierać co najwyżej 32 znaki
+      <gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wprowadzone przez ciebie hasło nie spełnia wymagań!
+      <#7c5058>Wymagania dotyczące hasła:
+      <#990000>► <gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Hasło może zawierać tylko znaki alfanumeryczne
+      <#990000>► <gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Hasło musi zawierać co najmniej jedną małą literę
+      <#990000>► <gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Hasło musi zawierać co najmniej jedną dużą literę
+      <#990000>► <gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Hasło musi zawierać co najmniej 8 znaków
+      <#990000>► <gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Hasło musi zawierać co najwyżej 32 znaki
       """
               .trim());
 
   public MutableMessage specifiedUsernameIsInvalid =
       MutableMessage.of(
-          "<red>Nazwa użytkownika, która jest przypisana do twojego konta jest nieprawidłowa.");
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nazwa użytkownika, która jest przypisana do twojego konta jest nieprawidłowa.");
 
   public MutableMessage specifiedEmailIsInvalid =
-      MutableMessage.of("<red>Wprowadzony przez ciebie adres email jest nieprawidłowy.");
+      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wprowadzony przez ciebie adres email jest nieprawidłowy.");
 
   public MutableMessage specifiedEmailIsTheSame =
-      MutableMessage.of("<red>Wprowadzony przez ciebie adres email jest taki sam jak aktualny.");
+      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wprowadzony przez ciebie adres email jest taki sam jak aktualny.");
 
   public MutableMessage specifiedEmailIsClaimed =
-      MutableMessage.of("<red>Wprowadzony przez ciebie adres email jest już zajęty.");
+      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wprowadzony przez ciebie adres email jest już zajęty.");
 
   public MutableMessage loginSuccessful =
       MutableMessage.of(
-          "<gray>Uwierzytelniłeś się pomyślnie, wkrótce zostaniesz przekierowany na serwer docelowy.");
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Uwierzytelniłeś się pomyślnie, wkrótce zostaniesz przekierowany na serwer docelowy.");
 
-  public MutableMessage passwordChanged = MutableMessage.of("<gray>Twoje hasło zostało zmienione.");
+  public MutableMessage passwordChanged = MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Twoje hasło zostało zmienione.");
 
   public MutableMessage registeredAccount =
-      MutableMessage.of("<gray>Twoje konto zostało zarejestrowane.");
+      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Twoje konto zostało zarejestrowane.");
 
   public MutableMessage unregisterAccount =
-      MutableMessage.of("<gray>Twoje konto zostało wyrejestrowane.");
+      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Twoje konto zostało wyrejestrowane.");
 
   public MutableMessage authorizationTicking =
       MutableMessage.of(
-          "<dark_gray>► <gray>Na uwierzytelnienie pozostało ci <white><period><gray>.");
+          "<#7c5058>► <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Na uwierzytelnienie pozostało ci <#f4a9ba><period><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>.");
 
   public MutableMessage authorizationTimeout =
-      MutableMessage.of("<red>Skończył ci się czas na uwierzytelnienie.");
+      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Skończył ci się czas na uwierzytelnienie.");
 
   public MutableMessage authorizedWithPremium =
-      MutableMessage.of("<gray>Zostałeś zalogowany automatycznie.");
+      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Zostałeś zalogowany automatycznie.");
 
   public MutableMessage suggestRegistration =
       MutableMessage.of(
-          "<gray>Aby przejść do rozgrywki musisz się zarejestrować, użyj <white>/register<gray>, aby to zrobić.");
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Aby przejść do rozgrywki musisz się zarejestrować, użyj <#f4a9ba>/register<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>, aby to zrobić.");
 
   public MutableMessage suggestAuthorization =
       MutableMessage.of(
-          "<gray>Aby przejść do rozgrywki musisz się uwierzytelnić, użyj <white>/login<gray>, aby to zrobić.");
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Aby przejść do rozgrywki musisz się uwierzytelnić, użyj <#f4a9ba>/login<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>, aby to zrobić.");
 
   public MutableMessage tooManyLoginAttempts =
       MutableMessage.of(
-          "<red>Przekroczyłeś limit prób na wpisanie hasła, jeśli chcesz spróbować ponownie, dołącz na serwer.");
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Przekroczyłeś limit prób na wpisanie hasła, jeśli chcesz spróbować ponownie, dołącz na serwer.");
 
   public MutableMessage emailHasBeenChanged =
-      MutableMessage.of("<gray>Ustawiłeś aktualny adres e-mail na <white><email><gray>.");
+      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Ustawiłeś aktualny adres e-mail na <#f4a9ba><email><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>.");
 
   public MutableMessage recoveryEmailSubject = MutableMessage.of("Odzyskiwanie hasła - AuroraMC");
 }

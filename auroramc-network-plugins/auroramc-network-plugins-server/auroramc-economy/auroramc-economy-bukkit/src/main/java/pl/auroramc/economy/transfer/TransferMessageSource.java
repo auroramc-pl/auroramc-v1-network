@@ -7,23 +7,23 @@ public class TransferMessageSource extends OkaeriConfig {
 
   public MutableMessage transferSent =
       MutableMessage.of(
-          "<gray>Wysłałeś przelew do <white><context.player.displayName><gray>, <gray>z twojego konta zostało odebrane <white><context.currency.@symbol><context.amount><gray>.");
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Wysłałeś przelew do <#f4a9ba><context.player.displayName><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>, <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>z twojego konta zostało odebrane <#f4a9ba><context.currency.@symbol><context.amount><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>.");
 
   public MutableMessage transferReceived =
       MutableMessage.of(
-          "<gray>Otrzymałeś przelew od <white><context.player.displayName><gray>, do twojego konta zostało dodane <white><context.currency.@symbol><context.amount><gray>.");
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Otrzymałeś przelew od <#f4a9ba><context.player.displayName><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>, do twojego konta zostało dodane <#f4a9ba><context.currency.@symbol><context.amount><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>.");
 
   public MutableMessage transferFailed =
       MutableMessage.of(
-          "<red>Operacja nie została wykonana, gdyż nie udało się odnaleźć waluty z id pasującym do <yellow><currency.@id><red>.");
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Operacja nie została wykonana, gdyż nie udało się odnaleźć waluty z id pasującym do <gradient:#ffad33:#ff8052:#ffdb57:#ff8052:#ffdb57:#ffad33><currency.@id><gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>.");
 
   public MutableMessage validationRequiresAmountGreaterThanZero =
-      MutableMessage.of("<red>Kwota musi być większa od zera.");
+      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Kwota musi być większa od zera.");
 
   public MutableMessage validationRequiresSpecifyingTarget =
-      MutableMessage.of("<red>Musisz określić poprawnego odbiorcę, aby wykonać tę operację.");
+      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Musisz określić poprawnego odbiorcę, aby wykonać tę operację.");
 
   public MutableMessage validationRequiresGreaterAmountOfBalance =
       MutableMessage.of(
-          "<red>Nie posiadasz wystarczającej ilości pieniędzy, aby wykonać ten przelew.");
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie posiadasz wystarczającej ilości pieniędzy, aby wykonać ten przelew.");
 }

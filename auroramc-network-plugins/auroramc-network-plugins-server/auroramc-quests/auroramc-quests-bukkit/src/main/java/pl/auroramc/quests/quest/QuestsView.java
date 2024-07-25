@@ -268,9 +268,9 @@ public class QuestsView {
     final List<CompiledMessage> entries = new ArrayList<>();
     entries.add(empty());
     entries.addAll(questObjectives);
+    entries.add(empty());
     entries.add(
         messageCompiler.compile(messageSource.questRequiresCompletionOfAllObjectives, NO_CURSIVE));
-    entries.add(empty());
     entries.add(messageCompiler.compile(messageSource.questCouldBeTracked, NO_CURSIVE));
     return entries.toArray(CompiledMessage[]::new);
   }

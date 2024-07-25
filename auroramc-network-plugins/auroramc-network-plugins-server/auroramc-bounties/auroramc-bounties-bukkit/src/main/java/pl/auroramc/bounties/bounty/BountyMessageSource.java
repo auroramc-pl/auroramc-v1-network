@@ -5,25 +5,25 @@ import pl.auroramc.messages.message.MutableMessage;
 
 public class BountyMessageSource extends OkaeriConfig {
 
-  public MutableMessage bountyTitle = MutableMessage.of("<gray>Dzień <white><day>");
+  public MutableMessage bountyTitle = MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Dzień <#f4a9ba><day>");
 
   public MutableMessage bountyAvailable =
-      MutableMessage.of("<gray>Naciśnij <white>LPM<gray>, aby odebrać tą nagrodę.");
+      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Naciśnij <#f4a9ba>LPM<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>, aby odebrać tą nagrodę.");
 
   public MutableMessage bountyAvailableSinceTomorrow =
-      MutableMessage.of("<gray>Nagroda ta będzie dla ciebie dostępna do odebrania już jutro.");
+      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Nagroda ta będzie dla ciebie dostępna do odebrania już jutro.");
 
   public MutableMessage remainingTimeUntilBounty =
-      MutableMessage.of("<gray>Nagrodę będziesz mógł odebrać za <white><remaining_time><gray>.");
+      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Nagrodę będziesz mógł odebrać za <#f4a9ba><remaining_time><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>.");
 
   public MutableMessage remainingDaysUntilBounty =
       MutableMessage.of(
-          "<gray>Nagroda będzie dostępna do odebrania za <white><remaining_days><gray>.");
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Nagroda będzie dostępna do odebrania za <#f4a9ba><remaining_days><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>.");
 
   public MutableMessage pastBounty =
-      MutableMessage.of("<red>Ta nagroda została już przez ciebie odebrana.");
+      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Ta nagroda została już przez ciebie odebrana.");
 
   public MutableMessage bountyAcquired =
       MutableMessage.of(
-          "<gray>Odebrałeś nagrodę dzienną za <white><day> <gray>dzień, następna nagroda będzie dostępna do odebrania już jutro.");
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Odebrałeś nagrodę dzienną za <#f4a9ba><day> <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>dzień, następna nagroda będzie dostępna do odebrania już jutro.");
 }

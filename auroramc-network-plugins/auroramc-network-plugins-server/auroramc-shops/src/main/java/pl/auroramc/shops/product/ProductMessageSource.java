@@ -7,32 +7,32 @@ public class ProductMessageSource extends OkaeriConfig {
 
   public MutableMessage productBought =
       MutableMessage.of(
-          "<gray>Zakupiłeś <white><context.product> <gray>w zamian za <white><context.currency.@symbol><context.price><gray>, które zostały pobrane z twojego konta.");
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Zakupiłeś <#f4a9ba><context.product> <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>w zamian za <#f4a9ba><context.currency.@symbol><context.price><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>, które zostały pobrane z twojego konta.");
 
   public MutableMessage productCouldNotBeBoughtBecauseOfMissingMoney =
       MutableMessage.of(
-          "<red>Nie posiadasz wystarczającej ilości środków na zakup tego przedmiotu.");
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie posiadasz wystarczającej ilości środków na zakup tego przedmiotu.");
 
   public MutableMessage productCouldNotBeBoughtBecauseOfMissingSpace =
-      MutableMessage.of("<red>Nie posiadasz wystarczająco miejsca w ekwipunku, aby to zakupić.");
+      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie posiadasz wystarczająco miejsca w ekwipunku, aby to zakupić.");
 
   public MutableMessage productSold =
       MutableMessage.of(
-          "<gray>Sprzedałeś <white><context.product> <gray>w zamian za <white><context.currency.@symbol><context.price><gray>, które zostały przelane na twoje konto.");
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Sprzedałeś <#f4a9ba><context.product> <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>w zamian za <#f4a9ba><context.currency.@symbol><context.price><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>, które zostały przelane na twoje konto.");
 
   public MutableMessage productCouldNotBeSoldBecauseOfMissingStock =
       MutableMessage.of(
-          "<red>Nie posiadasz wystarczającej ilości tego przedmiotu, aby go sprzedać.");
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie posiadasz wystarczającej ilości tego przedmiotu, aby go sprzedać.");
 
   public MutableMessage purchaseTag =
-      MutableMessage.of("<gray>Cena zakupu: <white><context.currency.@symbol><context.price>");
+      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Cena zakupu: <#f4a9ba><context.currency.@symbol><context.price>");
 
   public MutableMessage purchaseSuggestion =
-      MutableMessage.of("<gray>Naciśnij <white>LPM <gray>aby zakupić ten przedmiot.");
+      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Naciśnij <#f4a9ba>LPM <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>aby zakupić ten przedmiot.");
 
   public MutableMessage sellTag =
-      MutableMessage.of("<gray>Cena sprzedaży: <white><context.currency.@symbol><context.price>");
+      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Cena sprzedaży: <#f4a9ba><context.currency.@symbol><context.price>");
 
   public MutableMessage sellSuggestion =
-      MutableMessage.of("<gray>Naciśnij <white>PPM <gray>aby sprzedać ten przedmiot.");
+      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Naciśnij <#f4a9ba>PPM <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>aby sprzedać ten przedmiot.");
 }

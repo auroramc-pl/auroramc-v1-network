@@ -15,8 +15,8 @@ public class MessageSource extends OkaeriConfig {
 
   public List<MutableMessage> lines =
       List.of(
-          MutableMessage.of("<gray>Nazwa: <white>%player_name%"),
-          MutableMessage.of("<gray>Ranga: <white>%luckperms_primary_group_name%"));
+          MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Nazwa: <#f4a9ba>%player_name%"),
+          MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Ranga: <#f4a9ba>%luckperms_primary_group_name%"));
 
   public QuestMessageSource quest = new QuestMessageSource();
 }

@@ -10,44 +10,44 @@ public class MessageSource extends OkaeriConfig {
 
   public MutableMessage invalidMerchant =
       MutableMessage.of(
-          "<red>Nie możesz stworzyć tabliczki dla innego gracza, upewnij się, czy wpisałeś swoją nazwę poprawnie.");
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie możesz stworzyć tabliczki dla innego gracza, upewnij się, czy wpisałeś swoją nazwę poprawnie.");
 
   public MutableMessage invalidQuantity =
-      MutableMessage.of("<red>Wskazana przez ciebie ilość jest nieprawidłowa.");
+      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wskazana przez ciebie ilość jest nieprawidłowa.");
 
   public MutableMessage invalidPrice =
-      MutableMessage.of("<red>Wskazana przez ciebie cena jest nieprawidłowa.");
+      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wskazana przez ciebie cena jest nieprawidłowa.");
 
   public MutableMessage bazaarSelfInteraction =
-      MutableMessage.of("<red>Nie możesz korzystać z własnego bazaru.");
+      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie możesz korzystać z własnego bazaru.");
 
   public MutableMessage bazaarOutOfStock =
       MutableMessage.of(
-          "<red>Bazar, z którego próbujesz zakupić przedmioty nie posiada ich wystarczająco na stanie.");
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Bazar, z którego próbujesz zakupić przedmioty nie posiada ich wystarczająco na stanie.");
 
   public MutableMessage bazaarOutOfSpace =
       MutableMessage.of(
-          "<red>Bazar, do którego próbujesz sprzedać przedmioty nie posiada wystarczająco miejsca.");
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Bazar, do którego próbujesz sprzedać przedmioty nie posiada wystarczająco miejsca.");
 
   public MutableMessage customerOutOfSpace =
-      MutableMessage.of("<red>Nie posiadasz wystarczająco miejsca w ekwipunku, aby to zakupić.");
+      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie posiadasz wystarczająco miejsca w ekwipunku, aby to zakupić.");
 
   public MutableMessage customerOutOfProduct =
-      MutableMessage.of("<red>Nie posiadasz wystarczająco przedmiotów, aby to sprzedać.");
+      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie posiadasz wystarczająco przedmiotów, aby to sprzedać.");
 
   public MutableMessage customerOutOfBalance =
       MutableMessage.of(
-          "<red>Nie posiadasz wystarczającej ilości gotówki na zakup tego przedmiotu.");
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie posiadasz wystarczającej ilości gotówki na zakup tego przedmiotu.");
 
   public MutableMessage merchantOutOfBalance =
       MutableMessage.of(
-          "<red>Właściciel bazaru, do którego próbujesz sprzedać przedmioty nie posiada wystarczająco gotówki.");
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Właściciel bazaru, do którego próbujesz sprzedać przedmioty nie posiada wystarczająco gotówki.");
 
   public MutableMessage productBought =
       MutableMessage.of(
-          "<gray>Zakupiłeś <white><product> <gray>od <white><context.merchant> <gray>za <white><currency.@symbol><context.price><gray>, które zostały pobrane z twojego konta.");
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Zakupiłeś <#f4a9ba><product> <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>od <#f4a9ba><context.merchant> <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>za <#f4a9ba><currency.@symbol><context.price><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>, które zostały pobrane z twojego konta.");
 
   public MutableMessage productSold =
       MutableMessage.of(
-          "<gray>Sprzedałeś <white><product> <gray>od <white><context.merchant> <gray>za <white><currency.@symbol><context.price><gray>, które zostały dodane do twojego konta.");
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Sprzedałeś <#f4a9ba><product> <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>od <#f4a9ba><context.merchant> <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>za <#f4a9ba><currency.@symbol><context.price><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>, które zostały dodane do twojego konta.");
 }

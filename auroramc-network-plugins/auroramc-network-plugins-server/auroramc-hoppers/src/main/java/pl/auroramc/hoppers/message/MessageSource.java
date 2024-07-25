@@ -11,10 +11,10 @@ public class MessageSource extends OkaeriConfig {
 
   public MutableMessage hopperHasBeenGiven =
       MutableMessage.of(
-          "<gray>Do twojego ekwipunku został dodany lejek przenoszący <white><quantity> <gray>przedmiotów.");
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Do twojego ekwipunku został dodany lejek przenoszący <#f4a9ba><quantity> <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>przedmiotów.");
 
   public MutableMessage hopperDisplayName =
-      MutableMessage.of("<gray>Hopper <dark_gray>(<white><quantity><dark_gray>)");
+      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Hopper <#7c5058>(<#f4a9ba><quantity><#7c5058>)");
 
   public CommandMessageSource command = new CommandMessageSource();
 }

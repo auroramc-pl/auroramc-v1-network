@@ -10,13 +10,13 @@ import static shops.HopperUtils.getHopperWithTransferQuantity
 
 shop {
     icon {
-        displayName("<gray>Bloki")
+        displayName("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Bloki")
     }
     paymentCurrencyId(1)
     products {
         product {
             icon {
-                displayName("<gray>Kamień")
+                displayName("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Kamień")
             }
             subject {
                 type(Material.STONE)
@@ -41,12 +41,12 @@ class HopperUtils {
                 .with {
                     icon {
                         type(Material.HOPPER)
-                        displayName("<gray>Hopper <dark_gray>(<white>$transferQuantity</white><dark_gray>)")
+                        displayName("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Hopper <#7c5058>(<#f4a9ba>$transferQuantity</white><#7c5058>)")
                     }
                     subject {
                         type(Material.HOPPER)
                         data(new NamespacedKey("auroramc-hoppers", "transfer_quantity"), PersistentDataType.INTEGER, transferQuantity)
-                        displayName("<gray>Hopper <dark_gray>(<white>$transferQuantity</white><dark_gray>)")
+                        displayName("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Hopper <#7c5058>(<#f4a9ba>$transferQuantity</white><#7c5058>)")
                     }
                     quantity(1)
                     priceForPurchase(suggestedPurchasePrice)
