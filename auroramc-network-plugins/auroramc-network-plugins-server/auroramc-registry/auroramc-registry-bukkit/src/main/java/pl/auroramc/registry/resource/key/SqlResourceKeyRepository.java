@@ -4,7 +4,7 @@ import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static pl.auroramc.registry.resource.key.SqlResourceKeyRepositoryQuery.CREATE_RESOURCE_KEY;
 import static pl.auroramc.registry.resource.key.SqlResourceKeyRepositoryQuery.CREATE_RESOURCE_KEYS_SCHEMA;
 import static pl.auroramc.registry.resource.key.SqlResourceKeyRepositoryQuery.DELETE_RESOURCE_KEY;
-import static pl.auroramc.registry.resource.key.SqlResourceKeyRepositoryQuery.GET_RESOURCE_KEYS;
+import static pl.auroramc.registry.resource.key.SqlResourceKeyRepositoryQuery.GET_RESOURCE_KEYS_BY_PROVIDER_ID;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,14 +34,19 @@ class SqlResourceKeyRepository implements ResourceKeyRepository {
   }
 
   @Override
-  public List<ResourceKey> getResourceKeys() {
+  public List<ResourceKey> getResourceKeysByProviderId(final Long providerId) {
     try (final Connection connection = juliet.borrowConnection();
-        final PreparedStatement statement = connection.prepareStatement(GET_RESOURCE_KEYS)) {
+        final PreparedStatement statement =
+            connection.prepareStatement(GET_RESOURCE_KEYS_BY_PROVIDER_ID)) {
+      statement.setLong(1, providerId);
+
       final List<ResourceKey> results = new ArrayList<>();
-      final ResultSet resultSet = statement.executeQuery();
-      while (resultSet.next()) {
-        results.add(mapResultSetToResourceKey(resultSet));
+      try (final ResultSet resultSet = statement.executeQuery()) {
+        while (resultSet.next()) {
+          results.add(mapResultSetToResourceKey(resultSet));
+        }
       }
+
       return results;
     } catch (final SQLException exception) {
       throw new ResourceKeyRepositoryException(
@@ -55,7 +60,8 @@ class SqlResourceKeyRepository implements ResourceKeyRepository {
         final PreparedStatement statement =
             connection.prepareStatement(CREATE_RESOURCE_KEY, RETURN_GENERATED_KEYS)) {
       for (final ResourceKey resourceKey : resourceKeys) {
-        statement.setString(1, resourceKey.getName());
+        statement.setLong(1, resourceKey.getProviderId());
+        statement.setString(2, resourceKey.getName());
         statement.addBatch();
       }
       statement.executeBatch();
@@ -88,6 +94,7 @@ class SqlResourceKeyRepository implements ResourceKeyRepository {
   }
 
   private ResourceKey mapResultSetToResourceKey(final ResultSet resultSet) throws SQLException {
-    return new ResourceKey(resultSet.getLong("id"), resultSet.getString("name"));
+    return new ResourceKey(
+        resultSet.getLong("id"), resultSet.getLong("provider_id"), resultSet.getString("name"));
   }
 }

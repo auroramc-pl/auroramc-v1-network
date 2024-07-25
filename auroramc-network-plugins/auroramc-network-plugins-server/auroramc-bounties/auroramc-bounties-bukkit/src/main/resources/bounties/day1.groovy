@@ -7,7 +7,7 @@ import static pl.auroramc.bounties.bounty.BountyDsl.bounty
 
 bounty {
     key {
-        name("day_1")
+        withName("day_1")
     }
     icon {
         lore(

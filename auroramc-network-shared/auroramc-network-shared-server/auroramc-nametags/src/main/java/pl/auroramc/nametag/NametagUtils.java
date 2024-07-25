@@ -3,7 +3,7 @@ package pl.auroramc.nametag;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import net.minecraft.server.network.ServerPlayerConnection;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 final class NametagUtils {

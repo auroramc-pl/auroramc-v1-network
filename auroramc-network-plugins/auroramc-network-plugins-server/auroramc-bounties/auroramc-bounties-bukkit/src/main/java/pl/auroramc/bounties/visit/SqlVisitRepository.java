@@ -58,9 +58,10 @@ class SqlVisitRepository implements VisitRepository {
       statement.setLong(1, userId);
 
       final Set<Visit> results = new HashSet<>();
-      final ResultSet resultSet = statement.executeQuery();
-      while (resultSet.next()) {
-        results.add(mapResultSetToVisit(resultSet));
+      try (final ResultSet resultSet = statement.executeQuery()) {
+        while (resultSet.next()) {
+          results.add(mapResultSetToVisit(resultSet));
+        }
       }
 
       return results;
@@ -81,9 +82,10 @@ class SqlVisitRepository implements VisitRepository {
       statement.setTimestamp(3, Timestamp.from(to));
 
       final Set<Visit> results = new HashSet<>();
-      final ResultSet resultSet = statement.executeQuery();
-      while (resultSet.next()) {
-        results.add(mapResultSetToVisit(resultSet));
+      try (final ResultSet resultSet = statement.executeQuery()) {
+        while (resultSet.next()) {
+          results.add(mapResultSetToVisit(resultSet));
+        }
       }
 
       return results;

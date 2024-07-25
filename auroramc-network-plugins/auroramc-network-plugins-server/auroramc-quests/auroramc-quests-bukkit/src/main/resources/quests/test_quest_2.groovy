@@ -9,7 +9,7 @@ import static pl.auroramc.quests.quest.QuestDsl.quest
 
 quest {
     key {
-        name("test_quest_2")
+        withName("test_quest_2")
     }
     icon {
         type(WOODEN_AXE)
@@ -19,7 +19,7 @@ quest {
     objectives {
         objective {
             key {
-                name("break_block")
+                withName("break_block")
             }
             typeOfObjective(BreakBlockObjective.class)
             type(OAK_LOG)
@@ -30,7 +30,7 @@ quest {
         }
         objective {
             key {
-                name("distance_traveled_with_axe")
+                withName("distance_traveled_with_axe")
             }
             typeOfObjective(DistanceObjective.class)
             type((byte) 1)

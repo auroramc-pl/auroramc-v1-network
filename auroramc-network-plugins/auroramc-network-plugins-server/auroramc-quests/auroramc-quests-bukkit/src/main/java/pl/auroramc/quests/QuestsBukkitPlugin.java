@@ -60,6 +60,8 @@ import pl.auroramc.quests.quest.observer.QuestObserverFacade;
 import pl.auroramc.quests.quest.track.QuestTrackController;
 import pl.auroramc.quests.quest.track.QuestTrackFacade;
 import pl.auroramc.registry.resource.key.ResourceKeyFacade;
+import pl.auroramc.registry.resource.provider.ResourceProvider;
+import pl.auroramc.registry.resource.provider.ResourceProviderFacade;
 import pl.auroramc.registry.user.UserFacade;
 
 public class QuestsBukkitPlugin extends JavaPlugin {
@@ -76,6 +78,13 @@ public class QuestsBukkitPlugin extends JavaPlugin {
     final ConfigFactory configFactory =
         new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
 
+    final ResourceProviderFacade resourceProviderFacade =
+        resolveService(getServer(), ResourceProviderFacade.class);
+    final ResourceProvider resourceProvider =
+        resourceProviderFacade.resolveResourceProviderByName(getName());
+    final ResourceKeyFacade resourceKeyFacade =
+        resolveService(getServer(), ResourceKeyFacade.class);
+
     final Scheduler scheduler = getBukkitScheduler(this);
 
     final MessageSource messageSource =
@@ -91,12 +100,10 @@ public class QuestsBukkitPlugin extends JavaPlugin {
     juliet =
         JulietBuilder.newBuilder().withDataSource(getHikariDataSource(julietConfig.hikari)).build();
 
-    final ResourceKeyFacade resourceKeyFacade =
-        resolveService(getServer(), ResourceKeyFacade.class);
     final QuestIndex questIndex = getQuestIndex();
     final QuestFacade questFacade = getQuestFacade(getQuestsDirectoryPath(), getClassLoader());
     final List<Quest> quests = questFacade.getQuests();
-    resourceKeyFacade.validateResourceKeys(quests);
+    resourceKeyFacade.validateResourceKeys(resourceProvider, quests);
     initTranslationForObjectivesFromQuests(messageSource, quests);
 
     questIndex.indexQuests(quests);

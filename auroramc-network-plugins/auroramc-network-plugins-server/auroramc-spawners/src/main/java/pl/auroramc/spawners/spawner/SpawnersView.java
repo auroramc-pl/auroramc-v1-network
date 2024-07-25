@@ -1,6 +1,6 @@
 package pl.auroramc.spawners.spawner;
 
-import static org.bukkit.enchantments.Enchantment.UNBREAKING;
+import static org.bukkit.enchantments.Enchantment.DURABILITY;
 import static org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS;
 import static pl.auroramc.commons.bukkit.page.navigation.NavigationDirection.BACKWARD;
 import static pl.auroramc.commons.bukkit.page.navigation.NavigationDirection.FORWARD;
@@ -84,7 +84,7 @@ class SpawnersView {
             .manipulate(
                 value -> value.creatureType() == subject.getSpawnedType(),
                 spawner,
-                builder -> builder.enchantment(UNBREAKING, 1).flags(HIDE_ENCHANTS))
+                builder -> builder.enchantment(DURABILITY, 1).flags(HIDE_ENCHANTS))
             .build(),
         event ->
             spawnerController.purchaseSpawner((Player) event.getWhoClicked(), spawner, subject),

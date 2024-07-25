@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 import pl.auroramc.registry.resource.Resource;
+import pl.auroramc.registry.resource.provider.ResourceProvider;
 
 class ResourceKeyService implements ResourceKeyFacade {
 
@@ -19,8 +20,8 @@ class ResourceKeyService implements ResourceKeyFacade {
   }
 
   @Override
-  public List<ResourceKey> getResourceKeys() {
-    return resourceKeyRepository.getResourceKeys();
+  public List<ResourceKey> getResourceKeysByProviderId(final Long providerId) {
+    return resourceKeyRepository.getResourceKeysByProviderId(providerId);
   }
 
   @Override
@@ -34,16 +35,19 @@ class ResourceKeyService implements ResourceKeyFacade {
   }
 
   @Override
-  public void validateResourceKeys(final List<? extends Resource> resources) {
+  public void validateResourceKeys(
+      final ResourceProvider resourceProvider, final List<? extends Resource> resources) {
     final List<String> localNamesOfResourceKeys = getNamesOfResourceKeys(resources);
-    createResourceKeys(getResourceKeysToCreate(localNamesOfResourceKeys));
-    deleteResourceKeys(getResourceKeysToDelete(localNamesOfResourceKeys));
-    assignIdsOfResourceKeys(resources);
+    createResourceKeys(getResourceKeysToCreate(resourceProvider, localNamesOfResourceKeys));
+    deleteResourceKeys(getResourceKeysToDelete(resourceProvider, localNamesOfResourceKeys));
+    assignIdsOfResourceKeys(resourceProvider, resources);
   }
 
-  private void assignIdsOfResourceKeys(final List<? extends Resource> resources) {
+  private void assignIdsOfResourceKeys(
+      final ResourceProvider resourceProvider, final List<? extends Resource> resources) {
     final Map<String, ResourceKey> allResourceKeys =
-        getResourceKeys().stream().collect(toMap(ResourceKey::getName, identity()));
+        getResourceKeysByProviderId(resourceProvider.getId()).stream()
+            .collect(toMap(ResourceKey::getName, identity()));
     assignIdsOfResourceKeys(allResourceKeys, resources);
     assignIdsOfResourceKeys(
         allResourceKeys, resources.stream().map(Resource::children).flatMap(List::stream).toList());
@@ -66,23 +70,30 @@ class ResourceKeyService implements ResourceKeyFacade {
     return aggregatedResources.stream().map(Resource::getKey).map(ResourceKey::getName).toList();
   }
 
-  private List<ResourceKey> getResourceKeysToCreate(final List<String> localNamesOfQuestKeys) {
-    final List<ResourceKey> allResourceKeys = getResourceKeys();
-    return localNamesOfQuestKeys.stream()
+  private List<ResourceKey> getResourceKeysToCreate(
+      final ResourceProvider resourceProvider, final List<String> localNamesOfResourceKeys) {
+    final List<ResourceKey> allResourceKeys = getResourceKeysByProviderId(resourceProvider.getId());
+    return localNamesOfResourceKeys.stream()
         .distinct()
         .filter(
             nameOfResourceKey ->
                 allResourceKeys.stream()
                     .map(ResourceKey::getName)
                     .noneMatch(nameOfResourceKey::equals))
-        .map(name -> new ResourceKey(null, name))
+        .map(
+            name ->
+                ResourceKeyBuilder.newBuilder()
+                    .withProviderId(resourceProvider.getId())
+                    .withName(name)
+                    .build())
         .toList();
   }
 
-  private List<ResourceKey> getResourceKeysToDelete(final List<String> localNamesOfResourceKeys) {
-    final List<ResourceKey> allResourceKeys = getResourceKeys();
+  private List<ResourceKey> getResourceKeysToDelete(
+      final ResourceProvider resourceProvider, final List<String> localNamesOfResourceKeys) {
+    final List<ResourceKey> allResourceKeys = getResourceKeysByProviderId(resourceProvider.getId());
     return allResourceKeys.stream()
-        .filter(not(questKey -> localNamesOfResourceKeys.contains(questKey.getName())))
+        .filter(not(resourceKey -> localNamesOfResourceKeys.contains(resourceKey.getName())))
         .toList();
   }
 }

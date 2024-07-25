@@ -9,7 +9,7 @@ import static pl.auroramc.quests.quest.QuestDsl.quest
 
 quest {
     key {
-        name("test_quest_1")
+        withName("test_quest_1")
     }
     icon {
         type(WOODEN_PICKAXE)
@@ -19,7 +19,7 @@ quest {
     objectives {
         objective {
             key {
-                name("place_block_1")
+                withName("place_block_1")
             }
             typeOfObjective(PlaceBlockObjective.class)
             type(STONE)
@@ -27,7 +27,7 @@ quest {
         }
         objective {
             key {
-                name("place_block_2")
+                withName("place_block_2")
             }
             typeOfObjective(PlaceBlockObjective.class)
             type(DIRT)
@@ -35,7 +35,7 @@ quest {
         }
         objective {
             key {
-                name("break_block")
+                withName("break_block")
             }
             typeOfObjective(BreakBlockObjective.class)
             type(STONE)

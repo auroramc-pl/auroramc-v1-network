@@ -8,7 +8,6 @@ import static org.bukkit.Bukkit.getOnlinePlayers;
 import static pl.auroramc.nametag.NametagUtils.getOutboundConnection;
 
 import io.papermc.paper.adventure.AdventureComponent;
-import java.util.Optional;
 import net.kyori.adventure.text.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.numbers.FixedFormat;
@@ -98,8 +97,8 @@ class NametagService implements NametagFacade {
             seenPlayer.getName(),
             DUMMY_OBJECTIVE_NAME,
             DUMMY_SCORE,
-            Optional.of(EMPTY),
-            Optional.of(belowNameFormat));
+            EMPTY,
+            belowNameFormat);
 
     outboundConnection.send(setScorePacket);
   }

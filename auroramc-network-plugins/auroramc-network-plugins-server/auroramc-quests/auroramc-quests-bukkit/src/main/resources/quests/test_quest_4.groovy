@@ -7,7 +7,7 @@ import static pl.auroramc.quests.quest.QuestDsl.quest
 
 quest {
     key {
-        name("test_quest_4")
+        withName("test_quest_4")
     }
     icon {
         type(LEATHER_BOOTS)
@@ -17,7 +17,7 @@ quest {
     objectives {
         objective {
             key {
-                name("distance")
+                withName("distance")
             }
             typeOfObjective(DistanceObjective.class)
             type((byte) 0)

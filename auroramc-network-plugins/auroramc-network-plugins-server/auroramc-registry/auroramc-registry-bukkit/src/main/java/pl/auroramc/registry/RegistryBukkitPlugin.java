@@ -6,6 +6,7 @@ import static pl.auroramc.commons.bukkit.BukkitUtils.registerListeners;
 import static pl.auroramc.commons.bukkit.scheduler.BukkitSchedulerFactory.getBukkitScheduler;
 import static pl.auroramc.integrations.configs.juliet.JulietConfig.JULIET_CONFIG_FILE_NAME;
 import static pl.auroramc.registry.resource.key.ResourceKeyFacadeFactory.getResourceKeyFacade;
+import static pl.auroramc.registry.resource.provider.ResourceProviderFacadeFactory.getResourceProviderFacade;
 import static pl.auroramc.registry.user.UserFacadeFactory.getUserFacade;
 
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
@@ -18,6 +19,7 @@ import pl.auroramc.integrations.configs.ConfigFactory;
 import pl.auroramc.integrations.configs.juliet.JulietConfig;
 import pl.auroramc.integrations.configs.serdes.juliet.SerdesJuliet;
 import pl.auroramc.registry.resource.key.ResourceKeyFacade;
+import pl.auroramc.registry.resource.provider.ResourceProviderFacade;
 import pl.auroramc.registry.user.UserFacade;
 import pl.auroramc.registry.user.UserListener;
 
@@ -38,10 +40,11 @@ public class RegistryBukkitPlugin extends JavaPlugin {
 
     final Scheduler scheduler = getBukkitScheduler(this);
 
+    final ResourceProviderFacade resourceProviderFacade = getResourceProviderFacade(juliet);
     final ResourceKeyFacade resourceKeyFacade = getResourceKeyFacade(juliet);
     final UserFacade userFacade = getUserFacade(scheduler, juliet);
     registerListeners(this, new UserListener(userFacade));
-    registerFacades(this, Set.of(resourceKeyFacade, userFacade));
+    registerFacades(this, Set.of(resourceProviderFacade, resourceKeyFacade, userFacade));
   }
 
   @Override

@@ -73,9 +73,10 @@ class SqlPaymentRepository implements PaymentRepository {
       statement.setLong(1, referencingId);
 
       final List<PaymentSummary> resolvedPayments = new ArrayList<>();
-      final ResultSet resultSet = statement.executeQuery();
-      while (resultSet.next()) {
-        resolvedPayments.add(mapResultSetToPaymentSummary(resultSet));
+      try (final ResultSet resultSet = statement.executeQuery()) {
+        while (resultSet.next()) {
+          resolvedPayments.add(mapResultSetToPaymentSummary(resultSet));
+        }
       }
 
       return resolvedPayments;

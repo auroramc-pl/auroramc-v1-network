@@ -4,7 +4,7 @@ import java.util.List;
 
 interface ResourceKeyRepository {
 
-  List<ResourceKey> getResourceKeys();
+  List<ResourceKey> getResourceKeysByProviderId(final Long providerId);
 
   void createResourceKeys(final List<ResourceKey> resourceKeys);
 

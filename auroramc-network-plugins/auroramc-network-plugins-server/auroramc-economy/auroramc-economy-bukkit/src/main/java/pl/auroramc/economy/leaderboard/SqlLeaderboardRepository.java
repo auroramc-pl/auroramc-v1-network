@@ -51,9 +51,10 @@ class SqlLeaderboardRepository implements LeaderboardRepository {
       statement.setLong(1, currencyId);
 
       final List<LeaderboardEntry> results = new LinkedList<>();
-      final ResultSet resultSet = statement.executeQuery();
-      while (resultSet.next()) {
-        results.add(mapResultSetToLeaderboardEntry(resultSet));
+      try (final ResultSet resultSet = statement.executeQuery()) {
+        while (resultSet.next()) {
+          results.add(mapResultSetToLeaderboardEntry(resultSet));
+        }
       }
 
       return results;

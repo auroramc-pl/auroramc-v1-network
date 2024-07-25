@@ -8,7 +8,7 @@ import static pl.auroramc.quests.quest.QuestDsl.quest
 
 quest {
     key {
-        name("test_quest_3")
+        withName("test_quest_3")
     }
     icon {
         type(WOODEN_SWORD)
@@ -18,7 +18,7 @@ quest {
     objectives {
         objective {
             key {
-                name("break_block")
+                withName("break_block")
             }
             typeOfObjective(BreakBlockObjective.class)
             type(STONE)

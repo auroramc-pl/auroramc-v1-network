@@ -31,7 +31,7 @@ public final class QuestBuilder {
   }
 
   public QuestBuilder key(final @DelegatesTo(ResourceKeyBuilder.class) Closure<?> closure) {
-    final ResourceKeyBuilder resourceKeyBuilder = new ResourceKeyBuilder();
+    final ResourceKeyBuilder resourceKeyBuilder = ResourceKeyBuilder.newBuilder();
     closure.setDelegate(resourceKeyBuilder);
     closure.setResolveStrategy(DELEGATE_ONLY);
     closure.call();

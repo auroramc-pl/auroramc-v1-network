@@ -8,7 +8,7 @@
       <artifactId>paper-api</artifactId>
       <groupId>io.papermc.paper</groupId>
       <scope>provided</scope>
-      <version>1.20.6-R0.1-SNAPSHOT</version>
+      <version>1.20.4-R0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
 

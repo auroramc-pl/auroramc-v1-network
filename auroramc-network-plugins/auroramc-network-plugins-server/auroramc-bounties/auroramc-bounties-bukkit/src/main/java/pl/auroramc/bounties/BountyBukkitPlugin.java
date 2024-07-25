@@ -46,6 +46,8 @@ import pl.auroramc.integrations.configs.serdes.juliet.SerdesJuliet;
 import pl.auroramc.integrations.configs.serdes.message.SerdesMessages;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 import pl.auroramc.registry.resource.key.ResourceKeyFacade;
+import pl.auroramc.registry.resource.provider.ResourceProvider;
+import pl.auroramc.registry.resource.provider.ResourceProviderFacade;
 import pl.auroramc.registry.user.UserFacade;
 
 public class BountyBukkitPlugin extends JavaPlugin {
@@ -64,6 +66,10 @@ public class BountyBukkitPlugin extends JavaPlugin {
         configFactory.produceConfig(
             BountyConfig.class, BOUNTY_CONFIG_FILE_NAME, new SerdesCommons());
 
+    final ResourceProviderFacade resourceProviderFacade =
+        resolveService(getServer(), ResourceProviderFacade.class);
+    final ResourceProvider resourceProvider =
+        resourceProviderFacade.resolveResourceProviderByName(getName());
     final ResourceKeyFacade resourceKeyFacade =
         resolveService(getServer(), ResourceKeyFacade.class);
 
@@ -86,7 +92,7 @@ public class BountyBukkitPlugin extends JavaPlugin {
     final VisitController visitController = new VisitController();
 
     final BountyFacade bountyFacade = getBountyFacade(getClassLoader(), getBountiesDirectoryPath());
-    resourceKeyFacade.validateResourceKeys(bountyFacade.getBounties());
+    resourceKeyFacade.validateResourceKeys(resourceProvider, bountyFacade.getBounties());
     final BountyProgressFacade bountyProgressFacade = getBountyProgressFacade(scheduler, juliet);
     final BountyController bountyController =
         new BountyController(
