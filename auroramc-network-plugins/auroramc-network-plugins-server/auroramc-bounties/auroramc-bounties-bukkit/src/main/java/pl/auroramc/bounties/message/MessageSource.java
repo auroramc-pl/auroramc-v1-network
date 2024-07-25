@@ -12,7 +12,7 @@ public class MessageSource extends OkaeriConfig {
   public static final @Exclude String MESSAGE_SOURCE_FILE_NAME = "messages.yml";
 
   public MutableMessage belowName =
-      MutableMessage.of("<dark_gray>[ <gradient:white:gray><duration> <dark_gray>]");
+      MutableMessage.of("<#7c5058>[ <gradient:white:gray><duration> <#7c5058>]");
 
   public VisitMessageSource visit = new VisitMessageSource();
 

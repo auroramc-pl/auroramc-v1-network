@@ -13,13 +13,13 @@ public class ObjectiveMessageSource extends OkaeriConfig {
 
   public MutableMessage breakBlockObjective =
       MutableMessage.of(
-          "<dark_gray>► <gray>Zniszcz <white><objective.@type> <dark_gray>(<white><progress.@data><gray>/<gray><progress.@goal><dark_gray>)");
+          "<#7c5058>► <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Zniszcz <#f4a9ba><objective.@type> <#7c5058>(<#f4a9ba><progress.@data><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>/<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b><progress.@goal><#7c5058>)");
 
   public MutableMessage placeBlockObjective =
       MutableMessage.of(
-          "<dark_gray>► <gray>Postaw <white><objective.@type> <dark_gray>(<white><progress.@data><gray>/<gray><progress.@goal><dark_gray>)");
+          "<#7c5058>► <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Postaw <#f4a9ba><objective.@type> <#7c5058>(<#f4a9ba><progress.@data><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>/<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b><progress.@goal><#7c5058>)");
 
   public MutableMessage distanceObjective =
       MutableMessage.of(
-          "<dark_gray>► <gray>Przemierz dystans <dark_gray>(<white><progress.@data><gray>/<gray><progress.@goal><dark_gray>)");
+          "<#7c5058>► <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Przemierz dystans <#7c5058>(<#f4a9ba><progress.@data><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>/<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b><progress.@goal><#7c5058>)");
 }

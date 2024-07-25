@@ -1,5 +1,6 @@
 package quests
 
+import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import pl.auroramc.quests.objectives.block.BreakBlockObjective
 import pl.auroramc.quests.objectives.block.PlaceBlockObjective
@@ -13,8 +14,9 @@ quest {
     }
     icon {
         type(WOODEN_PICKAXE)
-        lore("<gray>Lorem ipsum dolor sit amet, consectetur")
-        displayName("<gray>Początkujący górnik")
+        lore("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Lorem ipsum dolor sit amet, consectetur")
+        displayName("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Początkujący górnik")
+        flags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS)
     }
     objectives {
         objective {

@@ -10,19 +10,19 @@ public class MessageSource extends OkaeriConfig {
   public static final @Exclude String MESSAGE_SOURCE_FILE_NAME = "messages.yml";
 
   public MutableMessage teleportedIntoSpawn =
-      MutableMessage.of("<gray>Zostałeś przeteleportowany na spawn.");
+      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Zostałeś przeteleportowany na spawn.");
 
   public MutableMessage lobbyClarification =
       MutableMessage.of(
           """
-          <gray>Znajdujesz się w lobby, które przeznaczone jest do uwierzytelnienia,
+          <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Znajdujesz się w lobby, które przeznaczone jest do uwierzytelnienia,
           po poprawnym zakończeniu tego procesu, zostaniesz przeniesiony na serwer docelowy.
           Powodzenia!
           """);
 
   public MutableMessage teleportedFromVoid =
       MutableMessage.of(
-          "<gray>Zostałeś przeteleportowany na spawn, z powodu twojej obecności w otchłani.");
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Zostałeś przeteleportowany na spawn, z powodu twojej obecności w otchłani.");
 
   public CommandMessageSource command = new CommandMessageSource();
 }

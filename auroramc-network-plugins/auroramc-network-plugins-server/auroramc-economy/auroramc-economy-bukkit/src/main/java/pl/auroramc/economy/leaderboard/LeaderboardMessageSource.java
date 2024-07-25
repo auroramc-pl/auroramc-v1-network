@@ -6,17 +6,17 @@ import pl.auroramc.messages.message.MutableMessage;
 public class LeaderboardMessageSource extends OkaeriConfig {
 
   public MutableMessage leaderboardHeader =
-      MutableMessage.of("<gray>Ranking najbogatszych graczy:");
+      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Ranking najbogatszych graczy:");
 
   public MutableMessage leaderboardFooter =
       MutableMessage.of(
-          "<gray>Twoja pozycja:<newline><yellow><context.position>) <gray><context.username> <dark_gray>- <white><context.currency.@symbol><context.balance>");
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Twoja pozycja:<newline><gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894><context.position>) <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b><context.username> <#7c5058>- <#f4a9ba><context.currency.@symbol><context.balance>");
 
   public MutableMessage leaderboardEntry =
       MutableMessage.of(
-          "<dark_gray><context.position>) <gray><context.username> <dark_gray>- <white><context.currency.@symbol><context.balance>");
+          "<#7c5058><context.position>) <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b><context.username> <#7c5058>- <#f4a9ba><context.currency.@symbol><context.balance>");
 
   public MutableMessage leaderboardEmpty =
       MutableMessage.of(
-          "<gray>Nie wystarczająca liczba graczy do skompletowania rankingu najbogatszych graczy dla tej waluty.");
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Nie wystarczająca liczba graczy do skompletowania rankingu najbogatszych graczy dla tej waluty.");
 }

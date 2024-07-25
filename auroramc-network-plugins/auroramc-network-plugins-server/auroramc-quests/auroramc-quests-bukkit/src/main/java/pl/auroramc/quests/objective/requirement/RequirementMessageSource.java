@@ -14,5 +14,5 @@ public class RequirementMessageSource extends OkaeriConfig {
 
   public MutableMessage heldItemRequirement =
       MutableMessage.of(
-          "<dark_gray>* <gray>Aby wykonać cel, musisz używać przedmiotu <white><item>");
+          "<#7c5058>* <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Aby wykonać cel, musisz używać przedmiotu <#f4a9ba><item>");
 }

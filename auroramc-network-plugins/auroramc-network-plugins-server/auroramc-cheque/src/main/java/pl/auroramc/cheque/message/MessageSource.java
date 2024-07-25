@@ -11,30 +11,30 @@ public class MessageSource extends OkaeriConfig {
 
   public MutableMessage chequeIssued =
       MutableMessage.of(
-          "<gray>Wystawiłeś czek o wartości <white><context.currency.@symbol><context.amount><gray>.");
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Wystawiłeś czek o wartości <#f4a9ba><context.currency.@symbol><context.amount><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>.");
 
   public MutableMessage chequeFinalized =
       MutableMessage.of(
-          "<gray>Sfinalizowałeś czek na kwotę <white><context.currency.@symbol><context.amount> <gray>wystawiony przez <white><context.issuer.username><gray>.");
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Sfinalizowałeś czek na kwotę <#f4a9ba><context.currency.@symbol><context.amount> <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>wystawiony przez <#f4a9ba><context.issuer.username><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>.");
 
   public MutableMessage validationRequiresAmountInBounds =
       MutableMessage.of(
-          "<red>Wprowadzona przez ciebie kwota czeku jest niepoprawna, gdyż musi ona wynosić co najmniej <currency.@symbol><cheque.worth.minimum> oraz co najwyżej <currency.@symbol><cheque.worth.maximum>.");
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wprowadzona przez ciebie kwota czeku jest niepoprawna, gdyż musi ona wynosić co najmniej <currency.@symbol><cheque.worth.minimum> oraz co najwyżej <currency.@symbol><cheque.worth.maximum>.");
 
   public MutableMessage validationRequiresIntegralAndFractionalInBounds =
       MutableMessage.of(
-          "<red>Wprowadzona przez ciebie kwota czeku jest niepoprawna, gdyż maksymalnie może ona posiadać <integral.length.maximum> liczb przed przecinkiem oraz <fraction.length.maximum> liczb po przecinku.");
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wprowadzona przez ciebie kwota czeku jest niepoprawna, gdyż maksymalnie może ona posiadać <integral.length.maximum> liczb przed przecinkiem oraz <fraction.length.maximum> liczb po przecinku.");
 
   public MutableMessage validationRequiresGreaterAmountOfBalance =
       MutableMessage.of(
-          "<red>Nie posiadasz wystarczających środków aby wystawić czek o tej wartości.");
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie posiadasz wystarczających środków aby wystawić czek o tej wartości.");
 
   public MutableMessage titleOfCheque =
       MutableMessage.of(
-          "<gray>Czek <dark_gray>(<white><context.currency.@symbol><context.amount><dark_gray>)");
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Czek <#7c5058>(<#f4a9ba><context.currency.@symbol><context.amount><#7c5058>)");
 
   public MutableMessage linesOfCheque =
-      MutableMessage.of("<gray>Wystawiający: <white><context.issuer.username>");
+      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Wystawiający: <#f4a9ba><context.issuer.username>");
 
   public CommandMessageSource command = new CommandMessageSource();
 }

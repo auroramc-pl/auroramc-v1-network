@@ -7,12 +7,12 @@ public class VaultMessageSource extends OkaeriConfig {
 
   public MutableMessage vaultItemReceived =
       MutableMessage.of(
-          "<gray>Do twojego schowka został dodany <dark_gray>x<subject.@amount></dark_gray> <white><subject><gray>, możesz odebrać go używając <white><click:run_command:/vault>/vault</click><gray>.");
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Do twojego schowka został dodany <#7c5058>x<subject.@amount></dark_gray> <#f4a9ba><subject><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>, możesz odebrać go używając <#f4a9ba><click:run_command:/vault>/vault</click><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>.");
 
   public MutableMessage vaultItemRedeemed =
       MutableMessage.of(
-          "<gray>Odebrałeś <dark_gray>x<subject.@amount></dark_gray> <white><subject> <gray>ze swojego schowka.");
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Odebrałeś <#7c5058>x<subject.@amount></dark_gray> <#f4a9ba><subject> <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>ze swojego schowka.");
 
   public MutableMessage vaultItemRedeemSuggestion =
-      MutableMessage.of("<gray>Naciśnij aby odebrać ten przedmiot.");
+      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Naciśnij aby odebrać ten przedmiot.");
 }
