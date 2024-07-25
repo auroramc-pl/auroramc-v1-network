@@ -15,7 +15,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import pl.auroramc.auctions.vault.item.VaultItem;
-import pl.auroramc.commons.External;
+import pl.auroramc.commons.view.External;
 import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 import pl.auroramc.commons.scheduler.Scheduler;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;

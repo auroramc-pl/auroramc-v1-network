@@ -12,9 +12,11 @@ bounty {
     }
     icon {
         lore(
+                "",
                 "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Nagroda:",
                 "<#7c5058>* <#f4a9ba>\$100",
-                "<#7c5058>* <#f4a9ba>4 diamenty"
+                "<#7c5058>* <#f4a9ba>4 diamenty",
+                ""
         )
         flags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS)
     }

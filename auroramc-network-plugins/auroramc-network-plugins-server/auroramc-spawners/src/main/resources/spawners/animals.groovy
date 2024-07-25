@@ -9,17 +9,17 @@ import static spawners.SpawnerUtils.getDisplayOf
 
 spawners {
     spawner {
-        icon(getDisplayOf(Material.SHEEP_SPAWN_EGG, "<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894>Spawner owiec"))
+        icon(getDisplayOf(Material.SHEEP_SPAWN_EGG, "<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894><bold>Spawner owiec"))
         price(BigDecimal.valueOf(10_000))
         creatureType(EntityType.SHEEP)
     }
     spawner {
-        icon(getDisplayOf(Material.CHICKEN_SPAWN_EGG, "<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894>Spawner kur"))
+        icon(getDisplayOf(Material.CHICKEN_SPAWN_EGG, "<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894><bold>Spawner kur"))
         price(BigDecimal.valueOf(15_000))
         creatureType(EntityType.CHICKEN)
     }
     spawner {
-        icon(getDisplayOf(Material.COW_SPAWN_EGG, "<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894>Spawner krów"))
+        icon(getDisplayOf(Material.COW_SPAWN_EGG, "<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894><bold>Spawner krów"))
         price(BigDecimal.valueOf(30_000))
         creatureType(EntityType.COW)
     }

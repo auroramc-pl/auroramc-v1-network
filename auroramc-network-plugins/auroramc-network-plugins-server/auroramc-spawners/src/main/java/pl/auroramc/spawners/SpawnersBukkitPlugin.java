@@ -24,7 +24,6 @@ import pl.auroramc.integrations.configs.serdes.SerdesCommons;
 import pl.auroramc.integrations.configs.serdes.message.SerdesMessages;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 import pl.auroramc.spawners.message.MessageSource;
-import pl.auroramc.spawners.message.placeholder.transformer.pack.SpawnersObjectTransformerPack;
 import pl.auroramc.spawners.spawner.SpawnerBreakListener;
 import pl.auroramc.spawners.spawner.SpawnerController;
 import pl.auroramc.spawners.spawner.SpawnerFacade;
@@ -52,8 +51,7 @@ public class SpawnersBukkitPlugin extends JavaPlugin {
     final MessageSource messageSource =
         configFactory.produceConfig(
             MessageSource.class, MESSAGE_SOURCE_FILE_NAME, new SerdesMessages());
-    final BukkitMessageCompiler messageCompiler =
-        getBukkitMessageCompiler(scheduler, new SpawnersObjectTransformerPack());
+    final BukkitMessageCompiler messageCompiler = getBukkitMessageCompiler(scheduler);
 
     final CurrencyFacade currencyFacade = resolveService(getServer(), CurrencyFacade.class);
     final Currency fundsCurrency = getFundsCurrency(currencyFacade, spawnersConfig.fundsCurrencyId);

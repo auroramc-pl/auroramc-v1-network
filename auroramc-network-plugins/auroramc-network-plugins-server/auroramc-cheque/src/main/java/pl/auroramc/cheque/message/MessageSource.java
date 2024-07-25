@@ -19,11 +19,11 @@ public class MessageSource extends OkaeriConfig {
 
   public MutableMessage validationRequiresAmountInBounds =
       MutableMessage.of(
-          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wprowadzona przez ciebie kwota czeku jest niepoprawna, gdyż musi ona wynosić co najmniej <currency.@symbol><cheque.worth.minimum> oraz co najwyżej <currency.@symbol><cheque.worth.maximum>.");
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wprowadzona przez ciebie kwota czeku jest niepoprawna, gdyż musi ona wynosić co najmniej <gradient:#ffad33:#ff8052:#ffdb57:#ff8052:#ffdb57:#ffad33><currency.@symbol><cheque.worth.minimum> <gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>oraz co najwyżej <gradient:#ffad33:#ff8052:#ffdb57:#ff8052:#ffdb57:#ffad33><currency.@symbol><cheque.worth.maximum><gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>.");
 
   public MutableMessage validationRequiresIntegralAndFractionalInBounds =
       MutableMessage.of(
-          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wprowadzona przez ciebie kwota czeku jest niepoprawna, gdyż maksymalnie może ona posiadać <integral.length.maximum> liczb przed przecinkiem oraz <fraction.length.maximum> liczb po przecinku.");
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wprowadzona przez ciebie kwota czeku jest niepoprawna, gdyż maksymalnie może ona posiadać <gradient:#ffad33:#ff8052:#ffdb57:#ff8052:#ffdb57:#ffad33><integral.length.maximum> <gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>liczb przed przecinkiem oraz <gradient:#ffad33:#ff8052:#ffdb57:#ff8052:#ffdb57:#ffad33><fraction.length.maximum> <gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>liczb po przecinku.");
 
   public MutableMessage validationRequiresGreaterAmountOfBalance =
       MutableMessage.of(
@@ -31,10 +31,10 @@ public class MessageSource extends OkaeriConfig {
 
   public MutableMessage titleOfCheque =
       MutableMessage.of(
-          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Czek <#7c5058>(<#f4a9ba><context.currency.@symbol><context.amount><#7c5058>)");
+          "<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894>Czek <#d3a37e>(<gradient:#f7cf78:#fbd06a:#f4b352:#fbd06a:#f7cf78><context.currency.@symbol><context.amount><#d3a37e>)");
 
   public MutableMessage linesOfCheque =
-      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Wystawiający: <#f4a9ba><context.issuer.username>");
+      MutableMessage.of("<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894>Wystawiający: <gradient:#f7cf78:#fbd06a:#f4b352:#fbd06a:#f7cf78><context.issuer.username>");
 
   public CommandMessageSource command = new CommandMessageSource();
 }

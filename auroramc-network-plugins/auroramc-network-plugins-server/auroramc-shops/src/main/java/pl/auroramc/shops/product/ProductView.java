@@ -5,6 +5,7 @@ import static pl.auroramc.commons.bukkit.page.navigation.NavigationDirection.FOR
 import static pl.auroramc.commons.bukkit.page.navigation.NavigationUtils.navigate;
 import static pl.auroramc.integrations.item.ItemStackUtils.getItemStackWithQuantity;
 import static pl.auroramc.integrations.item.ItemStackUtils.mergeLore;
+import static pl.auroramc.messages.message.MutableMessage.empty;
 import static pl.auroramc.messages.message.decoration.MessageDecorations.NO_CURSIVE;
 import static pl.auroramc.shops.product.ProductMessageSourcePaths.CONTEXT_PATH;
 
@@ -17,7 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import pl.auroramc.commons.External;
+import pl.auroramc.commons.view.External;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 import pl.auroramc.messages.message.compiler.CompiledMessage;
@@ -94,20 +95,22 @@ class ProductView {
 
   private CompiledMessage[] getAdditionalLoreForProductItem(final Product product) {
     return Stream.of(
-            messageSource.sellTag.placeholder(
-                CONTEXT_PATH,
-                new ProductContext(
-                    getItemStackWithQuantity(product.subject(), product.quantity()),
-                    fundsCurrency,
-                    product.priceForSale())),
+            empty(),
             messageSource.purchaseTag.placeholder(
                 CONTEXT_PATH,
                 new ProductContext(
                     getItemStackWithQuantity(product.subject(), product.quantity()),
                     fundsCurrency,
                     product.priceForPurchase())),
-            messageSource.sellSuggestion,
-            messageSource.purchaseSuggestion)
+            messageSource.sellTag.placeholder(
+                CONTEXT_PATH,
+                new ProductContext(
+                    getItemStackWithQuantity(product.subject(), product.quantity()),
+                    fundsCurrency,
+                    product.priceForSale())),
+            empty(),
+            messageSource.purchaseSuggestion,
+            messageSource.sellSuggestion)
         .map(message -> messageCompiler.compile(message, NO_CURSIVE))
         .toArray(CompiledMessage[]::new);
   }

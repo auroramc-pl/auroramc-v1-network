@@ -13,7 +13,7 @@ public class SpawnerMessageSource extends OkaeriConfig {
       MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Cena zakupu: <#f4a9ba><currency.@symbol><spawner.price>");
 
   public MutableMessage spawnerPurchaseSuggestion =
-      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Naciśnij <#f4a9ba>LPM <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>aby zakupić ten przedmiot.");
+      MutableMessage.of("<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894>Naciśnij <gradient:#f7cf78:#fbd06a:#f4b352:#fbd06a:#f7cf78><bold>LPM</bold><gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894>, aby zakupić ten przedmiot.");
 
   public MutableMessage spawnerCouldNotBePurchasedBecauseOfMissingMoney =
       MutableMessage.of(
@@ -22,5 +22,5 @@ public class SpawnerMessageSource extends OkaeriConfig {
   public MutableMessage spawnerCouldNotBePurchasedBecauseOfSameType =
       MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie możesz zmienić spawnera na ten typ, ponieważ już go posiada.");
 
-  public MutableMessage spawnerDisplayName = MutableMessage.of("<#f4a9ba><creatureType>Spawner");
+  public MutableMessage spawnerDisplayName = MutableMessage.of("<#f4a9ba><creatureType> Spawner");
 }

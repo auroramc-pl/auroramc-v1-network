@@ -6,6 +6,7 @@ import static pl.auroramc.commons.bukkit.page.navigation.NavigationDirection.BAC
 import static pl.auroramc.commons.bukkit.page.navigation.NavigationDirection.FORWARD;
 import static pl.auroramc.commons.bukkit.page.navigation.NavigationUtils.navigate;
 import static pl.auroramc.integrations.item.ItemStackUtils.mergeLore;
+import static pl.auroramc.messages.message.MutableMessage.empty;
 import static pl.auroramc.messages.message.decoration.MessageDecorations.NO_CURSIVE;
 import static pl.auroramc.spawners.spawner.SpawnerMessageSourcePaths.CURRENCY_PATH;
 import static pl.auroramc.spawners.spawner.SpawnerMessageSourcePaths.SPAWNER_PATH;
@@ -21,7 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import pl.auroramc.commons.External;
+import pl.auroramc.commons.view.External;
 import pl.auroramc.economy.currency.Currency;
 import pl.auroramc.integrations.item.ItemStackBuilder;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
@@ -93,10 +94,12 @@ class SpawnersView {
 
   private CompiledMessage[] getAdditionalLoreForSpawnerItem(final Spawner spawner) {
     return Stream.of(
+            empty(),
             messageSource
                 .spawnerPurchaseTag
                 .placeholder(CURRENCY_PATH, fundsCurrency)
                 .placeholder(SPAWNER_PATH, spawner),
+            empty(),
             messageSource.spawnerPurchaseSuggestion)
         .map(message -> messageCompiler.compile(message, NO_CURSIVE))
         .toArray(CompiledMessage[]::new);

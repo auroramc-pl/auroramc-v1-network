@@ -28,7 +28,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import pl.auroramc.bounties.BountyConfig;
 import pl.auroramc.bounties.progress.BountyProgress;
-import pl.auroramc.commons.External;
+import pl.auroramc.commons.view.External;
 import pl.auroramc.commons.view.Variable;
 import pl.auroramc.integrations.item.ItemStackBuilder;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;

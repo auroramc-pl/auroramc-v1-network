@@ -12,7 +12,7 @@ import java.util.Set;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.plugin.Plugin;
-import pl.auroramc.commons.External;
+import pl.auroramc.commons.view.External;
 import pl.auroramc.shops.product.ProductFacade;
 
 class ShopsView {

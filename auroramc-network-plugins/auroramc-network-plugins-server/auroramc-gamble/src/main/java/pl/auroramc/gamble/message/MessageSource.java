@@ -1,5 +1,8 @@
 package pl.auroramc.gamble.message;
 
+import static pl.auroramc.messages.message.MutableMessage.empty;
+import static pl.auroramc.messages.message.MutableMessage.newline;
+
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Exclude;
 import pl.auroramc.integrations.configs.command.CommandMessageSource;
@@ -49,14 +52,16 @@ public class MessageSource extends OkaeriConfig {
   public MutableMessage stakesTitle = MutableMessage.of("Oczekujące zakłady");
 
   public MutableMessage stakeName =
-      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Zakład <#7c5058>(<#f4a9ba><context.gambleKey><#7c5058>)");
+      MutableMessage.of("<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894><bold>Zakład <#d3a37e>(<gradient:#f7cf78:#fbd06a:#f4b352:#fbd06a:#f7cf78><context.gambleKey><#d3a37e>)");
 
   public MutableMessage stakeBrief =
-      MutableMessage.empty()
+      empty()
+          .append(newline())
           .append(MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Gracz: <#f4a9ba><context.initiator.username>"))
           .append(MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Wybór: <#f4a9ba><context.initiator.prediction>"))
           .append(MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Stawka: <#f4a9ba><currency.@symbol><context.stake>"))
-          .append(MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Naciśnij aby dołączyć do zakładu."));
+          .append(empty())
+          .append(MutableMessage.of("<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894>Naciśnij <gradient:#f7cf78:#fbd06a:#f4b352:#fbd06a:#f7cf78><bold>LPM</bold><gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894>, aby dołączyć do zakładu."));
 
   public NavigationMessageSource navigation = new NavigationMessageSource();
 

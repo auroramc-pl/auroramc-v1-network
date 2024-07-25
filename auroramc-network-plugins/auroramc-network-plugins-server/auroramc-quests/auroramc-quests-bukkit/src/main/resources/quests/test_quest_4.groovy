@@ -12,8 +12,8 @@ quest {
     }
     icon {
         type(LEATHER_BOOTS)
-        lore("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Lorem ipsum dolor sit amet, consectetur")
-        displayName("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Początkujący podróżnik")
+        lore("<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894>Lorem ipsum dolor sit amet, consectetur")
+        displayName("<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894><bold>Początkujący podróżnik")
         flags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS)
     }
     objectives {

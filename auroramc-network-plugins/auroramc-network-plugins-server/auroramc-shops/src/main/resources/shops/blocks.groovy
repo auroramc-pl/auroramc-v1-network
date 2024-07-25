@@ -10,13 +10,14 @@ import static shops.HopperUtils.getHopperWithTransferQuantity
 
 shop {
     icon {
-        displayName("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Bloki")
+        lore("<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894>Lorem ipsum dolor sit amet, consectetur")
+        displayName("<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894><bold>Bloki")
     }
     paymentCurrencyId(1)
     products {
         product {
             icon {
-                displayName("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Kamień")
+                displayName("<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894><bold>Kamień")
             }
             subject {
                 type(Material.STONE)
@@ -41,12 +42,12 @@ class HopperUtils {
                 .with {
                     icon {
                         type(Material.HOPPER)
-                        displayName("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Hopper <#7c5058>(<#f4a9ba>$transferQuantity</white><#7c5058>)")
+                        displayName("<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894><bold>Hopper <#d3a37e>(<gradient:#f7cf78:#fbd06a:#f4b352:#fbd06a:#f7cf78>$transferQuantity<#d3a37e>)")
                     }
                     subject {
                         type(Material.HOPPER)
                         data(new NamespacedKey("auroramc-hoppers", "transfer_quantity"), PersistentDataType.INTEGER, transferQuantity)
-                        displayName("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Hopper <#7c5058>(<#f4a9ba>$transferQuantity</white><#7c5058>)")
+                        displayName("<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894><bold>Hopper <#d3a37e>(<gradient:#f7cf78:#fbd06a:#f4b352:#fbd06a:#f7cf78>$transferQuantity<#d3a37e>)")
                     }
                     quantity(1)
                     priceForPurchase(suggestedPurchasePrice)

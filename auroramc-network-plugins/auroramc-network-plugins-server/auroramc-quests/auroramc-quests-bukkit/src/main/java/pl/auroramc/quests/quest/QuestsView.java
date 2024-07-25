@@ -39,7 +39,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import pl.auroramc.commons.External;
+import pl.auroramc.commons.view.External;
 import pl.auroramc.commons.bukkit.event.BukkitEventPublisher;
 import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 import pl.auroramc.commons.scheduler.Scheduler;

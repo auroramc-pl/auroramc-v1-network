@@ -18,6 +18,7 @@
 #### Components
 - leading character: `<#d3a37e>`
 - text: `<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894>`
+- value: `<gradient:#f7cf78:#fbd06a:#f4b352:#fbd06a:#f7cf78>`
 
 #### Preview
 <img src="images/informational.png"></img>
