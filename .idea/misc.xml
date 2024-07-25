@@ -15,6 +15,7 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/auroramc-network-shared/auroramc-nametags/pom.xml" />
         <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-auctions/pom.xml" />
+        <option value="$PROJECT_DIR$/auroramc-network-plugins/auroramc-network-plugins-server/auroramc-bounties/auroramc-bounties-shared/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
