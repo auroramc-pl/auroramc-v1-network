@@ -10,7 +10,6 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.Blocking;
 import pl.auroramc.auctions.vault.item.VaultItem;
 import pl.auroramc.auctions.vault.item.VaultItemFacade;
 import pl.auroramc.commons.concurrent.CompletableFutureUtils;
@@ -46,14 +45,12 @@ public class VaultController {
     this.vaultItemFacade = vaultItemFacade;
   }
 
-  @Blocking
-  List<VaultItem> searchVaultItems(final UUID uniqueId) {
+  public CompletableFuture<List<VaultItem>> searchVaultItems(final UUID uniqueId) {
     return userFacade
         .getUserByUniqueId(uniqueId)
         .thenApply(User::getId)
         .thenApply(vaultItemFacade::getVaultItemsByUserId)
-        .exceptionally(CompletableFutureUtils::delegateCaughtException)
-        .join();
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
   public void createVaultItem(final UUID uniqueId, final byte[] subject) {
@@ -79,7 +76,7 @@ public class VaultController {
     final Player player = getPlayer(uniqueId);
     if (player == null) {
       throw new VaultItemRedeemException(
-          "Vault item could not be redeemed, because player is Offline.");
+          "Vault item could not be redeemed, because player is offline.");
     }
 
     final Viewer viewer = BukkitViewer.wrap(player);

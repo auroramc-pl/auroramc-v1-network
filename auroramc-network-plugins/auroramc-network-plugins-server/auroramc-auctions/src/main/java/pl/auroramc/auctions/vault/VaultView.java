@@ -10,14 +10,15 @@ import static pl.auroramc.messages.message.decoration.MessageDecorations.NO_CURS
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
+import java.util.List;
 import java.util.UUID;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import pl.auroramc.auctions.vault.item.VaultItem;
-import pl.auroramc.commons.view.External;
 import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 import pl.auroramc.commons.scheduler.Scheduler;
+import pl.auroramc.commons.view.External;
 import pl.auroramc.messages.message.compiler.BukkitMessageCompiler;
 
 class VaultView {
@@ -61,12 +62,14 @@ class VaultView {
   public @External void populateVaultItems(final PaginatedPane requestingPane) {
     vaultItemsPane = requestingPane;
     vaultItemsPane.clear();
-    vaultItemsPane.populateWithGuiItems(
-        vaultController.searchVaultItems(vaultOwnerUniqueId).stream()
-            .map(this::getGuiItemForVaultItem)
-            .toList());
-
-    scheduler.run(SYNC, () -> vaultGui.update());
+    vaultController
+        .searchVaultItems(vaultOwnerUniqueId)
+        .thenApply(this::getVaultGuiItems)
+        .thenAccept(
+            vaultItems ->
+                scheduler.run(SYNC, () -> vaultItemsPane.populateWithGuiItems(vaultItems)))
+        .thenAccept(state -> scheduler.run(SYNC, () -> vaultGui.update()))
+        .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
   public void requestVaultItemRedeem(final InventoryClickEvent event, final VaultItem vaultItem) {
@@ -76,7 +79,11 @@ class VaultView {
         .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }
 
-  private GuiItem getGuiItemForVaultItem(final VaultItem vaultItem) {
+  private List<GuiItem> getVaultGuiItems(final List<VaultItem> vaultItems) {
+    return vaultItems.stream().map(this::getVaultGuiItem).toList();
+  }
+
+  private GuiItem getVaultGuiItem(final VaultItem vaultItem) {
     final ItemStack originItemStack = ItemStack.deserializeBytes(vaultItem.getSubject());
     final ItemStack renderItemStack =
         mergeLore(
