@@ -22,6 +22,7 @@ import dev.rollczi.litecommands.annotations.LiteCommandsAnnotations;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import java.util.Optional;
+import java.util.logging.Logger;
 import moe.rafal.juliet.Juliet;
 import moe.rafal.juliet.JulietBuilder;
 import org.bukkit.command.CommandSender;
@@ -66,6 +67,7 @@ public class AuctionsBukkitPlugin extends JavaPlugin {
             AuctionsConfig.class, AUCTIONS_CONFIG_FILE_NAME, new SerdesCommons());
     final AuctionFacade auctionFacade = getAuctionFacade();
 
+    final Logger logger = getLogger();
     final Scheduler scheduler = getBukkitScheduler(this);
 
     final MessageSource messageSource =
@@ -87,7 +89,7 @@ public class AuctionsBukkitPlugin extends JavaPlugin {
 
     final UserFacade userFacade = resolveService(getServer(), UserFacade.class);
     final VaultFacade vaultFacade = getVaultFacade(scheduler, juliet);
-    final VaultItemFacade vaultItemFacade = getVaultItemFacade(scheduler, juliet);
+    final VaultItemFacade vaultItemFacade = getVaultItemFacade(logger, scheduler, juliet);
     final VaultController vaultController =
         new VaultController(
             scheduler,
