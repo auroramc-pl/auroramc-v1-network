@@ -22,7 +22,7 @@
     <dependency.version.completablefutures>0.3.6</dependency.version.completablefutures>
     <dependency.version.groovy>5.0.0-alpha-9</dependency.version.groovy>
     <dependency.version.juliet>1.0-SNAPSHOT</dependency.version.juliet>
-    <dependency.version.litecommands>3.4.2</dependency.version.litecommands>
+    <dependency.version.litecommands>3.4.3</dependency.version.litecommands>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
