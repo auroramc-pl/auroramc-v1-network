@@ -94,7 +94,7 @@
       <artifactId>litecommands-velocity</artifactId>
       <groupId>dev.rollczi</groupId>
       <scope>compile</scope>
-      <version>3.4.2</version>
+      <version>3.4.3</version>
     </dependency>
     <dependency>
       <artifactId>velocity-api</artifactId>
