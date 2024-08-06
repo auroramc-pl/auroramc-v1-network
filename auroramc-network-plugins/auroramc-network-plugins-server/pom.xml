@@ -14,20 +14,20 @@
 
   <modelVersion>4.0.0</modelVersion>
   <modules>
-    <module>auroramc-auctions</module>
-    <module>auroramc-bazaars</module>
-    <module>auroramc-bounties</module>
-    <module>auroramc-cheque</module>
-    <module>auroramc-economy</module>
-    <module>auroramc-essentials</module>
-    <module>auroramc-gamble</module>
-    <module>auroramc-hoppers</module>
-    <module>auroramc-lobby</module>
-    <module>auroramc-quests</module>
+<!--    <module>auroramc-auctions</module>-->
+<!--    <module>auroramc-bazaars</module>-->
+<!--    <module>auroramc-bounties</module>-->
+<!--    <module>auroramc-cheque</module>-->
+<!--    <module>auroramc-economy</module>-->
+<!--    <module>auroramc-essentials</module>-->
+<!--    <module>auroramc-gamble</module>-->
+<!--    <module>auroramc-hoppers</module>-->
+<!--    <module>auroramc-lobby</module>-->
+<!--    <module>auroramc-quests</module>-->
     <module>auroramc-registry</module>
-    <module>auroramc-scoreboard</module>
-    <module>auroramc-shops</module>
-    <module>auroramc-spawners</module>
+<!--    <module>auroramc-scoreboard</module>-->
+<!--    <module>auroramc-shops</module>-->
+<!--    <module>auroramc-spawners</module>-->
   </modules>
   <packaging>pom</packaging>
 

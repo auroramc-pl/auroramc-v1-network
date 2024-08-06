@@ -8,7 +8,7 @@ final class SqlResourceKeyRepositoryQuery {
         `auroramc_registry_resource_keys`
       (
         `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
-        `provider_id` BIGINT REFERENCES `auroramc_registry_resource_providers` (`id`) ON DELETE CASCADE,
+        `provider_id` BIGINT REFERENCES `auroramc_registry_providers` (`id`) ON DELETE CASCADE,
         `name` VARCHAR(64) NOT NULL,
         UNIQUE (`name`)
       );

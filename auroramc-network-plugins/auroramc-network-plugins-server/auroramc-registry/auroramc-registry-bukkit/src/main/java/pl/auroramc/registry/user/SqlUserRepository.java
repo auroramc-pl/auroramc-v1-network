@@ -2,7 +2,7 @@ package pl.auroramc.registry.user;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static pl.auroramc.registry.user.SqlUserRepositoryQuery.CREATE_USER;
-import static pl.auroramc.registry.user.SqlUserRepositoryQuery.CREATE_USER_SCHEMA_IF_REQUIRED;
+import static pl.auroramc.registry.user.SqlUserRepositoryQuery.CREATE_USER_SCHEMA;
 import static pl.auroramc.registry.user.SqlUserRepositoryQuery.FIND_USER_BY_UNIQUE_ID;
 import static pl.auroramc.registry.user.SqlUserRepositoryQuery.FIND_USER_BY_USERNAME;
 import static pl.auroramc.registry.user.SqlUserRepositoryQuery.UPDATE_USER;
@@ -26,7 +26,7 @@ class SqlUserRepository implements UserRepository {
   void createUserSchemaIfRequired() {
     try (final Connection connection = juliet.borrowConnection();
         final Statement statement = connection.createStatement()) {
-      statement.execute(CREATE_USER_SCHEMA_IF_REQUIRED);
+      statement.execute(CREATE_USER_SCHEMA);
     } catch (final SQLException exception) {
       throw new UserRepositoryException(
           "Could not create user schema, because of unexpected exception.", exception);

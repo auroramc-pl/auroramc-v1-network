@@ -2,7 +2,7 @@ package pl.auroramc.registry.user;
 
 final class SqlUserRepositoryQuery {
 
-  static final String CREATE_USER_SCHEMA_IF_REQUIRED =
+  static final String CREATE_USER_SCHEMA =
       """
       CREATE TABLE IF NOT EXISTS
         `auroramc_registry_users`

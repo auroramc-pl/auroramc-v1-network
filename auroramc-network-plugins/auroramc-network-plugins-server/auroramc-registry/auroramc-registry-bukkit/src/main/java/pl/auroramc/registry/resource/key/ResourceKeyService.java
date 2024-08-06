@@ -8,8 +8,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+import pl.auroramc.registry.provider.Provider;
 import pl.auroramc.registry.resource.Resource;
-import pl.auroramc.registry.resource.provider.ResourceProvider;
 
 class ResourceKeyService implements ResourceKeyFacade {
 
@@ -36,17 +36,17 @@ class ResourceKeyService implements ResourceKeyFacade {
 
   @Override
   public void validateResourceKeys(
-      final ResourceProvider resourceProvider, final List<? extends Resource> resources) {
+      final Provider provider, final List<? extends Resource> resources) {
     final List<String> localNamesOfResourceKeys = getNamesOfResourceKeys(resources);
-    createResourceKeys(getResourceKeysToCreate(resourceProvider, localNamesOfResourceKeys));
-    deleteResourceKeys(getResourceKeysToDelete(resourceProvider, localNamesOfResourceKeys));
-    assignIdsOfResourceKeys(resourceProvider, resources);
+    createResourceKeys(getResourceKeysToCreate(provider, localNamesOfResourceKeys));
+    deleteResourceKeys(getResourceKeysToDelete(provider, localNamesOfResourceKeys));
+    assignIdsOfResourceKeys(provider, resources);
   }
 
   private void assignIdsOfResourceKeys(
-      final ResourceProvider resourceProvider, final List<? extends Resource> resources) {
+      final Provider provider, final List<? extends Resource> resources) {
     final Map<String, ResourceKey> allResourceKeys =
-        getResourceKeysByProviderId(resourceProvider.getId()).stream()
+        getResourceKeysByProviderId(provider.getId()).stream()
             .collect(toMap(ResourceKey::getName, identity()));
     assignIdsOfResourceKeys(allResourceKeys, resources);
     assignIdsOfResourceKeys(
@@ -71,8 +71,8 @@ class ResourceKeyService implements ResourceKeyFacade {
   }
 
   private List<ResourceKey> getResourceKeysToCreate(
-      final ResourceProvider resourceProvider, final List<String> localNamesOfResourceKeys) {
-    final List<ResourceKey> allResourceKeys = getResourceKeysByProviderId(resourceProvider.getId());
+      final Provider provider, final List<String> localNamesOfResourceKeys) {
+    final List<ResourceKey> allResourceKeys = getResourceKeysByProviderId(provider.getId());
     return localNamesOfResourceKeys.stream()
         .distinct()
         .filter(
@@ -83,15 +83,15 @@ class ResourceKeyService implements ResourceKeyFacade {
         .map(
             name ->
                 ResourceKeyBuilder.newBuilder()
-                    .withProviderId(resourceProvider.getId())
+                    .withProviderId(provider.getId())
                     .withName(name)
                     .build())
         .toList();
   }
 
   private List<ResourceKey> getResourceKeysToDelete(
-      final ResourceProvider resourceProvider, final List<String> localNamesOfResourceKeys) {
-    final List<ResourceKey> allResourceKeys = getResourceKeysByProviderId(resourceProvider.getId());
+      final Provider provider, final List<String> localNamesOfResourceKeys) {
+    final List<ResourceKey> allResourceKeys = getResourceKeysByProviderId(provider.getId());
     return allResourceKeys.stream()
         .filter(not(resourceKey -> localNamesOfResourceKeys.contains(resourceKey.getName())))
         .toList();

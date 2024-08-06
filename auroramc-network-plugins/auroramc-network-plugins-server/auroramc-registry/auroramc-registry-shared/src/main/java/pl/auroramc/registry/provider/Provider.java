@@ -1,11 +1,11 @@
-package pl.auroramc.registry.resource.provider;
+package pl.auroramc.registry.provider;
 
-public class ResourceProvider {
+public class Provider {
 
   private Long id;
   private String name;
 
-  public ResourceProvider(final Long id, final String name) {
+  public Provider(final Long id, final String name) {
     this.id = id;
     this.name = name;
   }
