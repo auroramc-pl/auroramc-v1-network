@@ -9,7 +9,7 @@ final class SqlLeaderboardRepositoryQuery {
         ROW_NUMBER() OVER (ORDER BY `balance` DESC, `username`) AS `position`
       FROM
         `auroramc_economy_accounts`
-      LEFT JOIN `auroramc_registry_users`
+      JOIN `auroramc_registry_users`
         ON `auroramc_registry_users`.`id` = `auroramc_economy_accounts`.`user_id`
       WHERE
         `currency_id` = ?
@@ -25,7 +25,7 @@ final class SqlLeaderboardRepositoryQuery {
         (
           SELECT COUNT(*) + 1
           FROM `auroramc_economy_accounts` AS `counter_query`
-          LEFT JOIN `auroramc_registry_users` AS `counter_users`
+          JOIN `auroramc_registry_users` AS `counter_users`
             ON `counter_users`.`id` = `counter_query`.`user_id`
           WHERE
             (
@@ -39,7 +39,7 @@ final class SqlLeaderboardRepositoryQuery {
         ) AS `position`
       FROM
         `auroramc_economy_accounts` AS `primary_query`
-      LEFT JOIN `auroramc_registry_users` AS `primary_users`
+      JOIN `auroramc_registry_users` AS `primary_users`
         ON `primary_users`.`id` = `primary_query`.`user_id`
       WHERE
         `currency_id` = ? AND `unique_id` = ?

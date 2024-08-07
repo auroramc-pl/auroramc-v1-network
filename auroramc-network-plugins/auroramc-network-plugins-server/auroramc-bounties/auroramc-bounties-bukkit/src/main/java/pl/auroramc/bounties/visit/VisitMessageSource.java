@@ -6,7 +6,8 @@ import pl.auroramc.messages.message.MutableMessage;
 public class VisitMessageSource extends OkaeriConfig {
 
   public MutableMessage visitDailySummary =
-      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Wykaz sesji z dnia <#f4a9ba><timeframe.minimum><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>:");
+      MutableMessage.of(
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Wykaz sesji z dnia <#f4a9ba><timeframe.minimum><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>:");
 
   public MutableMessage visitRangeSummary =
       MutableMessage.of(
@@ -16,5 +17,6 @@ public class VisitMessageSource extends OkaeriConfig {
       MutableMessage.of(
           "<#7c5058>► (<#f4a9ba><visit.@startTime> <#7c5058>- <#f4a9ba><visit.@ditchTime><#7c5058>) <#7c5058>- <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b><visit.@duration>");
 
-  public MutableMessage noVisits = MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Brak sesji w podanym okresie.");
+  public MutableMessage noVisits =
+      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Brak sesji w podanym okresie.");
 }

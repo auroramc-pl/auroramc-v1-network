@@ -23,6 +23,18 @@
       <version>${dependency.version.juliet}</version>
     </dependency>
     <dependency>
+      <artifactId>litecommands-bukkit</artifactId>
+      <groupId>dev.rollczi</groupId>
+      <scope>compile</scope>
+      <version>${dependency.version.litecommands}</version>
+    </dependency>
+    <dependency>
+      <artifactId>litecommands-adventure-platform</artifactId>
+      <groupId>dev.rollczi</groupId>
+      <scope>compile</scope>
+      <version>${dependency.version.litecommands}</version>
+    </dependency>
+    <dependency>
       <artifactId>caffeine</artifactId>
       <groupId>com.github.ben-manes.caffeine</groupId>
       <scope>provided</scope>

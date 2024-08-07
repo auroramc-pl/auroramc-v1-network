@@ -17,7 +17,7 @@ final class SqlAudienceRepositoryQuery {
         `allows_messages`
       FROM
         `auroramc_auctions_audiences`
-      LEFT JOIN
+      JOIN
         `auroramc_registry_users`
       ON
         `auroramc_registry_users`.`id` = `auroramc_auctions_audiences`.`user_id`

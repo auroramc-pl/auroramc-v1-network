@@ -8,7 +8,8 @@ import pl.auroramc.commons.scheduler.Scheduler;
 
 public interface VaultItemFacade {
 
-  static VaultItemFacade getVaultItemFacade(final Logger logger, final Scheduler scheduler, final Juliet juliet) {
+  static VaultItemFacade getVaultItemFacade(
+      final Logger logger, final Scheduler scheduler, final Juliet juliet) {
     final SqlVaultItemRepository sqlVaultItemRepository = new SqlVaultItemRepository(juliet);
     sqlVaultItemRepository.createVaultItemSchemaIfRequired();
     return new VaultItemService(logger, scheduler, sqlVaultItemRepository);

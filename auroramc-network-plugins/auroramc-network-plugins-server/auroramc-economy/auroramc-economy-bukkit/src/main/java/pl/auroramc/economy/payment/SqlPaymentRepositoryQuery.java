@@ -37,15 +37,15 @@ final class SqlPaymentRepositoryQuery {
         `payment`.`transaction_time`
       FROM
         `auroramc_economy_payments` AS `payment`
-      LEFT JOIN
+      JOIN
         `auroramc_registry_users` AS `initiator`
       ON
         `initiator_id` = `initiator`.`id`
-      LEFT JOIN
+      JOIN
         `auroramc_registry_users` AS `receiver`
       ON
         `receiver_id` = `receiver`.`id`
-      LEFT JOIN
+      JOIN
         `auroramc_economy_currencies` AS `currency`
       ON
         `currency_id` = `currency`.`id`
@@ -68,15 +68,15 @@ final class SqlPaymentRepositoryQuery {
         `payment`.`transaction_time`
       FROM
         `auroramc_economy_payments` AS `payment`
-      LEFT JOIN
+      JOIN
         `auroramc_registry_users` AS `initiator`
       ON
         `initiator_id` = `initiator`.`id`
-      LEFT JOIN
+      JOIN
         `auroramc_registry_users` AS `receiver`
       ON
         `receiver_id` = `receiver`.`id`
-      LEFT JOIN
+      JOIN
         `auroramc_economy_currencies` AS `currency`
       ON
         `currency_id` = `currency`.`id`

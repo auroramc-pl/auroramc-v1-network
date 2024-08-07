@@ -34,7 +34,8 @@ public class MessageSource extends OkaeriConfig {
           "<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894>Czek <#d3a37e>(<gradient:#f7cf78:#fbd06a:#f4b352:#fbd06a:#f7cf78><context.currency.@symbol><context.amount><#d3a37e>)");
 
   public MutableMessage linesOfCheque =
-      MutableMessage.of("<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894>Wystawiający: <gradient:#f7cf78:#fbd06a:#f4b352:#fbd06a:#f7cf78><context.issuer.username>");
+      MutableMessage.of(
+          "<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894>Wystawiający: <gradient:#f7cf78:#fbd06a:#f4b352:#fbd06a:#f7cf78><context.issuer.username>");
 
   public CommandMessageSource command = new CommandMessageSource();
 }

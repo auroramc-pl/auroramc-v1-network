@@ -2,7 +2,7 @@ package pl.auroramc.registry.provider;
 
 public interface ProviderFacade {
 
-  Provider resolveProviderByName(final String name);
+  Provider getOrCreateProviderByName(final String name);
 
   Provider getProviderByName(final String name);
 

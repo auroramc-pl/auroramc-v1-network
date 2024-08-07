@@ -24,11 +24,11 @@ final class SqlVaultItemRepositoryQuery {
         `auroramc_auctions_vault_items`.`creation_time`
       FROM
         `auroramc_auctions_vault_items`
-      LEFT JOIN
+      JOIN
         `auroramc_auctions_vaults`
         ON
           `auroramc_auctions_vaults`.`id` = `auroramc_auctions_vault_items`.`vault_id`
-      LEFT JOIN
+      JOIN
         `auroramc_registry_users`
         ON `auroramc_auctions_vaults`.`user_id` = `auroramc_registry_users`.`id`
       WHERE

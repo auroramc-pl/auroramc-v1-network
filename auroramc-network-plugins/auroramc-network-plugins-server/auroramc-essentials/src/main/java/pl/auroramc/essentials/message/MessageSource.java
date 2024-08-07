@@ -21,15 +21,19 @@ public class MessageSource extends OkaeriConfig {
       """
               .trim());
 
-  public MutableMessage entryOfSummary = MutableMessage.of("<#f4a9ba><pluginName><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b><separator>");
+  public MutableMessage entryOfSummary =
+      MutableMessage.of(
+          "<#f4a9ba><pluginName><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b><separator>");
 
   public MutableMessage unknownCommand =
-      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wprowadzona przez ciebie komenda nie została znaleziona.");
+      MutableMessage.of(
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wprowadzona przez ciebie komenda nie została znaleziona.");
 
   public MutableMessage unknownCommandWithPotentialSuggestion =
       MutableMessage.of(
           "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wprowadzona przez ciebie komenda nie została znaleziona. Czy nie chodziło Ci może przypadkiem o <gradient:#ffad33:#ff8052:#ffdb57:#ff8052:#ffdb57:#ffad33>/<suggestion><gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>?");
 
   public MutableMessage potentialSuggestionHover =
-      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Naciśnij, aby użyć sugestii dotyczącej poprawnej komendy.");
+      MutableMessage.of(
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Naciśnij, aby użyć sugestii dotyczącej poprawnej komendy.");
 }

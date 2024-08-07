@@ -94,11 +94,7 @@ class NametagService implements NametagFacade {
 
     final ClientboundSetScorePacket setScorePacket =
         new ClientboundSetScorePacket(
-            seenPlayer.getName(),
-            DUMMY_OBJECTIVE_NAME,
-            DUMMY_SCORE,
-            EMPTY,
-            belowNameFormat);
+            seenPlayer.getName(), DUMMY_OBJECTIVE_NAME, DUMMY_SCORE, EMPTY, belowNameFormat);
 
     outboundConnection.send(setScorePacket);
   }

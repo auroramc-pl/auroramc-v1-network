@@ -7,8 +7,10 @@ public final class BountyProgressFacadeFactory {
 
   private BountyProgressFacadeFactory() {}
 
-  public static BountyProgressFacade getBountyProgressFacade(final Scheduler scheduler, final Juliet juliet) {
-    final SqlBountyProgressRepository bountyProgressRepository = new SqlBountyProgressRepository(juliet);
+  public static BountyProgressFacade getBountyProgressFacade(
+      final Scheduler scheduler, final Juliet juliet) {
+    final SqlBountyProgressRepository bountyProgressRepository =
+        new SqlBountyProgressRepository(juliet);
     bountyProgressRepository.createBountyProgressSchemaIfRequired();
     return new BountyProgressService(scheduler, bountyProgressRepository);
   }

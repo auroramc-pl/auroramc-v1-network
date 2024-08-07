@@ -2,12 +2,12 @@ package pl.auroramc.bounties.visit;
 
 import static java.time.Instant.now;
 import static java.util.Comparator.comparing;
+import static pl.auroramc.bounties.message.MessageSourcePaths.TIMEFRAME_PATH;
+import static pl.auroramc.bounties.message.MessageSourcePaths.VISIT_PATH;
 import static pl.auroramc.commons.format.temporal.TemporalUtils.getMaximumTimeOfDay;
 import static pl.auroramc.commons.format.temporal.TemporalUtils.getMinimumTimeOfDay;
 import static pl.auroramc.commons.range.Between.ranged;
 import static pl.auroramc.commons.range.Between.single;
-import static pl.auroramc.bounties.message.MessageSourcePaths.TIMEFRAME_PATH;
-import static pl.auroramc.bounties.message.MessageSourcePaths.VISIT_PATH;
 
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;

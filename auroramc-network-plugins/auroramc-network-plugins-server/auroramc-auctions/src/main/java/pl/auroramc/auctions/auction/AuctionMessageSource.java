@@ -10,30 +10,36 @@ public class AuctionMessageSource extends OkaeriConfig {
           "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Musisz spróbować wystawić przedmiot później, gdyż aktualnie osiągnięty został limit oczekujących aukcji.");
 
   public MutableMessage requiresHoldingItem =
-      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Musisz trzymać przedmiot w ręce, aby móc go wystawić na aukcję.");
+      MutableMessage.of(
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Musisz trzymać przedmiot w ręce, aby móc go wystawić na aukcję.");
 
   public MutableMessage invalidStock =
-      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wprowadzony przez ciebie nakład jest nieprawidłowy.");
+      MutableMessage.of(
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wprowadzony przez ciebie nakład jest nieprawidłowy.");
 
   public MutableMessage invalidStockBecauseOfMissingItems =
       MutableMessage.of(
           "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wprowadzony przez ciebie nakład przewyższa posiadane przez ciebie przedmioty.");
 
   public MutableMessage invalidMinimalPrice =
-      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wprowadzona przez ciebie kwota startowa jest nieprawidłowa.");
+      MutableMessage.of(
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wprowadzona przez ciebie kwota startowa jest nieprawidłowa.");
 
   public MutableMessage invalidMinimalPricePuncture =
-      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wprowadzona przez ciebie kwota przebicia jest nieprawidłowa.");
+      MutableMessage.of(
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wprowadzona przez ciebie kwota przebicia jest nieprawidłowa.");
 
   public MutableMessage auctionSchedule =
       MutableMessage.of(
           "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Trzymany przez ciebie przedmiot został wystawiony. Aukcja rozpocznie się, gdy nadejdzie jej kolej.");
 
   public MutableMessage offerMissingAuction =
-      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie możesz złożyć oferty, gdyż w tej chwili nie trwa żadna aukcja.");
+      MutableMessage.of(
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie możesz złożyć oferty, gdyż w tej chwili nie trwa żadna aukcja.");
 
   public MutableMessage offerSelfAuction =
-      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie możesz złożyć oferty, gdyż jest to twoja aukcja.");
+      MutableMessage.of(
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie możesz złożyć oferty, gdyż jest to twoja aukcja.");
 
   public MutableMessage offerIsAlreadyHighest =
       MutableMessage.of(
@@ -44,17 +50,20 @@ public class AuctionMessageSource extends OkaeriConfig {
           "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie możesz złożyć oferty, gdyż jest ona mniejsza od aktualnej oferty.");
 
   public MutableMessage offerNotEnoughBalance =
-      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie posiadasz wystarczająco pieniędzy, aby złożyć tą ofertę.");
+      MutableMessage.of(
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie posiadasz wystarczająco pieniędzy, aby złożyć tą ofertę.");
 
   public MutableMessage offered =
       MutableMessage.of(
           "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Złożyłeś ofertę w wysokości <#f4a9ba><context.currency.@symbol><context.amount><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>.");
 
   public MutableMessage offeringFailed =
-      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wystąpił nieoczekiwany błąd podczas złożenia oferty.");
+      MutableMessage.of(
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wystąpił nieoczekiwany błąd podczas złożenia oferty.");
 
   public MutableMessage auctionIsMissing =
-      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>W tej chwili nie trwa żadna aukcja.");
+      MutableMessage.of(
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>W tej chwili nie trwa żadna aukcja.");
 
   public MutableMessage auctionWinningBid =
       MutableMessage.of(
@@ -74,13 +83,16 @@ public class AuctionMessageSource extends OkaeriConfig {
 
   public MutableMessage unknownOffer = MutableMessage.of("<#f4a9ba>Brak");
 
-  public MutableMessage unknownPlayer = MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Nieznany");
+  public MutableMessage unknownPlayer =
+      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Nieznany");
 
   public MutableMessage notificationsEnabled =
-      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Włączyłeś wyświetlanie powiadomień dotyczących aukcji.");
+      MutableMessage.of(
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Włączyłeś wyświetlanie powiadomień dotyczących aukcji.");
 
   public MutableMessage notificationsDisabled =
-      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Wyłączyłeś wyświetlanie powiadomień dotyczących aukcji.");
+      MutableMessage.of(
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Wyłączyłeś wyświetlanie powiadomień dotyczących aukcji.");
 
   public MutableMessage auctionNearCompletion =
       MutableMessage.of(

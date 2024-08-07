@@ -72,8 +72,7 @@ public class QuestsBukkitPlugin extends JavaPlugin {
 
   @Override
   public void onEnable() {
-    unpackResources(
-        getFile(), getDataFolder(), Set.of(QUESTS_DIRECTORY_NAME), Set.of());
+    unpackResources(getFile(), getDataFolder(), Set.of(QUESTS_DIRECTORY_NAME), Set.of());
 
     final ConfigFactory configFactory =
         new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);

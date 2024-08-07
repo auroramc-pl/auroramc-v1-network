@@ -17,7 +17,7 @@ class SqlQuestObserverRepositoryQuery {
         `user_id`, `quest_id`
       FROM
         `auroramc_quests_quest_observers`
-      LEFT JOIN
+      JOIN
         `auroramc_registry_users`
       ON
         `auroramc_registry_users`.`id` = `auroramc_quests_quest_observers`.`user_id`

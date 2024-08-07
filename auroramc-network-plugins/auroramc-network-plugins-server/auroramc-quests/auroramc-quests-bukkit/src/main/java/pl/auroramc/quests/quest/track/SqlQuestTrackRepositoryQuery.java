@@ -18,7 +18,7 @@ final class SqlQuestTrackRepositoryQuery {
         `user_id`, `quest_id`, `quest_state`
       FROM
         `auroramc_quests_quest_tracks`
-      LEFT JOIN
+      JOIN
         `auroramc_registry_users`
       ON
         `auroramc_registry_users`.`id` = `auroramc_quests_quest_tracks`.`user_id`

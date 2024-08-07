@@ -5,10 +5,12 @@ import pl.auroramc.messages.message.MutableMessage;
 
 public class BalanceMessageSource extends OkaeriConfig {
 
-  public MutableMessage balanceSummaryHeader = MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Podsumowanie stanu konta:");
+  public MutableMessage balanceSummaryHeader =
+      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Podsumowanie stanu konta:");
 
   public MutableMessage balanceSummaryHeaderTargeted =
-      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Podsumowanie stanu konta gracza <#f4a9ba><player.displayName><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>:");
+      MutableMessage.of(
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Podsumowanie stanu konta gracza <#f4a9ba><player.displayName><gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>:");
 
   public MutableMessage balanceSummaryEntry =
       MutableMessage.of(

@@ -18,10 +18,12 @@ public class TransferMessageSource extends OkaeriConfig {
           "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Operacja nie została wykonana, gdyż nie udało się odnaleźć waluty z id pasującym do <gradient:#ffad33:#ff8052:#ffdb57:#ff8052:#ffdb57:#ffad33><currency.@id><gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>.");
 
   public MutableMessage validationRequiresAmountGreaterThanZero =
-      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Kwota musi być większa od zera.");
+      MutableMessage.of(
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Kwota musi być większa od zera.");
 
   public MutableMessage validationRequiresSpecifyingTarget =
-      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Musisz określić poprawnego odbiorcę, aby wykonać tę operację.");
+      MutableMessage.of(
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Musisz określić poprawnego odbiorcę, aby wykonać tę operację.");
 
   public MutableMessage validationRequiresGreaterAmountOfBalance =
       MutableMessage.of(

@@ -10,7 +10,8 @@ public class MessageSource extends OkaeriConfig {
   public static final @Exclude String MESSAGE_SOURCE_FILE_NAME = "messages.yml";
 
   public MutableMessage teleportedIntoSpawn =
-      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Zostałeś przeteleportowany na spawn.");
+      MutableMessage.of(
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Zostałeś przeteleportowany na spawn.");
 
   public MutableMessage lobbyClarification =
       MutableMessage.of(

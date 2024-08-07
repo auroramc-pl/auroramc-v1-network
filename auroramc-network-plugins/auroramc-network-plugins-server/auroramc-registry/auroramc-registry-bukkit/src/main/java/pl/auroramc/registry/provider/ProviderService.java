@@ -14,7 +14,7 @@ class ProviderService implements ProviderFacade {
   }
 
   @Override
-  public Provider resolveProviderByName(final String name) {
+  public Provider getOrCreateProviderByName(final String name) {
     final Provider cachedProvider = providerByProviderName.get(name);
     if (cachedProvider != null) {
       return cachedProvider;
@@ -22,12 +22,12 @@ class ProviderService implements ProviderFacade {
 
     final Provider oldProvider = getProviderByName(name);
     if (oldProvider != null) {
-      return getAndCacheProvider(oldProvider);
+      return cacheAndGetProvider(oldProvider);
     }
 
     final Provider newProvider = ProviderBuilder.newBuilder().withName(name).build();
     createProvider(newProvider);
-    return getAndCacheProvider(newProvider);
+    return cacheAndGetProvider(newProvider);
   }
 
   @Override
@@ -45,7 +45,7 @@ class ProviderService implements ProviderFacade {
     providerRepository.updateProvider(provider);
   }
 
-  private Provider getAndCacheProvider(final Provider provider) {
+  private Provider cacheAndGetProvider(final Provider provider) {
     providerByProviderName.put(provider.getName(), provider);
     return provider;
   }

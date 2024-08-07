@@ -13,13 +13,16 @@ public class MessageSource extends OkaeriConfig {
           "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie możesz stworzyć tabliczki dla innego gracza, upewnij się, czy wpisałeś swoją nazwę poprawnie.");
 
   public MutableMessage invalidQuantity =
-      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wskazana przez ciebie ilość jest nieprawidłowa.");
+      MutableMessage.of(
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wskazana przez ciebie ilość jest nieprawidłowa.");
 
   public MutableMessage invalidPrice =
-      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wskazana przez ciebie cena jest nieprawidłowa.");
+      MutableMessage.of(
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Wskazana przez ciebie cena jest nieprawidłowa.");
 
   public MutableMessage bazaarSelfInteraction =
-      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie możesz korzystać z własnego bazaru.");
+      MutableMessage.of(
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie możesz korzystać z własnego bazaru.");
 
   public MutableMessage bazaarOutOfStock =
       MutableMessage.of(
@@ -30,10 +33,12 @@ public class MessageSource extends OkaeriConfig {
           "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Bazar, do którego próbujesz sprzedać przedmioty nie posiada wystarczająco miejsca.");
 
   public MutableMessage customerOutOfSpace =
-      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie posiadasz wystarczająco miejsca w ekwipunku, aby to zakupić.");
+      MutableMessage.of(
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie posiadasz wystarczająco miejsca w ekwipunku, aby to zakupić.");
 
   public MutableMessage customerOutOfProduct =
-      MutableMessage.of("<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie posiadasz wystarczająco przedmiotów, aby to sprzedać.");
+      MutableMessage.of(
+          "<gradient:#b51c1c:#d33131:#c72929:#d33131:#b51c1c>Nie posiadasz wystarczająco przedmiotów, aby to sprzedać.");
 
   public MutableMessage customerOutOfBalance =
       MutableMessage.of(

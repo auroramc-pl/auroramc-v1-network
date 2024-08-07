@@ -14,5 +14,6 @@ public class VaultMessageSource extends OkaeriConfig {
           "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Odebrałeś <#7c5058>x<subject.@amount></dark_gray> <#f4a9ba><subject> <gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>ze swojego schowka.");
 
   public MutableMessage vaultItemRedeemSuggestion =
-      MutableMessage.of("<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Naciśnij aby odebrać ten przedmiot.");
+      MutableMessage.of(
+          "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Naciśnij aby odebrać ten przedmiot.");
 }

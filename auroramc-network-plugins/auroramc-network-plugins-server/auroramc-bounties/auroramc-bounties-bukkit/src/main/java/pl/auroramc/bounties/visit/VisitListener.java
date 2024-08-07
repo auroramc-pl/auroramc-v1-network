@@ -10,8 +10,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 import pl.auroramc.bounties.BountyConfig;
+import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 import pl.auroramc.registry.user.UserFacade;
 
 public class VisitListener implements Listener {

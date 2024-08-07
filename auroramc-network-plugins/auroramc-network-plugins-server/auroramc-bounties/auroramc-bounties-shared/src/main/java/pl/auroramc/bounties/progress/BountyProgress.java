@@ -9,7 +9,8 @@ public class BountyProgress {
   private Long day;
   private LocalDate acquisitionDate;
 
-  public BountyProgress(final Long id, final Long userId, final Long day, final LocalDate acquisitionDate) {
+  public BountyProgress(
+      final Long id, final Long userId, final Long day, final LocalDate acquisitionDate) {
     this.id = id;
     this.userId = userId;
     this.day = day;
