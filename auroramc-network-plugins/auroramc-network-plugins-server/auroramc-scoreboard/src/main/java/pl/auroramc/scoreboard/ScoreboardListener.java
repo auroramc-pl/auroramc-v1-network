@@ -4,6 +4,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import pl.auroramc.registry.locale.LocaleChangedEvent;
 import pl.auroramc.scoreboard.sidebar.SidebarFacade;
 import pl.auroramc.scoreboard.sidebar.SidebarRenderer;
 
@@ -25,5 +26,10 @@ class ScoreboardListener implements Listener {
   @EventHandler
   public void onSidebarDeletionRequest(final PlayerQuitEvent event) {
     sidebarFacade.deleteSidebarByUniqueId(event.getPlayer().getUniqueId());
+  }
+
+  @EventHandler
+  public void onSidebarUpdateRequest(final LocaleChangedEvent event) {
+    sidebarRenderer.render(event.getPlayer());
   }
 }

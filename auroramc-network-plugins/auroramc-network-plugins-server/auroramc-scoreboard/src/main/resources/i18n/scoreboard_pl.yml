@@ -1,0 +1,5 @@
+title: "<bold><gradient:#0bf57c:#10de73>Aurora<gradient:#00dbfc:#07c6e3>MC"
+lineWithName: "<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894>Nazwa: <gradient:#f7cf78:#fbd06a:#f4b352:#fbd06a:#f7cf78>%player_name%"
+lineWithGroup: "<gradient:#f5c894:#f6d4a2:#f9e2b4:#f6d4a2:#f5c894>Ranga: <gradient:#f7cf78:#fbd06a:#f4b352:#fbd06a:#f7cf78>%luckperms_primary_group_name%"
+questObserved: "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Obserwowane zadanie: <#f4a9ba><quest.@key.@name>"
+questRemainingObjectives: "<gradient:#c95e7b:#ed7d95:#ed7d95:#b55e7b>Pozostałe cele:"

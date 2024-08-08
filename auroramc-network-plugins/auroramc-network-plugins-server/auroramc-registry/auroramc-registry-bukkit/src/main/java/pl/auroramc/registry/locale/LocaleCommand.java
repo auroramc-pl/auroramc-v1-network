@@ -13,6 +13,7 @@ import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 import org.bukkit.entity.Player;
+import pl.auroramc.commons.bukkit.event.BukkitEventPublisher;
 import pl.auroramc.commons.concurrent.CompletableFutureUtils;
 import pl.auroramc.messages.i18n.Message;
 import pl.auroramc.registry.message.RegistryMessageSource;
@@ -27,14 +28,17 @@ import pl.auroramc.registry.settings.SettingsFacade;
 public class LocaleCommand {
 
   private final RegistryMessageSource registryMessageSource;
+  private final BukkitEventPublisher eventPublisher;
   private final SettingsFacade settingsFacade;
   private final SettingsController settingsController;
 
   public LocaleCommand(
       final RegistryMessageSource registryMessageSource,
+      final BukkitEventPublisher eventPublisher,
       final SettingsFacade settingsFacade,
       final SettingsController settingsController) {
     this.registryMessageSource = registryMessageSource;
+    this.eventPublisher = eventPublisher;
     this.settingsFacade = settingsFacade;
     this.settingsController = settingsController;
   }
@@ -65,6 +69,10 @@ public class LocaleCommand {
     return settingsFacade
         .updateSettings(settings)
         .thenAccept(state -> settingsController.applySettings(player, settings))
+        .thenAccept(
+            state ->
+                eventPublisher.publish(
+                    new LocaleChangedEvent(player, settings.getLocale(), locale)))
         .thenApply(state -> true)
         .exceptionally(CompletableFutureUtils::delegateCaughtException);
   }

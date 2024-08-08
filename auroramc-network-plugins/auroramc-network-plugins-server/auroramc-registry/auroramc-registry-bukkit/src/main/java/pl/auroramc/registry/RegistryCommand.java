@@ -1,5 +1,6 @@
 package pl.auroramc.registry;
 
+import static pl.auroramc.commons.concurrent.CompletableFutureUtils.delegateCaughtException;
 import static pl.auroramc.messages.i18n.Message.message;
 
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -24,12 +25,13 @@ class RegistryCommand {
   }
 
   @Execute(name = "reload")
-  public Message reloadConfiguration() {
+  public Message reload() {
     try {
       messageFacade.refresh();
-      return message(messageSource.configurationReloadSuccess);
+      return message(messageSource.messagesRefreshSuccess);
     } catch (final OkaeriException exception) {
-      return message(messageSource.configurationReloadFailure);
+      delegateCaughtException(exception);
+      return message(messageSource.messagesRefreshFailure);
     }
   }
 }

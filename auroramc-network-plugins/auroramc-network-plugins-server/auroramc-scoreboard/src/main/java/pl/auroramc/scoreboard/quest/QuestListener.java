@@ -1,8 +1,8 @@
 package pl.auroramc.scoreboard.quest;
 
-import org.bukkit.event.EventHandler;
+//import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import pl.auroramc.quests.quest.observer.QuestObservedEvent;
+//import pl.auroramc.quests.quest.observer.QuestObservedEvent;
 import pl.auroramc.scoreboard.sidebar.SidebarRenderer;
 
 public class QuestListener implements Listener {
@@ -13,8 +13,8 @@ public class QuestListener implements Listener {
     this.sidebarRenderer = sidebarRenderer;
   }
 
-  @EventHandler
-  public void onSidebarUpdateRequest(final QuestObservedEvent event) {
-    sidebarRenderer.render(event.getPlayer());
-  }
+//  @EventHandler
+//  public void onSidebarUpdateRequest(final QuestObservedEvent event) {
+//    sidebarRenderer.render(event.getPlayer());
+//  }
 }

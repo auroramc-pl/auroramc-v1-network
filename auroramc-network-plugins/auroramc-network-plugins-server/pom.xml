@@ -25,7 +25,7 @@
     <!--    <module>auroramc-lobby</module>-->
     <!--    <module>auroramc-quests</module>-->
     <module>auroramc-registry</module>
-    <!--    <module>auroramc-scoreboard</module>-->
+    <module>auroramc-scoreboard</module>
     <!--    <module>auroramc-shops</module>-->
     <!--    <module>auroramc-spawners</module>-->
   </modules>
