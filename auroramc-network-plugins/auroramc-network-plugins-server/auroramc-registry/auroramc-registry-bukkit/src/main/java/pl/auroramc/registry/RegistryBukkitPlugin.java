@@ -1,10 +1,12 @@
 package pl.auroramc.registry;
 
+import static java.util.Locale.ENGLISH;
 import static moe.rafal.juliet.datasource.hikari.HikariPooledDataSourceFactory.getHikariDataSource;
 import static pl.auroramc.commons.bukkit.BukkitUtils.registerFacades;
 import static pl.auroramc.commons.bukkit.BukkitUtils.registerListeners;
 import static pl.auroramc.commons.bukkit.BukkitUtils.registerServices;
 import static pl.auroramc.integrations.configs.juliet.JulietConfig.JULIET_CONFIG_FILE_NAME;
+import static pl.auroramc.messages.i18n.BukkitMessageFacade.getBukkitMessageFacade;
 import static pl.auroramc.messages.i18n.Message.message;
 import static pl.auroramc.messages.viewer.BukkitViewerFacade.getBukkitViewerFacade;
 import static pl.auroramc.registry.observer.ObserverFacadeFactory.getObserverFacade;
@@ -17,15 +19,18 @@ import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.adventure.LiteAdventureExtension;
 import dev.rollczi.litecommands.annotations.LiteCommandsAnnotations;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
+import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import java.util.Locale;
 import java.util.Set;
 import moe.rafal.juliet.Juliet;
 import moe.rafal.juliet.JulietBuilder;
 import org.bukkit.command.CommandSender;
+import pl.auroramc.commons.bukkit.event.BukkitEventPublisher;
 import pl.auroramc.integrations.IntegrationsBukkitPlugin;
 import pl.auroramc.integrations.commands.BukkitCommandsBuilderProcessor;
 import pl.auroramc.integrations.configs.juliet.JulietConfig;
 import pl.auroramc.integrations.configs.serdes.juliet.SerdesJuliet;
+import pl.auroramc.messages.i18n.BukkitMessageFacade;
 import pl.auroramc.messages.viewer.BukkitViewerFacade;
 import pl.auroramc.registry.locale.LocaleArgumentResolver;
 import pl.auroramc.registry.locale.LocaleCommand;
@@ -48,10 +53,12 @@ public class RegistryBukkitPlugin extends IntegrationsBukkitPlugin {
 
   @Override
   public void onStartup() {
-    final RegistryMessageSource registryMessageSource =
-        registerMessageSource(RegistryMessageSource.class, REGISTRY_BUNDLE_NAME);
-
     final BukkitViewerFacade viewerFacade = getBukkitViewerFacade(getServer());
+    final BukkitMessageFacade messageFacade =
+        getBukkitMessageFacade(YamlBukkitConfigurer::new, ENGLISH);
+    final RegistryMessageSource registryMessageSource =
+        registerMessageSource(messageFacade, RegistryMessageSource.class, REGISTRY_BUNDLE_NAME);
+    registerServices(this, Set.of(registerIntegrationsMessageSource(messageFacade)));
 
     final JulietConfig julietConfig =
         produceConfig(JulietConfig.class, JULIET_CONFIG_FILE_NAME, new SerdesJuliet());
@@ -77,28 +84,31 @@ public class RegistryBukkitPlugin extends IntegrationsBukkitPlugin {
         this,
         Set.of(
             viewerFacade,
+            messageFacade,
             settingsFacade,
             providerFacade,
             observerFacade,
             resourceKeyFacade,
             userFacade));
 
+    final BukkitEventPublisher eventPublisher = new BukkitEventPublisher(getScheduler());
     commands =
         LiteBukkitFactory.builder(getName(), this)
             .extension(new LiteAdventureExtension<>(), configurer -> configurer.miniMessage(true))
             .argument(
                 Locale.class,
                 new LocaleArgumentResolver<>(
-                    getMessageFacade().getAvailableLocales(),
+                    messageFacade.getAvailableLocales(),
                     message(registryMessageSource.localeNotSupported)))
             .commands(
                 LiteCommandsAnnotations.of(
-                    new RegistryCommand(getIntegrationsMessageSource(), getMessageFacade()),
-                    new LocaleCommand(registryMessageSource, settingsFacade, settingsController)))
+                    new RegistryCommand(getIntegrationsMessageSource(), messageFacade),
+                    new LocaleCommand(
+                        registryMessageSource, eventPublisher, settingsFacade, settingsController)))
             .selfProcessor(
                 new BukkitCommandsBuilderProcessor(
                     getIntegrationsMessageSource(),
-                    getMessageFacade(),
+                    messageFacade,
                     getMessageCompiler(),
                     viewerFacade))
             .build();

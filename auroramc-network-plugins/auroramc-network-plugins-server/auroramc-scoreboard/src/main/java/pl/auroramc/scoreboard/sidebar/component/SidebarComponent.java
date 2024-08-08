@@ -7,7 +7,7 @@ import pl.auroramc.messages.message.compiler.CompiledMessage;
 
 public interface SidebarComponent<Y> {
 
-  List<CompiledMessage> render(final Player viewer, final @Nullable Y value);
+  List<CompiledMessage> render(final Player player, final @Nullable Y value);
 
-  List<CompiledMessage> render(final Player viewer);
+  List<CompiledMessage> render(final Player player);
 }
