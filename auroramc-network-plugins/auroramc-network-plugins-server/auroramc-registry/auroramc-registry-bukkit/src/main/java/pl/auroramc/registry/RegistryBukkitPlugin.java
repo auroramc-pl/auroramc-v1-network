@@ -99,6 +99,7 @@ public class RegistryBukkitPlugin extends IntegrationsBukkitPlugin {
                     message(registryMessageSource.localeNotSupported)))
             .commands(
                 LiteCommandsAnnotations.of(
+                    new RegistryCommand(getIntegrationsMessageSource(), getMessageFacade()),
                     new LocaleCommand(registryMessageSource, settingsFacade, settingsController)))
             .selfProcessor(
                 new BukkitCommandsBuilderProcessor(
