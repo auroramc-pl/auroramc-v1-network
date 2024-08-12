@@ -26,7 +26,7 @@ class RegistryCommand {
   @Execute(name = "reload")
   public Message reloadConfiguration() {
     try {
-      messageFacade.refreshMessageSources();
+      messageFacade.refresh();
       return message(messageSource.configurationReloadSuccess);
     } catch (final OkaeriException exception) {
       return message(messageSource.configurationReloadFailure);
