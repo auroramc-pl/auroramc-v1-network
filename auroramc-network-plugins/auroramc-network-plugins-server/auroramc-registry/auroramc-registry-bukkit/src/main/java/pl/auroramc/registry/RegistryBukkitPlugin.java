@@ -17,7 +17,6 @@ import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.adventure.LiteAdventureExtension;
 import dev.rollczi.litecommands.annotations.LiteCommandsAnnotations;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
-import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import java.util.Locale;
 import java.util.Set;
 import moe.rafal.juliet.Juliet;
@@ -25,7 +24,6 @@ import moe.rafal.juliet.JulietBuilder;
 import org.bukkit.command.CommandSender;
 import pl.auroramc.integrations.IntegrationsBukkitPlugin;
 import pl.auroramc.integrations.commands.BukkitCommandsBuilderProcessor;
-import pl.auroramc.integrations.configs.ConfigFactory;
 import pl.auroramc.integrations.configs.juliet.JulietConfig;
 import pl.auroramc.integrations.configs.serdes.juliet.SerdesJuliet;
 import pl.auroramc.messages.viewer.BukkitViewerFacade;
@@ -50,17 +48,13 @@ public class RegistryBukkitPlugin extends IntegrationsBukkitPlugin {
 
   @Override
   public void onStartup() {
-    final ConfigFactory configFactory =
-        new ConfigFactory(getDataFolder().toPath(), YamlBukkitConfigurer::new);
-
     final RegistryMessageSource registryMessageSource =
         registerMessageSource(RegistryMessageSource.class, REGISTRY_BUNDLE_NAME);
 
     final BukkitViewerFacade viewerFacade = getBukkitViewerFacade(getServer());
 
     final JulietConfig julietConfig =
-        configFactory.produceConfig(
-            JulietConfig.class, JULIET_CONFIG_FILE_NAME, new SerdesJuliet());
+        produceConfig(JulietConfig.class, JULIET_CONFIG_FILE_NAME, new SerdesJuliet());
     juliet =
         JulietBuilder.newBuilder().withDataSource(getHikariDataSource(julietConfig.hikari)).build();
 
