@@ -1,8 +1,10 @@
 package pl.auroramc.registry.observer;
 
+import pl.auroramc.commons.sql.SqlQuery;
+
 final class SqlObserverRepositoryQuery {
 
-  static final String CREATE_OBSERVER_SCHEMA =
+  static final @SqlQuery String CREATE_OBSERVER_SCHEMA =
       """
       CREATE TABLE IF NOT EXISTS
         `auroramc_registry_observers`
@@ -14,7 +16,7 @@ final class SqlObserverRepositoryQuery {
         );
       """;
 
-  static final String FIND_OBSERVER_BY_PROVIDER_ID_AND_USER_ID =
+  static final @SqlQuery String FIND_OBSERVER_BY_PROVIDER_ID_AND_USER_ID =
       """
       SELECT
         `id`, `provider_id`, `user_id`, `enabled`
@@ -24,7 +26,7 @@ final class SqlObserverRepositoryQuery {
         `provider_id` = ? AND `user_id` = ?;
       """;
 
-  static final String CREATE_OBSERVER =
+  static final @SqlQuery String CREATE_OBSERVER =
       """
       INSERT INTO
         `auroramc_registry_observers`
@@ -33,7 +35,7 @@ final class SqlObserverRepositoryQuery {
         (?, ?, ?);
       """;
 
-  static final String UPDATE_OBSERVER =
+  static final @SqlQuery String UPDATE_OBSERVER =
       """
       UPDATE
         `auroramc_registry_observers`

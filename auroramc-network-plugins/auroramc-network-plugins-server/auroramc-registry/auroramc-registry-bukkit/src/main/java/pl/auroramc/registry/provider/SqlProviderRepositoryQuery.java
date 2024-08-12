@@ -1,8 +1,10 @@
 package pl.auroramc.registry.provider;
 
+import pl.auroramc.commons.sql.SqlQuery;
+
 final class SqlProviderRepositoryQuery {
 
-  static final String CREATE_PROVIDER_SCHEMA =
+  static final @SqlQuery String CREATE_PROVIDER_SCHEMA =
       """
       CREATE TABLE IF NOT EXISTS
         `auroramc_registry_providers`
@@ -12,7 +14,7 @@ final class SqlProviderRepositoryQuery {
         );
       """;
 
-  static final String CREATE_INDEX_ON_PROVIDER_NAME =
+  static final @SqlQuery String CREATE_INDEX_ON_PROVIDER_NAME =
       """
       CREATE UNIQUE INDEX IF NOT EXISTS
         `auroramc_registry_providers_index_on_name`
@@ -21,7 +23,7 @@ final class SqlProviderRepositoryQuery {
         (`name`);
       """;
 
-  static final String FIND_PROVIDER_BY_NAME =
+  static final @SqlQuery String FIND_PROVIDER_BY_NAME =
       """
       SELECT
         `id`, `name`
@@ -31,7 +33,7 @@ final class SqlProviderRepositoryQuery {
         `name` = ?;
       """;
 
-  static final String CREATE_PROVIDER =
+  static final @SqlQuery String CREATE_PROVIDER =
       """
       INSERT INTO
         `auroramc_registry_providers`
@@ -40,7 +42,7 @@ final class SqlProviderRepositoryQuery {
         (?);
       """;
 
-  static final String UPDATE_PROVIDER =
+  static final @SqlQuery String UPDATE_PROVIDER =
       """
       UPDATE
         `auroramc_registry_providers`

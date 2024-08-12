@@ -1,8 +1,10 @@
 package pl.auroramc.registry.resource.key;
 
+import pl.auroramc.commons.sql.SqlQuery;
+
 final class SqlResourceKeyRepositoryQuery {
 
-  static final String CREATE_RESOURCE_KEYS_SCHEMA =
+  static final @SqlQuery String CREATE_RESOURCE_KEYS_SCHEMA =
       """
       CREATE TABLE IF NOT EXISTS
         `auroramc_registry_resource_keys`
@@ -14,7 +16,7 @@ final class SqlResourceKeyRepositoryQuery {
       );
       """;
 
-  static final String GET_RESOURCE_KEYS_BY_PROVIDER_ID =
+  static final @SqlQuery String GET_RESOURCE_KEYS_BY_PROVIDER_ID =
       """
       SELECT
         `id`, `provider_id`, `name`
@@ -24,7 +26,7 @@ final class SqlResourceKeyRepositoryQuery {
         `provider_id` = ?;
       """;
 
-  static final String CREATE_RESOURCE_KEY =
+  static final @SqlQuery String CREATE_RESOURCE_KEY =
       """
       INSERT INTO
         `auroramc_registry_resource_keys` (`provider_id`, `name`)
@@ -32,7 +34,7 @@ final class SqlResourceKeyRepositoryQuery {
         (?, ?);
       """;
 
-  static final String DELETE_RESOURCE_KEY =
+  static final @SqlQuery String DELETE_RESOURCE_KEY =
       """
       DELETE FROM
         `auroramc_registry_resource_keys`

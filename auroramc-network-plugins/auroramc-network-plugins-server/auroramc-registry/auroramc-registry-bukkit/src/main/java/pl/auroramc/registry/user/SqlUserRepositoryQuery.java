@@ -1,8 +1,10 @@
 package pl.auroramc.registry.user;
 
+import pl.auroramc.commons.sql.SqlQuery;
+
 final class SqlUserRepositoryQuery {
 
-  static final String CREATE_USER_SCHEMA =
+  static final @SqlQuery String CREATE_USER_SCHEMA =
       """
       CREATE TABLE IF NOT EXISTS
         `auroramc_registry_users`
@@ -15,7 +17,7 @@ final class SqlUserRepositoryQuery {
         );
       """;
 
-  static final String FIND_USER_BY_UNIQUE_ID =
+  static final @SqlQuery String FIND_USER_BY_UNIQUE_ID =
       """
       SELECT
         `id`, `unique_id`, `username`
@@ -25,7 +27,7 @@ final class SqlUserRepositoryQuery {
         `unique_id` = ?;
       """;
 
-  static final String FIND_USER_BY_USERNAME =
+  static final @SqlQuery String FIND_USER_BY_USERNAME =
       """
       SELECT
         `id`, `unique_id`, `username`
@@ -35,7 +37,7 @@ final class SqlUserRepositoryQuery {
         `username` = ?;
       """;
 
-  static final String CREATE_USER =
+  static final @SqlQuery String CREATE_USER =
       """
       INSERT INTO
         `auroramc_registry_users`
@@ -44,7 +46,7 @@ final class SqlUserRepositoryQuery {
         (?, ?);
       """;
 
-  static final String UPDATE_USER =
+  static final @SqlQuery String UPDATE_USER =
       """
       UPDATE
         `auroramc_registry_users`

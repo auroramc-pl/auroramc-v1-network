@@ -1,8 +1,10 @@
 package pl.auroramc.registry.settings;
 
+import pl.auroramc.commons.sql.SqlQuery;
+
 final class SqlSettingsRepositoryQuery {
 
-  static final String CREATE_SETTINGS_SCHEMA =
+  static final @SqlQuery String CREATE_SETTINGS_SCHEMA =
       """
       CREATE TABLE IF NOT EXISTS
         `auroramc_registry_settings`
@@ -13,7 +15,7 @@ final class SqlSettingsRepositoryQuery {
         );
       """;
 
-  static final String CREATE_LANGUAGES_SCHEMA =
+  static final @SqlQuery String CREATE_LANGUAGES_SCHEMA =
       """
       CREATE TABLE IF NOT EXISTS
         `auroramc_registry_languages`
@@ -23,7 +25,7 @@ final class SqlSettingsRepositoryQuery {
         );
       """;
 
-  static final String FIND_SETTINGS_BY_USER_ID =
+  static final @SqlQuery String FIND_SETTINGS_BY_USER_ID =
       """
       SELECT
         `auroramc_registry_settings`.`id`,
@@ -43,7 +45,7 @@ final class SqlSettingsRepositoryQuery {
         `auroramc_registry_settings`.`user_id` = ?;
       """;
 
-  static final String CREATE_SETTINGS =
+  static final @SqlQuery String CREATE_SETTINGS =
       """
       INSERT INTO
         `auroramc_registry_settings`
@@ -55,7 +57,7 @@ final class SqlSettingsRepositoryQuery {
         );
       """;
 
-  static final String UPDATE_SETTINGS =
+  static final @SqlQuery String UPDATE_SETTINGS =
       """
       UPDATE
         `auroramc_registry_settings`
